@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row row-hd row-hd-responsive" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="KFQ_HumDeptPosiHis.Add" onclick="PowerForm.OnBtnWizard(this)"><i class="fa fa-plus"></i>新增</a>
+                        <a class="mini-button blue" id="KFQ_HumDeptPosiHis.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                        <a class="mini-button blue" id="KFQ_HumDeptPosiHis.Save" iconcls="fa fa-save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                        <a class="mini-button blue" id="KFQ_HumDeptPosiHis.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    </div>
+                    <div class="tools">
+                        <input id="KFQ_HumDeptPosiHis-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="KFQ_HumDeptPosiHis-search">
+                            <input id="KFQ_HumDeptPosiHis-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="KFQ_HumDeptPosiHis-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 100%">
+                    <div id="KFQ_HumDeptPosiHis" class="mini-datagrid" height="512" visible="true" width="917" 
+                       allowcelledit="true" allowcellselect="true" multiselect="true" sortField="sequ" style="width: 100%; height: 100%;" pagesize="100" idfield="Id">
+                        <div property="columns">
+                            <div type="indexcolumn">序号</div>
+                            <div type="checkcolumn"></div>
+                            <div field="Code" name="Code" headeralign="Center" allowsort="true"  header="编号" align="center">编号</div>
+                            <div field="Name" name="Name" headeralign="Center" allowsort="true"  header="姓名" align="center">姓名</div>
+                            <div field="DeptName" name="DeptName" headeralign="Center" allowsort="true"  header="部门" align="center">部门<input property="editor" id="KFQ_HumDeptPosiHis.DeptName" class="mini-buttonedit" name="DeptName"
+                                textname="DeptName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" /></div>
+                            <div field="PosiName" name="PosiName" headeralign="Center" allowsort="true"  header="岗位" align="center">岗位<input property="editor" id="KFQ_HumDeptPosiHis.PosiName" class="mini-buttonedit" name="PosiName"
+                                textname="PosiName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" /></div>
+                            <div field="StartDate" name="StartDate" allowSort="true" header="开始"  dateformat="yyyy-MM-dd"  align="left" headeralign="left">开始<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                            <div field="EndDate" name="EndDate" allowSort="true" header="结束"  dateformat="yyyy-MM-dd"  align="left" headeralign="left">结束<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                            <div field="RegHumName" name="RegHumName" allowSort="true" header="录入人"  align="left" readonly="true" headeralign="left">录入人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                            <div field="RegDate" name="RegDate" allowSort="true" header="录入日期"  dateformat="yyyy-MM-dd"  align="left" readonly="true" headeralign="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+    </script>
+</body>
+</html>

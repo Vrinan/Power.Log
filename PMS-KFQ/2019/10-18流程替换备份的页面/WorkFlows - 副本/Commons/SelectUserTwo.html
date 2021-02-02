@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script> 
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>人员选择(二次筛选流程定义中的人员)
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onOK">确定</a><!--确定-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')" iconcls="fa-power-off">取消</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <table style="width:100%" cellpadding="2" >
+                        <tr>
+                            <td>
+                                <div id="chkSelectedAll" name="SelectedAll" class="mini-checkbox" text='全选' onvaluechanged="onSelectedAll" /> 
+                            </td> 
+                            <td>    
+                                <div id="chkUserList" name="UserList"  class="mini-checkboxlist"  repeatitems="4" repeatlayout="table" required="true" repeatdirection="horizontal" textfield="UserName" valuefield="UserID"  >
+                                </div>
+                            </td>  
+                        </tr>  
+                    </table> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var chkSelectedAll = mini.get("chkSelectedAll");
+        var chkUserList = mini.get("chkUserList");
+         
+        var onSelectedAll = function (e) {
+             
+            if (e.value == "true")
+                chkUserList.selectAll();
+            else
+                chkUserList.deselectAll();
+
+        }
+
+        var onOK = function (e) {
+            if (chkUserList.getSelecteds().length == 0) {
+                Power.ui.error("请您至少选择一个用户");
+                return;//"请您先选择一个用户"
+            }
+            CloseWindow("ok");   //确定操作
+        }
+
+
+
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        function SetData(data) {
+            chkUserList.setData(data);
+             
+        }
+        function GetData() {            
+            return chkUserList.getSelecteds();
+        }
+
+    </script>
+
+</body>
+</html>

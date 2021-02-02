@@ -1,0 +1,225 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="js/TouchSlide.1.1.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script src="/Apps/Common.js"></script>
+    <script src="/WebCenter/MenuEpsJson/menu" type="text/javascript"></script>
+    <link href="style/style.css" rel="stylesheet" type="text/css" />
+    <link href="style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+<style type="text/css">
+    body {
+        background-color: #f4f4f4;
+    }
+
+    .event {
+        font-size: 1.4rem;
+    }
+
+    .code ,.name, .file ,.content {
+        background-color: #fff;
+        border-bottom: 1px solid #808080;
+        padding: 5px;
+    }
+
+            .event div span {
+                border-left: 1px solid #808080;
+                padding-left: 10px;
+            }
+
+    .content {
+        padding:8px;
+    }
+
+    .file {
+        color: #3243fa;
+    }
+
+    .listdiv {
+        position: fixed;
+        top: 0;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 1000;
+    }
+
+        .listdiv .navbg {
+            filter: alpha(opacity=30);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            background-color: #000;
+            width: 100%;
+            height: 100%;
+        }
+
+        .listdiv .navlist {
+            display: block;
+            background-color: #fff;
+            width: 120px;
+            position: absolute;
+            top: 90px;
+            left: 5px;
+            border: 1px solid #fff;
+            border-radius: 5px;
+        }
+
+            .listdiv .navlist ul li {
+                line-height: 30px;
+                border-bottom: 1px solid #ddd;
+                width: 100%;
+                text-indent: 8px;
+            }
+
+                .listdiv .navlist ul li:last-child {
+                    border: 0px;
+                }
+
+                .listdiv .navlist ul li span {
+                    margin-left: 5px;
+                }
+</style>
+<body>
+    <div class="event">
+        <div class="code">编号：<span id="code"></span></div>
+        <div class="name">名称：<span id="name"></span></div>
+        <div class="file">附件(0)</div>
+        <div class="content" id="content"></div>
+
+        <div class="listdiv" id="listdiv">
+            <div class="navbg"></div>
+            <div class="navlist">
+                <div class="triangle-up"></div>
+                <ul id="files"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    $(function () {
+
+        if ($(".file").length > 0) {
+            $(".file").click(function () {
+                $("#listdiv").show();
+            });
+        }
+        if ($("#listdiv").length > 0) {
+            $("#listdiv").click(function () {
+                $("#listdiv").hide();
+            });
+        }
+        var html = "";
+        var id = getParameter("id");
+        if (id == null || id == "")
+            return;
+
+        //加载通知
+        $.ajax({
+            url: "/Form/FormLoad",
+            data: { KeyWord: 'PS_ProjectEvents', keyvalue: id, select: '', swhere: '', formstate: 'view', KeyWordType: 'BO' },
+
+            type: 'post',
+            success: function (text) {
+                var o = jQuery.parseJSON(text);
+                if (o.success) {
+                    var data = jQuery.parseJSON(o.data.value);
+                    $("#code").html(data.Code);
+                    $("#name").html(data.Title);
+                    $("#content").html(Base64.decode(data.EeventsMemo));
+                }
+            }
+        });
+        //加载附件
+        var sort = "";
+        var swhere = "";
+        $.ajax({
+            url: "/Form/GetDocFiles",
+            data: {
+                BOKeyWord: "PS_ProjectEvents",
+                BOKeyValue: id,
+                select: "",
+                swhere: swhere,
+                sort: sort,
+                index: 0,
+                size: 0
+            },
+            cache: false,
+            success: function (text) {
+                var tmp = jQuery.parseJSON(text);
+                if (tmp.success) {
+                    var data = jQuery.parseJSON(tmp.data.value);
+                    var count = data.length;
+                    var html = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var d = data[i];
+                        html += "<li  onclick=\"OpenView('" + d.Id + "','" + d.Name + d.FileExt + "')\"> <a href=\"javascrpit:;\"></a>" + d.Name + d.FileExt + "</li>";
+                    }
+                    $("#files").html(html);
+                    $(".file").html("附件(" + count + ")");
+                }
+                else
+                    $("#FileAttach").html("");
+
+
+
+            }
+        });
+    });
+
+    function OpenView(id, title) {
+
+        var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + id;
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":"' + title + '"}',url);
+        //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+        //    window.m3app.AppCall('appOpenNewWebView', '{"url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":"' + title + '"}', function XXX(outparam) {
+
+        //    });
+        //}
+        //else {
+        //    window.open(url, "_self")
+        //}
+    }
+    function openmenu(id, title) {
+        var url = "/WebCenter/MainMenu/" + id;
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"true","pullDown":"true","showTabbar":"true","title":"' + title + '"}',url);
+        //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+        //    window.m3app.AppCall('appOpenNewWebView', '{"url":"' + url + '","pullUp":"true","pullDown":"true","showTabbar":"true","title":"' + title + '"}', function XXX(outparam) {
+
+        //    });
+        //}
+        //else {
+        //    window.open(url, "_self")
+        //}
+    }
+    function getParameter(param, win) {
+        var wind = win && win != "" ? win : window;
+        var query = wind.location.search;
+        var iLen = param.length;
+        var iStart = query.indexOf("&" + param + "=");
+        if (iStart == -1) {
+            iStart = query.indexOf("?" + param + "=");
+            if (iStart == -1) return "";
+        }
+        iStart += iLen + 1 + 1;
+        var iEnd = query.indexOf("&", iStart);
+        if (iEnd == -1)
+            return query.substring(iStart);
+
+        return query.substring(iStart, iEnd);
+    }
+</script>
+
+</html>

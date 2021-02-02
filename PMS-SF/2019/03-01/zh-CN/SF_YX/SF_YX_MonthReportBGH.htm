@@ -1,0 +1,590 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>运行部月报（办公会）
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_YX_MonthReportBGH.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_YX_MonthReportBGH.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_YX_MonthReportBGH.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_YX_MonthReportBGH" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_MonthReportBGH.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            所属运行站
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.ReportDept" name="ReportDept" textname="ReportDept" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            填报时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.ReportDateTime" name="ReportDateTime" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_MonthReportBGH.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_MonthReportBGH.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title='渗滤液处理生产'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_MonthReportBGH_dtlFirst.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_MonthReportBGH_dtlFirst.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_YX_MonthReportBGH_dtlFirst-Export" class="btn-group"></div>
+                                <div id="SF_YX_MonthReportBGH_dtlFirst.importxls"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/渗滤液处理系统生产统计表.xlsx">导入模板下载</a>  
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_YX_MonthReportBGH_dtlFirst" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="DeptName" headeralign="center">
+                                            站点
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div header="系统接水" headeralign="center">
+                                            <div property="columns">
+                                                <div field="SysAddPlan" headeralign="center">
+                                                    计划值(t)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="SysAddInfact" headeralign="center">
+                                                    实际值(t)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="系统进水" headeralign="center">
+                                            <div property="columns">
+                                                <div field="SysReturnAmount" headeralign="center">
+                                                    进水量（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="SysReturnDeal" headeralign="center">
+                                                    处理率（%）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="100" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="系统未处理量" headeralign="center">
+                                            <div property="columns">
+                                                <div header="系统未处理量" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysInoryAmount" headeralign="center">
+                                                            实际值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysInoryHP" headeralign="center">
+                                                            环比（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div field="SysInoryOut" headeralign="center">
+                                                    外运量（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="清液" headeralign="center">
+                                            <div property="columns">
+                                                <div field="SysClearPlan" headeralign="center">
+                                                    计划值（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="SysClearFact" headeralign="center">
+                                                    实际值（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div header="反渗透产税水率" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysClearRatePlan" headeralign="center">
+                                                            计划值（%）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="100" />
+                                                        </div>
+                                                        <div field="SysClearRateFinish" headeralign="center">
+                                                            完成值（%）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="100" />
+                                                        </div>
+                                                        <div field="SysClearHB" headeralign="center">
+                                                            环比（%）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="100" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="浓液" headeralign="center">
+                                            <div property="columns">
+                                                <div header="产生量" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysDirPlanRange" headeralign="center">
+                                                            控制值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysDirPlanAmount" headeralign="center">
+                                                            产值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysDirPlanAmountNoPlan" headeralign="center">
+                                                            非计划生产量值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="处理量" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysDirDelAmount" headeralign="center">
+                                                            回喷量（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysDirOutAmount" headeralign="center">
+                                                            外运量（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="污泥" headeralign="center">
+                                            <div property="columns">
+                                                <div header="干污泥" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysDirmDra" headeralign="center">
+                                                            产生量（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysDirmDraDel" headeralign="center">
+                                                            焚烧/填埋处置量（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="泥水泥合物" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysDirmDraOut" headeralign="center">
+                                                            外委处置量（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="能源消耗" headeralign="center">
+                                            <div property="columns">
+                                                <div header="用电量" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysSourceLimit" headeralign="center">
+                                                            限定值（kwh）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysSourceFact" headeralign="center">
+                                                            实际值（kwh）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysSourceUnit" headeralign="center">
+                                                            单位电耗（kwh）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="工业用水量" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="SysPSourceLimit" headeralign="center">
+                                                            限定值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysPSourceUnitFact" headeralign="center">
+                                                            实际值（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="SysPSourceUnitUse" headeralign="center">
+                                                            单位水耗（t）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width:100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='渗滤液处理水质监测'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_MonthReportBGH_dtlSecond.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_MonthReportBGH_dtlSecond.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+
+                                <div id="SF_YX_MonthReportBGH_dtlSecond-Export" class="btn-group"></div>
+                                <div id="SF_YX_MonthReportBGH_dtlSecond.importxls"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/渗滤液处理系统水质监测统计表.xlsx">导入模板下载</a>  
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_YX_MonthReportBGH_dtlSecond" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="DeptName" headeralign="center">
+                                            站点
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div header="调节池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div field="TJCCODOut" headeralign="center" required="true">
+                                                    COD（mg/L）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" required="true"/>
+                                                </div>
+                                                <div field="TJCAD" headeralign="center">
+                                                    氨氮（mg/L）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="UASB池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="UASBMLSS" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="UASBAD" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="UASBCOD" headeralign="center">
+                                                            COD（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="UASBMLSS2" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="UASBAD2" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="UASBCOD2" headeralign="center">
+                                                            COD（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="反硝化池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="FXHCAD" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="FXHCMLSS" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="FXHCAD2" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="FXHCMLSS2" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="硝化池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="XHCMLSS" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCAD" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCCOD" headeralign="center">
+                                                            COD（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCT" headeralign="center">
+                                                            温度（°C）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="XHCMLSS2" headeralign="center">
+                                                            MLSS（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCAD2" headeralign="center">
+                                                            氨氮（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCCOD2" headeralign="center">
+                                                            COD（mg/L）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="XHCT2" headeralign="center">
+                                                            温度（°C）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div header="DTRO" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="DTROCOD" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="DTROAD" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="DTROCOD2" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="DTROAD2" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="总排" headeralign="center">
+                                            <div property="columns">
+                                                <div field="ZPCOD" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="ZPAD" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="ZPZD" headeralign="center">
+                                                    总氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width:100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='飞灰处理生产'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_MonthReportBGH_dtlThird.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_MonthReportBGH_dtlThird.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_YX_MonthReportBGH_dtlThird-Export" class="btn-group"></div>
+                                <div id="SF_YX_MonthReportBGH_dtlThird.importxls"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/飞灰处理系统生产统计表.xlsx">导入模板下载</a>  
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_YX_MonthReportBGH_dtlThird" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="DeptName" headeralign="center">
+                                            站点
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="YHCLL" headeralign="center">
+                                            原灰处理量（t）
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                        <div header="螫合剂" headeralign="center">
+                                            <div property="columns">
+                                                <div field="THJuse" headeralign="center">
+                                                    使用量（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;height:500px;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="THJleft" headeralign="center">
+                                                    剩余量（t）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div field="WaterUse" headeralign="center">
+                                            用水量（t）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="ElectricUse" headeralign="center">
+                                            用电量（kwh）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="GHWYield" headeralign="center">
+                                            固化物产量（t）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="OutYield" headeralign="center">
+                                            外运量（t）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="MatYield" headeralign="center">
+                                            库存量（t）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="PassRate" headeralign="center">
+                                            产品合格率（%）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="100" />
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width:100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

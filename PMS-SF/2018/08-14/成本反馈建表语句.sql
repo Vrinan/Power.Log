@@ -1,0 +1,46 @@
+--建筑成本季度反馈
+CREATE TABLE SF_FK_EquipmentCostFeedback(
+	[Id] [uniqueidentifier] NOT NULL,
+	[Code] [nvarchar](200) NULL,
+	[Title] [nvarchar](200) NULL,
+	[UpdHumId] [uniqueidentifier] NULL,
+	[UpdHuman] [nvarchar](80) NULL,
+	[UpdDate] [datetime] NULL,
+	[RegDate] [datetime] NULL,
+	[RegHumName] [nvarchar](80) NULL,
+	[RegHumId] [uniqueidentifier] NULL,
+	[OwnProjName] [nvarchar](255) NULL,
+	[OwnProjId] [uniqueidentifier] NULL,
+	[EpsProjId] [uniqueidentifier] NULL,
+	[ApprHumId] [uniqueidentifier] NULL,
+	[ApprHumName] [nvarchar](80) NULL,
+	[ApprDate] [datetime] NULL,
+	[Status] [tinyint] NULL,
+	[Memo] [nvarchar](1000) NULL,
+	CostId uniqueidentifier null,
+	CostCode nvarchar(200) null,
+	CostName nvarchar(200) null,
+	EpsProjectId uniqueidentifier null,
+	EpsProjectCode nvarchar(200) null,
+	EpsProjectName nvarchar(200) null,
+	CostType nvarchar(100) null,--费用科目类型
+	SeasonNum nvarchar(200) null,
+)
+CREATE TABLE SF_FK_EquipmentCostFeedback_dtl(
+	[Id] [uniqueidentifier] NOT NULL,
+	[MasterId] [uniqueidentifier] NULL,
+	[ParentId] [uniqueidentifier] NULL,
+	[Code] [nvarchar](200) NULL,
+	[Name] [nvarchar](100) NULL,
+	[Specifications] [nvarchar](100) NULL,
+	[unit] [nvarchar](100) NULL,
+	[Quantity] [float] NULL,
+	[UnitPrice] [float] NULL,
+	[Price] [float] NULL,
+	ListId uniqueidentifier null,
+	[Memo] [nvarchar](500) NULL,
+	Sequ int null,
+	UpdDate datetime null,
+	SeasonReport  nvarchar(max) null
+) 
+

@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>资格预审
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="PS_Prequalification.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看项目信息</a>
+                        <a class="mini-button blue" id="PS_Prequalification.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_Prequalification.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="PS_Prequalification.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_Prequalification" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目机会
+                                        </td>
+                                        <td>
+                                            <input id="PS_Prequalification.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请项目机会..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_Prequalification.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_Prequalification.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            客户
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_Prequalification.ClientName" name="ClientName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_Prequalification.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_Prequalification.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='预审详情'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_Prequalification_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_Prequalification_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_Prequalification_Dtl" class="mini-treegrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+
+                                        <!--名称 Price-->
+                                        <div field="DocumentName" headeralign="center">
+                                            资料名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DeliveryDate" dateformat="yyyy-MM-dd" headeralign="center">
+                                            提交日期
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <!--其他信息-->
+                                        <div field="DeliveryWay" type="comboboxcolumn">
+                                            提交方式
+                                            <input property="editor" id="PS_Prequalification_Dtl.DeliveryWay" name="DeliveryWay" class="mini-combobox" />
+                                        </div>
+                                        <div field="ReviewResult" type="comboboxcolumn">
+                                            审查结果
+                                            <input property="editor" id="PS_Prequalification_Dtl.ReviewResult" name="ReviewResult" class="mini-combobox" />
+                                        </div>
+                                        <div field="Handler" headeralign="center">
+                                            经办人
+                                            <input property="editor" id="PS_Prequalification_Dtl.Handler" class="mini-buttonedit" name="Handler" textname="Handler" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <!--其他信息-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function ViewForm() {
+            var ProjectInfo_Guid = formconfig.config.joindata.currow["ProjectInfo_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_Prequalification.ProjectName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/029d6895-3186-4565-adc3-61919e3ab1ed/" + "/view/" + ProjectInfo_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>
+

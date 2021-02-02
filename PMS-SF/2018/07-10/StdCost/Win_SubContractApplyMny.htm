@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var StrEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                             <span>合同名称</span>
+                            <input id="ContractName" class="mini-textbox" shownullitem="true" width="120px" />
+                            <span>合同类型</span>
+                            <input id="ContractType" class="mini-combobox" shownullitem="true" width="120px" data='[{"id": "E","text": "设计合同"},
+							{"id": "C","text": "施工合同"},
+							{"id": "P","text": "采购合同"},
+							{"id": "S","text": "其他合同"}]' />
+                            <span>合同支付开始</span>
+                            <input id="txtStart" class="mini-datepicker" shownullitem="true" width="120px" />
+                            <span>合同支付结束</span>
+                            <input id="txtFinish" class="mini-datepicker" shownullitem="true" width="120px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <!-- 请款开始 -->
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width: 100%; height: 100%;" vertical="true">
+                            <div size="60%" showCollapseButton="true">
+                            <div id="maintabs2" class="mini-tabs" tabposition="top" tabalign="left" style="height: 100%;">
+                                <div title="支付申请">
+                                    <div class="mini-fit">
+                                        <div id="ContractPayment" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="name" field="Code" width="160">编号</div>
+                                                <div field="Title" width="80">标题</div>
+                                                <div field="SubContractName" width="60">合同名称</div>
+                                                <div field="SubContractCode" width="80">合同编号</div>                                               
+                                                <div field="ApplyAmount" width="80">申请金额</div>
+                                                <div field="SubContractType" width="80">合同类型</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 请款结束 -->
+                                <!-- 到款开始 -->
+                                <div title="付款记录">
+                                    <div class="mini-fit">
+                                        <div id="ContractPayment1" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="name" field="Code" width="160">编号</div>
+                                                <div field="Title" width="80">标题</div>
+                                                <div field="SubContractName" width="60">合同名称</div>
+                                                <div field="SubContractCode" width="60">合同编号</div>
+                                                <div field="PaymentAmount" width="80">付款金额</div>
+                                                <div field="SubContractType" width="80">合同类型</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 到款开始 -->
+                            </div>
+                                </div>
+                            <div showcollapsebutton="true">
+                                <div id="charthere" style="width: 100%; height: 100%">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        $(function () {
+            LoadData();
+        });
+
+        //双击打开表单开始
+        mini.get("ContractPayment").on("rowdblclick", function (e) {
+            var row = mini.get("ContractPayment").getSelected();
+            var Client_Guid = row.Id;
+            var typec = row.SubContractType;
+            if (typec == "E")
+                var url = "/Form/ValidForm/36139912-2361-428e-af0c-38f2fcff2492/" + "/view/" + Client_Guid;
+            if (typec == "P")
+                var url = "/Form/ValidForm/37802d42-62c5-4374-af62-676656453965/" + "/view/" + Client_Guid;
+            if (typec == "C")
+                var url = "/Form/ValidForm/0cb9ff34-f056-4a0b-8e07-2ab3d193445c/" + "/view/" + Client_Guid;
+            if (typec == "S")
+                var url = "/Form/ValidForm/b2fb3336-9be3-4d6e-9d10-8062813dc0bd/" + "/view/" + Client_Guid;
+            if (typec == "")
+                return;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        });
+        mini.get("ContractPayment1").on("rowdblclick", function (e) {
+            var row = mini.get("ContractPayment1").getSelected();
+            var Client_Guid = row["Id"];
+            var typec = row["SubContractType"];
+            if (typec == "E")
+                var url = "/Form/ValidForm/0bc7d119-6a0d-418e-8bb4-273642584ba8/" + "/view/" + Client_Guid;
+            if (typec == "P")
+                var url = "/Form/ValidForm/b9bd19f5-2536-42c3-997f-55bbe4082fa7/" + "/view/" + Client_Guid;
+            if (typec == "C")
+                var url = "/Form/ValidForm/25c96fa9-b6a8-4485-b006-a026caa46639/" + "/view/" + Client_Guid;
+            if (typec == "S")
+                var url = "/Form/ValidForm/c43a02b8-4ba0-4d38-bde9-deb0e13b9e48/" + "/view/" + Client_Guid;
+            if (typec == "")
+                return;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        });
+        //双击打开表单开始 结束
+        //加载数据开始
+        function LoadData() {
+            var startDate = "";
+            var endDate = "";
+            var ContractName = mini.get("ContractName").getFormValue();
+            var ContractType = mini.get("ContractType").getFormValue();
+            if (ContractType == "")
+                ContractType = "";
+            if (ContractName == "")
+                ContractName = "";
+            startDate = new Date().getFullYear() + "-1-1";
+            endDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+            if (mini.get("txtStart").getValue() == "" || mini.get("txtFinish").getValue() == "") {
+                mini.get("txtStart").setValue(startDate);
+                mini.get("txtFinish").setValue(endDate);
+            }
+            debugger;
+            $.ajax({
+                url: "/Cost/SubContractApplyMny",
+                data: {
+                    Nd: mini.get("txtStart").getFormValue() == "" ? startDate : mini.get("txtStart").getFormValue(),
+                    Nd1: mini.get("txtFinish").getFormValue() == "" ? endDate : mini.get("txtFinish").getFormValue(),  
+                    Nd2: "" ? StrEpsProjId : StrEpsProjId,
+                    Nd3: ContractName,
+                    Nd4: ContractType,
+                },
+                type: "POST",
+                success: function (text) {
+                    
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("ContractPayment");
+                        grid.setData(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+
+            $.ajax({
+                url: "/Cost/SubContractPayment",
+                data: {
+                    Nd: mini.get("txtStart").getFormValue() == "" ? startDate : mini.get("txtStart").getFormValue(),
+                    Nd1: mini.get("txtFinish").getFormValue() == "" ? endDate : mini.get("txtFinish").getFormValue(),                    
+                    Nd2: "" ? StrEpsProjId : StrEpsProjId,
+                    Nd3: ContractName,
+                    Nd4: ContractType,
+                },
+                type: "POST",
+                success: function (text) {
+                    //debugger;
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("ContractPayment1");
+                        grid.setData(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+            //加载报表
+            LoadChart('');
+        }
+        //加载数据结束
+        //加载图表
+        function LoadChart(conId) {
+            debugger;
+
+            $.ajax({
+                url: "/Cost/SubContractApplyMnyChar",
+                data: {
+                    Nd: mini.get("txtStart").getFormValue(),
+                    Nd1: mini.get("txtFinish").getFormValue(),
+                    Nd2: StrEpsProjId,
+                    Nd3: mini.get("ContractName").getFormValue(),
+                    Nd4: mini.get("ContractType").getFormValue(),
+                },
+                type: "POST",
+                success: function (text) {
+                    var result = text;
+                    var s = result.split("|");
+                    var sname = s[0];
+                    var sPaymentAmount = s[1];
+                    var samount = s[2];
+                    var sPaymentAmount1 = s[3];
+                    var samount1 = s[4];
+                    var name = {};
+                    var PaymentAmount = {};
+                    var amount = {};
+                    var PaymentAmount1 = {};
+                    var amount1 = {};
+                    name = sname.split(",");
+                    PaymentAmount = sPaymentAmount.split(",");
+                    amount = samount.split(",");
+                    PaymentAmount1 = sPaymentAmount1.split(",");
+                    amount1 = samount1.split(",");
+
+
+                    var opt = {};
+                    opt.title = { text: "分包合同付款" };
+                    opt.calculable = true;
+                    opt.tooltip = { trigger: 'axis' };
+                    opt.legend = { data: ['当月应付', '累计应付', '当月实付', '累计实付'] },
+                    opt.toolbox = { show: false };
+                    //opt.xAxis = [xaxis];
+                    opt.xAxis = [{ type: 'category', data: [] }];
+                    opt.yAxis = [{ type: 'value', axisLabel: { formatter: '{value}' } }, { type: 'value', axisLabel: { formatter: '{value}' } }, { type: 'value', axisLabel: { formatter: '{value}' } }, { type: 'value', axisLabel: { formatter: '{value}' } }];
+                    opt.series = [{ name: '当月应付', type: 'bar', data: [] }, { name: '累计应付', type: 'line', yAxisIndex: 1, data: [] }, { name: '当月实付', type: 'bar', data: [] }, { name: '累计实付', type: 'line', yAxisIndex: 1, data: [] }];
+
+                    for (var i = name.length - 1; i > -1 ; i--) {
+                        opt.xAxis[0].data.push(name[i]);
+                        opt.series[0].data.push(PaymentAmount[i]);
+                        opt.series[1].data.push(amount[i])
+                        opt.series[2].data.push(PaymentAmount1[i]);
+                        opt.series[3].data.push(amount1[i])
+                    }
+
+                    InitEChart("charthere", opt);
+
+                }
+            });
+
+        }
+
+
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

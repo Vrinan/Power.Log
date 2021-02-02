@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjName = "$!CurrentSession.EpsProjName"
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目预算编制
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                     <a class="mini-button blue" id="PS_ContractBudget.Up" onclick="Up()">
+                        <i class="fa fa-upload"></i>升版</a><!--保存-->
+                    <a class="mini-button blue" id="PS_ContractBudget.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_ContractBudget.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group">
+                    </div>-->
+                    <a class="mini-button blue" id="PS_ContractBudget.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_ContractBudget" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.OwnProjName" name="OwnProjName" class="mini-textbox"
+                                                readonly="readonly" />
+                                        </td>                                      
+                                        <td>
+                                            <label for="PS_ContractBudget.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            版本号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.VersionCode" name="VersionCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractBudget.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            对应计划
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractBudget.Plan_Guid" name="Plan_Guid" class="mini-textbox" style="display: none" />
+                                            <input id="PS_ContractBudget.Plan_Name" name="Plan_Name" textname="Plan_Name" class="mini-buttonedit"
+                                                emptytext="请选择计划..." onbuttonclick="AddPlan()" required="true"
+                                                allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+									 <tr>
+                                        <td>
+                                            审批人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.ApprHumName" name="ApprHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            批准日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractBudget.ApprDate" name="ApprDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='项目预算编制-WBS'>
+                            <!--数据明细-->
+                            <!-- <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="A1" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="A2" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>-->
+                            <div class="mini-fit">
+                                <div id="PS_ContractBudget_WBS" class="mini-treegrid" style="height: 100%;" resultastree="false"
+                                    idfield="Wbs_Guid" parentfield="Parent_Wbs_Guid" showtreeicon="true" treecolumn="WbsCode"
+                                    allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">
+                                        </div>
+                                        <div field="WbsCode" name="WbsCode" headeralign="center" readonly="true">
+                                            WBS编码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--科目-->
+                                        <div field="WbsName" headeralign="center" readonly="true">
+                                            WBS名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="WbsWeight" headeralign="center">
+                                            权重
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='项目预算编制-CBS' visible="false">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_ContractBudget_CBS.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    新增</a> <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ContractBudget_CBS.Delete"
+                                        onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractBudget_CBS" class="mini-treegrid" style="height: 100%;" showsummaryrow="true"
+                                    idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">
+                                        </div>
+                                        <div type="comboboxcolumn" field="NodeType" headeralign="center">
+                                            节点类型
+                                            <input id="PS_ContractBudget_CBS.NodeType" property="editor" class="mini-combobox"
+                                                style="width: 100%;" />
+                                        </div>
+                                        <div field="CbsCode" headeralign="center">
+                                            科目编码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="CbsName" headeralign="center">
+                                            科目名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="EstimatePrice" headeralign="center" summarytype="sum">
+                                            预算
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="BudgetPrice" headeralign="center" summarytype="sum">
+                                            估算
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="ControlPrice" headeralign="center" summarytype="sum">
+                                            控制
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        //PowerForm.EventAfterFormLoad = function () {
+        //    if (FormState == "add") {
+        //        mini.get("PS_ContractBudget.OwnProjName").setValue(strEpsProjName);
+        //    }
+        //}
+        //数据时触发
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            //动态增加列
+            debugger;
+            if (e.sender.id == "PS_ContractBudget_WBS") {
+                var firstRow = {};
+                if (data && data.length > 0) {
+                    firstRow = data[0];
+                }
+                var cbsTitle = firstRow.CbsTitle;
+                var cols = [];
+                if (!cbsTitle || cbsTitle == "") {
+                    cbsTitle = [];
+                    $.ajax({
+                        url: "/Plan/GetCBSSheetHeader",
+                        data: {
+                            keyword: KeyWord,
+                            keywordFilter: "E",
+                            strEpsProjId: strEpsProjId
+                        },
+                        async: false,
+                        dataType: "JSON",
+                        success: function (headerData) {
+                            cbsTitle = headerData.list;
+                        }
+                    });
+                }
+                else
+                    cbsTitle = $.parseJSON(cbsTitle);
+                var columns = e.sender.getColumns();
+                $.each(cbsTitle, function () {
+                    var thisCbs = this;
+                    var filterCols = $.grep(columns, function (item) {
+                        return item.field == thisCbs.Id;
+                    });
+                    if (filterCols.length == 0)
+                        columns.push({
+                            header: this.CbsTitle,
+                            headerAlign: "center",
+                            align: "center",
+                            field: this.Id,
+                            width: 100,
+                            editor: {
+                                type: "spinner",
+                                maxValue: 9999999999
+                            }
+                        });
+                    cols.push(this.Id);
+                });
+                e.sender.setColumns(columns);
+                //处理加载时 数据
+                $.each(data, function () {
+                    var value = this.CbsValue;
+                    if (typeof (value) == "string" && value[0] == "{") {
+                        value = $.parseJSON(value);
+                        for (var f in value) {
+                            if (typeof (value[f]) != "function") {
+                                this[f] = value[f];
+                            }
+                        }
+                    }
+                });
+                //编辑完后,将值更新到行的特定列上去
+                var gridObj = e.sender;
+                e.sender.on("cellendedit", function (e) {
+                    debugger;
+                    if ($.inArray(e.field, cols) > -1) {
+                        var _value = e.record.CbsValue;
+                        if (_value == null)
+                            _value = 0;
+                        if (_value[0] != "{") {
+                            //debugger;
+                            _value = "{}";
+                        }
+                        _value = $.parseJSON(_value);
+                        _value[e.field] = e.value;
+                        var upddate = {};
+                        upddate.CbsValue = mini.encode(_value);
+                        upddate.CbsTitle = mini.encode(cbsTitle);
+                        gridObj.updateRow(e.record, upddate);
+                    }
+                })
+            }
+            return data;
+        }
+        //升版
+        function Up() {
+
+            Power.ui.confirm("确定升版？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("升版中。。")
+                    var guid = formconfig.config.joindata.currow["Id"];
+                    var exec = {};  //对象
+                    exec.KeyWord = "PS_ContractBudget";   //bo的KeyWord
+                    exec.MethodName = "Up"; //方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.Id = guid;
+                    var params = exec.MethodParams;
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            debugger;
+                            var tmp = mini.decode(text);
+                            if (tmp.success) {
+                                Power.ui.loading.close();
+                                var a = { id: "PS_ContractBudget.CloseForm" };
+                                PowerForm.OnBtnCloseForm(a);
+                                var result = tmp.data.value;
+                                debugger;
+                                if (result != "") {
+                                    var url = "/Form/ValidForm/da14ce0a-4fbc-468a-9058-d11b098add9b/edit/" + result;
+                                    mini.open({
+                                        url: url,
+                                        width: 900,
+                                        height: 550
+                                    });
+                                }
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.alert(tmp.message);
+                            }
+                               
+                        }
+                    });
+                }
+            });
+        }
+
+        //选择计划
+        function AddPlan() {
+            var url;
+            url = "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardProjectPlan.htm&multi=0&plantype=E";
+            mini.open({
+                url: url,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    debugger;
+                    data = mini.clone(data);
+                    var t = mini.get("PS_ContractBudget.Plan_Guid");
+                    t.setValue(data[0].proj_plan_guid);
+                    var t2 = mini.get("PS_ContractBudget.Plan_Name");
+                    t2.setValue(data[0].plan_name);
+                    t2.setText(data[0].plan_name);
+                }
+            })
+        }
+    </script>
+</body>
+</html>

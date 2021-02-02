@@ -1,0 +1,891 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同变更
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_SubContract.Statistics" onclick="Statistics()"><i class="fa fa-bar-chart-o"></i>统计</a>
+                    <a class="mini-button blue" id="PS_SubContract.share" onclick="Share()"><i class="fa fa-share-alt"></i>分摊</a>
+                    <a class="mini-button blue" id="PS_SubContract.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_SubContract.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_SubContract.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_SubContract" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            变更编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.SubContractCode" name="SubContractCode" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_SubContract.Status">变更状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.SubContractName" name="SubContractName" class="mini-textbox" required="true" requirederrortext="合同名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+
+                                            <input id="PS_SubContract.AddSubContractId" name="AddSubContractId" class="mini-textbox" visible="false" />
+                                            <input id="PS_SubContract.AddSubContractCode" name="AddSubContractCode" textname="AddSubContractCode"
+                                                   class="mini-buttonedit" emptytext="请选择采购合同..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                   allowinput="false" required="true" />
+                                        </td>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.AddSubContractName" name="AddSubContractName" class="mini-textbox" required="true" requirederrortext="合同名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.SubContractAmount" name="SubContractAmount" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            变更后金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.FinalSubContractAmount" name="FinalSubContractAmount" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更合同金额
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.ChangeAmount" name="ChangeAmount" class="mini-textbox" readonly="readonly" />
+                                            <input id="PS_SubContract.deductionAmount" visible="false" name="deductionAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.Remarks" name="Remarks" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContract.OrderCode">询价单/竞价通知书编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.OrderCode" name="OrderCode" textname="OrderCode" class="mini-buttonedit" class="mini-buttonedit"
+                                                   emptytext="请选择询价单/竞价通知书..." onbuttonclick="PowerForm.OnBtnWizard(this,true)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            询价单/竞价通知书名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.OrderName" name="OrderName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContract.PartyA">甲方</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PartyA" name="PartyA" textname="PartyA" class="mini-buttonedit"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                        <td><label for="PS_SubContract.XLX_SubType">合同子类型</td>
+                                        <td><input id="PS_SubContract.XLX_SubType" name="XLX_SubType" class="mini-combobox" required="true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContract.PartyB">供应商</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.PartyB" name="PartyB" textname="PartyB" class="mini-buttonedit"
+                                                   emptytext="请选择供应商..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContract.CurrencyType">币种</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.CurrencyType" name="CurrencyType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            项目性质
+                                        </td>
+                                        <td><input id="PS_SubContract.ProNature" name="ProNature" class="mini-combobox" required="true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContract.PartyAPerson">甲方经办人</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PartyAPerson" name="PartyAPerson" textname="PartyAPerson" class="mini-buttonedit"
+                                                   emptytext="请选择签署人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            乙方经办人
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PartyBPerson" name="PartyBPerson" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+                                            <label for="PS_SubContract.SubContractFrom">合同来源</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.SubContractFrom" name="SubContractFrom" class="mini-combobox" />
+                                        </td>-->
+                                        <td>
+                                            支付方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PaymentWay" name="PaymentWay" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            签订日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.SignDate" name="SignDate" class="mini-datepicker" allowinput="false" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            税率%
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.TaxRate" name="TaxRate" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="100" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            税额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.TaxAmount" name="TaxAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            控制比例%
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.ControlRatio" name="ControlRatio" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="100" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            控制金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.ControlAmount" name="ControlAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            采买方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PurchaseWay" name="PurchaseWay" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            运输方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.DeliveryWay" name="DeliveryWay" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            交货日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.DeliveryDate" name="DeliveryDate" class="mini-datepicker" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            交货地点
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.DeliveryPlace" name="DeliveryPlace" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='物料清单'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="PS_SubContract_MatItem.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <!--<div id="btnUpload">  </div>-->
+                                <!--<div id="View_XLX_PUR_InquirySupplie-Export" class="btn-group"></div>-->
+                                <!--<div id="PS_SubContract_MatItem.importxls" ><i class="fa fa-sign-out"></i>导入物料明细</div>
+                                <a class="mini-button blue" id="PS_SubContract_MatItem.Export" onclick="PowerForm.OnExportDataToXls('PS_SubContract_MatItem', '采购合同物料明细', '物资编码')"><i class="fa fa-sign-out"></i>导出</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContract_MatItem.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContract_MatItem" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" multiselect="true" showpager="false" virtualScroll="true" ondrawcell="MatDrawcell" allowcelledit="true" allowcellselect="true" oncellbeginedit="PS_SubContract_MatItem_BeginEdit" oncellendedit="PS_SubContract_MatItem_EndEdit" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="Checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="MatBs_Guid" headeralign="center" allowsort="true" width="0">
+                                            物资分类主键
+                                        </div>
+                                        <div field="MatBsName" headeralign="center" allowsort="true" width="0">
+                                            物资分类
+                                        </div>
+                                        <div field="Mat_Guid" headeralign="center" allowsort="true" width="0">
+                                            物资主键
+                                        </div>
+                                        <div field="Cbs_Guid" headeralign="center" allowsort="true" width="0">
+                                            费用科目主键
+                                        </div>
+                                        <div field="CbsName" headeralign="center" allowsort="true" width="0">
+                                            费用科目名称
+                                        </div>
+                                        <div field="XLX_Inquiry_MatList_Id" headeralign="center" allowsort="true" width="0">
+                                            采购审批主键
+                                        </div>
+                                        <div field="XLX_Request_List_Id" headeralign="center" allowsort="true" width="0">
+                                            请购主键
+                                        </div>
+                                        <div field="MatCode" headeralign="center" allowsort="true">
+                                            物资编码
+
+                                        </div>
+                                        <div field="Id" headeralign="center" allowsort="true" width="0">
+                                            主键
+                                        </div>
+                                        <div field="MatName" headeralign="center" allowsort="true">
+                                            物资名称
+
+                                        </div>
+                                        <div field="MatModel" headeralign="center" allowsort="true">
+                                            物资描述
+
+                                        </div>
+                                        <div field="Specifi" width="160" headerAlign="center" allowSort="true">
+                                            规格型号
+
+                                        </div>
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">
+                                            制造标准
+
+                                        </div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">
+                                            材质
+
+                                        </div>
+                                        <div field="Pattern" width="160" headerAlign="center" allowSort="true">
+                                            型式
+
+                                        </div>
+                                        <div field="MatSpec" headeralign="center" allowsort="true">
+                                            装置
+
+                                        </div>
+                                        <div field="TagNumber" headeralign="center" align="center" allowsort="true">
+                                            位号
+
+                                        </div>
+                                        <div field="MatUnit" headeralign="center" align="center" allowsort="true">
+                                            单位
+
+                                        </div>
+                                        <div field="MatPrice" headeralign="center" align="center" allowsort="true">
+                                            单价
+                                        </div>
+                                        <div field="MatAmount" headeralign="center" align="center" summarytype="sum" allowsort="true">
+                                            合同数量
+                                        </div>
+                                        <div field="ChangeNumber" headeralign="center" align="center" summarytype="sum" allowsort="true">
+                                            变更后数量
+                                            <input id="PS_CM_SubContract_MatItem.ChangeNumber" property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="MatMoney" headeralign="center" summarytype="sum" align="center" allowsort="true">
+                                            金额
+
+                                        </div>
+                                        <div field="ArrivalNum" headeralign="center" align="center" summarytype="sum" allowsort="true">
+                                            累计到货数量
+                                        </div>
+                                        <div field="RequireDate" headeralign="center" dateformat="yyyy-MM-dd" align="center" allowsort="true">
+                                            要求到货日期
+                                            <input property="editor" class="mini-datepicker">
+                                        </div>
+                                        <div field="IsVoid" headeralign="center" type="comboboxcolumn">
+                                            是否作废
+                                            <input id="PS_SubContract_MatItem.IsVoid" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='支付节点'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContract_PayNodes.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContract_PayNodes.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContract_PayNodes" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" oncellendedit="cellendedit1(this)" allowcellselect="true" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="PayType" type="comboboxcolumn" headeralign="center" align="center" width="100" allowsort="true">付款类型<input property="editor" id="PS_SubContract_PayNodes.PayType" name="PayType" class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="PayPercent" headeralign="center" align="center" summarytype="sum" width="80" allowsort="true">占合同百分比<input property="editor" class="mini-spinner" minvalue="0" maxvalue="100" style="width: 100%;" /></div>
+                                        <div field="PayAmount" headeralign="center" align="center" summarytype="sum" width="80" allowsort="true">金额<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" /></div>
+                                        <div field="PayItem" headeralign="center">付款说明<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='相关信息'>
+                            <div class="portlet box gray" style="height: 100%">
+                                <div class="mini-tabs" id="Div1" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                                    <div title="请款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_SubContractApplyMoney" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ApplyAmount" name="ApplyAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="申请金额" align="left">申请金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="开票记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_SubContractInvoice" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="InvoiceAmount" name="InvoiceAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="发票金额" align="left">发票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="InvoiceDate" name="InvoiceDate" guideid="" datatype="" allowsort="true" currencyunit="" header="开票日期" dateformat="yyyy-MM-dd" align="left">开票日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="付款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_SubContractPayment" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="PaymentAmount" name="PaymentAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="付款金额" align="left">付款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="PaymentDate" name="PaymentDate" guideid="" datatype="" allowsort="true" currencyunit="" header="付款日期" dateformat="yyyy-MM-dd" align="left">付款日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="变更记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_SubContractChange" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                 allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="请购单">
+                                        <div class="mini-fit">
+                                            <div id="XLX_PUR_Request" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                 allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="RequestCode" name="RequestCode" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--
+                                        <div title="扣款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractCharged" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ChargedAmount" name="ChargedAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="扣款金额" align="left">申请索赔金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("PS_SubContractApplyMoney").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "PS_SubContractApplyMoney.ViewForm" }, "37802D42-62C5-4374-AF62-676656453965");
+            });
+            mini.get("PS_SubContractInvoice").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "PS_SubContractInvoice.ViewForm" }, "dd4a5341-fd4d-4df9-873a-d3237df8c6cb");
+            });
+            mini.get("PS_SubContractPayment").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "PS_SubContractPayment.ViewForm" }, "B9BD19F5-2536-42C3-997F-55BBE4082FA7");
+            });
+            mini.get("PS_SubContractChange").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "PS_SubContractChange.ViewForm" }, "075d8678-9e8d-4401-9a36-03ca794cdd26");
+            });
+            mini.get("XLX_PUR_Request").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "XLX_PUR_Request.ViewForm" }, "52599d7a-5f45-4ff1-8031-f90b365c6b37");
+            });
+            //MatDrawcell();
+            /*
+			mini.get("PS_ContractCharged").on("rowdblclick", function () {
+				PowerForm.OnBtnViewForm({ id: "PS_ContractCharged.ViewForm" }, "ead1ff97-8127-448a-8c49-c946673303b1");
+			});
+			*/
+            //FileUp("PS_SubContract_MatItem", CreateGUID())//此处修改关键词
+        });
+        //function FileUp(keyword, keyvalue) {
+        //    mini.parse();
+
+        //    if (keyword == "")
+        //        keyword = "PS_SubContract_MatItem";//此处修改关键词
+
+        //    if (keyvalue == undefined || keyvalue == "")
+        //        keyvalue = "00000000-0000-0000-0000-000000000000";
+        //    var grid = mini.get("PS_SubContract_MatItem");//此处修改关键词
+        //    $("#btnUpload").html("");
+        //    $("#btnUpload").uploadify({
+        //        "height": 30,
+        //        width: "56",
+        //        fileSizeLimit: 0,
+        //        auto: true,
+        //        blocksize: 2048 * 500, //分块大小
+        //        "buttonText": "<i class=\"fa fa-retweet\"></i>导入报价",
+        //        "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+        //        "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+        //        formData: {
+        //            KeyWord: keyword,
+        //            KeyValue: keyvalue
+        //        },
+        //        onUploadStart: function () {
+        //            if (formconfig.FormState == "add") {
+        //                Power.ui.alert("请先保存主表");
+        //                return;//新增时，不能导入
+        //            }
+        //            grid.loading("上传中，请稍后.....");
+        //        },
+        //        onUploadComplete: function () {
+        //            grid.loading("导入中,请稍后.....");
+        //            var exec = {};  //对象
+        //            exec.KeyWord = "PS_SubContract_MatItem";   //bo的KeyWord//此处修改关键词
+        //            exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+        //            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+        //            exec.MethodParams = {}; //方法参数
+        //            var params = exec.MethodParams;
+        //            params.KeyWord = keyword;
+        //            params.KeyValue = keyvalue;
+        //            params.Id = formconfig.KeyValue;
+
+        //            var txt = mini.encode(exec); //对象转换成字符串
+
+        //            $.ajax({
+        //                url: "/API/Exec",
+        //                type: "POST",
+        //                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+        //                cache: false,
+        //                success: function (text) {
+        //                    var tmp = mini.decode(text);
+        //                    if (!tmp.success)
+        //                        Power.ui.error(tmp.message);
+        //                    else if (tmp.data.value != "")
+        //                        Power.ui.alert(tmp.data.value);
+        //                    grid.reload();
+        //                }
+        //            });
+        //        },
+        //        onDialogClose: function () {
+        //        }
+        //    });
+        //    $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+
+        //}
+        function MatDrawcell(e) {
+            if (e.field == "IsVoid") {
+                if (parseFloat(e.row.IsVoid) == 1) {
+                    e.rowStyle = "background:#66ccff";
+                }
+            }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "XLX_PUR_Request" && formconfig.FormState != "add") {
+                e.params.swhere += " or Id in(select x2.FK from XLX_PUR_Request_List x2 where  x2.Id in(select x1.XLX_Request_List_Id from PS_CM_SubContract_MatItem x1 where x1.Masterid='" + formconfig.KeyValue + "' ))";
+            }
+        }
+        var oldOrder_Guid = "";
+        PowerForm.EventAfterFormLoad = function (e) {
+            oldOrder_Guid = formconfig.config.joindata.currow.Order_Guid;
+            mini.get("PS_SubContract.PartyA").setValue("福建永荣科技有限公司");
+        }
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (formconfig.config.joindata.currow.SubContractType != "A") {
+                if (btnid == "PS_SubContract.OrderCode") {
+                    //如果有修改的询价单/中标通知书的话，删除明细表
+                    if (oldOrder_Guid != currow.Order_Guid) {
+                        oldOrder_Guid = currow.Order_Guid;
+                        var grid = mini.get("PS_SubContract_MatItem");
+                        if (data.length > 0)
+                            grid.removeRows(grid.getData());
+                    }
+                    //选择分包之后，需要在后台把分包的明细取到，然后附加到PS_SubContract_MatItem中
+                    //var p = { KeyWord: "XLX_PUR_Order_List", index: 0, size: 0, sort: "" };
+                    //var swhere = "  FK='" + currow.Order_Guid + "'";
+                    //p.swhere = swhere;
+                    //FormFuns.GridPageLoad(p, function (o) {
+                    //    if (o.success) {
+                    //        var data = mini.decode(o.data.value);
+                    //        var grid = mini.get("PS_SubContract_MatItem");
+                    //        if (data.length > 0)
+                    //            grid.removeRows(grid.getData());
+
+                    //        var sum = new Number(0);
+                    //        for (var i = 0; i < data.length; i++) {
+                    //            var d = data[i];
+
+                    //            var row = PowerForm.OnBtnAdd({ id: "PS_SubContract_MatItem.Add" });
+                    //            if (row == false)
+                    //                return;
+                    //            debugger;
+                    //            row.MatBs_Guid = d.MatBs_Guid;
+                    //            row.MatBsName = d.MatBS_Name;
+                    //            row.Mat_Guid = d.MatId;
+                    //            row.MatCode = d.MatCode;
+                    //            //row.MatName = d.MatName;
+                    //            row.MatSpec = d.MatSpec;
+                    //            row.Standard = d.Standard;
+                    //            row.Specifi = d.Specifi;
+                    //            row.Texture = d.Texture;
+                    //            row.Pattern = d.Pattern;
+                    //            row.MatModel = d.Model;
+                    //            row.MatDescription = "";
+                    //            row.MatUnit = d.MatUnit;
+                    //            row.MatPrice = d.MatPrice;
+                    //            row.MatAmount = d.Qty_Order;
+                    //            row.MatMoney = d.MatMoney;
+                    //            row.ArrivalNum = 0;
+                    //            row.RequireDate = "";
+                    //            row.Cbs_Guid = d.Cbs_Guid;
+                    //            row.CbsCode = d.CBS_Code;
+                    //            row.CbsName = d.CBS_Name;
+                    //            row.TagNumber = d.TagNumber;
+                    //            row.XLX_Request_List_Id = d.InquiryMatList_Id;
+                    //            grid.updateRow(row);
+                    //            sum = sum + parseFloat(row.MatMoney);
+                    //        }
+
+                    //        mini.get("PS_SubContract.SubContractAmount").setValue(sum);
+                    //    }
+                    //})
+                }
+            }
+        }
+        function PS_SubContract_MatItem_BeginEdit(e) {
+            if (e.field == "MatMoney") {
+                e.cancel = true;
+            }
+        };
+        function cellendedit1(e) {
+            var grid = mini.get("PS_SubContract");
+            var SubContractAmount1 = mini.get("PS_SubContract.SubContractAmount").getValue();
+            var PayAmount1 = 0;
+            e.findRow(function (row) {
+                //计算比例金额
+                if (row.PayPercent != '' && SubContractAmount1 != undefined && row.PayPercent != undefined) {
+                    PayAmount1 = accMul((parseFloat(row.PayPercent) * SubContractAmount1), 0.01);
+                    e.updateRow(row, {
+                        PayAmount: PayAmount1
+                    });
+                }
+            });
+        }
+        function accMul(arg1, arg2) {
+            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+            try { m += s1.split(".")[1].length } catch (e) { }
+            try { m += s2.split(".")[1].length } catch (e) { }
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+        }
+        //给Number类型增加一个mul方法，调用起来更加方便。
+        Number.prototype.mul = function (arg) {
+            return accMul(arg, this);
+        }
+        function PS_SubContract_MatItem_EndEdit(e) {
+            if (e.field == "MatPrice" || e.field == "ChangeNumber") {//当这2个字段编辑结束后，触发以下事件
+                var record = e.record;//当前行的数据
+                var sender = e.sender;//当前子表对象
+                var Price = record.MatPrice == null ? 0 : parseFloat(record.MatPrice);//单价
+                var Amount = record.MatAmount == null ? 0 : parseFloat(record.MatAmount);//数量
+                var arrivalnumber = record.ArrivalNum == null ? 0 : parseFloat(record.ArrivalNum);//累计到货数量
+                var changenumber = record.ChangeNumber == null ? 0 : parseFloat(record.ChangeNumber);//变更后数量
+                var MatMoney = Price * (changenumber - Amount);
+                sender.updateRow(record, { MatMoney: MatMoney });//修改sender对象的record行的Money列
+                if (changenumber > Amount || changenumber < arrivalnumber) {
+                    Power.ui.warning("变更后数量应小于等于合同数量，大于等于到货数量");
+                    sender.updateRow(record, { ChangeNumber: 0, MatMoney: 0 });
+                }
+
+            }
+            var grid = mini.get("PS_SubContract_MatItem");
+            var sum = new Number(0);
+            var row = grid.findRow(function (row) {
+                sum = sum + parseFloat(row.MatMoney);
+            });
+            mini.get("PS_SubContract.ChangeAmount").setValue(sum);
+
+            var contractAmount = mini.get("PS_SubContract.SubContractAmount").getValue();
+            var deductionAmount = mini.get("PS_SubContract.deductionAmount").getValue();
+            mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(sum) + parseFloat(contractAmount));
+            mini.get("PS_SubContract.ChangeAmount").setValue(parseFloat(sum));
+
+        }
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var gd = mini.get("PS_SubContract_MatItem");
+            var r = gd.data.length;
+            if (r == 0) {
+                mini.get("PS_SubContract.ChangeAmount").setValue("0");
+            }
+            var contractAmount = mini.get("PS_SubContract.SubContractAmount").getValue();
+            var deductionAmount = mini.get("PS_SubContract.deductionAmount").getValue();
+            if (deductionAmount == null) {
+                deductionAmount = 0;
+            }
+            var changeAmount = mini.get("PS_SubContract.ChangeAmount").getValue();
+            mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(contractAmount) + parseFloat(changeAmount) - parseFloat(deductionAmount));
+            //if (parseFloat(deductionAmount) != '' || parseFloat(deductionAmount) != null || parseFloat(deductionAmount) != NaN) {
+            //    mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(contractAmount) + parseFloat(changeAmount) - parseFloat(deductionAmount));
+            //}
+            //else {
+            //    deductionAmount = mini.get("PS_SubContract.deductionAmount").setValue(0);
+            //    mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(contractAmount) + parseFloat(changeAmount) - parseFloat(deductionAmount));
+            //}
+
+            var sum = 0;
+            var grid = mini.get("PS_SubContract_PayNodes");
+            var row = grid.findRow(function (row) {
+                if (row.PayPercent != "") {
+                    sum += parseFloat(row.PayPercent);
+                }
+                if (sum > 100) {
+                    Power.ui.warning("占合同百分比不能超过100！");
+                    row.PayPercent = mini.get("PS_SubContract_PayNodes.PayPercent").setValue(0);
+                    mini.get("PS_SubContract.Save").disable();
+                }
+            });
+            /*var grid = mini.get("PS_SubContract_MatItem");
+			var sum = new Number(0);
+			var row = grid.findRow(function (row) {
+				sum = sum + parseInt(row.MatMoney);
+			});
+			mini.get("PS_SubContract.SubContractAmount").setValue(sum);*/
+            var grid = mini.get("PS_SubContract");
+            //计算变更后金额
+            //var ContractAmount = mini.get("PS_SubContract.SubContractAmount").value;
+            //var deductionAmount = mini.get("PS_SubContract.deductionAmount").getValue();
+            //mini.get("PS_SubContract.ChangeAmount").setValue(parseFloat(deductionAmount));
+            //mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(ContractAmount) - parseFloat(deductionAmount));
+
+            //计算变更后金额
+            //var ContractAmount = mini.get("PS_SubContract.SubContractAmount").value;
+            //var ChangeAmount = formconfig.config.joindata.currow.ChangeAmount || 0;
+            //mini.get("PS_SubContract.FinalSubContractAmount").setValue(parseFloat(ContractAmount) + parseFloat(ChangeAmount));
+            //计算税额
+            var mons = mini.get("PS_SubContract.SubContractAmount").getValue();
+            var TaxRate = mini.get("PS_SubContract.TaxRate").getValue()
+            var mon = mons * 0.01 * TaxRate;
+            mini.get("PS_SubContract.TaxAmount").setValue(mon);
+            var final = mini.get("PS_SubContract.FinalSubContractAmount").getValue();
+            var ControlRatio = mini.get("PS_SubContract.ControlRatio").getValue();
+            var sun = final * 0.01 * ControlRatio;
+            mini.get("PS_SubContract.ControlAmount").setValue(sun);
+        }
+        function Share() {
+            var ShareAmount = mini.get("PS_SubContract.SubContractAmount").getValue();
+            $.ajax({
+                url: "/Cost/CheckShareId",
+                data: { KeyValue: KeyValue, ShareAmount: ShareAmount },
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.detail != "") {
+                            var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 600,
+                                showMaxButton: true,
+                                onload: function () {
+                                },
+                                ondestroy: function () {
+                                }
+                            });
+                        } else {
+                            NewShare();
+                        }
+                    }
+                    else {
+                        Power.ui.loading.close();
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                }
+            });
+        }
+        function NewShare() {
+            Power.ui.confirm("确定分摊？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("分摊中。。")
+                    var Code = mini.get("PS_SubContract.SubContractCode").getValue();
+                    var Title = mini.get("PS_SubContract.SubContractName").getValue();
+                    var ShareAmount = mini.get("PS_SubContract.SubContractAmount").getValue();
+                    var Plan_Guid = "";
+                    $.ajax({
+                        url: "/Cost/InsertShare",
+                        data: {
+                            KeyWord: KeyWord,
+                            KeyValue: KeyValue,
+                            KeyWordFilter: "P",
+                            Plan_Guid: Plan_Guid,
+                            Code: Code,
+                            Title: Title,
+                            ShareAmount: ShareAmount
+                        },
+                        async: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (text) {
+                            debugger
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                debugger;
+                                Power.ui.loading.close();
+                                var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                                //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 600,
+                                    showMaxButton: true,
+                                    onload: function () {
+                                    },
+                                    ondestroy: function () {
+                                    }
+                                });
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        function Statistics() {
+            var Contractid = formconfig.KeyValue;
+            if (FormState == "add") {
+                Power.ui.alert("请先保存合同信息!"); return false;
+            }
+            var url = "/Form/EditForm/9baf767f-ffad-4d53-a8ca-d02b82a6c9da/?Contractid=" + Contractid + "&ViewType=SubContract&Ctype=P";
+            mini.open({ url: url, width: "80%", heigth: "160%" })
+        }
+    </script>
+</body>
+</html>

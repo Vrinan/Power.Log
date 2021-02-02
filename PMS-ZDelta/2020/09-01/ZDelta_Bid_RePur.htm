@@ -1,0 +1,345 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsFormVue.js?v=$AppVersion"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title bottom">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>重新采购
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="ZDelta_Bid_RePur.ViewBidPlan" onclick="ViewForm('14af8be0-4cd6-42b0-8b3b-76b82cc9ecc2',currow.PlanCodeId)">
+                        <i class="fa fa-eye"></i>查看招标方案</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="ZDelta_Bid_RePur.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="ZDelta_Bid_RePur.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit scroll">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb0')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>基本信息
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb0">
+                            <div id="ZDelta_Bid_RePur" name="ZDelta_Bid_RePur" class="form">
+                                <table id="ZDelta_Bid_RePur_table" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status">编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.Code" name="Code" readonly  class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status">状态</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.Status" name="Status" readonly class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status" required>标题</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_Bid_RePur.Title" name="Title" required class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status">方案编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.PlanCodeCode" name="PlanCodeCode" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status">方案名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.PlanCodeName" name="PlanCodeName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status">预算金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.PlanBudgetAmount" name="PlanBudgetAmount" readonly changeOnMouseWheel="false" minValue="-9999999999"
+                                                    maxValue="9999999999" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate" required>主办部门</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.HolderDeptName" name="HolderDeptName" textname="HolderDeptName"  allowinput="false"
+                                                    class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" required/>
+                                            </td>   
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status" required>主办人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.HolderHumanName" name="HolderHumanName" textname="HolderHumanName"  allowinput="false"
+                                                    class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" required/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_Status" required>联系方式</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.HolderContactNumber" name="HolderContactNumber" class="design mini-textbox" required/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName" required>重新采购原因</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_Bid_RePur.RePurReason" name="RePurReason" height="80" class="design mini-textarea" required/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName">录入人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.RegHumName" name="RegHumName" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate">录入日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Bid_RePur.RegDate" name="RegDate" readonly class="design mini-datepicker" timeformat="yyyy-MM-dd"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" title="附件">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb2')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>附件 </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb2">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_Pub_FixedFiles.Add"
+                                    onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_Pub_FixedFiles.Del"
+                                    onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa fa-arrow-up" id="ZDelta_Pub_FixedFiles.MoveUp"
+                                    onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa fa-arrow-down" id="ZDelta_Pub_FixedFiles.MoveDown"
+                                    onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                                <a class="mini-button blue" iconcls="fa-download" id="ZDelta_Pub_FixedFiles.DownloadFiles"
+                                    onclick="FixedFiles.BatchDownloadFiles()">批量下载</a>
+                            </div>
+                            <div id="ZDelta_Pub_FixedFiles" class="mini-datagrid" style="width: 100%; height:440px;" idField="Id"
+                                allowAlternating="true" multiSelect="true" allowCellSelect="true" allowCellEdit="true" allowresize="true" showPager="false">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" header="序号" width="25" headeralign="center"></div>
+                                    <div field="DocTypeName" name="DocTypeName" header="类型" width="50" headeralign="center" align="left" allowsort="true">
+                                        <input property="editor" class="mini-textbox" />
+                                    </div>
+                                    <div filed="FileName" name="FileName" header="附件" headeralign="center" width="250" renderer="FixedFiles.FileColumnRenderer"></div>
+                                    <div field="UpdHumanName" name="UpdHumanName" header="上传人" width="40" headeralign="center" align="left" allowsort="true"></div>
+                                    <div field="UpdDate" name="UpdDate" header="上传日期" headeralign="center" align="center" width="40"  dateFormat="yyyy-MM-dd" allowsort="true"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>附件</div>
+                        </div>
+                        <div class="section-content" id="tb1">
+                            <iframe id="attachfile" style="height:100%;width:100%;"  frameborder="0"></iframe>
+                        </div>
+                    </div> -->
+                    <div class="section" id="WorkFlowSection" style="display: none;">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb5')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程</div>
+                        </div>
+                        <div class="section-content" id="tb5" style="height:400px;">
+                            <iframe id="workflow" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="div_workflowInfo">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb8')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程处理</div>
+                        </div>
+                        <div class="section-content notool" id="tb8" style="height:600px;">
+                            <div id="workflowInfo" class="mini-panel" style="height:100%;width:100%; padding-top:0px !important;" showHeader="false"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+
+        /********************************************开始：变量定义********************************************/
+
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var epsProjName = mini.get("ZDelta_Bid_RePur.EpsProjName");//项目名称
+        var holderHumanName = mini.get("ZDelta_Bid_RePur.HolderHumanName");//主办人
+        var holderDeptName = mini.get("ZDelta_Bid_RePur.HolderDeptName");//主办部门
+        var title = mini.get("ZDelta_Bid_RePur.Title");//标题
+        var fixedFilesGrid =  mini.get("ZDelta_Pub_FixedFiles");//固定附件
+
+        /********************************************结束：变量定义********************************************/
+
+        /********************************************开始：平台事件重写********************************************/
+
+        //表单加载后事件
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+            FormLoadCommomMethod(e, data);
+            if (FormState == 'add') {
+                delete oldcurrow.PlanBudgetAmount;
+            } else {
+            }
+            FixedFiles.FormInit();
+        }
+
+        PowerForm.EventBeforeRenderData = function(e,data){
+            if(e.sender.id == fixedFilesGrid.id){
+                var config = formconfig.config.joindata;
+                FixedFiles.LoadFiles(config.KeyWord,null,function(docFiles){
+                    docFiles.forEach(function(item){
+                        for(var i = 0; i < data.length; i ++){
+                            if(item.FolderId == data[i]["Id"]){
+                                data[i]["FileName"] = item.Name;
+                                data[i]["UpdHumanId"] = item.RegHumId;
+                                data[i]["UpdHumanName"] = item.RegHumName;
+                                data[i]["UpdDate"] = item.RegDate;
+                                data[i]["FileId"] = item.Id;
+                                data[i]["FileExt"] = item.FileExt;
+                            }
+                        }
+                    });
+                });
+            }
+            return data;
+        }
+
+        PowerForm.EventBeforeLoadData = function(e){
+            e.cancel = false;
+            if(e.id == fixedFilesGrid.id){
+                if(FormState == "add" && FixedFiles.IsInitFiles == false)
+                    e.cancel = true;
+            }
+        }
+
+        //选择流程前
+        PowerForm.EventBeforeOnBtnFlow = function(e){
+            e.isValid = true;
+            if(e.KeyWord == formconfig.config.joindata.KeyWord && (workflowdata == "" || (workflowdata && workflowdata.CurNodeType == 10))){
+                if(FixedFiles.FlowFileCheck == false){
+                    var result = FixedFiles.CheckRequiredFiles();
+                    if(result.valid == false){
+                        e.isValid = false;
+                        var yes = "是";
+                        var no = "否";
+                        var btnOpt = {};
+                        btnOpt[yes] = {
+                            theme: 'primary',
+                            handler: function () {
+                                FixedFiles.FlowFileCheck = true;
+                                $("#btnActive").trigger("click");
+                            }
+                        };
+                        btnOpt[no] = function () { };
+                        parent.Power.ui.confirm("类型为[" + result.msg + "]的文件要求必须上传附件，但当前尚未上传附件，是否继续送审！", { button: btnOpt });
+                    } 
+                }
+            }
+        }
+
+        PowerForm.EventBeforeAddRow = function(e,row){
+            if(e.id == fixedFilesGrid.id){
+                row.DocTypeName = FixedFiles.DefaultDocTypeName;
+            }
+        }
+
+        PowerForm.EventAfterAddRow = function(e,row){
+            if(e.id == fixedFilesGrid.id){
+                FixedFiles.InitFileBtn("Upload", row.Id, null);
+            }
+        }
+
+        PowerForm.EventBeforeDelete = function(e,rows){
+            e.cancel = false;
+            if(e.id == "ZDelta_Pub_FixedFiles.Del"){
+                var nameStr = "";
+                rows.forEach(function(item){
+                    if(!IsEmpty(item.DocTypeId)){
+                        nameStr += item.DocTypeName + "、";
+                    }
+                });
+                if(nameStr != ""){
+                    nameStr = nameStr.substring(0,nameStr.length - 1);
+                    Power.ui.warning("类型为[" + nameStr + "]的文件为系统设置的文件，不允许删除！");
+                    e.cancel = true;
+                }
+            }
+        }
+
+
+        /********************************************结束：平台事件重写********************************************/
+
+        /********************************************开始：miniui拦截事件********************************************/
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+        /********************************************开始：自定义事件********************************************/
+
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+
+</html>
+
+
+

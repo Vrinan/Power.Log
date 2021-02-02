@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>$Helper.GetResource("workflow_common_opinions")
+                </div><!--常用意见-->
+                <div class="actions">
+                    <a class="mini-button blue" id="btnAddRow" onclick="onAddRow"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                    <a class="mini-button blue" id="btnRemoveRow" onclick="onRemoveRow" enabled="false"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                    <span> </span>
+                    <a class="mini-button blue" id="btnSave" onclick="onOK"><i class="fa fa-save"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')"><i class="fa fa-power-off"></i>$Helper.GetResource("g_off")</a><!--关闭-->
+                </div>
+            </div>
+            <div>
+                <div class="portlet-body">
+                    <div id="gdMindList" class="mini-datagrid" showpager="false" allowcelledit="true" allowcellselect="true"
+                         idfield="MindID" onrowclick="onMindClick" onrowdblclick="onMindDblClick">
+                        <div property="columns">
+                            <div type="indexcolumn" width="10">$Helper.GetResource("g_sequ")</div><!--序号-->
+                            <div name="MindInfo" field="MindInfo" headeralign="center">
+                                $Helper.GetResource("workflow_common_opinions")
+                                <input property="editor" class="mini-textbox" style="width:100%;" />
+                            </div><!--常用意见-->
+                            <div name="MindInfo" field="MindInfo" headeralign="center" width="10" renderer="onRenderer">$Helper.GetResource("g_select")</div><!--选择-->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var gdMindList = mini.get("gdMindList");
+
+        var onAddRow = function (e) {
+
+            var node = { MindID: CreateGUID() };// Guid.NewGuid().ToString() };
+            gdMindList.addRow(node);
+        }
+        var onRemoveRow = function (e) {
+            var node = gdMindList.getSelected();
+            if (!node) return;
+            gdMindList.removeRow(node);
+            mini.get("btnRemoveRow").setEnabled(false);
+        }
+        function CloseWindow(action) {
+            onSaveMind();
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        var onMindDblClick = function (e) {
+            var row = e.record;
+            if (!row) return;
+            onSaveMind();
+            CloseWindow("ok");
+        }
+
+        var onSaveMind = function () {
+            var data = gdMindList.getChanges();
+
+            if (data.length == 0) return;
+            for (var irow = 0, len = data.length; irow < len; irow++) {
+                if (data[irow]._state == "removed") continue;
+                data[irow]._state = "auto";  //设置成自动判断新增或修改
+            }
+            var subData = {};
+            subData.WorkCommonMind = { data: data };
+
+            //保存JSON数据
+            $.ajax({
+                url: "/Form/SaveWebForm",
+                data: { jsonData: mini.encode(subData), formId: "", Params: "" },
+                cache: false,
+                async: false,
+                success: function (text) {
+                    var tmpData = mini.decode(text);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message); return;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(textStatus);
+                }
+            });
+
+        }
+        var onMindClick = function (e) {
+            mini.get("btnRemoveRow").setEnabled(true);
+        }
+
+        var onOK = function (e) {
+            var row = gdMindList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_node"]);//请先选择记录
+                return;
+            }
+            onSaveMind();
+            CloseWindow("ok");
+        }
+
+        function GetData() {
+            var row = gdMindList.getSelected();
+            if (!row) return {};
+            return row.MindInfo;
+        }
+
+        var onSelectRow = function () {
+            var row = gdMindList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_node"]);//请先选择记录
+                return;
+            }
+            onSaveMind();
+            CloseWindow("ok");
+        }
+        var onRenderer = function (e) {
+            var s = '';
+
+            s = '<a href="javascript:onSelectRow()">' + app_global["g_select"] + '</a>';//选择
+
+            return s;
+        }
+
+        //加载JSON数据
+        $.ajax({
+            url: "/Form/GridPageLoad",
+            data: { KeyWord: "WorkCommonMind", KeyWordType: "Business", select: "", swhere: " UserID='[@HumanId]' ", sort: "", index: null, size: null, extparams: "" },
+            cache: false,
+            async: false,
+            success: function (text) {
+                var data = mini.decode(text);
+                if (data.success == false) {
+                    alert(data.message); return;
+                }
+                var dataList = mini.decode(data.data.value);
+                gdMindList.setData(dataList);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(textStatus);
+            }
+        });
+    </script>
+</body>
+</html>

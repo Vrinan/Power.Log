@@ -1,0 +1,240 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i> 设计评审
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        
+                        <a class="mini-button blue" id="SF_ZZ_Review.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Review.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_ZZ_Review.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Review" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Review.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+            <td>
+                    项目编号
+                </td>
+                <td>
+                    <input id="SF_ZZ_Review.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit" allowinput="false"
+                           emptytext="请选择编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"  />
+                </td>
+                <td>
+                        项目负责人
+                    </td>
+                    <td>
+                        <input id="SF_ZZ_Review.ProjectLeader" name="ProjectLeader" textname="ProjectLeader" class="mini-textbox" allowinput="false"
+                              onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"  />
+
+        <tr>
+
+
+
+        <td>
+            项目名称
+        </td>
+        <td>
+            <input id="SF_ZZ_Review.ProjectInformation" name="ProjectInformation" textname="ProjectInformation" class="mini-textbox" allowinput="false"
+                    onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"  />
+        </td>-->
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.ProjectInformation" name="ProjectInformation" textname="ProjectInformation" class="mini-buttonedit"
+                                                   allowinput="false" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" emptytext="请选择项目名称..." />
+                                        </td>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.ProjectCode" name="ProjectCode" class="mini-textbox" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.ProjectLeader" name="ProjectLeader" textname="ProjectLeader" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目负责人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                    
+                                       
+                                       
+                                    <tr>
+                                        <td>
+                                            存在问题及改进
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Review.Improve" name="Improve" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+
+                                    <!-- <td>
+        工号
+    </td>
+    <td>
+        <input id="SF_ZZ_Review.HumanCode" name="HumanCode" class="mini-textbox" readonly="readonly" />
+    </td> -->
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+            劳动合同编号
+        </td>
+        <td>
+            <input id="SF_ZZ_Review.LaborCode" name="LaborCode" textname="LaborCode" class="mini-buttonedit" allowinput="false"
+                   emptytext="请选择劳动合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+        </td>-->
+                                        <!-- <td>
+                通知状态
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.IsNotice" name="IsNotice" class="mini-combobox" readonly/>
+            </td>
+            <td>
+                原劳动合同到期时间
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.LaborEndDate" name="LaborEndDate" class="mini-datepicker" format="yyyy-MM-dd" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                续签次数（年）
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.RenewalTimes" name="RenewalTimes" class="mini-combobox" />
+            </td>
+            <td>
+                续签合同期限
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.RenewalTerm" name="RenewalTerm" class="mini-spinner" maxvalue="999999999" minvalue="0" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                续签起始时间
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.RenewalBeginDate" name="RenewalBeginDate" class="mini-datepicker" format="yyyy-MM-dd" />
+            </td>
+            <td>
+                续签截至时间
+            </td>
+            <td>
+                <input id="SF_ZZ_Review.RenewalEndDate" name="RenewalEndDate" class="mini-datepicker" format="yyyy-MM-dd" />
+            </td>
+        </tr>                                     -->
+
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Review.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+    <td>
+        委托任务内容及要求
+    </td>
+    <td colspan="3">
+
+        <input id="SF_ZZ_Review.Code" name="Requirements" class="mini-TextArea" style="height:130px;" />
+    </td></tr>
+    <td>
+        返回资料内容及时间
+    </td>
+    <td colspan="3">
+
+        <input id="SF_ZZ_Review.Code" name="Content" class="mini-TextArea" style="height:130px;" />
+    </td></tr> -->
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        })
+
+    </script>
+</body>
+</html>

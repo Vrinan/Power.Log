@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>档案借阅
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_Borrowing.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_Borrowing.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_Borrowing.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_Borrowing.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_Borrowing.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_Borrowing" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_Borrowing.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>
+                                        <td>
+                                            借阅方式
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Type" name="Type" class="mini-combobox" required/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>       
+                                        <td>
+                                            借阅人姓名
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_ZH_Borrowing.HumName" name="HumName" textname="HumName" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"/>-->
+                                            <input id="SF_ZH_Borrowing.HumName" name="HumName" class="mini-textbox" readonly />
+                                            <input id="SF_ZH_Borrowing.HumId" name="HumId" class="mini-textbox" readonly style="display:none"/>
+                                        </td>                                
+                                        <td>
+                                            借阅人部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Department" name="Department" class="mini-textbox" readonly />
+                                            <input id="SF_ZH_Borrowing.DeptId" name="DeptId" class="mini-textbox" readonly style="display:none"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系人电话
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Phone" name="Phone" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            Email地址
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Email" name="Email" class="mini-textbox" allowinput="false" />
+                                        </td>
+                                    </tr>                                   
+                                    <tr>
+                                        <td>
+                                            借阅途径
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Model" name="Model" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            借阅期限(天)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.Borrowtime" name="Borrowtime" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            借阅时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.BorrowDate" name="BorrowDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            实际归还时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.BackDate" name="BackDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Borrowing.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Borrowing.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="借阅明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Borrowing_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_WeeklyMeeting_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_Borrowing_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_Borrowing_list-Print" class="btn-group"></div>
+                                <div id="SF_ZH_Borrowing_list-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_Borrowing_list" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="Type" width="100" allowSort="true" type="comboboxcolumn">
+                                            档案类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DocumnetCode" width="100" allowSort="true">
+                                            档号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DocumnetName" width="100" allowSort="true">
+                                            名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" width="100" allowSort="true">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>     
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {          
+            PowerForm.Init();
+        });
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    var start = mini.get("SF_ZH_Borrowing.StartDate").value;
+        //    var end = mini.get("SF_ZH_Borrowing.EndDate").value;
+            
+        //    if (start != '' && end != '') {
+        //        var start = new Date(start).format("yyyy-MM-dd");
+        //        var end = new Date(end).format("yyyy-MM-dd");
+
+        //        var time = DateDiff(end, start);
+        //        if (mini.get("SF_ZH_Borrowing.LeaveTime").value == 0) {
+        //            mini.get("SF_ZH_Borrowing.LeaveTime").setValue(time);
+        //        }
+        //    }        
+        //}
+        function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+            var aDate, oDate1, oDate2, iDays
+            aDate = sDate1.split("-")
+            oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+            aDate = sDate2.split("-")
+            oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+            iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+            return iDays + 1
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            if (formconfig.config.joindata.currow.Status == "50") {
+                mini.get("SF_ZH_Borrowing.BackDate").setReadOnly(false);
+                mini.get("SF_ZH_Borrowing.Save").enable();
+            }
+        }
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_ZH_Borrowing.Department").value == '') {
+                var DeptId = sessiondata.DeptId;
+                var Department = sessiondata.DeptName;
+                mini.get("SF_ZH_Borrowing.DeptId").setValue(DeptId);
+                mini.get("SF_ZH_Borrowing.Department").setValue(Department);
+                var HumanId = sessiondata.HumanId;
+                var HumanName = sessiondata.HumanName;
+                mini.get("SF_ZH_Borrowing.HumId").setValue(HumanId);
+                mini.get("SF_ZH_Borrowing.HumName").setValue(HumanName);
+            }
+        }
+    </script>
+</body>
+</html>

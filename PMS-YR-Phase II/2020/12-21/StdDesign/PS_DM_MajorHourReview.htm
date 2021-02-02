@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>专业工时审核
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_DM_MajorHourReview.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_DM_MajorHourReview.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_DM_MajorHourReview.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_DM_MajorHourReview" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_DM_MajorHourReview.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_DM_MajorHourReview.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            专业
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.DesignMajor" name="DesignMajor" textname="DesignMajor" class="mini-buttonedit"
+                                                   emptytext="请选择专业..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+										 <td colspan="2">
+                                            <a class="mini-button blue" id="PreWeek" onclick="addWeek('-')"><i class="fa fa-undo"></i>上一周</a>
+											<a class="mini-button blue" id="NowWeek" onclick="addWeek()"><i class="fa fa-compass"></i>本周</a>
+											<a class="mini-button blue" id=" NextWeek" onclick="addWeek('+')"><i class="fa fa-compass"></i>下一周</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开始日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.BeginDate" name="BeginDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            结束日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.EndDate" name="EndDate" class="mini-datepicker" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            本期工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.ThislHour" name="ThislHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            累计工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.TotalHour" name="TotalHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            总预算工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.BudgetHour" name="BudgetHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            消耗百分比(%)
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.ActHourPer" name="ActHourPer" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="100" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_DM_MajorHourReview.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细'>
+                            <div class="mini-toolbar">
+                            
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_DM_MajorHourReview_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+
+                            <div class="mini-fit">
+                                <div id="PS_DM_MajorHourReview_Dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="ProjectName" headeralign="center">
+                                            项目名称
+                                            <input property="editor" id="PS_DM_MajorHourReview_Dtl.ProjectName" class="mini-buttonedit" name="ProjectName" textname="ProjectName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="HumanName" headeralign="center">
+                                            姓名
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />                                        
+                                        </div>
+                                        <div field="HumanRole" headeralign="center">
+                                            角色
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ThisHour" headeralign="center">
+                                            本期工时
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalHour" headeralign="center">
+                                            累计工时
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+		var currDT;
+        $(function () {
+			 
+            PowerForm.Init();
+        });
+PowerForm.EventAfterFormLoad = function (e,data) {
+       if(FormState=="add"){
+		 currDT = new Date();
+		 showDate();
+	   }else{
+	   
+		currDT=formconfig.config.joindata.currow["BeginDate"];
+	   }
+	   var data =mini.get("PS_DM_MajorHourReview_Dtl").data;
+	   if(data.length==0){
+		$("#PreWeek").show();
+		$("#NowWeek").show();
+		$("#NextWeek").show();
+	   }else{
+	   $("#PreWeek").hide();
+		$("#NowWeek").hide();
+		$("#NextWeek").hide();
+	   }
+}
+       
+function addWeek(ope) {
+        var num = 0;
+        if (ope == "-") {
+            num = -7;
+        } else if (ope == "+") {
+            num = 7;
+        } else {
+            currDT = new Date();
+        }
+        currDT = addDate(currDT, num);
+        var towDT = addDate(new Date(), -14);
+     
+        showDate();  
+}
+function showDate() {
+    //确定周一是那天
+    var dw = currDT.getDay();
+    var monDt;
+    var sunDt;
+    if (dw == 0) {
+        sunDt = currDT;
+        monDt = addDate(currDT, -6);
+    } else {
+        monDt = addDate(currDT, (1 - dw));
+        sunDt = addDate(currDT, (7 - dw));
+    }
+    var arrDt = monDt;
+ 
+    mini.get("PS_DM_MajorHourReview.BeginDate").setValue(monDt);
+    mini.get("PS_DM_MajorHourReview.EndDate").setValue(sunDt);
+}
+//增加或减少若干天，由 num 的正负决定，正为加，负为减
+function addDate(dt, num) {
+    var ope = "+";
+    if (num < 0) {
+        ope = "-";
+    }
+    var reDT = dt;
+    for (var i = 0; i < Math.abs(num) ; i++) {
+        reDT = addOneDay(reDT, ope);
+    }
+    return reDT;
+}
+//增加或减少一天，由ope决定, + 为加，- 为减，否则不动
+function addOneDay(dt, ope) {
+    var num = 0;
+    if (ope == "-") {
+        num = -1;
+    } else if (ope == "+") {
+        num = 1;
+    }
+
+    var y = dt.getFullYear();
+    var m = dt.getMonth();
+    var lastDay = getLastDay(y, m);
+
+    var d = dt.getDate();
+    d += num;
+    if (d < 1) {
+        m--;
+        if (m < 0) {
+            y--;
+            m = 11;
+        }
+        d = getLastDay(y, m);
+    } else if (d > lastDay) {
+        m++;
+        if (m > 11) {
+            y++;
+            m = 0;
+        }
+        d = 1;
+    }
+    var reDT = new Date("2000-0-1");
+    reDT.setYear(y);
+    reDT.setMonth(m);
+    reDT.setDate(d);
+
+    return reDT;
+}
+//是否为闰年
+function isLeapYear(y) {
+    var isLeap = false;
+    if (y % 4 == 0 && y % 100 != 0 || y % 400 == 0) {
+        isLeap = true;
+    }
+    return isLeap;
+}
+//每月最后一天
+function getLastDay(y, m) {
+    var lastDay = 28;
+    m++;
+    if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
+        lastDay = 31;
+    } else if (m == 4 || m == 6 || m == 9 || m == 11) {
+        lastDay = 30;
+    } else if (isLeapYear(y) == true) {
+        lastDay = 29;
+    }
+    return lastDay;
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Apps/style/webformstyle.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+
+</head>
+
+<body>
+
+    <div class="listfile">
+        <div class="show buttonlist" id="PS_IncomeContract_buttonlist">
+
+            <!--<div id="FielView" class="button a" style="border:0px;display:none;width:30%"><a href="#"><i class="fa fa-eye"></i><span>查看</span></a></div>-->
+            <div class="button a"><a id="PS_IncomeContract.Save" href="#" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i><span>保存</span></a></div>
+            <!--<div class="button a"><a href="#"><i class="fa fa-thumbs-up"></i><span>同意</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-mail-reply"></i><span>驳回</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-eye"></i><span>流程监控</span></a></div>-->
+            <!-- <div class="button" style="border:0px;"><a href="#" id="nav"><i class="fa fa-github-square"></i><span>列表</span></a></div>-->
+        </div>
+        <!--<div class="hide buttonlist" id="PS_IncomeContract_PayNodes_buttonlist">
+            <div class="button a"><a href="#"><i class="fa fa-plus"></i><span>新增</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-trash"></i><span>删除</span></a></div>
+        </div>-->
+        <div class=" hide buttonlist" id="file_buttonlist">
+            <div id="btnUpload" class="button" style="border: 0px;  width: 30%"><a href="#" id="nav"><i class="fa fa-cloud-upload"></i><span>上传图片</span></a></div>
+        </div>
+        <div id="tablist">
+            <section id="PS_IncomeContract" class=" form show">
+                <table border="0" cellspacing="1">
+                    <tr>
+                        <td width="30%">
+                            合同编号
+                        </td>
+                        <td width="70%">
+                            <input id="PS_IncomeContract.ContractCode" name="ContractCode" class="mini-textbox" required="true" requirederrortext="合同编号不能为空" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="PS_IncomeContract.Status">合同状态</label>
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.Status" name="Status" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            合同名称
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractName" name="ContractName" class="mini-textbox" required="true" requirederrortext="合同名称不能为空" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            合同类型
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractType" name="ContractType" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            合同形式
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractForm" name="ContractForm" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            合同金额
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractAmount" name="ContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            变更金额
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ChangeAmount" name="ChangeAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            最终金额
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.FinalContractAmount" name="FinalContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            币种
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.CurrencyType" name="CurrencyType" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            产品类型
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ProductType" name="ProductType" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            评审方式
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ReviewWay" name="ReviewWay" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            评审日期
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ReviewDate" name="ReviewDate" class="mini-datepicker" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            签订日期
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.SignedDate" name="SignedDate" class="mini-datepicker" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            甲方
+                        </td>
+                        <td>
+                            <!--   <input id="PS_IncomeContract.PartyA" name="PartyA" class="mini-textbox" />     -->
+                            <input id="PS_IncomeContract.PartyA" name="PartyA" textname="PartyA" class="mini-buttonedit"
+                                   emptytext="请选择甲方..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            甲方签署人
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.PartyAPerson" name="PartyAPerson" class="mini-textbox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            乙方
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.PartyB" name="PartyB" textname="PartyB" class="mini-buttonedit"
+                                   emptytext="请选择乙方..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            乙方签署人
+                        </td>
+                        <td>
+                            <!--    <input id="PS_IncomeContract.PartyBSighPerson" name="PartyBSighPerson" class="mini-textbox" />     -->
+                            <input id="PS_IncomeContract.PartyBSighPerson" name="PartyBSighPerson" textname="PartyBSighPerson" class="mini-buttonedit"
+                                   emptytext="请选择乙方签署人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            支付方式
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.PayType" name="PayType" class="mini-combobox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            有无甲供
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.OrArmour" name="OrArmour" class="mini-combobox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            开工日期
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractStrartDate" name="ContractStrartDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            完工日期
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.ContractEndDate" name="ContractEndDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            录入人
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            录入时间
+                        </td>
+                        <td>
+                            <input id="PS_IncomeContract.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                        </td>
+                    </tr>
+                </table>
+            </section>
+            <!--<section class="hide" id="PS_IncomeContract_PayNodes"></section>-->
+            <section class="hide" id="file">
+                <ul id="FileAttach"></ul>
+            </section>
+            <ul id="ul1">
+                <li class="active"><i class="fa fa-home"></i></br><span>基本信息</span></li>
+                <!--<li><i class="fa fa-cogs"></i></br><span>收款节点</span></li>-->
+                <li><i class="fa fa-file"></i></br><span id="filecount">附件(0)</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="listdiv" id="listdiv">
+        <div class="navbg"></div>
+        <div class="navlist">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenCamera()">打开相机</a></li>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenGallery()">打开相册</a></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new MobileWebForm();
+
+        $(function () {
+		PowerForm.Init();
+
+        });
+        mini.parse();
+
+
+    </script>
+</body>
+</html>

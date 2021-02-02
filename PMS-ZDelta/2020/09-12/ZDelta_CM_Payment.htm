@@ -1,0 +1,1402 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsFormVue.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+    <style>
+        .ProgressPay{
+            display: none;
+        }
+        .AdvancePay{
+            display: none;
+        }
+        .Invoice{
+            display: none;
+        }
+        .mini-grid-row-redfont .mini-tree-nodetext{
+            color: #FF0000 !important;
+        }
+        .mini-grid-row-redfont .mini-grid-cell-inner{
+            color: #FF0000 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title bottom">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>计量支付
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="ZDelta_CM_Payment.ViewContract" onclick="ViewForm('2e2723c3-7719-4dcf-aef2-7871b5ce62ce',currow.ContractId)">
+                        <i class="fa fa-eye"></i>查看合同</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="ZDelta_CM_Payment.Save" onclick="CustomSave()">
+                        <i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="ZDelta_CM_Payment.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit scroll">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb0')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>基本信息
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb0">
+                            <div id="ZDelta_CM_Payment" name="ZDelta_CM_Payment" class="form">
+                                <table id="ZDelta_CM_Payment_table" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.Code" name="Code" class="design mini-textbox" readonly/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">状态</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.Status" name="Status" readonly class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>标题</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_Payment.Title" name="Title" required class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ContractCode" name="ContractCode" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ContractName" name="ContractName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同类型</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ContractType" name="ContractType" readonly class="design mini-combobox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ContractAmount" name="ContractAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同+变更金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.TotalContractAmount" name="TotalContractAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">结算金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.SettleAmount" name="SettleAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">供应商</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3" id="PartyBTd">
+                                                <input id="ZDelta_CM_Payment.PartyBName" name="PartyBName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">施工申报金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ConstApplyAmount" name="ConstApplyAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">监理审核金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.SupervisionAmount" name="SupervisionAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">业主审定金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.TotalAmount" name="TotalAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">最终支付金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.PayAmount" name="PayAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">支付类型</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.PaymentType" name="PaymentType" allowInput="false" class="design mini-combobox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">支付日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.PayDate" name="PayDate" allowInput="false" class="design mini-datepicker" dateFormat="yyyy-MM-dd"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">期数</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.Period" name="Period" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n0"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">支付方式</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.PayWay" name="PayWay" allowInput="false" class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">期初累计金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.BeforeTotalAmount" name="BeforeTotalAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">期末累计金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.AfterTotalAmount" name="AfterTotalAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">说明</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_Payment.Memo" name="Memo" height="80" class="design mini-textarea" />
+                                            </td>
+                                        </tr>
+                                        <tr class="ProgressPay">
+                                            <td style="background-color: #E0E0E0; font-weight: bold; " colspan="4">
+                                                <i class="fa fa-edit blue"></i> 进度款信息
+                                            </td>
+                                        </tr>
+                                        <tr class="ProgressPay">
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">期数</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ProgressPayPeriod" name="ProgressPayPeriod" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n0"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">付款系数</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.PayRate" name="PayRate" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="p2"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="ProgressPay">
+                                            <td style="background-color: #E0E0E0; font-weight: bold; " colspan="4">
+                                                <i class="fa fa-edit blue"></i> 扣款&nbsp;&nbsp;
+                                                <a style="cursor: pointer;color: red;" onclick="DisplayDeduct(true)">显示</a>&nbsp;&nbsp;
+                                                <a style="cursor: pointer;color: red;" onclick="DisplayDeduct(false)">隐藏</a>&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr class="ProgressPay" id="DeductDiv1">
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">累计已付预付款(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.AdvancePayedAmount" name="AdvancePayedAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">累计已扣回预付款(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.AdvanceDeductedAmount" name="AdvanceDeductedAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr id="DeductDiv2">
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">本次预付款扣回(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.ThisAdvacneDeductAmount" name="ThisAdvacneDeductAmount" allowLimitValue="false" changeOnMouseWheel="false" readOnly class="design mini-spinner" format="n2"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">其他扣款金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.DeductAmount" name="DeductAmount" allowLimitValue="false" changeOnMouseWheel="false" readOnly class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color: #E0E0E0; font-weight: bold; " colspan="4">
+                                                <i class="fa fa-edit blue"></i> 发票
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">是否已到发票</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.IsInvoiceReady" name="IsInvoiceReady" class="design mini-checkbox"/>
+                                            </td>
+                                            <td class="cell td-label InvoiceReady" style="display: none;">
+                                                <label class="design mini-powerlabel">本次发票金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl InvoiceReady" style="display: none;">
+                                                <input id="ZDelta_CM_Payment.ThisInvoiceAmount" name="ThisInvoiceAmount" readonly allowLimitValue="false" changeOnMouseWheel="false" class="design mini-spinner" format="n2"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="InvoiceUnReady">
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>未到发票原因</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_Payment.InvoiceUnReadyReason" name="InvoiceUnReadyReason" height="80" class="design mini-textarea" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName">录入人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.RegHumName" name="RegHumName" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate">录入日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_Payment.RegDate" name="RegDate" readonly class="design mini-datepicker" timeformat="yyyy-MM-dd"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section AdvancePay" title="支付清单">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>支付清单
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb1">
+                            <div class="mini-toolbar">
+                                <!-- <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a> -->
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDtl.Add0" onclick="PowerForm.OnBtnWizard(this,false)">选择支付节点</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDtl.Add1" onclick="PowerForm.OnBtnWizard(this,false)">选择变更</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDtl.Add2" onclick="PowerForm.OnBtnWizard(this,false)">选择补充协议</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_PaymentDtl.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_PaymentDtl.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_PaymentDtl.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                            </div>
+                            <div id="ZDelta_CM_PaymentDtl" class="mini-datagrid" style="width: 100%; height:400px;"  idField="Id" multiSelect="true" allowCellSelect="true"  allowAlternating="true"
+                                showSummaryRow="true" ondrawsummarycell="PowerForm.OnDrawSummaryCell" allowCellEdit="true" allowresize="true">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                    <div type="comboboxcolumn" field="PayType" name="PayType" header="付款类型" readonly="true" width="80" headeralign="center" align="left">
+                                        <input property="editor" allowInput="false" class="mini-combobox"/>
+                                    </div>
+                                    <div field="ConstApplyAmount" name="ConstApplyAmount" header="申报金额(元)" headeralign="center" align="right" width="100" allowsort="true" numberFormat="n2">
+                                        <input property="editor" allowLimitValue="false" changeOnMouseWheel="false" class="mini-spinner" style="width: 100%;"/>
+                                    </div>
+                                    <div field="SupervisionAmount" name="SupervisionAmount" header="审核金额(元)" headeralign="center" readOnly="true" align="right" width="100" allowsort="true" numberFormat="n2">
+                                        <input property="editor" allowLimitValue="false" changeOnMouseWheel="false" class="mini-spinner" style="width: 100%;"/>
+                                    </div>
+                                    <div field="Amount" name="Amount" header="审定金额(元)" headeralign="center" readOnly="true" align="right" width="100" allowsort="true" numberFormat="n2">
+                                        <input property="editor" allowLimitValue="false" changeOnMouseWheel="false" class="mini-spinner" style="width: 100%;"/>
+                                    </div>
+                                    <div type="comboboxcolumn" field="PartyBId" name="PartyBId" header="乙方单位" width="130" headeralign="center" align="left">
+                                        <input property="editor" allowInput="false" textField="Name" valueField="Id" valueFromSelect="true" class="mini-combobox"/>
+                                    </div>
+                                    <div field="Memo" name="Memo" header="付款说明" headeralign="center" align="left" width="150" allowsort="true">
+                                        <input property="editor" height="80" class="mini-textarea" style="width: 100%;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section ProgressPay" title="工程量完成清单">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb2')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>工程量完成清单
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb2">
+                            <div class="mini-splitter" vertical="false" style="width: 100%; height: 400px;">
+                                <div size="25%" showcollapsebutton="false">
+                                    <div class="mini-toolbar" style="width:100%;">
+                                        <span>合同工程量清单</span>
+                                        <a class="mini-checkbox" id="TreeFilter" iconcls="fa-trash-o" style="padding-left:5px;" onclick="FilterTreeData(this.checked)">本期申报工程量清单</a>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="ZDelta_CM_ContractBOQ" class="mini-treegrid" style="width: 100%; height: 100%" virtualScroll="true" showtreeicon="true" treecolumn="Code" allowAlternating="true"
+                                            idfield="Id" parentfield="ParentId" resultastree="false" allowresize="true"
+                                            expandonload="1" showpager="false">
+                                            <div property="columns">
+                                                <div field="Code" name="Code" header="编号" width="130" headeralign="center"></div>
+                                                <div field="Name" name="Name" header="名称" width="170" headeralign="center"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="75%" showcollapsebutton="false">
+                                    <div class="mini-toolbar" style="width:100%;">
+                                        <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentBOQ.Add" onclick="PowerForm.OnBtnWizard(this,false)">合同</a>
+                                        <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentBOQ.Add0" onclick="PowerForm.OnBtnWizard(this,false)">变更价格申报</a>
+                                        <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentBOQ.Add1" onclick="PowerForm.OnBtnWizard(this,false)">签证</a>
+                                        <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentBOQ.Add2" onclick="PowerForm.OnBtnWizard(this,false)">补充协议</a>
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_PaymentBOQ.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                        <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_PaymentBOQ.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                        <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_PaymentBOQ.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                                    </div>
+                                    <div id="ZDelta_CM_PaymentBOQ" class="mini-datagrid" idField="Id" style="width: 100%; height: 400px;" allowresize="true" sortField="Sequ" allowAlternating="true"
+                                        multiSelect="true" allowcellselect="true" allowcelledit="true" enableGroupOrder="false" sortField="Sequ" frozenStartColumn="0" frozenEndColumn="3" showSummaryRow="true" ondrawsummarycell="SummaryRowFunc.DrawSummaryCell"
+                                        sortOrder="asc" showPager="false">
+                                        <div property="columns">
+                                            <div type="checkcolumn"></div>
+                                            <div type="indexcolumn" width="40" header="序号" headerAlgin="center"></div>
+                                            <div field="Code" name="Code" header="编号" width="60" headeralign="center" align="left"></div>
+                                            <div field="Name" name="Name" header="名称" width="200" headeralign="center" align="left"></div>
+                                            <div field="Unit" name="Unit" header="单位" width="55" headeralign="center" align="left"></div>
+                                            <div field="UnitPrice" name="UnitPrice" header="单价(元)" width="100" headeralign="center" align="right" numberFormat="n2"></div>
+                                            <div field="OldItemQuantity" name="OldItemQuantity" header="数量" width="100" headeralign="center" align="right" numberFormat="n3"></div>
+                                            <div field="PayRate" name="PayRate" header="支付系数" width="80" headeralign="center" align="right" numberFormat="p2">
+                                                <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="0" maxValue="100" style="width:100%;"/>
+                                            </div>
+                                            <div header="期初" headerAlign="center">
+                                                <div property="columns">
+                                                    <div field="BeginingQuantity" name="BeginingQuantity" header="数量" width="100" headeralign="center" align="right" numberFormat="n3"></div>
+                                                    <div field="BeginingAmount" name="BeginingAmount" header="金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div>
+                                                    <!-- <div field="BeginingFixRateAmount" name="BeginingFixRateAmount" header="税率调差金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div> -->
+                                                </div>
+                                            </div>
+                                            <div field="ThisFixRateAmount" name="ThisFixRateAmount" header="税率调差金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div>
+                                            <!-- <div field="Quantity" name="Quantity" header="工程量" width="100" headeralign="center" align="right" numberFormat="n2">
+                                                <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="-9999999999" maxValue="9999999999" style="width:100%;"/>
+                                            </div>
+                                            <div field="Amount" name="Amount" header="金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div> -->
+                                            <div header="期末" headerAlign="center">
+                                                <div property="columns">
+                                                    <div field="EndingQuantity" name="EndingQuantity" header="数量" width="100" headeralign="center" align="right" numberFormat="n3"></div>
+                                                    <div field="EndingAmount" name="EndingAmount" header="金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div>
+                                                    <!-- <div field="EndingFixRateAmount" name="EndingFixRateAmount" header="税率调差金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div> -->
+                                                </div>
+                                            </div>
+                                            <div field="Memo" name="Memo" header="备注" width="100" headeralign="center" align="left">
+                                                <input property="editor" class="mini-textarea" style="width:100%;" minHeight="100" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" title="扣款/返还清单">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb4')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>扣款/返还清单
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb4">
+                            <div id="DeductInfo" style="color:red;"></div>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDeduct.Add0" onclick="PowerForm.OnBtnWizard(this)">新增(选择扣款/返还)</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDeduct.Add" onclick="AddDeduct('Advance')">预付款扣回</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentDeduct.Add1" onclick="AddDeduct('QTKK')">其他扣款</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_PaymentDeduct.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_PaymentDeduct.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_PaymentDeduct.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                            </div>
+                            <div id="ZDelta_CM_PaymentDeduct" class="mini-datagrid" style="width: 100%; height:400px;"  idField="Id" multiSelect="true" allowCellSelect="true"  allowAlternating="true"
+                                showSummaryRow="true" allowCellEdit="true" allowresize="true" showPager="false">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                    <div type="comboboxcolumn" field="Type" name="Type" header="类型" width="80" readOnly="true" headeralign="center" align="center">
+                                        <input property="editor" allowInput="false" class="mini-combobox"/>
+                                    </div>
+                                    <div field="Amount" name="Amount" header="金额(元)" headeralign="center" align="right" width="100" allowsort="true" numberFormat="n2">
+                                        <input property="editor" allowLimitValue="false" changeOnMouseWheel="false" class="mini-spinner" style="width: 100%;"/>
+                                    </div>
+                                    <div type="comboboxcolumn" field="DeductOrReturn" name="DeductOrReturn" header="扣款/返还" width="80" readOnly="true" headeralign="center" align="center">
+                                        <input property="editor" allowInput="false" class="mini-combobox"/>
+                                    </div>
+                                    <div type="comboboxcolumn" field="PartyBId" name="PartyBId" header="乙方单位" width="130" headeralign="center" align="left">
+                                        <input property="editor" allowInput="false" textField="Name" valueField="Id" valueFromSelect="true" class="mini-combobox"/>
+                                    </div>
+                                    <div field="Memo" name="Memo" header="扣款说明" headeralign="center" align="left" width="150" allowsort="true">
+                                        <input property="editor" height="120" class="mini-textarea" style="width: 100%;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section Invoice" title="发票">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb6')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>发票
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb6">
+                            <div class="mini-toolbar">
+                                <!-- <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentInvoice.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a> -->
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_PaymentInvoice.Add0" onclick="PowerForm.OnBtnWizard(this,false)">选择发票</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_PaymentInvoice.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_PaymentInvoice.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_PaymentInvoice.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                            </div>
+                            <div id="ZDelta_CM_PaymentInvoice" class="mini-datagrid" style="width: 100%; height:400px;"  idField="Id" multiSelect="true" allowCellSelect="true"  allowAlternating="true"
+                                showSummaryRow="true" ondrawsummarycell="PowerForm.OnDrawSummaryCell" allowCellEdit="true" allowresize="true">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                    <div field="InvoiceCode" name="InvoiceCode" header="发票编号" width="80" headeralign="center" align="center"> </div>
+                                    <div field="InvoiceName" name="InvoiceName" header="发票名称" width="150" headeralign="center" align="left"> </div>
+                                    <div field="TotalAmount" name="TotalAmount" header="发票总金额(元)" headeralign="center" align="right" width="100" allowsort="true" numberFormat="n2"></div>
+                                    <div field="RemainAmount" name="RemainAmount" header="发票剩余金额(元)" headeralign="center" align="right" width="100" allowsort="true" numberFormat="n2"></div>
+                                    <div field="ThisAmount" name="ThisAmount" header="本次使用金额(元)" headeralign="center" align="right" width="100" allowsort="true" numberFormat="n2">
+                                        <input property="editor" allowLimitValue="false" changeOnMouseWheel="false" class="mini-spinner" style="width: 100%;"/>
+                                    </div>
+                                    <div field="Memo" name="Memo" header="备注" headeralign="center" align="left" width="150" allowsort="true">
+                                        <input property="editor" height="80" class="mini-textarea" style="width: 100%;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb3')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>附件</div>
+                        </div>
+                        <div class="section-content" id="tb3">
+                            <iframe id="attachfile" style="height:100%;width:100%;"  frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="WorkFlowSection" style="display: none;">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb5')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程</div>
+                        </div>
+                        <div class="section-content" id="tb5" style="height:400px;">
+                            <iframe id="workflow" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="div_workflowInfo">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb8')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程处理</div>
+                        </div>
+                        <div class="section-content notool" id="tb8" style="height:600px;">
+                            <div id="workflowInfo" class="mini-panel" style="height:100%;width:100%; padding-top:0px !important;" showHeader="false"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+
+        /********************************************开始：变量定义********************************************/
+
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var dtlGrid = mini.get("ZDelta_CM_PaymentDtl");//支付清单
+        var BOQGrid = mini.get("ZDelta_CM_PaymentBOQ");//工程量
+        var BOQTree = mini.get("ZDelta_CM_ContractBOQ");//工程量清单树
+        var oldValue = 0;
+        var title = mini.get("ZDelta_CM_Payment.Title");//标题
+        var period = mini.get("ZDelta_CM_Payment.Period");//支付期数
+        var payWay = mini.get("ZDelta_CM_Payment.PayWay");//支付方式
+        var progressPayPeriod = mini.get("ZDelta_CM_Payment.ProgressPayPeriod");//进度款期数
+        var beforeTotalAmount = mini.get("ZDelta_CM_Payment.BeforeTotalAmount");//期初累计金额
+        var afterTotalAmount = mini.get("ZDelta_CM_Payment.AfterTotalAmount");//期末累计金额
+        var partyBCmbText = '<input id="ZDelta_CM_Payment.PartyBId" name="PartyBId" allowInput="false" valueField="Id" textField="Name" multiSelect="true" class="design mini-combobox" />';
+        var partyBText = '<input id="ZDelta_CM_Payment.PartyBName" name="PartyBName" readOnly class="design mini-textbox" />';
+        var partyBName = null;
+        var paymentType = mini.get("ZDelta_CM_Payment.PaymentType");//付款类型
+        var BOQTreeSelected = null;//工程量清单树选中行
+        var columns = BOQGrid.getColumns();//列
+        var setColumnFlag = false;//标记动态列是否设置好，防止重复设置
+        var apprDeptList = null;//审批部门list
+        var advancePayedAmount = mini.get("ZDelta_CM_Payment.AdvancePayedAmount");//累计已付预付款
+        var advanceDeductedAmount = mini.get("ZDelta_CM_Payment.AdvanceDeductedAmount");//累计扣减预付款
+        var thisAdvacneDeductAmount = mini.get("ZDelta_CM_Payment.ThisAdvacneDeductAmount");//本次预付款扣回
+        var treeFilter = mini.get("TreeFilter");
+        var invoiceGrid = mini.get("ZDelta_CM_PaymentInvoice");//发票
+        var isInvoiceReady = mini.get("ZDelta_CM_Payment.IsInvoiceReady");//是否已到发票
+        var WFRight = {};//节点标签权限。
+        var settleAmount = mini.get("ZDelta_CM_Payment.SettleAmount");//结算金额
+        var deductGrid = mini.get("ZDelta_CM_PaymentDeduct");//扣款表格
+
+        /********************************************结束：变量定义********************************************/
+
+        /********************************************开始：平台事件重写********************************************/
+
+        //表单加载后事件
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+
+            FormLoadCommomMethod(e, data);
+
+            if (FormState == 'add') {
+                delete oldcurrow.ContractAmount;
+                delete oldcurrow.Title;
+                delete oldcurrow.PayWay;
+                delete oldcurrow.TotalContractAmount;
+                delete oldcurrow.SettleAmount;
+
+                period.setText("保存后系统自动计算");
+                progressPayPeriod.setText("保存后系统自动计算");
+                beforeTotalAmount.setText("保存后系统自动计算");
+                afterTotalAmount.setText("保存后系统自动计算");
+                title.setText("系统默认值(保存后可修改)");
+                title.setReadOnly(true);
+                title.setRequired(false);
+                payWay.setValue("2");
+                
+                if(currow.ContractType == "C")
+                    paymentType.setValue(1);
+                else
+                    paymentType.setValue(2);
+                    
+                //联合体，乙方单位要可选
+                if(currow.IsConsortium){
+                    var cmbData = [];
+                    cmbData.push({"Id":currow.PartyBId,"Name":currow.PartyBName});
+                    currow.PartyBJson = mini.encode(cmbData);
+                    var array = ["C","D","E","F","G","H","I","J","K"];
+                    var index = 0;
+                    if(IsEmpty(currow.PartyCId))
+                        index = 1;
+                    else if(IsEmpty(currow.PartyDId))
+                        index = 2;
+                    else if(IsEmpty(currow.PartyEId))
+                        index = 3;
+                    else if(IsEmpty(currow.PartyFId))
+                        index = 4;
+                    else if(IsEmpty(currow.PartyGId))
+                        index = 5;
+                    else if(IsEmpty(currow.PartyHId))
+                        index = 6;
+                    else if(IsEmpty(currow.PartyIId))
+                        index = 7;
+                    else if(IsEmpty(currow.PartyJId))
+                        index = 8;
+                    else if(IsEmpty(currow.PartyKId))
+                        index = 9;
+                    for(var i = 0; i < index - 1; i ++){
+                        eval('cmbData.push({"Id":currow.Party' + array[i] + 'Id,"Name":currow.Party' + array[i] + 'Name});');                        
+                    }
+                    $("#PartyBTd").html(partyBCmbText);
+                    mini.parse();
+                    mini.get("ZDelta_CM_Payment.PartyBId").setData(cmbData);
+                    mini.get("ZDelta_CM_Payment.PartyBId").setValue(currow.PartyBId);
+                    mini.get("ZDelta_CM_Payment.PartyBId").on("valuechanged",function(e){
+                        var tmpData = e.selecteds;
+                        currow.PartyBName = "";
+                        if(tmpData.length > 1){
+                            tmpData.forEach(function(item){
+                                currow.PartyBName += item.Name + "、";
+                            });
+                            currow.PartyBName = currow.PartyBName.substring(0,currow.PartyBName.length - 1);
+                            currow.IsConsortiumPay = 1;
+                        }else{
+                            if(e.selected)
+                                currow.PartyBName = e.selected.Name;
+                            currow.IsConsortiumPay = 0;
+                        }
+                        currow.PartyBJson = mini.encode(e.selecteds);
+                        dtlGrid.getColumn("PartyBId").editor.data = e.selecteds;
+                        GetAdvanceInfo(e.value);
+                    });
+                }else{
+                    //获取预付款信息
+                    GetAdvanceInfo(); 
+                    var cmbData = [];
+                    cmbData.push({"Id":currow.PartyBId,"Name":currow.PartyBName});
+                    currow.PartyBJson = JSON.stringify(cmbData);
+                }
+
+                //获取结算信息
+                GetSettleInfo();
+            } else {
+                dtlGrid.getColumn("PartyBId").editor.data = mini.decode(currow.PartyBJson);
+                deductGrid.getColumn("PartyBId").editor.data = mini.decode(currow.PartyBJson);
+
+                if(mini.get("ZDelta_CM_Payment.PartyBId")){
+                    $("#PartyBTd").html(partyBText);
+                    mini.parse();
+                    mini.get("ZDelta_CM_Payment.PartyBName").setValue(currow.PartyBName);
+                }
+                paymentType.setReadOnly(true);
+
+                //扣款信息添加
+                // var deductInfo = mini.decode(currow.DeductInfo);
+                // var info = "当前合同截止到本期进度款填报日期[" + mini.formatDate(currow.RegDate,"yyyy-MM-dd") + "]，累计扣款金额为：" + mini.formatNumber(deductInfo.ContractDeduct,"n2") + "元，累计返还金额为：" + mini.formatNumber(deductInfo.ContractReturn,"n2") + "元。<br/>";
+                // var partyBDeduct = mini.decode(deductInfo.PartyB);//乙方扣款
+                // if(partyBDeduct != undefined){
+                //     partyBDeduct.forEach(function(item,index){
+                //         info += "单位[" + item.UnitName + "]的累计扣款金额为：" + mini.formatNumber(item.DeductAmount,"n2") + "元，累计返还金额为：" + mini.formatNumber(item.ReturnAmount,"n2") + "元。<br/>";
+                //     });
+                // }
+                // $("#DeductInfo").html(info);
+
+            }
+
+            //是否已到发票
+            SetContentByInvoiceReady();
+
+            //根据支付类型，动态显示隐藏字段或页签
+            SetContentByPaymentType();
+
+            //如果是进度款
+            if(currow.PaymentType == "1"){
+                //并且扣款金额都是0,则隐藏扣款
+                var numDeductAmount= Number(currow.DeductAmount);
+                var numThisAdvacneDeductAmount = Number(currow.ThisAdvacneDeductAmount);
+                var numAdvanceDeductedAmount = Number(currow.AdvanceDeductedAmount);
+                var numAdvancePayedAmount = Number(currow.AdvancePayedAmount);
+                if(numDeductAmount==0 && numThisAdvacneDeductAmount==0 && numAdvanceDeductedAmount==0 && numAdvancePayedAmount==0)
+                    DisplayDeduct(false);
+            }
+        }
+
+        PowerForm.EventBeforeLoadRight = function(o){
+            if (JSON.stringify(WFRight) == "{}") {
+                //根据权限字段配置子表编辑权限（ApprDeptJson）
+                currow = formconfig.config.joindata.currow;
+                if (currow.ApprDeptJson) {
+                    var apprDeptJsons = mini.decode(currow.ApprDeptJson);
+                    if (apprDeptJsons.length > 0) {
+                        WFRight.ZDelta_CM_Payment = [];
+                        WFRight.ZDelta_CM_PaymentBOQ = [];
+                        for (var i = 0; i < apprDeptJsons.length; i++) {
+                            if (i == 0) continue;//跳过施工的权限.
+                            var mainRight = { "BookMarkCode": apprDeptJsons[i]["MarkCode"], "Btn": ["Save"] };//主表保存按钮权限。
+                            var subRight = { "BookMarkCode": apprDeptJsons[i]["MarkCode"] };
+                            subRight["Column"] = ["Quantity_MarkCode_" + apprDeptJsons[i]["MarkCode"] + "_" + i];
+                            WFRight["ZDelta_CM_Payment"].push(mainRight);
+                            WFRight["ZDelta_CM_PaymentBOQ"].push(subRight);
+                        }
+                        //刷新权限
+                        FormFuns.LoadRight("ZDelta_CM_Payment", false);
+                    }
+                }
+                if (WFRight.ZDelta_CM_Payment == undefined) {
+                    WFRight.ZDelta_CM_Payment = [];
+                }
+                WFRight.ZDelta_CM_PaymentDeduct = [];
+                WFRight.ZDelta_CM_PaymentDeduct.push({ "BookMarkCode": "YSB", "Btn":["Add0","Add","Add1","Del","MoveUp","MoveDown" ], "Column":["Amount"] });
+                WFRight.ZDelta_CM_PaymentDeduct.push({ "BookMarkCode": "JL", "Btn":["Add0","Add","Add1","Del","MoveUp","MoveDown" ], "Column":["Amount"] });
+                WFRight.ZDelta_CM_PaymentDeduct.push({ "BookMarkCode": "GLB", "Btn":["Add0","Add","Add1","Del","MoveUp","MoveDown" ], "Column":["Amount"] });
+                var paymentConfig = WFRight.ZDelta_CM_Payment;
+                var bookMarkCodeArray = ["JL", "GLB", "YSB"];
+                for (var i = 0; i < bookMarkCodeArray.length; i++) {
+                    var flag = false;
+                    for (var j = 0; j < paymentConfig.length; j++) {
+                        if (paymentConfig[j].BookMarkCode != undefined && paymentConfig[j].BookMarkCode == bookMarkCodeArray[i]) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        paymentConfig.push({"BookMarkCode": bookMarkCodeArray[i] ,"Btn": ["Save"]});
+                    }
+                    // deductConfig.push({ "BookMarkCode": bookMarkCodeArray[i], "Btn": ["Add", "Del", "MoveUp", "MoveDown"], "Column": ["DeductType", "Amount", "PartyBId", "Memo"] });
+                }
+            }
+        }
+
+        //加载数据前
+        PowerForm.EventBeforeLoadData = function(e){
+            currow = formconfig.config.joindata.currow;
+            if(FormState != "add" && currow.PaymentType == "1" && setColumnFlag == false){
+                //动态添加审批部门列
+                apprDeptList = mini.decode(currow.ApprDeptJson);
+                var memoColumn = columns.pop();//抛出最后一个备注列
+                var endingColumn = columns.pop();//抛出最后一个期末列
+                apprDeptList.forEach(function(item,index){
+                    var addedColumn = {
+                        name: "Dept_" + index,
+                        header: item.DeptName,
+                        headerAlign: "center",
+                        columns: [{
+                            field: "Quantity_Dept_" + index,
+                            name: "Quantity_MarkCode_" + item.MarkCode + "_" + index,
+                            header: "数量",
+                            numberFormat: "n3",
+                            headerAlign: "center",
+                            width: 100,
+                            align: "right",
+                            readOnly: true,
+                            editor: {
+                                type: "spinner",
+                                changeOnMousewheel: false,
+                                minValue : "-9999999999" ,
+                                maxValue: "99999999999999",
+                                width: "100%"
+                            }
+                            }, {
+                            field: "Amount_Dept_" + index,
+                            name: "Amount_Dept_" + index,
+                            header: "金额(元)",
+                            numberFormat: "n2",
+                            headerAlign: "center",
+                            width: 120,
+                            align: "right",
+                            editor: {}
+                        }]
+                    }
+                    if(index == 0)
+                        addedColumn.columns[0]["readOnly"] = false;
+                    columns.push(addedColumn);
+                });
+                columns.push(endingColumn);//重新添加期末列
+                columns.push(memoColumn);//重新添加备注列
+                BOQGrid.setColumns(columns);
+                setColumnFlag = true;
+            }
+            if(e.sender.id == BOQTree.id){
+                if(FormState == "add"){
+                    e.cancel = true;
+                    return ;
+                }
+            }
+        }
+
+        //tree/grid加载数据后
+        PowerForm.EventAfterLoadData = function(e){
+            if(e.sender.id == "ZDelta_CM_ContractBOQ"){
+                //默认选中第一个叶子节点
+                if(BOQTreeSelected != null){
+                    BOQTree.select(BOQTreeSelected);
+                }else{
+                    var treeData = BOQTree.getData();
+                    if(treeData.length > 0){
+                        BOQTree.selectFirst();
+                        BOQTreeSelected = BOQTree.getData()[0];
+                    }
+                }
+
+                //判断是否要过滤已有项
+                if(!ValidEditRight("ZDelta_CM_PaymentBOQ")){
+                    treeFilter.setValue(1);
+                    FilterTreeData(1);
+                    //选中有数据行，没有编辑权限时执行
+                    var dataList = BOQTree.getDataView();
+                    for(var i = 0; i < dataList.length; i ++){
+                        if(dataList[i].IsExistsChild=="1"){
+                            BOQTreeSelected = dataList[i];
+                            BOQTree.select(BOQTreeSelected);
+                            break;
+                        }
+                    }
+                }
+            }
+            if(e.sender.id == BOQGrid.id){
+                BOQGrid.groupBy("ItemName", "asc");//分组
+            }
+        }
+
+        //数据渲染前
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            //拆分数据
+            if (e.sender.id == BOQGrid.id && currow.PaymentType == "1") {
+                //初始化动态列
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var list = mini.decode(item.ApprDeptJson);
+                    for (var j = 0; j < list.length; j++) {
+                        for(var tmp in list[j]){
+                            item[tmp] = list[j][tmp];
+                        }
+                    }
+                }
+
+                //汇总行
+                var beginingTotalAmount = 0,endingTotalAmount = 0,fixRateTotalAmount = 0;
+                var apprDeptTotalAmountArray = [];
+                var apprDeptJson = mini.decode(currow.ApprDeptJson);
+                apprDeptJson.forEach(function(item,index){
+                    apprDeptTotalAmountArray[index] = 0;
+                });
+                for(var i = 0; i < data.length; i ++){
+                    var item = data[i];
+                    beginingTotalAmount = Number(beginingTotalAmount) + Number(item.BeginingAmount);
+                    endingTotalAmount = Number(endingTotalAmount) + Number(item.EndingAmount);
+                    fixRateTotalAmount = Number(fixRateTotalAmount) + Number(item.ThisFixRateAmount);
+                    apprDeptTotalAmountArray.forEach(function(deptItem,index){
+                        apprDeptTotalAmountArray[index] = Number(deptItem) + Number(item["Amount_Dept_" + index]);
+                    });
+                }
+                var BOQSummary = {};
+                BOQSummary.GridId = e.sender.id;
+                BOQSummary.TextField = "Name";;
+                BOQSummary.TextValue = "合计:";
+                BOQSummary.SummaryData = {"BeginingAmount":{"Value":beginingTotalAmount},"EndingAmount":{"Value":endingTotalAmount},"ThisFixRateAmount":{"Value":fixRateTotalAmount}};
+                apprDeptTotalAmountArray.forEach(function(item,index){
+                    BOQSummary.SummaryData["Amount_Dept_" + index] = {"Value":item};
+                });
+                SummaryRowFunc.InitData(BOQSummary);
+            }else if(e.sender.id == BOQTree.id){
+                if(data.length == 0) return data;
+                var idStr = "";
+                data.forEach(function(item){
+                    idStr += "'" + item.Id + "',";
+                });
+                idStr = idStr.substring(0,idStr.length - 1);
+                var params = {};
+                params.idStr = idStr;
+                params.paymentId = formconfig.config.joindata.currow.Id;
+                APIExecSync("ZDelta_CM_PaymentBOQ", "BO", "GetBOQIsExistsChild", params, function (text) {
+                    var tmp = mini.decode(text);
+                    if (tmp.success) {
+                        var rltData = tmp.data.value.split(",");
+                        //兼容IE
+                        if(!Array.prototype.find){
+                            Array.prototype.find = function(callback) {
+                                return callback && (this.filter(callback)|| [])[0];
+                            };
+                        }
+                        data.forEach(function(item){
+                            var tmp = rltData.find(function(n){return n == item.Id;});
+                            if(tmp != undefined){
+                                item.IsExistsChild = 1;
+                            }else{
+                                item.IsExistsChild = 0;
+                            }
+                        });
+                    } else
+                        Power.ui.warning(tmp.message);
+                });
+            }
+            return data;
+        }
+
+        //保存前
+        PowerForm.EventBeforeSaveData = function (data, e) {
+            //拆分数据，设计明细一条拆多条
+            if (data && data.ZDelta_CM_PaymentBOQ && data.ZDelta_CM_PaymentBOQ.data) {
+                var dtlDataArray = data.ZDelta_CM_PaymentBOQ.data;
+                var newDataArray = [];
+                for (var i = 0; i < dtlDataArray.length; i++) {
+                    var item = dtlDataArray[i];
+                    item.ApprDeptJson = [];
+                    for (var j = 0; j < apprDeptList.length; j++) {
+                        var obj = {};
+                        obj["Quantity_Dept_" + j] = item["Quantity_Dept_" + j];
+                        obj["Amount_Dept_" + j] = item["Amount_Dept_" + j];
+                        obj["IsEdited_Dept_" + j] = item["IsEdited_Dept_" + j];
+                        item.ApprDeptJson.push(obj);
+                    }
+                    item.ApprDeptJson = mini.encode(item.ApprDeptJson);
+                }
+            }
+        }
+
+        //行新增前
+        PowerForm.EventBeforeAddRow = function(e,row){
+            if(e.id == BOQGrid.id){
+                row.ParentId = BOQTreeSelected.Id;
+                row.MasterId = currow.Id;
+                apprDeptList.forEach(function(item,index){
+                    row["Quantity_Dept_" + index] = 0;
+                    row["Amount_Dept_" + index] = 0;
+                    row["IsEdited_Dept_" + index] = false;
+                    row["BeginingAmount"] = 0;
+                    row["EndingAmount"] = 0;
+                    row["BeginingQuantity"] = 0;
+                    row["EndingQuantity"] = 0;
+                    row["ThisFixRateAmount"] = 0;
+                    row["BeginingFixRateAmount"] = 0;
+                    row["EndingFixRateAmount"] = 0;
+                    row["PayRate"] = currow.PayRate;
+                    row["OriginalRate"] = currow.OriginalRate;
+                    row["CurrentRate"] = currow.CurrentRate;
+                });
+                var parentNodes = BOQTree.getAncestors(BOQTree.getSelectedNode());
+                var parentNames = "";
+                parentNodes.forEach(function(item,index){
+                    parentNames += item["Name"] + "/";
+                });
+                parentNames += BOQTree.getSelectedNode()["Name"];
+                row.ParentNames = parentNames;
+            }
+            if(e.id == invoiceGrid.id){
+                row.ThisAmount = 0;
+            }
+            if(e.id == dtlGrid.id){
+                if(currow.IsConsortiumPay){
+                    row.PartyBId = mini.decode(currow.PartyBJson)[0]["Id"];
+                    row.PartyBName = mini.decode(currow.PartyBJson)[0]["Name"];
+                }else{
+                    row.PartyBId = currow.PartyBId;
+                    row.PartyBName = currow.PartyBName;
+                }
+            }
+        }
+
+        //打开向导前
+        PowerForm.EventWizardWhere = function(e){
+            e.canNext = true;
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add"){
+                if(BOQTreeSelected == null){
+                    e.canNext = false;
+                    Power.ui.warning("请先选择左侧工程量清单树!");
+                    return ;
+                }
+                e.where = " ParentId = '" + BOQTreeSelected.Id + "' and PartyBId = '" + currow.PartyBId + "' and not exists (select 1 from ZDelta_CM_ContractBOQ x1 where x1.ParentId = Id) ";
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add0"){
+                if(BOQTreeSelected == null){
+                    e.canNext = false;
+                    Power.ui.warning("请先选择左侧工程量清单树!");
+                    return ;
+                }
+                e.where = " ParentId = '" + BOQTreeSelected.Id + "' and B.PartyBId = '" + currow.PartyBId + "' and not exists (select 1 from ZDelta_Chg_PriceApplyDtl x1 where x1.ParentId = Id)";
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add1"){
+                if(BOQTreeSelected == null){
+                    e.canNext = false;
+                    Power.ui.warning("请先选择左侧工程量清单树!");
+                    return ;
+                }
+                e.where = " ParentId = '" + BOQTreeSelected.Id + "' and B.PartyBId = '" + currow.PartyBId + "' and not exists (select 1 from ZDelta_Chg_VisaDtl x1 where x1.ParentId = Id)";
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add2"){
+                if(BOQTreeSelected == null){
+                    e.canNext = false;
+                    Power.ui.warning("请先选择左侧工程量清单树!");
+                    return ;
+                }
+                e.where = " ParentId = '" + BOQTreeSelected.Id + "' and A.PartyBId = '" + currow.PartyBId + "' and not exists (select 1 from ZDelta_Chg_VisaDtl x1 where x1.ParentId = Id)";
+            }
+            if(e.id == "ZDelta_CM_PaymentDeduct.Add0"){
+                if(FormState == "add"){
+                    e.canNext = false;
+                    Power.ui.alert("请先保存！");
+                }else{
+                    e.where = " ContractId = '" + currow.ContractId + "' ";
+                    var partyBArray = currow.PartyBId.split(",");
+                    if(partyBArray.length > 0){
+                        var partyBWhere = "";
+                        partyBArray.forEach(function(item){
+                            partyBWhere  += "'" + item + "',";
+                        });
+                        e.where += " and PartyBId in (" + partyBWhere.substring(0,partyBWhere.length - 1) + ") ";
+                    }
+                }
+            }
+        }
+
+        //向导选择数据后
+        PowerForm.EventWizardData = function(e,data){
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add"){
+                for(var i = 0; i < data.length; i ++){
+                    data[i]["ItemType"] = "ContractBOQ";
+                    data[i]["ItemName"] = "合同:" + currow.ContractName;
+                    data[i]["UnitPrice"] = Number(data[i]["UnitPrice"]).toFixed(2);
+                    data[i]["OriginalRate"] = currow.OriginalRate;
+                    data[i]["CurrentRate"] = currow.CurrentRate;
+                }
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add0"){
+                for(var i = 0; i < data.length; i ++){
+                    data[i]["ItemType"] = "PriceApplyBOQ";
+                    data[i]["ItemName"] = "变更价格申报:" + data[i]["Title"];
+                    data[i]["ApprUnitPrice"] = Number(data[i]["ApprUnitPrice"]).toFixed(2);
+                    data[i]["OriginalRate"] = currow.OriginalRate;
+                    data[i]["CurrentRate"] = currow.CurrentRate;
+                }
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add1"){
+                for(var i = 0; i < data.length; i ++){
+                    data[i]["ItemType"] = "VisBOQ";
+                    data[i]["ItemName"] = "签证:" + data[i]["Title"];
+                    data[i]["ApprUnitPrice"] = Number(data[i]["ApprUnitPrice"]).toFixed(2);
+                    data[i]["OriginalRate"] = currow.OriginalRate;
+                    data[i]["CurrentRate"] = currow.CurrentRate;
+                }
+            }
+            if(e.id == "ZDelta_CM_PaymentBOQ.Add2"){
+                for(var i = 0; i < data.length; i ++){
+                    data[i]["ItemType"] = "SupplementaryAgreementBOQ";
+                    data[i]["ItemName"] = "补充协议:" + data[i]["Title"];
+                    data[i]["BeforeApprUnitPrice"] = Number(data[i]["BeforeApprUnitPrice"]).toFixed(2);
+                    data[i]["OriginalRate"] = currow.OriginalRate;
+                    data[i]["CurrentRate"] = currow.CurrentRate;
+                }
+            }
+        }
+
+        //选择流程前
+        PowerForm.EventBeforeOnBtnFlow = function(e){
+            e.isValid = true;
+            if(CheckIsStartNodeFlow(e.KeyWord)){
+                if(isInvoiceReady.getValue() == "true"){
+                    // if(currow.ThisInvoiceAmount != currow.PayAmount){
+                    //     Power.ui.info("当前付款单已选发票金额不等于付款金额，请确认！",{timeout:0,closeable:true});
+                    //     e.isValid = false;
+                    // }
+                }else{
+                    if(currow.InvoiceUnReadyReason == ""){
+                        Power.ui.info("当前付款单未填写发票未到原因！",{timeout:0,closeable:true});
+                        e.isValid = false;
+                    }
+                }
+            }
+        }
+
+        //保存，服务器返回成功后
+        PowerForm.EventAfterOnBtnSave = function(e){
+            if(e.id=="ZDelta_CM_Payment.Save"){
+                title.setReadOnly(false);
+                title.setRequired(true);
+            }else if(e.id == "ZDelta_CM_PaymentDtl.Del" || e.id == "ZDelta_CM_PaymentBOQ.Del" || e.id == "ZDelta_CM_PaymentInvoice.Del" || e.id == "ZDelta_CM_PaymentDeduct.Del" || e.id == "ZDelta_CM_PaymentDeduct"){
+                PowerForm.OnBtnRefresh({id:"ZDelta_CM_Payment.xxx"});
+            }
+        }
+
+        /********************************************结束：平台事件重写********************************************/
+
+        /********************************************开始：miniui拦截事件********************************************/
+
+        //编辑前
+        dtlGrid.on("cellbeginedit",function(e){
+            var record = e.record;
+            if(e.field == "PartyBId"){
+                var editor = e.editor;
+                if(currow.IsConsortiumPay){
+                    editor.setData(mini.decode(currow.PartyBJson));
+                }else{
+                    editor.setData([{Id:currow.PartyBId,Name:currow.PartyBName}]);
+                }
+            }
+        });
+
+        //编辑前
+        deductGrid.on("cellbeginedit",function(e){
+            var record = e.record;
+            if((e.field == "PartyBId" || e.field == "Amount") && !IsEmpty(record.ContractDeductId)){
+               e.cancel = true; 
+            }
+            else if(e.field == "PartyBId" && IsEmpty(record.ContractDeductId)){
+                var editor = e.editor;
+                if(currow.IsConsortiumPay){
+                    editor.setData(mini.decode(currow.PartyBJson));
+                }else{
+                    editor.setData([{Id:currow.PartyBId,Name:currow.PartyBName}]);
+                }
+            }
+        });
+
+        dtlGrid.on("cellendedit",function(e){
+            var record = e.record;
+            if (e.field == "PayType") {
+                var editor = e.editor;
+                editor.setData(comboboxdata["ZDelta_CM_PaymentDtl.PayType"].Data);
+            }else if(e.field == "ConstApplyAmount"){
+                dtlGrid.updateRow(record,{"SupervisionAmount":e.value,"Amount":e.value});
+            }else if(e.field == "SupervisionAmount"){
+                dtlGrid.updateRow(record,{"Amount":e.value});
+            }
+        })
+
+        paymentType.on("valuechanged",function(e){
+            SetContentByPaymentType();
+        });
+
+        isInvoiceReady.on("valuechanged",function(e){
+            SetContentByInvoiceReady();
+        });
+
+        //选中前
+        BOQTree.on("beforenodeselect",function(e){
+            var record = e.record;
+            BOQTreeSelected = record;//记录选中行
+        });
+
+        //单元格编辑后
+        BOQGrid.on("cellendedit",function(e){
+            var record = e.record;
+            if(e.field && e.field.indexOf("Quantity_Dept_") == 0){
+                var newAmount = e.value * record.UnitPrice;
+                var newFixAmount = newAmount;
+                if(record.OriginalRate != record.CurrentRate)
+                    newFixAmount = newAmount * Number(1 + Number(record.CurrentRate)) / (Number(1 + Number(record.OriginalRate)) * 1.0);
+                var amountField = e.field.replace("Quantity","Amount");
+                var isEditField = e.field.replace("Quantity","IsEdited");
+                var obj = {};
+                obj[amountField] = newFixAmount;
+                obj[isEditField] = true;
+                if(e.field == "Quantity_Dept_" + (apprDeptList.length - 1)){
+                    obj["ThisFixRateAmount"] = newAmount - newFixAmount;
+                }
+                BOQGrid.updateRow(record, obj);//更新金额,和是否编辑过状态
+
+                //更新后面的数量，金额
+                var index = Number(e.field.replace("Quantity_Dept_",""));
+                for(var i = index + 1; i < apprDeptList.length; i ++){
+                    if(record["IsEdited_Dept_" + i] == true){
+                        break;
+                    }else{
+                        //未编辑过，代表不是驳回的，要修改后面数据
+                        var quantityField = "Quantity_Dept_" + i;
+                        var amountField = "Amount_Dept_" + i;
+                        obj = {};
+                        obj[amountField] = newFixAmount;
+                        obj[quantityField] = e.value;
+                        if(i == (apprDeptList.length - 1)){
+                            obj["ThisFixRateAmount"] = newAmount - newFixAmount;
+                        }
+                        BOQGrid.updateRow(record,obj);
+                    }
+                }
+            }
+        });
+
+        BOQGrid.on("cellcommitedit",function(e){
+            var record = e.record;
+            if(e.field == "PayRate"){
+                e.value = e.value / 100.0;
+            }
+        });
+
+        //分组
+        BOQGrid.on("drawgroup",function(e){
+            e.cellHtml = e.value;
+        })
+
+        //单元格绘制
+        BOQGrid.on("drawcell",function(e){
+            var record = e.record;
+            if (e.field == "EndingQuantity") {
+                if (Number(e.value) > Number(record.OldItemQuantity)) {
+                    e.rowStyle = "background-color:#FFFF99;";
+                }
+            }
+        });
+
+        //单元格绘制
+        BOQTree.on("drawcell",function(e){
+            var record = e.record;
+            if (e.field == "Code") {
+                if(record.IsExistsChild == 1){
+                    e.rowCls = "mini-grid-row-redfont";
+                }
+            }
+        });
+
+        //双击查看
+        deductGrid.on("rowdblclick", function (e) {
+            var record = e.record;
+            switch(record.Type){
+                case "Safety":
+                case "Quality":
+                case "Human":
+                case "Environment":
+                case "Subpackage":
+                case "Other":
+                    ViewForm("0e1d01fb-4902-4ea6-b529-c9b3d96698cd", record.ItemId);
+                    break;
+                case "EvaluateDeduct":
+                case "EvaluateReturn":
+                    ViewForm("ea37390f-f39b-4c9b-8b4b-4f98467d15fd", record.ItemId);
+                    break;
+            }
+        });
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+        /********************************************开始：自定义事件********************************************/
+
+        //自定义保存按钮
+        var CustomSave = function(){
+            if(FormState == "add"){
+                var info = "当前付款类型为[" + paymentType.getText() + "],请确认付款类型是否正确，确认保存后，付款类型不可再更新！";
+                if(currow.IsConsortium){
+                    info += "<br/>当前合同为联合体类型，乙方单位为[" + mini.get("ZDelta_CM_Payment.PartyBId").getText() + "],请确认乙方单位是否正确，确认保存后，乙方单位不可再更改！";
+                }
+                //先弹出确认框
+                var buttonOption = {};
+                var yes = "是",
+                    no = "否";
+                buttonOption[yes] = {
+                    theme: 'primary',
+                    handler: function (ret) {
+                        if (ret) {
+                            PowerForm.OnBtnSave({"id": "ZDelta_CM_Payment.Save"});
+                        }
+                    }
+                };
+                buttonOption[no] = function () {};
+                
+                Power.ui.confirm(info, {
+                    button: buttonOption
+                });
+            }else{
+                PowerForm.OnBtnSave({"id": "ZDelta_CM_Payment.Save"});
+            }
+        }
+
+        //根据支付类型，动态显示隐藏字段或页签
+        var SetContentByPaymentType = function(){
+            if(paymentType.getValue() == "1" && currow.ContractType == "C"){
+                $(".ProgressPay").show();
+                $(".AdvancePay").hide();
+                mini.parse();
+            }else{
+                $(".ProgressPay").hide();
+                $(".AdvancePay").show();
+            }
+        }
+
+        //根据是否已到发票，动态显示隐藏字段或页签
+        var SetContentByInvoiceReady = function(){
+            if(isInvoiceReady.getValue() == "true"){
+                $(".InvoiceReady").show();
+                $(".InvoiceUnReady").hide();
+                $(".Invoice").show();
+                mini.parse();
+            }else{
+                $(".InvoiceReady").hide();
+                $(".InvoiceUnReady").show();
+                $(".Invoice").hide();
+            }
+        }
+
+        //获取预付款信息
+        var GetAdvanceInfo = function(partyBId){
+            var params = {};
+            params.contractId = currow.ContractId;
+            params.partyBId = partyBId == undefined ? currow.PartyBId : partyBId;
+            if(IsEmpty(params.contractId) || IsEmpty(params.partyBId))
+                return ;
+            FormFuns.APIExec("ZDelta_CM_Payment", "BO", "GetAdvanceInfo", params, function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.success) {
+                    var data = mini.decode(tmp.data.value);
+                    advancePayedAmount.setValue(data.AdvancePayedAmount);
+                    advanceDeductedAmount.setValue(data.AdvanceDeductedAmount);
+                } else
+                    Power.ui.warning(tmp.message);
+            });
+        }
+
+        //获取结算信息
+        var GetSettleInfo = function(){
+            var params = {};
+            params.contractId = currow.ContractId;
+            if(IsEmpty(params.contractId))
+                return ;
+            FormFuns.APIExec("ZDelta_CM_Settlement", "BO", "GetContractSettleInfo", params, function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.success) {
+                    var data = mini.decode(tmp.data.value);
+                    if(data.IsSettle == true){
+                        settleAmount.setValue(data.SettleAmount);
+                    }
+                } else
+                    Power.ui.warning(tmp.message);
+            });
+        }
+
+        //BOQ树过滤
+        var FilterTreeData = function(isChecked){
+            if(isChecked){
+                BOQTree.filter(function(node){
+                    if(node.IsExistsChild == 1) return true;
+                });
+            }else{
+                BOQTree.clearFilter();
+            }
+        }
+
+        //扣款显示隐藏
+        var DisplayDeduct = function(isDisplay){
+            if(isDisplay){
+                $("#DeductDiv1").show();
+                $("#DeductDiv2").show();
+            }else{
+                $("#DeductDiv1").hide();
+                $("#DeductDiv2").hide();
+            }
+        }
+
+        //增加预付款扣回或者税率
+        var AddDeduct = function(type){
+            var row = {};
+            row.MasterId = currow.Id;
+            row.DeductOrReturn = "Deduct";
+            row.Amount = 0;
+            if(currow.IsConsortiumPay){
+                var array = mini.decode(currow.PartyBJson);
+                row.PartyBId = array[0]["PartyBId"];
+                row.PartyBName = array[0]["PartyBName"];
+            }else{
+                row.PartyBId = currow.PartyBId;
+                row.PartyBName = currow.PartyBName;
+            }
+            row.Type = type;
+            deductGrid.addRow(row);
+        }
+
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+
+</html>
+
+
+

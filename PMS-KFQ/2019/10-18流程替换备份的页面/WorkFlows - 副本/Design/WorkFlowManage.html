@@ -1,0 +1,586 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="panelPropertyList" class="mini-panel" title="header" iconcls="icon-add" style="width: 450px; height: 250px;" visible="false"
+         showtoolbar="true" showclosebutton="true" showheader="false" bodystyle="padding:0" borderstyle="border:0">
+        <div id="gridPropertyList" class="mini-datagrid" style="width: 100%; height: 100%;" showpager="false">
+            <div property="columns">
+                <div field="PropertyName" width="70" headeralign="center">$Helper.GetResource("g_add")名称</div>
+                <div field="Description" width="70" headeralign="center">$Helper.GetResource("g_add")简述</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>$Helper.GetResource("workflow_manage")
+                </div><!--工作流管理-->
+                <div class="actions">
+                    <a class="mini-button blue" id="btnClearCache" iconcls="fa-save" onclick="onClearCache">清理缓存</a><!--保存-->
+                    <span></span>
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave">$Helper.GetResource("g_save")</a><!--保存-->
+                    <a class="mini-button blue" id="btnDelete" iconcls="fa-trash-o" onclick="onDelete">$Helper.GetResource("g_delete")</a><!--删除-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')" iconcls="fa-power-off">$Helper.GetResource("g_off")</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="tabMain" class="mini-tabs" activeindex="0" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="$Helper.GetResource('g_general')" name="tabCommon">
+                            <!--通常-->
+                            <form id="frmMain" method="post">
+                                <fieldset>
+                                    <legend>$Helper.GetResource("workflow_base_info")</legend><!--基本信息-->
+                                    <div class="fieldset-contain">
+                                        <table>
+                                            <tr>
+                                                <td>$Helper.GetResource("g_code")</td><!--编号-->
+                                                <td>
+                                                    <input id="txtWorkFlowCode" name="WorkFlowCode" class="mini-textbox" required="true" />
+                                                </td>
+                                                <td>$Helper.GetResource("g_name")</td><!--名称-->
+                                                <td>
+                                                    <input id="txtWorkFlowName" name="WorkFlowName" class="mini-textbox" required="true" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>$Helper.GetResource("workflow_version")</td><!--版本-->
+                                                <td>
+                                                    <input id="txtVersion" name="Version" class="mini-textbox" required="true" enabled="false" />
+                                                </td>
+                                                <td>
+                                                    <label>作用范围</label><!--所属分类-->
+                                                </td>
+                                                <td>
+                                                    <div id="cboDoMainType" name="DoMainType" class="mini-combobox" required="true" valueField="Code" textField="Text"></div>
+                                                    <div id="txtModuleID" name="ModuleID" class="mini-textbox" required="true" style="display: none"></div>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>$Helper.GetResource("g_business")</td><!--业务对象-->
+                                                <td>
+                                                    <input id="txtKeyWord" name="KeyWord" class="mini-textbox" required="true" enabled="false" allowinput="false" />
+                                                </td>
+                                                <td>
+                                                    <input id="txtEpsProjectID" name="EpsProjectID" class="mini-textbox"
+                                                           required="true" allowinput="false" visible="false" />
+                                                </td>
+                                                <td>
+                                                    <input id="chkIsDisabled" name="IsDisabled" class="mini-checkbox" text="禁用流程" />
+                                                    <input id="chkIsReDesign" name="IsReDesign" class="mini-checkbox" text="可重新设计" />
+                                                    <input id="chkIsAutoSelect" name="IsAutoSelect" class="mini-checkbox" text="自动选择" />
+
+                                                </td>
+                                            </tr>
+                                             <tr>
+                                                <td>办理期限:</td><!--说明-->
+                                                <td  >
+                                                    <input id="txtTimeLimit" name="TimeLimit" class="mini-spinner" required="true"  minValue="0" maxValue="1000" value="0"  /> 
+                                                </td>
+                                                 <td>(天)</td>
+                                                 <td> [0 没有时间限制]
+
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <div id="chkInputLimitDaysByRun" class="mini-checkbox" name="InputLimitDaysByRun" text="送审时填写" tooltip="送审人填写期望完成时间" ></div>
+                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td>$Helper.GetResource("workflow_about"):</td><!--说明-->
+                                                <td colspan="3">
+                                                    <input name="Description" class="mini-textbox" required="true" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <span style="color:red">
+                                                        说明：勾选“可重新设计”之后，起草人将可以重新设计这个流程；
+                                                        勾选“自动选择”之后，当选择流程页面只有本流程，且本流程没有起草者定义的节点时，自动触发下一步按钮
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                                
+                                <fieldset>
+                                    <legend>$Helper.GetResource("workflow_acitve_way")</legend><!--激活方式-->
+                                    <div class="fieldset-contain">
+                                        <table style="table-layout: fixed; width: 100%" border="0">
+                                            <tr>
+                                                <td width="100px"></td>
+                                                <td>
+                                                    <div id="rdoActiveType" name="ActiveType" class="mini-radiobuttonlist" onvaluechanged="onActiveTypeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data='[{Code:"Normal",Text:"$Helper.GetResource("workflow_unconditional")" },{Code:"CustomFormula" ,Text:"$Helper.GetResource("workflow_customformula")" } ]'>
+                                                    </div><!--无条件、自定义公式、代码定义-->
+                                                </td>
+                                            </tr>
+                                            <tr id="trActivePremise" style="display: none">
+                                                <td style="width: 100px">$Helper.GetResource("workflow_define_conditions")</td><!--条件定义-->
+                                                <td>
+                                                    <div id="txtActivePremise" name="ActivePremise" class="mini-textbox" emptytext="eg: ([变量1]='1') &&([变量2]='EPC' || [变量2]='C')" />
+                                                </td>
+                                            </tr>
+                                            <tr id="trActiveMero" style="display: none">
+                                                <td style="width: 100px">$Helper.GetResource("workflow_about")</td><!--说明-->
+                                                <td>
+                                                    <div id="txtActiveMero" name="ActiveMero" class="mini-textbox" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                                <fieldset> 
+                                    <div class="fieldset-contain">
+                                        <table style="table-layout: fixed;" border="0">
+                                            <tr>
+                                                <td>
+                                                    <div id="chkActiveTitle" name="ActiveTitle" class="mini-checkbox" text="开启自定义标题" oncheckedchanged="ActiveTitleChanged">
+                                                    </div><!--开启自定义标题-->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div id="txtActiveTitleName" name="ActiveTitleName" class="mini-textbox" emptytext="eg:[变量1]+'.'+[变量2]">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <div title="$Helper.GetResource('workflow_label_define')" name="tabBookMarkList" >
+                            <!--标签定义-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button" iconcls="fa-plus" onclick="addBookMarkRow()">$Helper.GetResource("g_add")</a><!--新增-->
+                                <a class="mini-button" iconcls="fa-trash-o" onclick="removeBookMarkRow()">$Helper.GetResource("g_delete")</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="gdBookMarkList" class="mini-datagrid" style="height: 100%;"  oncellbeginedit= "onBookMarkBeginEdit" oncellendedit= "onBookMarkEndEdit"
+                                     allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="false" showemptytext="true"  pagerButtons="#buttons" >
+                                    <div property="columns">
+                                        <div field="BookMarkCode" width="60" headeralign="center">
+                                            $Helper.GetResource("g_code")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--编号-->
+                                        <div field="BookMarkName" name="BookMarkName" width="60" headeralign="center">
+                                            $Helper.GetResource("workflow_about")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--说明-->
+                                         <div field="BookMarkType" name="BookMarkType" width="60" headeralign="center" displayField="BookMarkTypeName"  renderer="onBookMarkRenderer" >
+                                            类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" valueField="Code" textField="Text" />
+                                        </div> 
+                                    </div>
+                                </div>
+                                 <div id="buttons">
+                                            <span class="separator"></span>
+                                            <a class="mini-button" iconCls="icon-add" plain="true" id="add" onclick="javascript:alert('ok');"></a> 
+                                        </div>
+                            </div>
+
+                        </div>
+
+                        <div title="$Helper.GetResource('workflow_variable_define')" name="tabVariableList">
+                            <!--变量定义-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button" iconcls="fa-plus" onclick="addVariableRow">$Helper.GetResource("g_add")</a><!--新增-->
+                                <a class="mini-button" iconcls="fa-trash-o" onclick="removeVariableRow()">$Helper.GetResource("g_delete")</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="gdVariableList" class="mini-datagrid" style="height: 100%;" showpager="false"
+                                     allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="false" showemptytext="true">
+                                    <div property="columns">
+                                        <div field="VarName" width="60" headeralign="center">
+                                            $Helper.GetResource("g_name")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--名称-->
+                                        <div field="Description" name="Description" width="60" headeralign="center">
+                                            $Helper.GetResource("workflow_about")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--说明-->
+                                        <div field="VarSource" allowsort="false" headeralign="center" displayfield="VarSource" datatype="string">
+                                            $Helper.GetResource("workflow_resource")
+                                            <input property="editor" id="VarSource" name="VarSource" class="mini-lookup" required="true" textfield="PropertyName" displayfield="VarSource" valuefield="PropertyName" popupwidth="auto" popup="#panelPropertyList" grid="#gridPropertyList" multiselect="true" />
+                                        </div><!--来源-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+
+        var formManage = new FormManage();
+        var gdVariableList = mini.get("gdVariableList");
+        var gdBookMarkList = mini.get("gdBookMarkList");
+        var form = new mini.Form("frmMain");
+
+        var SelectData = null;
+        var rdoActiveType = mini.get("rdoActiveType");
+
+        formManage.setForm(form);  //将form对象传入进去
+
+        var mainConfig = [];
+        var configSub = new Object();
+        configSub.ControlName = "gdVariableList";
+        configSub.DataName = "VarList";
+        configSub.ControlType = "DataGrid";
+        mainConfig.push(configSub);
+
+        configSub = new Object();
+        configSub.ControlName = "gdBookMarkList";
+        configSub.DataName = "BookMarkList";
+        configSub.ControlType = "DataGrid";
+        mainConfig.push(configSub);
+
+        var bindConfig = [];
+        var bindItem = new Object();
+        bindItem.ControlName = "cboDoMainType";
+        bindItem.SourceName = "Power.WorkFlows.Enums.EDoMainType";
+        bindItem.ControlType = "ComboBox";
+        bindConfig.push(bindItem);
+
+        var formConfig = new Object();
+        formConfig.BindConfig = bindConfig;
+        formConfig.MainConfig = mainConfig;
+        formManage.setFormConfig(formConfig);
+
+
+
+        var addBookMarkRow = function (e) {
+            var iCount = gdBookMarkList.totalCount;
+            var row = { "BookMarkID": CreateGUID(),"BookMarkType":"Normal" };// Guid.NewGuid().ToString() }
+            gdBookMarkList.addRow(row);
+        }
+        var removeBookMarkRow = function (e) {
+            var rows = gdBookMarkList.getSelecteds();
+            if (rows.length <= 0) return;
+            gdBookMarkList.removeRows(rows, true);
+        }
+        var addVariableRow = function (e) {
+            var iCount = gdVariableList.totalCount;
+            //Guid.NewGuid().ToString()
+            var row = { "VarID": CreateGUID(), "SerialNo": (iCount + 1), VarType: 'System.String' }
+            gdVariableList.addRow(row);
+        }
+        var removeVariableRow = function (e) {
+
+            var rows = gdVariableList.getSelecteds();
+            if (rows.length <= 0) return;
+            gdVariableList.removeRows(rows, true);
+        }
+ 
+       
+        var ActiveTitleChanged = function (e) {
+            setActiveTitle(e.checked);
+        }
+        var setActiveTitle = function (flag) {
+            if (flag == false) {
+                mini.get("txtActiveTitleName").setValue("");
+                mini.get("txtActiveTitleName").setEnabled(false);
+                mini.get("txtActiveTitleName").setRequired(false);
+            }
+            else {
+                mini.get("txtActiveTitleName").setEnabled(true);
+                mini.get("txtActiveTitleName").setRequired(true);
+                mini.get("txtActiveTitleName").setRequiredErrorText("请输入赋值公式");//"请输入扩展流程对应的工作流类全名,以及确保该类存在"
+            }
+        }
+        var onActiveTypeChanged = function (e) {
+            setActiveType(e.value);
+        }
+        var setActiveType = function (value) {
+            mini.get("txtActivePremise").setValue("");
+            mini.get("txtActiveMero").setValue("");
+            mini.get("txtActivePremise").setRequired(false);
+            mini.get("txtActiveMero").setRequired(false);
+            switch (value) {
+                case "Normal":
+                    document.getElementById("trActivePremise").style.display = "none";
+                    document.getElementById("trActiveMero").style.display = "none";
+                    break;
+                case "CustomFormula":
+                    document.getElementById("trActivePremise").style.display = "";
+                    document.getElementById("trActiveMero").style.display = "";
+                    mini.get("txtActivePremise").setRequired(true);
+                    mini.get("txtActivePremise").setRequiredErrorText(app_global["workflow_info_5"]);//"请输入合法的自定义公式"
+                    mini.get("txtActiveMero").setRequired(true);
+                    mini.get("txtActivePremise").setRequiredErrorText(app_global["workflow_info_6"]);//"请输入公式含义说明"
+                    break; 
+
+            }
+
+        }
+
+
+        //标准方法接口定义
+        function SetData() {
+            
+            var bindList = [];
+            var bindData = { "KeyWord": "Power.WorkFlows.Enums.EDoMainType", "KeyWordType": "Enum", "Description": "流程作用范围" };
+            bindList.push(bindData);
+            bindData = { "KeyWord": "Power.WorkFlows.Enums.EBookMarkType", "KeyWordType": "Enum", "Description": "标签类型" };
+            bindList.push(bindData);
+            formManage.ReadData(EndRead, bindList);
+        }
+
+        function GetData() {
+            var o = form.getData();
+            return o;
+        }
+        //加载完毕后触发的方法
+        var EndRead = function (data) {
+           
+            SelectData = data.SelectData;
+            var tmpData = SelectData["Power.WorkFlows.Enums.EBookMarkType"];
+
+            var bookMarkLst = gdBookMarkList.getData();
+            for (var irow = 0; irow < bookMarkLst.length; irow++) {
+                var bookMark = bookMarkLst[irow];
+                for (var i = 0, l = tmpData.length; i < l; i++) {
+                    var g = tmpData[i];
+                    if (g.Code != bookMark.BookMarkType) continue;
+                    gdBookMarkList.updateRow(bookMark, { "BookMarkTypeName": g.Text });
+                }
+            }
+
+            AssemblyCode = data.SessionData.BizAreaCode;
+           
+          
+            if (formManage.getOperatorType() == "AddRecord")  //如果是打开已有记录
+            {
+                mini.get("txtVersion").setValue("1.0.0.1");
+
+                var sProjectID = getParameter("ProjectID");
+                mini.get("txtEpsProjectID").setValue(sProjectID);
+
+                var sModuleID = getParameter("ModuleID");
+                mini.get("txtModuleID").setValue(sModuleID);
+
+
+                var sKeyWord = getParameter("WorkFlowKeyWord");
+                mini.get("txtKeyWord").setValue(sKeyWord);
+
+                rdoActiveType.setValue("Normal");
+            }
+            else { 
+                
+                setActiveType(data.ResultFormData.ActiveType);
+
+                var advancedInfo = mini.decode(data.ResultFormData.AdvancedInfo);
+                rdoActiveType.setValue(advancedInfo.ActiveType);
+                setActiveType(advancedInfo.ActiveType);
+                mini.get("txtActivePremise").setValue(advancedInfo.ActivePremise);
+                mini.get("txtActiveMero").setValue(advancedInfo.ActiveMero);
+
+                var activeTitle = false;
+                if (advancedInfo && advancedInfo.ActiveTitle == "true") activeTitle = true;
+                mini.get("chkActiveTitle").setValue(activeTitle);
+                setActiveTitle(activeTitle);
+                if (advancedInfo.ActiveTitleName) mini.get("txtActiveTitleName").setValue(advancedInfo.ActiveTitleName);
+            }
+
+            var data = {};
+            data.SubOperate = "GetKeyWordPropertyList";   //子指令集,保存选择的人员到指定节点中
+            data.KeyWord = mini.get("txtKeyWord").getValue();
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (text) {
+                    debugger;
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(text);
+                    if (tmpData.success == false) {
+                        top.Power.ui.error(tmpData.message, { timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+                    mini.get("gridPropertyList").setData(mini.decode(tmpData.data.ResultInfo));
+
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+        //保存前触发
+        var BeforeSave = function (formData) {
+            var bookmarkList = gdBookMarkList.getData();
+            for (var iTmp = 0; iTmp < bookmarkList.length; iTmp++) {
+                if (!bookmarkList[iTmp].BookMarkCode) {
+                    alert(app_global["workflow_code_not_null"]); return false;//"标签编码不可为空"
+                }
+                if (!bookmarkList[iTmp].BookMarkName) {
+                    alert(app_global["workflow_name_not_null"]); return false;//"标签名称不可为空"
+                }
+            }
+
+            var advancedInfo = {};
+            advancedInfo.ActiveType = mini.get("rdoActiveType").getValue();
+            if (advancedInfo.ActiveType == null || advancedInfo.ActiveType == "") {
+                top.Power.ui.warning(app_global["workflow_select_active_type"], { timeout: 0, position: "center center", closeable: true });
+                return false;//"请您选择一项激活方式"
+            }
+            advancedInfo.ActivePremise = mini.get("txtActivePremise").getValue();
+            advancedInfo.ActiveMero = mini.get("txtActiveMero").getValue();
+
+            advancedInfo.ActiveTitle = mini.get("chkActiveTitle").getValue();
+            advancedInfo.ActiveTitleName = mini.get("txtActiveTitleName").getValue();
+            if (advancedInfo.ActiveTitle == true || advancedInfo.ActiveTitle == "true") {
+                if (!advancedInfo.ActiveTitleName || advancedInfo.ActiveTitleName.indexOf("=") >= 0) {
+                    top.Power.ui.warning("标题公式为赋值公式，不能包含等于号"); return false;
+                }
+            }
+
+            formData.ResultFormData.AdvancedInfo = advancedInfo;
+        }
+        function onBookMarkRenderer(e) {
+            if (!SelectData) return "";
+
+            var tmpData = SelectData["Power.WorkFlows.Enums.EBookMarkType"];
+            for (var i = 0, l = tmpData.length; i < l; i++) {
+                var g = tmpData[i];
+                if (g.Code == e.value) return g.Text;
+            }
+            return "";
+        }
+        var onBookMarkBeginEdit = function (e) {
+            var row = e.row;
+            if (e.field != "BookMarkType") return;
+
+            var tmpData =SelectData["Power.WorkFlows.Enums.EBookMarkType"];
+            var list = mini.clone(tmpData);
+            e.editor.setData(list); 
+        }
+
+        var onBookMarkEndEdit = function (e) {
+
+            var row = e.row;
+            if (e.field != "BookMarkType") return;
+            var grid = e.sender;
+            
+        }
+        var onClearCache = function (e) {
+
+            if (formManage.getOperatorType() != "OpenRecord") {
+                top.power.ui.error("请先保存表单");
+                return;
+            }
+
+            Power.ui.confirm("您是否确认要清理当前流程图的所有缓存?", function (action) {
+                if (!action) return;
+
+                var data = {};
+                data.SubOperate = "ClearWorkFlowCache";   //子指令集,清理某个流程图的所有缓存，包括历史版本
+                data.WorkFlowID = formManage.getKeyValue();
+
+                var msg = {};
+                msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+                msg.data = data;
+                msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+               
+                mini.mask({
+                    el: document.body,
+                    cls: 'mini-mask-loading',
+
+                    html: '加载中...'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/API/APIMessage",
+                    data: { json: mini.encode(msg) },
+                    dataType: "json",
+                    success: function (text) {
+
+                        mini.unmask(document.body);
+                        var tmpData = mini.decode(text);
+                        if (tmpData.success == false) {
+                            top.Power.ui.error(tmpData.message, { timeout: 0, position: "center center", closeable: true });
+                            return;
+                        }
+                        top.Power.ui.info("缓存清理完成");
+                    },
+                    error: function (e, r, h) {
+                        alert(e.responseText, "错误！", "info");
+                    }
+                });
+
+            });
+        }
+        //执行保存操作
+        var onSave = function (e) {
+            
+            formManage.SaveData(BeforeSave, EndSave);
+        }
+        //执行保存操作
+        var onDelete = function (e) {
+            Power.ui.confirm(app_global["rightpage_alert_delete_select_data"], function (ret) {//"确定删除选中的记录？"
+                if (ret) {
+                    formManage.DeleteData(EndDelete);
+                }
+            });
+        }
+        function CloseWindow(action) {
+            if (action == "close" && form.isChanged()) {
+                Power.ui.confirm(app_global["workflow_update_save"], function (ret) {
+                    if (ret) {//"数据被修改,是否保存?"
+                        return false;
+                    }
+                });
+            }
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        var EndDelete = function () {
+            Power.ui.success(app_global["g_delete_success"]);//"删除成功"
+            CloseWindow("close");
+        }
+        var EndSave = function () {
+            Power.ui.success(app_global["rightpage_alert_save_success"]);//"保存成功"
+            form.setChanged(false);
+        }
+
+        formManage.init();   //初始化操作
+        SetData();
+
+    </script>
+
+</body>
+</html>
+

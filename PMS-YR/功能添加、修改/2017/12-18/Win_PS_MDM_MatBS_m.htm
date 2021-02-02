@@ -1,0 +1,197 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-5 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>物资类别定义
+                            <div id="PS_MDM_MatBS.Upload"></div>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="PS_MDM_MatBS" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="Id" treecolumn="text" width="890" allowcelledit="false" fitcolumns=""
+                             parentfield="ParentId" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true"
+                             data-options="{lazyload:true}">
+
+                            <div property="columns">
+                                <div name="text" field="MatBSCode" header="编号" allowsort="true">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                <div field="MatBSName" header="名称" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-7 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_MDM_Mat.Add" onclick="AddForm1(this)"><i class="fa fa-plus"></i>新增物资申请</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.Add2" onclick="AddForm2(this)"><i class="fa fa-plus"></i>新增物资</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.EditForm" onclick="PowerForm.OnBtnEditForm(this, OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <a class="mini-button blue" id="PS_MDM_Mat.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" href="/Upload/物资编码导入.xls">模版下载</a>
+
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_MDM_Mat" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                             allowcelledit="false" allowcellselect="true" multiselect="true" pagesize="15" showpager="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div field="MatCode" width="60">
+                                    物资类别编码
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="MatShortName" width="60">
+                                    简称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="MatLongName" width="60">
+                                    物资长描述
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="MatUnit" type="comboboxcolumn" width="60">
+                                    单位
+                                    <input id="PS_MDM_Mat.MatUnit" name="MatUnit" property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+
+        var tree = mini.get("PS_MDM_MatBS");
+        var tree_project_type = -1;
+        tree.on("nodeselect", function (e) {
+            tree_project_type = e.node.project_type;
+        });
+       
+        PowerForm.EventBeforeLoadData = function (e) {
+			if(e.sender.id=="PS_MDM_Mat"){
+			    var swhere = "1=1";
+			    var tree = mini.get("PS_MDM_MatBS");
+				var node = tree.getSelectedNode();
+				if (!node){
+					 e.cancel = true;
+					return;
+				} 
+				swhere += " and exists(select x1.Id from PS_MDM_MatBS x1 where MatBS_Guid=x1.Id"
+                   + " and (x1.LongCode='" + node.LongCode + "' or x1.LongCode like '" + node.LongCode + ".%'))";
+				var txt = mini.get("MatCode");
+				var txt1 = mini.get("MatLongName");
+				if (txt&&txt.value.length > 0)
+					swhere += " and (MatCode like '%" + txt.value + "%')";
+				if (txt1&&txt1.value.length > 0)
+					swhere += " and (MatLongName like '%" + txt1.value + "%')";
+				e.params.swhere = swhere;
+			}
+            
+        }
+      PowerForm.EventAfterLoadData= function (e) {
+			if(e.sender.id=="PS_MDM_MatBS"){
+				if(!e.sender.getSelectedNode()&&e.data.length>0)
+				{
+				   e.sender.select(0);
+				}
+			}
+            
+        }
+        function AddForm1(e) {
+            var tree = mini.get("PS_MDM_MatBS");
+            var node = tree.getSelectedNode();
+            var grid = mini.get("PS_MDM_Mat");
+            if (!node) {
+                Power.ui.alert("请选择物资类别!"); return false;
+            }
+
+            if (node.isLeaf == false) {
+                Power.ui.alert("请选择物资类别根节点!"); return false;
+            }
+
+            var data = { MatBS_Guid: node.Id, MatBS_Code: node.MatBSCode, MatBS_Name: node.MatBSName };
+            FormFuns.OnAddForm(OpenFormId, data, grid)
+
+
+        }
+        function AddForm2(e) {
+            var tree = mini.get("PS_MDM_MatBS");
+            var node = tree.getSelectedNode();
+            var grid = mini.get("PS_MDM_Mat");
+            if (!node) {
+                Power.ui.alert("请选择物资类别!"); return false;
+            }
+
+            if (node.isLeaf == false) {
+                Power.ui.alert("请选择物资类别根节点!"); return false;
+            }
+            var data = { MatBS_Guid: node.Id };
+            FormFuns.OnAddForm('4bc429a6-ef0b-48b4-bdab-716ef89c44f8', data, grid)
+        }
+    </script>
+</body>
+</html>

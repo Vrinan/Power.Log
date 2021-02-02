@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_FK_BudgetCost.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_FK_BudgetCost-Export" title="成本预算对比" class="btn-group"></div>
+                            <span>项目编号</span>
+                            <input id="QepsCode" class="mini-textbox" width="120">
+                            <span>项目名称</span>
+                            <input id="Qepsname" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+                        </div>
+                        <div class="tools">
+                            <input id="View_FK_BudgetCost-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_FK_BudgetCost-search">
+                                <input id="View_FK_BudgetCost-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_FK_BudgetCost-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_FK_BudgetCost" class="mini-treegrid" style="height:100%;" showsummaryrow="true" multiselect="true" idfield="ListId" showCheckBox="true" checkRecursive="true"
+                             oncellendedit="endedit" oncellbeginedit="beginedit" data-options="{canImport:true}" showtreeicon="true" treecolumn="Code" parentfield="ParentId" resultastree="false" expandonload="true"
+                             allowresize="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div field="EstablishCode" headeralign="center">建筑成本编号</div>
+                                <div field="EstablishName" headeralign="center">建筑成本标题</div>
+                                <div field="EpsCode" headeralign="center">项目编号</div>
+                                <div field="EpsName" headeralign="center">项目名称</div>
+
+                                <div name="Code" field="Code" headeralign="center" width="130">编号</div>
+                                <div field="Name" headeralign="center">名称</div>
+                                <div field="Specifications" headeralign="center">规格型号</div>
+                                <div field="unit" headeralign="center">单位</div>
+                                <div field="Quantity" headeralign="center" numberformat="n2">数量</div>
+                                <div field="UnitPrice" headeralign="center" numberformat="n2">单价</div>
+                                <div field="Price" headeralign="center" numberformat="n2" summarytype="sum">合价</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function search() {
+            mini.get('View_FK_BudgetCost').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_FK_BudgetCost") {
+                if (e.params.swhere == "") {
+                    //e.params.swhere = " Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "'  and Department like '%" + QDepartment + "%' ";
+                }
+                else {
+                    //e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

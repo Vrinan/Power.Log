@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+					<i class="fa fa-reorder"></i>面试评价及录用结果
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_Interview_list.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_Interview_list.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_Interview_list.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_Interview_list.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_Interview_list.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_Interview_list" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            姓名
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.HumName" name="HumName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_Interview_list.Status">年龄</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Ages" name="Ages" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            毕业学校
+                                        </td>
+                                        <td  >
+                                            <input id="SF_ZH_Interview_list.School" name="School" class="mini-textbox" />
+                                        </td>
+                                          <td>
+                                            专业
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Major" name="Major" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      
+                                        <td>
+                                            学历
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Education" name="Education" class="mini-textbox" />
+                                        </td>    
+                                          <td>
+                                            应聘岗位
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Position" name="Position" class="mini-textbox" />
+                                        </td>                                    
+                                    </tr>
+                            
+                                    <tr>
+                                        <td>
+                                            岗位性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Reamrk1" name="Reamrk1" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            应聘部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            面试日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.InterviewDate" name="InterviewDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            面试结果
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Interview_list.InterviewResults" name="InterviewResults" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            综合面试意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Interview_list.Reamrk2" name="Reamrk2" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            部门专业面试意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Interview_list.Reamrk3" name="Reamrk3" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            分管领导面试意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Interview_list.Reamrk4" name="Reamrk4" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            总经理面试意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Interview_list.Remark5" name="Remark5" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Interview_list.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_OverTime.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_OverTime.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>               
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+    </script>
+</body>
+</html>

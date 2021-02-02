@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_SubContractChange.CC" onclick="ViewFrom()"><i class="fa fa-eye"></i>查看明细</a>
+                            <a class="mini-button blue" id="PS_SubContractChange.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_SubContractChange" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        var fieldmap = {
+            C: "", P: "1b8c2acc-de61-4334-82e7-71a8d09c8b71",
+            S: "", E: ""
+        };
+
+        PowerForm.EventBeforeLoadData = function (e) {
+			var Contract_Guid = getParameter("SubContract_Guid");
+            debugger;
+            if (e.params.swhere != "")
+                e.params.swhere += " and SubContract_Guid='" + Contract_Guid + "'";
+            else
+                e.params.swhere = "  SubContract_Guid='" + Contract_Guid + "'";
+        }
+		function ViewFrom() {
+            debugger;
+            var grid = mini.get("PS_SubContractChange");
+			var row=grid.getSelected();
+			if(!row){
+			 Power.ui.warning("没有选择记录！!"); return false;
+			}
+            var id = row.Id;
+            var Ctype=getParameter("Ctype");
+
+            var url = "/Form/ViewForm/" + fieldmap[Ctype] + "/" + id + "/"
+            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+            mini.open({
+                url: url,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                onload: function () {
+
+                },
+                ondestroy: function () {
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

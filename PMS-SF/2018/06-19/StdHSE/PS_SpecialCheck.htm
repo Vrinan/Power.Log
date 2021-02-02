@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>HSE专项检查
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_SpecialCheck.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_SpecialCheck.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_SpecialCheck.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_SpecialCheck" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_SpecialCheck.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检查内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SpecialCheck.Title" name="Title" class="mini-textbox" required="true" requirederrortext="内容不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            受检单位
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SpecialCheck.SubContractor" name="SubContractor" textname="SubContractor" class="mini-buttonedit"
+                                                   emptytext="请选择受检单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检查人员
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.CheckHuman" name="CheckHuman" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            检查日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.CheckDate" name="CheckDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检查内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SpecialCheck.CheckContent" name="CheckContent" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            存在内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SpecialCheck.UnqualifiedContent" name="UnqualifiedContent" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_SpecialCheck.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+
+    </script>
+</body>
+</html>

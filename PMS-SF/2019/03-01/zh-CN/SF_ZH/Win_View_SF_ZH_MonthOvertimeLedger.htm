@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_ZH_MonthOvertimeLedger.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            
+                            <span>月份</span>
+                            <input id="QStartDate" class="mini-monthpicker" width="120"></input>
+                            <span>部门/运行站</span>
+                            <input id="Department" class="mini-textbox" width="120"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>
+
+                            <div id="View_SF_ZH_MonthOvertimeLedger-Export" title="加班统计台账" class="btn-group"></div>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_ZH_MonthOvertimeLedger-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_ZH_MonthOvertimeLedger-search">
+                            <input id="View_SF_ZH_MonthOvertimeLedger-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_ZH_MonthOvertimeLedger-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_ZH_MonthOvertimeLedger" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" onload="OnLoad" sortField="Department,HumCode,OverDate ASC"
+                             showpager="true" pagesize="500" sizelist="[100,200,500]" allowcellselect="true" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div field="HumCode" name="HumCode" width="80" allowsort="true">工号</div>
+                                <div field="HumName" name="HumName" width="80" allowsort="true">人员</div>
+                                <div field="Department" name="Department" width="80" allowsort="true">部门/运行站</div>
+                                <div field="OverType" headeralign="center" header="加班类型" type="comboboxcolumn">加班类型<input property="editor" name="OverType" class="mini-combobox" /></div>
+                                <div field="OverDate" name="OverDate" headeralign="center" header="起始日期" dateformat="yyyy-MM-dd HH:mm:ss">起始日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="OverDate1" name="OverDate1" headeralign="center" header="结束日期" dateformat="yyyy-MM-dd HH:mm:ss">结束日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="MonthTime" width="80" allowsort="true" numberformat="n2">加班时长</div>
+                                <div field="Memo" width="80" allowsort="true" type="comboboxclumn">加班原由<input property="editor" name="Memo" class="mini-textarea" /></div>
+                                <div field="Remark" width="80" allowsort="true">备注</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            firstDate.format("yyyy-MM");
+            mini.get("QStartDate").setValue(firstDate);
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_ZH_MonthOvertimeLedger').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_ZH_MonthOvertimeLedger") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " Month like '%" + mini.get("QStartDate").getFormValue() + "%' and Department like '%" + mini.get("Department").getFormValue() + "%' ";
+                }
+                else {
+                    e.params.swhere += "and Month like '%" + mini.get("QStartDate").getFormValue() + "%' and Department like '%" + mini.get("Department").getFormValue() + "%' ";
+                }
+            }
+        }        function OnLoad(e) {
+            var grid = e.sender;
+            mini.get("View_SF_ZH_MonthOvertimeLedger").mergeColumns(["HumCode", "HumName"]);
+        }
+    </script>
+</body>
+</html>

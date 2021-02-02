@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>技术协议编制
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_DesignTaskAdviceNote.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_TechDealCompile.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_TechDealCompile.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_TechDealCompile.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_TechDealCompile" class="form">
+                                <table class="table table-bordered">
+                                    <!--<tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.OwnProjName" name="OwnProjName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Code">单据编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.Code" name="Code" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td >
+                                            <input id="SF_TechDealCompile.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Profession">专业</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.Profession" name="Profession" textname="Profession" class="mini-buttonedit"
+                                                   emptytext="请选择专业..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ContractName">合同名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.ContractName" name="ContractName" textname="ContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                       
+                                        <td>
+                                            <label for="SF_TechDealCompile.ProjectMessage">项目信息</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.ProjectMessage" name="ProjectMessage" textname="ProjectMessage" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                        <!--<td>
+                                            <label for="SF_TechDealCompile.Amount">签订金额</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.Amount" name="Amount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" />
+                                        </td>-->
+                                        <td>
+                                            <label for="SF_TechDealCompile.DealType">协议类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.DealType" name="DealType" class="mini-combobox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Devicename">设备名称</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.Devicename" name="Devicename" class="mini-textbox" required />
+                                        </td>
+                                        <td>
+                                            <label for="SF_TechDealCompile.DesignStage">设计阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.DesignStage" name="DesignStage" class="mini-combobox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Proofreading">校审意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechDealCompile.Proofreading" name="Proofreading" class="mini-textarea" height="100" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechDealCompile.AuditConclusion">审核意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechDealCompile.AuditConclusion" name="AuditConclusion" class="mini-textarea" height="100" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechDealCompile.Memo">备注</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechDealCompile.Memo" name="Memo" class="mini-textarea"  height="80"/>
+                                        </td>
+                                    </tr>									
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechDealCompile.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+	    //PowerForm.EventAfterFormLoad = function (e,data) {
+		//	if(formconfig.FormState == "add"){
+		//		formconfig.config.joindata.currow["ProjectName"]=EpsName;
+		//		formconfig.config.joindata.currow["ProjectInfo_Guid"]=EpsId;
+		//		var btn = mini.get("SF_DesignTaskAdviceNote.ProjectName");
+		//		btn.setText(EpsName);
+		//		btn.setValue(EpsName);
+
+		//   }
+
+        //}
+        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_TechDealCompile";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    //upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            debugger;
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_TechDealCompile";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    //upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventBeforeLoadRight = function (o) {
+            debugger;
+            if (o.id == "btnShowMonitorVIS" && o.data["Status"] == "50") {
+                debugger;
+                o.cancel = true; //跳过授权
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("jsyj") > -1) {
+                mini.get("SF_TechDealCompile.Proofreading").setReadOnly(false);
+                mini.get("SF_TechDealCompile.Save").enable();
+            }
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("shyj") > -1) {
+                mini.get("SF_TechDealCompile.AuditConclusion").setReadOnly(false);
+                mini.get("SF_TechDealCompile.Save").enable();
+            }
+        }
+    </script>
+</body>
+</html>

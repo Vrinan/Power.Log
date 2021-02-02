@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_ZH_CheckWorkLedger.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+
+                            <span>月份</span>
+                            <input id="QStartDate" class="mini-monthpicker" allowinput="false" width="120"></input>
+                            <span>部门/运行站</span>
+                            <input id="Department" class="mini-textbox" width="120"></input>
+                            <span>岗位性质</span>
+                            <input id="PositionType" class="mini-combobox" shownullitem="true" width="120"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>
+                            <div id="View_SF_ZH_CheckWorkLedger-Export" title="加班统计台账" class="btn-group"></div>
+                        </div>
+                        <!--<div class="tools">
+                            <input id="View_SF_ZH_CheckWorkLedger-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_ZH_CheckWorkLedger-search">
+                            <input id="View_SF_ZH_CheckWorkLedger-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_ZH_CheckWorkLedger-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a>
+                        </div>-->
+
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_ZH_CheckWorkLedger" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" onload="OnLoad" sortField="Department,HumanCode ASC"
+                             showpager="true" pagesize="100" sizelist="[100,200,500]" allowcellselect="true" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div field="HumanCode" name="HumanCode" width="50" allowsort="true">工号</div>
+                                <div field="HumanName" name="HumanName" width="80" allowsort="true">人员</div>
+                                <div field="Department" name="Department" width="80" allowsort="true">部门/运行站</div>
+
+                                <div field="Day1" headeralign="center" header="1号" width="50" type="comboboxcolumn">1号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day2" headeralign="center" header="2号" width="50" type="comboboxcolumn">2号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day3" headeralign="center" header="3号" width="50" type="comboboxcolumn">3号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day4" headeralign="center" header="4号" width="50" type="comboboxcolumn">4号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day5" headeralign="center" header="5号" width="50" type="comboboxcolumn">5号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day6" headeralign="center" header="6号" width="50" type="comboboxcolumn">6号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day7" headeralign="center" header="7号" width="50" type="comboboxcolumn">7号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day8" headeralign="center" header="8号" width="50" type="comboboxcolumn">8号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day9" headeralign="center" header="9号" width="50" type="comboboxcolumn">9号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day10" headeralign="center" header="10号" width="50" type="comboboxcolumn">10号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day11" headeralign="center" header="11号" width="50" type="comboboxcolumn">11号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day12" headeralign="center" header="12号" width="50" type="comboboxcolumn">12号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day13" headeralign="center" header="13号" width="50" type="comboboxcolumn">13号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day14" headeralign="center" header="14号" width="50" type="comboboxcolumn">14号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day15" headeralign="center" header="15号" width="50" type="comboboxcolumn">15号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day16" headeralign="center" header="16号" width="50" type="comboboxcolumn">16号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day17" headeralign="center" header="17号" width="50" type="comboboxcolumn">17号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day18" headeralign="center" header="18号" width="50" type="comboboxcolumn">18号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day19" headeralign="center" header="19号" width="50" type="comboboxcolumn">19号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day20" headeralign="center" header="20号" width="50" type="comboboxcolumn">20号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day21" headeralign="center" header="21号" width="50" type="comboboxcolumn">21号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day22" headeralign="center" header="22号" width="50" type="comboboxcolumn">22号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day23" headeralign="center" header="23号" width="50" type="comboboxcolumn">23号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day24" headeralign="center" header="24号" width="50" type="comboboxcolumn">24号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day25" headeralign="center" header="25号" width="50" type="comboboxcolumn">25号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day26" headeralign="center" header="26号" width="50" type="comboboxcolumn">26号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day27" headeralign="center" header="27号" width="50" type="comboboxcolumn">27号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day28" headeralign="center" header="28号" width="50" type="comboboxcolumn">28号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day29" headeralign="center" header="29号" width="50" type="comboboxcolumn">29号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day30" headeralign="center" header="30号" width="50" type="comboboxcolumn">30号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+                                <div field="Day31" headeralign="center" header="31号" width="50" type="comboboxcolumn">31号<input property="editor" name="OverType" class="mini-combobox" style="width: 20px;" /></div>
+
+
+                                <div field="DayShift1" width="50" allowsort="true">白班</div>
+                                <div field="DayShift2" width="50" allowsort="true">中班</div>
+                                <div field="DayShift3" width="50" allowsort="true">夜班</div>
+                                <div field="DayShift4" width="50" allowsort="true">加班</div>
+                                <div field="Total" width="50" allowsort="true">合计</div>
+                                <div field="DayShift5" width="50" allowsort="true">事假</div>
+                                <div field="DayShift6" width="50" allowsort="true">病假</div>
+                                <div field="DayShift7" width="50" allowsort="true">休假</div>
+                                <div field="DayShift9" width="50" allowsort="true">年休</div>
+                                <div field="DayShift8" width="50" allowsort="true">旷工</div>
+                                <div field="Remark" width="80" allowsort="true">备注</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            firstDate.format("yyyy-MM");
+            mini.get("QStartDate").setValue(firstDate);
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_ZH_CheckWorkLedger').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_ZH_CheckWorkLedger") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " CheckTime like '%" + mini.get("QStartDate").getFormValue() + "%' and Department like '%" + mini.get("Department").getFormValue() + "%' and PositionType like'%" + mini.get("PositionType").getFormValue() + "%' ";//
+                }
+                else {
+                    e.params.swhere += "and CheckTime like '%" + mini.get("QStartDate").getFormValue() + "%' and Department like '%" + mini.get("Department").getFormValue() + "%' and PositionType like'%" + mini.get("PositionType").getFormValue() + "%' ";//
+                }
+            }
+        }
+        function OnLoad(e) {
+            var grid = e.sender;
+            mini.get("View_SF_ZH_CheckWorkLedger").mergeColumns(["Department"]);
+        }
+    </script>
+</body>
+</html>

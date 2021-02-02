@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                               <a class="mini-button blue" id="PS_CbsSheetConfig.Add"  onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                               <a class="mini-button blue" id="PS_CbsSheetConfig.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                            <a class="mini-button blue" id="PS_CbsSheetConfig.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                            <a class="mini-button blue" id="PS_CbsSheetConfig.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                            <a class="mini-button blue" id="PS_CbsSheetConfig.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i>上移</a><!--上移-->
+                            <a class="mini-button blue" id="PS_CbsSheetConfig.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i>下移</a><!--下移-->
+                            <a class="mini-button blue" id="PS_CbsSheetConfig.Up" onclick="Up()"><i class="fa fa-long-arrow-down"></i>引用公司数据</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                         <div id="PS_CbsSheetConfig" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" borderstyle="border-width:0;"
+                             allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id"
+                             showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <!--
+								<div field="CbsClass" headeralign="center" align="center">
+										分组名称
+										<input property="editor" class="mini-textbox" style="width: 100%;"  required="true" />
+								</div>
+								-->
+                                <div field="CbsType" headeralign="center" align="center">费用类型
+                                     <input property="editor" class="mini-textbox" style="width: 100%;"   required="true"/>
+                                </div><!--名称-->
+								<div field="IsSysDefault" width = "40">是否默认</div>
+
+                                 <div field="CbsTitle" headeralign="center" align="center">名称
+                                      <input property="editor" class="mini-textbox" style="width: 100%;"   required="true"/>
+                                 </div>
+								 <div field="LinkRec" headeralign="center" align="center">对象名称
+								 <input property="editor" id="LinkRec" class="mini-buttonedit" onbuttonclick="onAddKeyWord" name="Bo" textname="Bo" required="true" allowinput="false"/>
+                                  </div>
+								<div field="KeyWord" headeralign="center" align="center">对应KeyWord
+                                     <input property="editor" class="mini-textbox" style="width: 100%;"   readonly="readonly"/>
+                                </div>
+								<div field="KeyWordFilter" headeralign="center" align="center">KeyWordFilter
+                                     <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="CalColumn" headeralign="center" align="center">
+                                    计算公式
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+		 function onAddKeyWord(e) {
+            var btnEdit = this;
+            mini.open({
+                url: "/Sync/OpenSelectKeyWordReportOne",
+                title: "选择业务对象",//"选择业务对象",
+                width: 360,
+                height: 405,
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    data = mini.clone(data);    //必须
+					var grid = mini.get("PS_CbsSheetConfig");
+					for (var i in data) {
+					  if(data[i].BusinessType=="Main"){
+					  var row = grid.getSelected();
+					    btnEdit.setValue(data[i].text);
+                        btnEdit.setText(data[i].text);
+						grid.updateRow(row,{KeyWord:data[i].KeyWord});
+					}
+						
+					}
+					
+                }
+            });
+        }
+		 //引用公司数据
+		 function Up() {
+
+		     Power.ui.confirm("确定引用公司数据？", function (ret) {
+		         if (ret) {
+		             debugger;
+		             Power.ui.loading("引用数据中。。")
+		             var guid = formconfig.KeyValue; ;
+		             debugger;
+		             var exec = {};  //对象
+		             exec.KeyWord = "PS_CbsSheetConfig";   //bo的KeyWord
+		             exec.MethodName = "Up"; //方法名称
+		             //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+		             exec.MethodParams = {}; //方法参数
+		             var params = exec.MethodParams;
+		             params.Id = guid;
+		             var params = exec.MethodParams;
+		             var txt = mini.encode(exec); //对象转换成字符串
+
+		             $.ajax({
+		                 url: "/API/Exec",
+		                 type: "POST",
+		                 data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+		                 cache: false,
+		                 success: function (text) {
+		                     debugger;
+		                     var tmp = mini.decode(text);
+		                     if (tmp.success) {
+		                         Power.ui.loading.close();
+		                         var result = tmp.data.value;
+		                         var a = { id: "PS_CbsSheetConfig.Refresh" };
+		                         PowerForm.OnBtnRefresh(a);
+		                         debugger;
+
+		                     }
+		                     else {
+		                         Power.ui.loading.close();
+		                         Power.ui.alert(tmp.message);
+		                     }
+
+		                 }
+		             });
+		         }
+		     });
+		 }
+		 mini.get("PS_CbsSheetConfig").on("cellbeginedit", function (e) {
+            e.cancel = e.record.IsSysDefault == "Y";
+        });
+		PowerForm.EventBeforeAddRow=function(e,data){
+			if(e.id=="PS_CbsSheetConfig"){
+				data.IsSysDefault="N";
+			}
+			
+		}
+
+
+    </script>
+</body>
+</html>

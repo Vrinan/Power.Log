@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                                <span>状态</span>
+                                <input id="QStatus" class="mini-combobox" shownullitem="true" width="120px" onvaluechanged="mini.get('View_KFQ_FilesWorkFlow').reload();"></input>
+                                <span>送审时间</span>
+                                <input id="QStartDate" class="mini-datepicker" width="120px" ></input>
+                                <span>——</span>
+                                <input id="QEndDate" class="mini-datepicker" width="120px"></input>                           
+                                <span>单据标题</span>
+                                <input id="QTitle" class="mini-textbox" shownullitem="true" width="120px"></input>
+                                <span>起草人</span>
+                                <input id="QUserName" class="mini-textbox" shownullitem="true" width="120px"></input>
+   				&nbsp;
+                                <input id="IsSeven" name="IsSeven" truevalue="1" falsevalue="0" class="mini-checkbox" text="只显示七天以上未处理"  onvaluechanged="mini.get('View_KFQ_FilesWorkFlow').reload();"/>
+                                &nbsp;
+                                <!--<span>批准日期</span>
+                                <input id="QFinish" class="mini-datepicker" width="120px"></input>-->
+                                <a class="mini-button yellow" onclick="mini.get('View_KFQ_FilesWorkFlow').reload();">查询</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <div id="View_KFQ_FilesWorkFlow-Export" title="收文流程跟踪" class="btn-group"></div>     
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                            <div id="View_KFQ_FilesWorkFlow" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" allowCellWrap="true"
+                                allowresize="true" showPager="true" pagesize="50"  ondrawcell="drawcell" sortField="CreateDate desc">
+                            <div property="columns">
+                                <div type="indexcolumn"  headerAlign="Center">
+                                    序号
+                                </div>
+                                <div field="RecordStatus" width="60" type="comboboxcolumn"  headerAlign="Center" align="Center">
+                                    状态
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <!--<div field="KeyWord" width="100">
+                                    关键词
+                                </div>-->
+                                <!--<div field="EpsProjectName" width="100">
+                                    所属项目
+                                </div>-->
+                                <!--<div field="DocumentCode" width="150">
+                                    单据编号
+                                </div>-->
+                                <div field="Title" allowsort="true"  headerAlign="Center">
+                                    单据标题
+                                </div>
+                                <div field="RegHumName" width="30" headerAlign="Center" align="Center">
+                                    起草人
+                                </div>
+                                <div field="BeforeUserName" width="30" headerAlign="Center" align="Center">
+                                    前序人
+                                </div>
+                                <div field="UserName" width="40" headerAlign="Center" align="Center">
+                                    当前待办人
+                                </div>
+                                <div field="delayDays" width="30" allowsort="true" headerAlign="Center" align="Center">
+                                    延迟(天)
+                                </div>
+                                <div field="Content" >
+                                    审批意见
+                                </div>
+                                <div field="CreateDate" allowsort="true" dateformat="yyyy-MM-dd" width="60"  headerAlign="Center" align="center">
+                                    送审日期
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="RecvDate" allowsort="true" dateformat="yyyy-MM-dd" width="60"  headerAlign="Center" align="center">
+                                    记录到手时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="ReadDate" allowsort="true" dateformat="yyyy-MM-dd" width="60"  headerAlign="Center" align="center">
+                                    记录打开时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="SendDate" allowsort="true" dateformat="yyyy-MM-dd" width="60"  headerAlign="Center" align="center">
+                                    记录送出时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <!-- <div field="ActName" width="0">
+                                    当前节点
+                                </div>
+                                <div field="TypeName" width="0">
+                                    节点分类
+                                </div> -->
+                                
+                           </div>
+                       </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            var type = getParameter("type");
+            if(!IsEmpty(type))
+            {
+                type = decodeURI(type);
+                formconfig.config.joindata.swhere = " TypeName='"+ type +"' ";
+            }
+            if(
+                (sessiondata.HumanName =="系统管理员" || sessiondata.PosiName.indexOf("办公室")>-1 
+                || sessiondata.PosiName.indexOf("董事长")>-1
+                || sessiondata.PosiName.indexOf("总经理")>-1
+                || sessiondata.PosiName.indexOf("分管副总")>-1)  && IsEmpty(type)){
+                formconfig.config.joindata.swhere = " 1=1 ";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        function drawcell(e){
+            if(e.field=="Title"){
+                if(e.record.WorkFlowID=="d3559a38-37a4-b8aa-0dab-62acd132fbd5")
+                {
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('6d673167-51fb-4284-969c-08a7625a6c37','" + e.record.KeyValue + "');\">" + e.record.Title + "</a>";
+                }
+                else
+                {
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('929739a9-8b4e-4595-8ffc-6ea70ff3dea2','" + e.record.KeyValue + "');\">" + e.record.Title + "</a>";
+                }   
+            }
+        }
+			
+            //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_KFQ_FilesWorkFlow") {
+                // var type = getParameter("type");
+                // if(!IsEmpty(type))
+                // {
+                //     e.params.swhere += " TypeName='"+ type +"' and ";
+                // }
+                if (e.params.swhere == "") {
+                    e.params.swhere = " CreateDate>='" + mini.get("QStartDate").getFormValue() + "' and CreateDate<='" + mini.get("QEndDate").getFormValue() + "'";
+                }
+                else { 
+                    e.params.swhere += " and CreateDate>='" + mini.get("QStartDate").getFormValue() + "' and CreateDate<='" + mini.get("QEndDate").getFormValue() + "'";
+                }
+                //单据标题
+                if (mini.get("QTitle").getValue() != "") {
+                    e.params.swhere += " and Title like '%" + mini.get("QTitle").getValue() + "%'";
+                }
+		if(mini.get("IsSeven").getValue() == "1")
+                {
+                    e.params.swhere +=" and delaydays != '-' and delaydays >= 7";
+                }
+
+                //起草人
+                if (mini.get("QUserName").getValue() != "") {
+                    e.params.swhere += " and UserName like '%" + mini.get("QUserName").getValue() + "%'";
+                }
+                ////批准日期
+                //if (mini.get("QFinish").getValue() != "") {
+                //    e.params.swhere += " and FinishDate ='" + mini.get("QFinish").getFormValue() + "'";
+                //}
+                //状态
+                if (mini.get("QStatus").getValue() != "") {
+                    e.params.swhere += " and RecordStatus ='" + mini.get("QStatus").getFormValue() + "'";
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>

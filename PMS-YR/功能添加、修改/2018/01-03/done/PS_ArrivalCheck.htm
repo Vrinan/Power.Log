@@ -1,0 +1,476 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>到货检查
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+
+                    <a class="mini-button blue" id="PS_ArrivalCheck.ToMatInStore" onclick="OnToMatInStore()" style="display: none"><i class="fa fa-save"></i>到货入库</a>
+                    <a class="mini-button blue" id="PS_ArrivalCheck.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="PS_ArrivalCheck.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="PS_ArrivalCheck.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_ArrivalCheck.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_ArrivalCheck.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_ArrivalCheck" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ArrivalCheck.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ArrivalCheck.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            采购合同
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.ContractName" name="ContractName" textname="ContractName" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            供应商
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Supplier" name="Supplier" class="mini-textbox" readonly="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检验日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.CheckDate" name="CheckDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            检验人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.CheckHuman" name="CheckHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            到货仓库
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.StorageName" name="StorageName" textname="StorageName" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" required="true" allowinput="false" />
+                                            <input id="PS_ArrivalCheck.Storage_Guid" name="Storage_Guid" class="mini-textbox" visible="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划到货日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.PlanArrivalDate" name="PlanArrivalDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            实际到货日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.ActArrivalDate" name="ActArrivalDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            包装情况
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Packing" name="Packing" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            物资外观
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Appearance" name="Appearance" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            零部件
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Parts" name="Parts" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            备品备件
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.SpareParts" name="SpareParts" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            装箱单
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.PackingLists" name="PackingLists" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            合格证
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Certificate" name="Certificate" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            说明书
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Instructions" name="Instructions" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            图纸
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.Drawings" name="Drawings" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            其他资料
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.OtherMaterials" name="OtherMaterials" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            是否符合要求
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.IsMeet" name="IsMeet" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ArrivalCheck.Other" name="Other" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ArrivalCheck.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='到货明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_ArrivalCheck_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">按合同到货</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_ArrivalCheck_Dtl.Add2" onclick="PowerForm.OnBtnWizard(this)">从物资库选择</a><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="PS_ArrivalCheck_Dtl.Add1" onclick="OnWiardReq(this)">按请购单到货</a>新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ArrivalCheck_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ArrivalCheck_Dtl" class="mini-datagrid" style="height: 100%;" multiselect="true" oncellendedit="EidtApp"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" pagesize="15" showsummaryrow="true" ondrawcell="MatDrawcell">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="MatCode" headeralign="center" width="120">
+                                            物资编码
+                                        </div>
+                                        <div field="MatName" headeralign="center">
+                                            物资名称
+                                        </div>
+                                        <div field="MatDescription" headeralign="center">
+                                            物资描述
+                                        </div>
+                                        <div field="Specifi" headeralign="center">
+                                            规格型号
+                                        </div>
+                                        <div field="Standard" headeralign="center">
+                                            制造标准
+                                        </div>
+                                        <div field="Texture" headeralign="center">
+                                            材质
+                                        </div>
+                                        <div field="Pattern" headeralign="center">
+                                            型式
+                                        </div>
+                                        <div field="MatSpec" headeralign="center">
+                                            装置
+                                        </div>
+                                        <div field="TagNumber" headeralign="center">
+                                            位号
+                                        </div>
+                                        <div field="MatUnit" headeralign="center">
+                                            单位
+                                        </div>
+                                        <div field="ContractNum" headeralign="center" summarytype="sum">
+                                            合同数量
+                                        </div>
+                                        <div field="PassNum" headeralign="center" summarytype="sum">
+                                            到货数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="ArrivalNum" headeralign="center" summarytype="sum">
+                                            合格数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="UnPassNum" headeralign="center" summarytype="sum">
+                                            不合格数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalArrivalNum" headeralign="center" summarytype="sum">
+                                            累计到货数
+                                        </div>
+
+                                        <div field="InStoreNum" headeralign="center" summarytype="sum">
+                                            已入库数
+                                        </div>
+                                        <div field="MacData" headeralign="center">
+                                            随机资料
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="AcceptanceStatus" type="comboboxcolumn" headeralign="center">
+                                            验收状态
+                                            <input id="PS_ArrivalCheck_Dtl.AcceptanceStatus" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remarks" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            var grid = mini.get("PS_ArrivalCheck_Dtl");
+            grid.frozenColumns(0, 3);
+        });
+
+        function MatDrawcell(e) {
+            if (e.field == "PassNum") {
+                if (parseFloat(e.row.PassNum) > parseFloat(e.row.ContractNum)) {
+                    e.rowStyle = "background:#66ccff";
+                }
+            }
+        }
+
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var gd = mini.get("PS_ArrivalCheck_Dtl");
+            var row = gd.findRow(function (row) {
+                if (parseFloat(row.ContractNum) - parseFloat(row.PassNum) - parseFloat(row.TotalArrivalNum) < 0) {
+                    Power.ui.warning("到货数量大于合同数量");
+                }
+                if (parseFloat(row.UnPassNum) < 0) {
+                    //Power.ui.confirm("合格数量不可以大于到货数量,是否自动修改？", function (ret) {
+                    //	if (ret) {
+                    //			mini.get(row.ArrivalNum).setValue(parseFloat(row.PassNum));
+                    //			mini.get(row.UnPassNum).setValue(parseFloat(0));
+                    //		}
+                    //	});
+                    Power.ui.warning("合格数量不可以大于到货数量");
+                    row.UnPassNum = "0";
+                    row.ArrivalNum = row.PassNum;
+                }
+                if (parseFloat(row.ArrivalNum) < 0) {
+                    //Power.ui.confirm("不合格数量不可以大于到货数量,是否自动修改？", function (ret) {
+                    //	if (ret) {
+                    //row.UnPassNum =  parseFloat(row.PassNum);
+                    //row.PassNum =  parseFloat(0);
+                    //			mini.get(row.UnPassNum).setValue(parseFloat(row.PassNum));
+                    //			mini.get(row.PassNum).setValue(parseFloat(0));
+                    //		}
+                    //	});
+                    Power.ui.warning("不合格数量不可以大于到货数量");
+                }
+            });
+        }
+
+
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "PS_ArrivalCheck_Dtl.Add") {
+                if (formconfig.FormState == "add") {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表.");
+                    return;
+                }
+                var contractid = formconfig.config.joindata.currow.Contract_Guid;
+                if (!contractid) {
+                    e.canOpen = false;
+                    Power.ui.warning("请先选择到货的采购合同.");
+                    return;
+                }
+                e.where = "MasterId='" + contractid + "' and ((MatAmount-ArrivalNum)>0)";
+            }
+        }
+        PowerForm.EventAfterFormLoad = function (f, data) {
+            if (formconfig.FormState == "add") {
+                mini.get("PS_ArrivalCheck.StorageName").setValue("仓库");
+                mini.get("PS_ArrivalCheck.Storage_Guid").setValue("CA3D15B5-E5AA-15FA-F410-A5C5C1688983");
+            }
+            if (f.el.id == "PS_ArrivalCheck") {
+                if (formconfig.Effected || mini.get("PS_ArrivalCheck.Status").getValue() == "50") {
+                    mini.get("PS_ArrivalCheck.ToMatInStore").setVisible(true);
+                }
+                var itemid = getParameter("fulongitemid");
+                if (formconfig.FormState == "add" && itemid) {
+                    formconfig.config.joindata.currow.FuLongItemId = itemid;
+                }
+            }
+        }
+
+        function OnToMatInStore() {
+
+            var par = { "Type": "到货入库", "Id": formconfig.KeyValue };
+            FormFuns.APIExec("PS_ArrivalCheck", "BO", "Proc_Proc_PS_PUR_ArrivalCheck", par, function (text) {
+                var R = mini.decode(text).data.value.split("！");
+                Power.ui.warning(R[0]);
+                if (R[1] != undefined & R[1] != '') {
+                    var p = { formid: "7fb0df68-6adc-4b77-b8f9-3977f3291170", keyvalue: R[1], action: "edit" };
+                    FormFuns.OnOpenForm(p);
+                }
+            });
+            //$.ajax({
+            //    url: "/Purchase/ArrivalToMatInStore",
+            //    data: { arrivalid: formconfig.KeyValue },
+            //    type: "POST",
+            //    success: function (text) {
+            //        var o = mini.decode(text);
+            //        if (o.success) {
+            //            var p = { formid: "7fb0df68-6adc-4b77-b8f9-3977f3291170", keyvalue: o.data.Id, action: "edit" };
+            //            FormFuns.OnOpenForm(p);
+            //        }
+            //        else {
+            //            Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+            //        }
+            //    }
+            //})
+        }
+        function OnWiardReq(btn) {
+            if (formconfig.FormState == "add") return;
+            btn.where = "Status=50 and Id in (select x2.MasterId from PS_PUR_PurchaseRequisition_Dtl x2 where x2.ReqNum>x2.OrderNum)";
+            PowerForm.OnBtnWizard(btn);
+        }
+
+        PowerForm.EventWizardData = function (e, data) {
+            if (e.id == "PS_ArrivalCheck_Dtl.Add1") {
+                e.Next = false;
+                if (data.length == 0) return;
+                var ids = "";
+                for (var i = 0; i < data.length; i++)
+                    ids += (data[i].Id + ";");
+                var orderid = formconfig.KeyValue;
+                $.ajax({
+                    url: "/Purchase/ReJoinToArrivalCheck",
+                    data: { orderid: orderid, reqids: ids },
+                    type: "POST",
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            mini.get("PS_ArrivalCheck_Dtl").reload();
+                        }
+                        else
+                            Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                })
+            }
+        }
+
+        function EidtApp(e) {
+            var record = e.record;
+            var grid = mini.get("PS_ArrivalCheck_Dtl");
+
+            var ContractNum = record.ContractNum;
+            var PassNum = record.PassNum;
+            var UnPassNum = record.UnPassNum;
+            var ArrivalNum = record.ArrivalNum;
+
+            if (e.field == "UnPassNum") {
+                var t = parseFloat(e.record.PassNum) - parseFloat(e.record.UnPassNum);
+                e.sender.updateRow(e.record, { "ArrivalNum": t });
+            }
+
+            if (e.field == "ArrivalNum") {
+                var u = parseFloat(e.record.PassNum) - parseFloat(e.record.ArrivalNum);
+                e.sender.updateRow(e.record, { "UnPassNum": u });
+            }
+        }
+
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    //var grid = mini.get("PS_ArrivalCheck_Dtl");
+        //    //var ContractNum = mini.get("PS_ArrivalCheck_Dtl.ContractNum").getValue();
+        //	//var ArrivalNum = mini.get("PS_ArrivalCheck_Dtl.ArrivalNum").getValue();
+        //	//var TotalArrivalNum = mini.get("PS_ArrivalCheck_Dtl.TotalArrivalNum").getValue();
+
+        //	//var t = parseFloat(ContractNum) - parseFloat(ArrivalNum) - parseFloat(TotalArrivalNum);
+        //	//if(t<0){
+        //	//	power.ui.warning("到货数量不可以大于合同数量");
+        //	//}
+        //}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=273" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=273" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>建筑成本季度反馈表
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="SF_FK_EstablishCostFeedback.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_FK_EstablishCostFeedback.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_FK_EstablishCostFeedback.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_FK_EstablishCostFeedback" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_EstablishCostFeedback.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.EpsProjectName" name="EpsProjectName" textname="EpsProjectName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" required="true" />
+                                        </td>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.EpsProjectCode" name="EpsProjectCode" class="mini-textbox" textname="EpsCode" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>费用科目类型</td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.CostType" name="CostType" class="mini-combobox" readonly />
+                                        </td>
+                                        <td>
+                                            季度
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.SeasonNum" name="SeasonNum" class="mini-textbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_EstablishCostFeedback.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细' name="SF_FK_EstablishCostFeedback_dtl">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_EstablishCostFeedback_dtl.Add" onclick="PowerForm.OnBtnWizard(this)">选择成本计划表</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_EstablishCostFeedback_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_EstablishCostFeedback_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <!--<a class="mini-button blue" id="SF_FK_EstablishCostFeedback_dtl.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                                <a class="mini-button blue" id="SF_FK_EstablishCostFeedback_dtl.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                                <a class="mini-button blue" id="SF_FK_EstablishCostFeedback_dtl.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                                <a class="mini-button blue" id="SF_FK_EstablishCostFeedback_dtl.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>-->
+                                <a class="mini-button blue" id="SF_FK_EstablishCostFeedback_dtl.Export" sort= ="Code" onclick="PowerForm.OnExportDataToXls('SF_FK_EstablishCostFeedback_dtl', '建筑成本反馈', '')"><i class="fa fa-sign-out"></i>导出</a>
+                                <!--<div id="SF_FK_EquipmentCostFeedback_dtl.importxls"></div>-->
+                                <div id="btnUpload">  </div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_FK_EstablishCostFeedback_dtl" class="mini-treegrid" style="height:100%;" showsummaryrow="true" multiselect="true" idfield="ListId" showCheckBox="true" checkRecursive="true"
+                                     oncellendedit="endedit"  data-options="{canImport:true}" showtreeicon="true" treecolumn="Code" parentfield="ParentId" resultastree="false" expandonload="true"
+                                     allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <!--oncellbeginedit="beginedit"-->
+                                    <div property="columns">
+                                        <!--<div type="checkcolumn" width="30"></div>-->
+                                        <div type="indexcolumn" width="30">序号</div>
+                                        <div field="ListId" headeralign="center" width="0">
+                                            ListId
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ParentId" headeralign="center" width="0">
+                                            ParentId
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div name="Code" field="Code" headeralign="center">
+                                            编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Name" headeralign="center">
+                                            名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Specifications" headeralign="center">
+                                            规格型号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="unit" headeralign="center">
+                                            单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Quantity" headeralign="center" numberformat="n2">
+                                            数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="UnitPrice" headeralign="center" numberformat="n2">
+                                            单价
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Price" headeralign="center" numberformat="n2" summarytype="sum">
+                                            合价
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_FK_EstablishCostFeedback", CreateGUID())//此处修改关键词
+        });
+        mini.parse();
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "SF_FK_EstablishCostFeedback_dtl";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var sender = FormFuns.GetMiniFormGrid(keyword);
+            FormFuns.ReLoadData(sender);
+            var grid = mini.get("SF_FK_EstablishCostFeedback_dtl");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>Excel导入",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                    mini.get("SF_FK_EstablishCostFeedback_dtl").loading("上传中，请稍后.....");//此处修改关键词
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    mini.get("SF_FK_EstablishCostFeedback_dtl").loading("导入中，请稍后.....");//此处修改关键词
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_FK_EstablishCostFeedback";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            mini.get("SF_FK_EstablishCostFeedback_dtl").reload();//此处修改关键词
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }
+
+        PowerForm.EventWizardWhere = function (e) {
+            var EpsProjectId = formconfig.config.joindata.currow.EpsProjectId;
+            var CostType = mini.get("SF_FK_EstablishCostFeedback.CostType").getValue();
+            if (e.id == "SF_FK_EstablishCostFeedback_dtl.Add") {
+                e.where = "EpsId='" + EpsProjectId + "' and SceduleType='" + CostType + "'";
+            }
+        }
+
+        //PowerForm.EventAfterOnBtnSave = function (e) {
+        //    //获取季度
+        //    var a = mini.get("SF_FK_EstablishCostFeedback.SeasonNum").getValue();
+        //    if(IsEmpty(a))
+        //    {
+        //        var id = KeyValue;
+        //        var costType = formconfig.config.joindata.currow.CostType;
+        //        var epsProjectId = formconfig.config.joindata.currow.EpsProjectId;
+        //        Power.ui.loading("获取季度中……");
+        //        var par = { "id": id, "costType": costType, "epsProjectId": epsProjectId };
+        //        FormFuns.APIExec("SF_FK_EstablishCostFeedback", "BO", "getSeason", par, function (text) {
+        //            Power.ui.loading.close();                  
+        //            mini.get("SF_FK_EstablishCostFeedback.Refresh").doClick();
+        //        });
+        //    }
+        //}
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get(SF_FK_EstablishCostFeedback_dtl);
+            //判断、并进行计算
+            if (e.field == "Quantity" || e.field == "UnitPrice") {
+                var s = parseFloat(record.Quantity) * parseFloat(record.UnitPrice);
+                grid.updateRow(record, { "Price": s });
+            }
+        }
+
+        function beginedit(e) {
+            e.cancel = true;
+            if (e.field == "Quantity" || e.field == "UnitPrice") {
+                e.cancel = false;
+            }
+        }
+
+        //PowerForm.EventBeforeLoadData = function beforeload(e) {
+        //    if (FormState == "add") {
+        //        mini.get("SF_FK_EstablishCostFeedback.CostType").setValue("3");
+        //    }
+        //}
+
+    </script>
+</body>
+</html>

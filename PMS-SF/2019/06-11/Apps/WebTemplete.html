@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Apps/style/webformstyle.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Apps/js/MobileWorkFlow.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/APPAccount/GetMoblieConfig/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+    <style>
+        #tablist {
+            margin-top: 11px;
+        }
+
+        .show {
+            margin: 10px 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="txtCurrentWorkInfoID" class="mini-textbox" enabled="false" style="display: none"></div>
+    <div id="txtCurrentSequeID" class="mini-textbox" enabled="false" style="display: none"></div>
+    <div class="listfile">
+    </div>
+    <div class="adddiv" id="URLFlow">
+        <p class="selectbutton">
+            <a href="#" class="ok" onclick="URLFlowOk()">确定</a>
+            <a href="#" onclick="URLFlowCancel()">取消</a>
+        </p>
+        <section class="form">
+            <table border="0" cellspacing="1">
+                <tr>
+                    <td width="30%">意见</td>
+                    <td width="70%"> <input id="Infos" class="mini-textarea" /></td>
+                </tr>
+
+
+
+            </table>
+        </section>
+
+    </div>
+    <div class="listdiv" id="listprint">
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new MobileWebForm();
+        var posturl = "";//审批时，POST信息
+        var maindata = {};
+        $(function () {
+            GetMobileComboboxData();
+            if (moblieconfig && moblieconfig.url) {
+                SetHtml("url");
+                mini.parse();
+                if ($("#nav").length > 0) {
+                    $("#nav").click(function () {
+                        $("#listdiv").show();
+                    });
+                }
+                if ($("#listdiv").length > 0) {
+                    $("#listdiv").click(function () {
+                        $("#listdiv").hide();
+                    });
+                }
+
+                var oul = document.getElementById("ul1");
+                var oli = oul.getElementsByTagName("li");
+                var otab = document.getElementById("tablist");
+                var odiv = otab.getElementsByTagName("section");
+                var obutton = document.getElementsByClassName("buttonlist");
+                for (var i = 0; i < oli.length; i++) {
+                    oli[i].index = i;
+                    oli[i].onclick = function () {
+                        for (var i = 0; i < oli.length; i++) {
+                            oli[i].className = "";
+                        }
+                        this.className = "active";
+                        for (var j = 0; j < odiv.length; j++) {
+                            odiv[j].className = "hide";
+                        }
+
+                        odiv[this.index].className = "show";
+                        var id = odiv[this.index].id;
+                        for (var j = 0; j < obutton.length; j++) {
+                            if (obutton[j].id == id + "_buttonlist")
+                                obutton[j].className = "show buttonlist";
+                            else
+                                obutton[j].className = "hide buttonlist";
+                        }
+
+                    }
+                }
+                var url = moblieconfig.url.replace("[@id]", KeyValue);
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    cache: false,
+                    async: false,
+                    success: function (text) {
+                        LoadCombobox();
+                        var forms = new mini.Form("#" + moblieconfig.KeyWord);
+                        var data = jQuery.parseJSON(text);
+                        maindata = data;
+                        forms.setData(data);
+                    }
+                });
+                for (var i = 0; i < moblieconfig.children.length; i++) {
+                    if (moblieconfig.children[i].type == "form")
+                        LoadChildForm(moblieconfig.children[i]);
+                    else
+                        LoadChild(moblieconfig.children[i]);
+                }
+            }
+            else if (moblieconfig && moblieconfig.KeyWord) {
+                SetHtml();
+                mini.parse();
+                PowerForm.Init();
+            }
+        });
+        function GetMobileComboboxData() {
+            if (moblieconfig && moblieconfig.controls) {
+                for (var i = 0; i < moblieconfig.controls.length; i++) {
+                    var ctrl = moblieconfig.controls[i];
+                    if (ctrl.cmbdata) {
+                        if (ctrl.cmbdata.url) {
+                            comboboxdata[moblieconfig.KeyWord + "." + ctrl.field] = GetComboboxUrlData(ctrl.cmbdata.valuefield, ctrl.cmbdata.textfield, moblieconfig.KeyWord + "." + ctrl.field, null, ctrl.cmbdata.url);
+                        }
+                        else
+                            comboboxdata[moblieconfig.KeyWord + "." + ctrl.field] = GetComboboxUrlData(ctrl.cmbdata.valuefield, ctrl.cmbdata.textfield, moblieconfig.KeyWord + "." + ctrl.field, ctrl.cmbdata.data, null);
+                    }
+                }
+            }
+            if (moblieconfig && moblieconfig.children) {
+                for (var i = 0; i < moblieconfig.children.length; i++) {
+                    var child = moblieconfig.children[i];
+                    if (child.controls) {
+                        for (var j = 0; j< child.controls.length; j++) {
+                            var ctrl = child.controls[j];
+                            if (ctrl.cmbdata) {
+                                if (ctrl.cmbdata.url) {
+                                    comboboxdata[child.KeyWord + "." + ctrl.field] = GetComboboxUrlData(ctrl.cmbdata.valuefield, ctrl.cmbdata.textfield, child.KeyWord + "." + ctrl.field,null,ctrl.cmbdata.url);
+                                }
+                                else
+                                    comboboxdata[child.KeyWord + "." + ctrl.field] = GetComboboxUrlData(ctrl.cmbdata.valuefield, ctrl.cmbdata.textfield, child.KeyWord + "." + ctrl.field, ctrl.cmbdata.data, null);
+                            }
+                        }
+                    }
+                    if (child.title && child.title.cmbdata) {
+                        if (child.title.cmbdata.url) {
+                            comboboxdata[child.KeyWord + "." + child.title.field] = GetComboboxUrlData(child.title.cmbdata.valuefield, child.title.cmbdata.textfield, child.KeyWord + "." + child.title.field, null, child.title.cmbdata.url);
+                        }
+                        else
+                            comboboxdata[child.KeyWord + "." + child.title.field] = GetComboboxUrlData(child.title.cmbdata.valuefield, child.title.cmbdata.textfield, child.KeyWord + "." + child.title.field, child.title.cmbdata.data, null);
+                    }
+                    if (child.left && child.left.cmbdata) {
+                        if (child.left.cmbdata.url) {
+                            comboboxdata[child.KeyWord + "." + child.left.field] = GetComboboxUrlData(child.left.cmbdata.valuefield, child.left.cmbdata.textfield, child.KeyWord + "." + child.left.field, null, child.left.cmbdata.url);
+                        }
+                        else
+                            comboboxdata[child.KeyWord + "." + child.left.field] = GetComboboxUrlData(child.left.cmbdata.valuefield, child.left.cmbdata.textfield, child.KeyWord + "." + child.left.field, child.left.cmbdata.data, null);
+                    }
+                    if (child.center && child.center.cmbdata) {
+                        if (child.center.cmbdata.url) {
+                            comboboxdata[child.KeyWord + "." + child.center.field] = GetComboboxUrlData(child.center.cmbdata.valuefield, child.center.cmbdata.textfield, child.KeyWord + "." + child.center.field, null, child.center.cmbdata.url);
+                        }
+                        else
+                            comboboxdata[child.KeyWord + "." + child.center.field] = GetComboboxUrlData(child.center.cmbdata.valuefield, child.center.cmbdata.textfield, child.KeyWord + "." + child.center.field, child.center.cmbdata.data, null);
+                    }
+                    if (child.right && child.right.cmbdata) {
+                        if (child.right.cmbdata.url) {
+                            comboboxdata[child.KeyWord + "." + child.right.field] = GetComboboxUrlData(child.right.cmbdata.valuefield, child.right.cmbdata.textfield, child.KeyWord + "." + child.right.field, null, child.right.cmbdata.url);
+                        }
+                        else
+                            comboboxdata[child.KeyWord + "." + child.right.field] = GetComboboxUrlData(child.right.cmbdata.valuefield, child.right.cmbdata.textfield, child.KeyWord + "." + child.right.field, child.right.cmbdata.data, null);
+                    }
+                }
+            }
+        }
+        function LoadCombobox() {
+            if (typeof (comboboxdata) == "undefined" || comboboxdata == undefined) return;
+            for (var item in comboboxdata) {
+                if (typeof (item) == "function") continue;
+                var cmbdata = comboboxdata[item];
+                var cmb = mini.get(item);
+                if (cmb) {
+                    switch (cmb.type) {
+                        case "combobox":
+                            cmb.setValueField(cmbdata.ValueField);
+                            cmb.setTextField(cmbdata.TextField);
+                            if (cmbdata.SourceType != "url")
+                                cmb.setData(mini.encode(cmbdata.Data));
+                            else
+                                cmb.load(cmbdata.Data);
+                            break;
+                    }
+                }
+            }
+        }
+        function GetComboboxUrlData(idfield, textfield, controlname, data, url) {
+            if (url) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    cache: false,
+                    async: false,
+                    success: function (text) {
+                        data = jQuery.parseJSON(text);
+                        return GetCbData(idfield, textfield, controlname, data);
+                    }
+                });
+            }
+            return GetCbData(idfield, textfield, controlname, data);
+        }
+        function GetCbData(idfield, textfield, controlname, data) {
+            var result = {};
+            result.ControlName = controlname;
+            result.TextField = textfield;
+            result.ValueField = idfield;
+            result.Data = data;
+            return result;
+        }
+        function SetHtml(type) {
+            var html = '<div class="show buttonlist" id="' + moblieconfig.KeyWord + '_buttonlist">' +
+                   '<div id="btnShowMonitor" class="button a" style="display:none"  ><a href="#"><i class="fa fa-eye"></i><span>监控</span></a></div>' +
+                   '<div id="btnActive" class="button a" style="display:none" onclick="onExecute(this,\'Update,Active\');"><a href="#"><i class="fa fa-thumbs-up"></i><span>送审</span></a></div>' +
+                   '<div id="btnSend" class="button a" style="display:none" onclick="onExecute(this,\'Update,Send\');"><a href="#"><i class="fa fa-thumbs-up"></i><span>同意</span></a></div>' +
+           '<div id="btnReturn" class="button a" style="display:none" onclick="onExecute(this,\'Update,Return\');"><a href="#"><i class="fa fa-mail-reply"></i><span>驳回</span></a></div>';
+            if (type == "url")
+                html = '<div class="show buttonlist" id="' + moblieconfig.KeyWord + '_buttonlist">' +
+                   '<div id="btnSend" class="button a"  onclick="APPURLSend()"><a href="#"><i class="fa fa-thumbs-up"></i><span>同意</span></a></div>' +
+           '<div id="btnReturn" class="button a"  onclick="APPURLReturn()"><a href="#"><i class="fa fa-mail-reply"></i><span>驳回</span></a></div>';
+
+            if (moblieconfig.print == true || moblieconfig.print == "true")
+                html+='<div id="btnPrint" class="button a" style="border: 0px;  width: 30%"><a href="#" id="print"><i class="fa fa-print"></i><span id="reportname">报表</span></a></div>';
+            html+='</div>'
+       
+
+            var tables = "";
+            for (var i = 0; i < moblieconfig.controls.length; i++) {
+                var ctrl = moblieconfig.controls[i];
+                if (ctrl.format == "combobox") {
+                    tables += ' <tr><td>' + ctrl.title + '</td>' +
+                    '<td>' +
+                    '    <input id="' + moblieconfig.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" class="mini-combobox" readonly="true"  />' +
+                    '</td></tr>';
+                }
+                else if (ctrl.format.indexOf("yyyy") > -1) {
+                    tables += ' <tr><td>' + ctrl.title + '</td>' +
+                   '<td>' +
+                   '    <input id="' + moblieconfig.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" format="' + ctrl.format + '" class="mini-datepicker" readonly="true"  />' +
+                   '</td></tr>';
+                }
+                else if (ctrl.format == "" || ctrl.format == "text") {
+                    tables += ' <tr><td>' + ctrl.title + '</td>' +
+                   '<td>' +
+                   '    <input id="' + moblieconfig.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '"   class="mini-textbox" readonly="true"  />' +
+                   '</td></tr>';
+                }
+                else {
+                    tables += ' <tr><td>' + ctrl.title + '</td>' +
+                '<td>' +
+                '    <input id="' + moblieconfig.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" format="' + ctrl.format + '" class="mini-spinner" readonly="true" allowLimitValue="false"  />' +
+                '</td></tr>';
+                }
+            }
+            var childhtml = "";
+            var tabshtml = ' <li class="active"><i class="fa fa-home"></i></br><span>' + moblieconfig.name + '</span></li>';
+            for (var i = 0; i < moblieconfig.children.length; i++) {
+                var chlid = moblieconfig.children[i];
+                if (chlid.KeyWord == "DocFile" && type != "url") {
+                    childhtml += '<section class="hide" id="file"><ul id="FileAttach"></ul></section>';
+                    tabshtml += '<li><i class="fa fa-file"></i></br><span id="filecount">' + chlid.name + '</span></li>';
+                }
+                else {
+                    if (chlid.type == "form") {
+                        var childtables = "";
+                        for (var j = 0; j < chlid.controls.length; j++) {
+                            var ctrl = chlid.controls[j];
+                            if (ctrl.format == "combobox") {
+                                childtables += ' <tr><td>' + ctrl.title + '</td>' +
+                                '<td>' +
+                                '    <input id="' + chlid.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" class="mini-combobox" readonly="true"  />' +
+                                '</td></tr>';
+                            }
+                            else if (ctrl.format.indexOf("yyyy") > -1) {
+                                childtables += ' <tr><td>' + ctrl.title + '</td>' +
+                               '<td>' +
+                               '    <input id="' + chlid.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" format="' + ctrl.format + '" class="mini-datepicker" readonly="true"  />' +
+                               '</td></tr>';
+                            }
+                            else if (ctrl.format == "" || ctrl.format == "text") {
+                                childtables += ' <tr><td>' + ctrl.title + '</td>' +
+                               '<td>' +
+                               '    <input id="' + chlid.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '"   class="mini-textbox" readonly="true"  />' +
+                               '</td></tr>';
+                            }
+                            else {
+                                childtables += ' <tr><td>' + ctrl.title + '</td>' +
+                            '<td>' +
+                            '    <input id="' + chlid.KeyWord + '.' + ctrl.field + '" name="' + ctrl.field + '" format="' + ctrl.format + '" class="mini-spinner" readonly="true" allowLimitValue="false"  />' +
+                            '</td></tr>';
+                            }
+                        }
+                        childhtml += '<section id="' + chlid.KeyWord + '" class=" form" style="display:none;">' +
+                   '<table border="0" cellspacing="1">' + childtables +
+                    '</table>' +
+               '</section>'
+                        tabshtml += '<li><i class="fa fa-cogs"></i></br><span>' + chlid.name + '</span></li>';
+                    }
+                    else {
+                        var titlefield = typeof (chlid.title) == "object" ? chlid.title.value : "";
+                        var titleformat = typeof (chlid.title) == "object" ? chlid.title.format : "";
+                        var leftfield = typeof (chlid.left) == "object" ? chlid.left.value : "";
+                        var leftformat = typeof (chlid.left) == "object" ? chlid.left.format : "";
+                        var centerfield = typeof (chlid.center) == "object" ? chlid.center.value : "";
+                        var centerformat = typeof (chlid.center) == "object" ? chlid.center.format : "";
+                        var rightfield = typeof (chlid.right) == "object" ? chlid.right.value : "";
+                        var rightformat = typeof (chlid.right) == "object" ? chlid.right.format : "";
+                        childhtml += '<section class="hide" id="' + chlid.KeyWord + '" data-potions=\'{"idfield":"' + chlid.idfield + '","title":{"value":"' + titlefield + '","format":"' + titleformat + '"},"left":{"value":"' + leftfield + '","format":"' + leftformat + '"},"center":{"value":"' + centerfield + '","format":"' + centerformat + '"},"right":{"value":"' + rightfield + '","format":"' + rightformat + '"}}\'>' +
+                                    '<ul class="datalist"></ul>' +
+                                   '</section>';
+                        tabshtml += '<li><i class="fa fa-cogs"></i></br><span>' + chlid.name + '</span></li>';
+                    }
+                }
+            }
+            html += '  <div id="tablist">' +
+
+                '<section id="' + moblieconfig.KeyWord + '" class=" form show">' +
+                    '<table border="0" cellspacing="1">' + tables +
+                     '</table>' +
+                '</section>' + childhtml +
+'<ul id="ul1">' + tabshtml +
+'</ul></div>';
+            $(".listfile").html(html);
+        }
+        var flowtype = "";
+        function APPURLSend() {
+            flowtype = "send";
+            $("#URLFlow").show();
+        }
+        function APPURLReturn() {
+            flowtype = "return";
+            $("#URLFlow").show();
+        }
+        function URLFlowOk() {
+            var pjson = {};
+            pjson.type = flowtype;
+            pjson.infos = mini.get("Infos").getValue();
+            $.ajax({
+                url: posturl,
+                data: { json: pjson },
+                cache: false,
+                success: function (text) {
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        function URLFlowCancel() {
+            $("#URLFlow").hide();
+        }
+        function GetWhere(config) {
+            var swhere = "1=1";
+            swhere += " and " + config.swhere == null ? "" : config.swhere;
+            if (config.fields) {
+                for (var field in config.fields) {
+                    swhere += " and " + field + "='" + maindata[config.fields[field]] + "'";
+
+                }
+            }
+            return swhere;
+        }
+        function LoadChildForm(config) {
+            var swhere = GetWhere(config);
+            var url = config.url.replace("[@swhere]", swhere);
+            $.ajax({
+                url: url,
+                type: "POST",
+                cache: false,
+                success: function (text) {
+                    var forms = new mini.Form("#" + config.KeyWord);
+                    var data = jQuery.parseJSON(text);
+                    forms.setData(data);
+                }
+            });
+        }
+        function LoadChild(config) {
+            DataP.index = "0";
+            PowerM3AppCallBack.loadpage = LoadUrlData;
+            AndroidLoadPage = LoadUrlData;
+            LoadUrlData(DataP, config);
+        }
+        function LoadUrlData(dp, config) {
+            var swhere = GetWhere(config);
+            var url = config.url.replace("[@indexpage]", dp.index).replace("[@swhere]", swhere);
+            $.ajax({
+                url: url,
+                type: "POST",
+                cache: false,
+                success: function (text) {
+                    var o = jQuery.parseJSON(text);
+                    BuidHTML(o, config);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.responseText);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            })
+        }
+        function BuidHTML(data, config) {
+            var html = "";
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+                html += " <li>" +
+               "<a href=\"javascript:;\" " + GetOnClick(config, row) + ">" +
+                   "<span class=\"left\"><input id=\"" + row[config.idfield] + "\" name=\"" + config.idfield + "\" class=\"check\" type=\"checkbox\" value=\"\" style=\"display:none\"/><i class=\"fa " + (config.icon || "fa-plus-square-o") + " a\"></i></span>" +
+                   "<div>" +
+                       GetTitle(config, row) +
+                       "<p class=\"group\">" +
+                          GetLeft(config, row) +
+                          GetCenter(config, row) +
+                         GetRight(config, row) +
+                      " </p>" +
+                  " </div>" +
+                  " <span class=\"right\"><i class=\"fa fa-angle-right\"></i></span>" +
+               "</a>" +
+           "</li>";
+            }
+            $("#" + config.KeyWord + " ul").append(html);
+            if (data.length > 0)
+                DataP.index = parseInt(DataP.index) + 1;
+            //if ($(".buttonlist1").css("display") != "none") {
+            //    $(".left i").hide();
+            //    $(".left input").show();
+            //}
+        }
+        function GetOnClick(row) {
+            var onclick = "";//单击html
+            //if (OpenFormId != "") {
+            // onclick = "onclick=\"PowerForm.OpenWebForm('" + OpenFormId + "','" + row[config.idfield] + "')\"";
+            // }
+            return onclick;
+        }
+        function GetTitle(config, row) {
+
+            var title = "";//title
+            if (config.title) {
+                var format = config.title.format;
+                var field = config.title.field;
+                if (format == "" || format == null)//普通文本
+                    title = "<p class=\"title\">" + row[field] + "</p>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[config.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                title = "<p class=\"title\">" + d[comb.TextField] + "</p>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    title = "<p class=\"title\">" + mini.formatNumber(row[field], format) + "</p>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    title = "<p class=\"title\">" + mini.formatDate(row[field], format) + "</p>";
+                }
+            }
+            return title.replace("null", "");
+        }
+        function GetLeft(config, row) {
+
+            var left = "";//左下角
+            if (config.left) {
+                var format = config.left.format;
+                var field = config.left.field;
+                if (format == "" || format == null)//普通文本
+                    left = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[config.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                left = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    left = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    left = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return left.replace("null", "");
+        }
+        function GetCenter(config, row) {
+            var center = "";//中间
+            if (config.center) {
+                var format = config.center.format;
+                var field = config.center.field;
+                if (format == "" || format == null)//普通文本
+                    center = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[config.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                center = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    center = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    center = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return center.replace("null", "");;
+        }
+        function GetRight(config, row) {
+
+            var right = "";//右下角
+            if (config.right) {
+                var format = config.right.format;
+                var field = config.right.field;
+                if (format == "" || format == null)//普通文本
+                    right = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[config.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                right = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    right = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    right = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return right.replace("null", "");;
+        }
+        var DataP = {};
+        var HtmlP = {};
+    </script>
+</body>
+</html>

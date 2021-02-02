@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                            <input id="V_SF_SJ_DesignTaskAdviceNote-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="V_SF_SJ_DesignTaskAdviceNote-search">
+                                <input id="V_SF_SJ_DesignTaskAdviceNote-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="V_SF_SJ_DesignTaskAdviceNote-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_SF_SJ_DesignTaskAdviceNote" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div type="comboboxcolumn" headerAlign="center" align="center" field="Status" header="审批状态" allowsort="true">审批状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="Code" headerAlign="center" name="Code" datatype="" allowsort="true" header="编号">编号</div>
+                                <div field="Name" headerAlign="center" name="Name" datatype="" allowsort="true" header="单据名称">单据名称</div>
+                                <div type="comboboxcolumn" headerAlign="center" align="center" field="TaskType" header="任务类型" allowsort="true">任务类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="ProjectName1" headerAlign="center" name="ProjectName1" datatype="" allowsort="true" header="项目名称">项目名称</div>
+                                <div field="RegHumName" headerAlign="center" name="RegHumName" datatype="" allowsort="true" header="录入人名称" align="center">录入人名称</div>
+                                <div field="RegDate" headerAlign="center" name="RegDate" datatype="" allowsort="true" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+	
+
+    </script>
+</body>
+</html>

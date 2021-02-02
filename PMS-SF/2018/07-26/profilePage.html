@@ -1,0 +1,1203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <script src="/Scripts/boot.js" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="/Scripts/bootstrap/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        Widget settings form goes here
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn blue">Save changes</button>
+                        <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row profile">
+            <div class="col-md-12">
+
+                <div class="tab-pane" id="tab_1_3">
+                    <div class="row profile-account">
+                        <div class="col-md-3">
+                            <ul class="ver-inline-menu tabbable margin-bottom-10">
+                                <li>
+                                    <img id="userHeader" src="/App_Themes/Default/assets/img/profile/profile-img.png" class="img-responsive" alt="" />
+                                </li>
+                                <li id="li1" class="active"><a data-toggle="tab" href="extra_profile.html#tab_1-1"><i class="fa fa-picture-o"></i>$Helper.GetResource("g_preview")</a></li><!--预览-->
+                                <li id="li6"><a data-toggle="tab" href="extra_profile.html#tab_6-6"><i class="fa fa-cog"></i>$Helper.GetResource("g_work_entrust")</a></li><!--审批委托-->
+                                <li id="li5"><a data-toggle="tab" href="extra_profile.html#tab_5-5"><i class="fa fa-lock"></i>$Helper.GetResource("profilepage_design_menu")</a></li><!--设计菜单-->
+                                <li id="li2"><a data-toggle="tab" href="extra_profile.html#tab_2-2"><i class="fa fa-cog"></i>$Helper.GetResource("profilepage_userinfo")</a></li><!--个人信息-->
+                                <li id="li3"><a data-toggle="tab" href="extra_profile.html#tab_3-3"><i class="fa fa-picture-o"></i>$Helper.GetResource("profilepage_modify_header")</a></li><!--修改头像-->
+                                <li id="li4"><a data-toggle="tab" href="extra_profile.html#tab_4-4"><i class="fa fa-lock"></i>$Helper.GetResource("profilepage_modify_pass")</a></li><!--修改密码-->
+
+                            </ul>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="tab-content">
+                                <div id="tab_1-1" class="tab-pane active">
+                                    <form role="form" action="extra_profile.html#">
+                                        <div class="col-md-8 profile-info">
+                                            <h1>$!CurrentSession.HumanName</h1><!--登录姓名-->
+                                            <p id="puserinfo"></p>
+                                            <ul class="list-inline">
+                                                <li id="birth"></li>
+                                                <li id="position"></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="tab_2-2" class="tab-pane">
+                                    <form role="form" action="extra_profile.html#">
+                                        <div id="form1">
+                                            <table class="table">
+                                                <tr>
+                                                    <th style="width:10%">$Helper.GetResource("g_humanname")</th><!--姓名-->
+                                                    <td style="width:40%">
+                                                        <input name="Name" type="text" placeholder="Doe" class=" mini-textbox form-control" style="padding: 0px 13px" />
+                                                    </td>
+
+                                                    <th style="width:10%">$Helper.GetResource("g_code")</th><!--编号-->
+                                                    <td style="width:40%">
+                                                        <input name="Code" type="text" placeholder="Doe" class=" mini-textbox form-control" style="padding: 0px 13px" readonly="true" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>$Helper.GetResource("g_sex")</th><!--性别-->
+                                                    <td>
+                                                        <select name="Sex" class="mini-combobox form-control" style="padding: 0px;">
+                                                            <option value="2" selected="selected">$Helper.GetResource("g_secrecy")</option><!--保密-->
+                                                            <option value="1">$Helper.GetResource("g_man")</option><!--男-->
+                                                            <option value="0">$Helper.GetResource("g_woman")</option><!--女-->
+                                                        </select>
+
+                                                    </td>
+                                                    <th>$Helper.GetResource("g_marriage")</th><!--婚姻状况-->
+                                                    <td>
+                                                        <select name="Marriage" class="mini-combobox form-control" style="padding: 0px;">
+                                                            <option value="2" selected="selected">$Helper.GetResource("g_secrecy")</option><!--保密-->
+                                                            <option value="1">$Helper.GetResource("g_married")</option><!--已婚-->
+                                                            <option value="0">$Helper.GetResource("g_unmarried")</option><!--未婚-->
+                                                        </select>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>$Helper.GetResource("g_birthday")</th><!--出生日期-->
+                                                    <td>
+                                                        <input id="Birthday" name="Birthday" placeholder="Doe" class="mini-datepicker form-control" vtype="date:yyyy-MM-dd" style="padding: 0px;" />
+                                                    </td>
+                                                    <th> $Helper.GetResource("g_idcard")</th><!--身份证-->
+                                                    <td>
+                                                        <input name="IdCard" type="text" placeholder="Doe" class=" mini-textbox form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_passport")</th><!--护照-->
+                                                    <td>
+                                                        <input name="PassPort" type="text" placeholder="Doe" class="mini-textbox form-control" />
+                                                    </td>
+
+                                                    <th> $Helper.GetResource("g_degree")</th><!--学历-->
+                                                    <td>
+                                                        <input name="Degree" class="mini-combobox form-control" valuefield="id"
+                                                               style="padding: 0px;" url="/Data/JBaseData/BD_Degree" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_national")</th><!--民族-->
+                                                    <td>
+                                                        <input name="Native" class="mini-combobox form-control" style="padding: 0px;" valuefield="id" url="/Data/JBaseData/BD_Native" />
+                                                    </td>
+
+                                                    <th> $Helper.GetResource("g_political")</th><!--政治面貌-->
+                                                    <td>
+                                                        <input name="Political" class="mini-combobox form-control" valuefield="id" style="padding: 0px;"
+                                                               url="/Data/JBaseData/BD_Political" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_mobile")</th><!--手机-->
+                                                    <td>
+                                                        <input name="Mobile" type="text" placeholder="+1 646 580 DEMO (6284)" vtype="range:10000000000,100000000000" class="mini-textbox form-control" />
+                                                    </td>
+
+                                                    <th> $Helper.GetResource("g_phone")</th><!--座机-->
+                                                    <td>
+                                                        <input name="Phone" type="text" placeholder="Web Developer" class="mini-textbox form-control" />
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_qq")</th><!--QQ-->
+                                                    <td>
+                                                        <input name="QQ" type="text" placeholder="Web Developer" vtype="range:10000,100000000000" class="mini-textbox form-control" />
+                                                    </td>
+                                                    <th> $Helper.GetResource("g_wechat")</th><!--微信号-->
+                                                    <td>
+                                                        <input name="WeChat" type="text" placeholder="Web Developer" class="mini-textbox form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <th> $Helper.GetResource("g_email")</th><!--邮件地址-->
+                                                    <td>
+                                                        <input name="Email" type="text" placeholder="Web Developer" vtype="email" class="mini-textbox form-control" />
+                                                    </td>
+                                                    <th> $Helper.GetResource("g_postcode")</th><!--邮编-->
+                                                    <td>
+                                                        <input name="PostCode" type="text" placeholder="Web Developer" class="mini-textbox form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> RTX(腾讯通)帐号</th><!--地址-->
+                                                    <td colspan="3">
+                                                        <input name="RTX" type="text" placeholder="Web Developer" class="mini-textbox form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_address")</th><!--地址-->
+                                                    <td colspan="3">
+                                                        <input name="Address" type="text" placeholder="Web Developer" class="mini-textbox form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th> $Helper.GetResource("g_about")</th><!--个人说明-->
+                                                    <td colspan="3">
+                                                        <textarea name="Memo" class="mini-textbox form-control" rows="3" placeholder="We are KeenThemes!!!"></textarea>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                            <div class="margiv-top-10">
+                                                <a href="javascript:;" onclick="SaveInfo()" class="btn green"> $Helper.GetResource("g_save")</a><!--保存-->
+                                                <a href="javascript:;" class="btn default"> $Helper.GetResource("g_cancel")</a><!--取消-->
+
+                                                <span id="SaveInfo" style="color: red"></span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="tab_3-3" class="tab-pane">
+                                    <div id="loading" style="display: none; background-color: #F0F0F0; width: 100%; height: 500px; z-index: 9999999; position: absolute; filter: alpha(Opacity=80); -moz-opacity: 0.5; opacity: 0.5; text-align: center; padding-top: 290px; font-weight: 600; color: #000000;">
+                                        $Helper.GetResource("profilepage_upload_info")<!--上传中，请稍后……-->
+                                    </div>
+                                    <!--<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.</p>-->
+                                    <form action="extra_profile.html#" role="form">
+                                        <div class="form-group clearfix">
+                                            <div class="thumb-item  thumb-item-lg">
+                                                <div class="thumbnail">
+                                                    <img id="headerPic" alt="">
+                                                </div>
+                                                <div class="margin-top-10 fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="input-group input-group-fixed">
+                                                        <span class="input-group-btn">
+                                                            <span class="uneditable-input">
+                                                                <i class="fa fa-file fileupload-exists"></i>
+                                                                <span class="fileupload-preview"></span>
+                                                            </span>
+                                                        </span>
+                                                        <div id="btnUpload">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="thumb-item thumb-item-sm">
+                                                <div class="thumbnail">
+                                                    <img id="headerPic_Small" alt="">
+                                                </div>
+
+                                                <div class="margin-top-10 fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="input-group input-group-fixed">
+                                                        <span class="input-group-btn">
+                                                            <span class="uneditable-input">
+                                                                <i class="fa fa-file fileupload-exists"></i>
+                                                                <span class="fileupload-preview"></span>
+                                                            </span>
+                                                        </span>
+                                                        <div id="btnUpload_Small">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="margin-top-10">
+                                            <span class="label label-danger">$Helper.GetResource("g_note")</span><!--注意-->
+                                            <span>
+                                                $Helper.GetResource("profilepage_upload_note")
+                                            </span><!--仅支持PNG、JPG、PNG、BMP格式的图片，大头像不超过1024KB、小头像不超过128KB-->
+                                            <!-- <a href="javascript:;" onclick="HeadUpLoad()" class="btn green">Submit</a>
+                                            <a href="javascript:;" class="btn default">Cancel</a>-->
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="tab_4-4" class="tab-pane">
+                                    <form action="extra_profile.html#">
+                                        <div class="form-group">
+                                            <label class="control-label">$Helper.GetResource("profilepage_now_pass")</label><!--当前密码-->
+                                            <input id="oldPassWord" type="password" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">$Helper.GetResource("profilepage_new_pass")</label><!--新密码-->
+                                            <input id="newPassWord" type="password" class="form-control" onchange="PwdStrong()" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">$Helper.GetResource("profilepage_second_pass")</label><!--再次输入密码-->
+                                            <input id="againPassWord" type="password" class="form-control" />
+                                        </div>
+                                        <div class="margin-top-10">
+                                            <a href="javascript:;" onclick="changePassWord()" class="btn green">$Helper.GetResource("profilepage_modify_pass")</a><!--修改密码-->
+                                            <a href="javascript:;" class="btn default">$Helper.GetResource("g_cancel")</a><!--取消-->
+                                            <span id="passInfo" style="color: red"></span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="tab_5-5" class="tab-pane">
+                                    <form action="extra_profile.html#">
+                                        <div>
+                                            <table style="width:100%;height:500px">
+                                                <tr>
+                                                    <td style="width: 40%;">
+                                                        <div id="treemenu" class="mini-tree" style="width: 100%; height: 500px"
+                                                             showtreeicon="true" textfield="Name" idfield="Id" parentfield="ParentId"
+                                                             resultastree="false" expandonload="true" showcheckbox="true"
+                                                             showfoldercheckbox="false" onbeforenodeselect="beforenodeselect" virtualscroll="true">
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 10%; text-align: center; ">
+                                                        <input type="button" value=">" onclick="add()" style="width:40px;" /><br />
+                                                        <input type="button" value=">>" onclick="addAll()" style="width:40px;" /><br />
+                                                        <input type="button" value="&lt;&lt;" onclick="removeAll()" style="width:40px;" /><br />
+                                                        <input type="button" value="&lt;" onclick="removes()" style="width:40px;" /><br />
+                                                    </td>
+                                                    <td style="width: 50%;">
+                                                        <div id="datagridmenu" class="mini-datagrid" style="width: 100%; height: 500px" idfield="id"
+                                                             allowresize="true" showpager="false"
+                                                             allowcelledit="true" allowcellselect="true" multiselect="true"
+                                                             editnextonenterkey="true" editnextrowcell="true" oncellendedit="OnCellEndEdit">
+                                                            <div property="columns">
+                                                                <div type="indexcolumn"></div>
+                                                                <div type="checkcolumn"></div>
+                                                                <div name="ObjectName" field="ObjectName" headeralign="center" allowsort="true" width="150">
+                                                                    $Helper.GetResource("profilepage_menu_name")
+                                                                    <input property="editor" class="mini-textbox" style="width:100%;" />
+                                                                </div><!--菜单名称-->
+                                                                <div name="Color" field="Color" type="comboboxcolumn" headeralign="center" allowsort="true" width="80">
+                                                                    $Helper.GetResource("g_color")
+                                                                    <input property="editor" class="mini-combobox" style="width:100%;" data="GendersColor" />
+                                                                </div><!--颜色-->
+                                                                <div name="Icon" field="Icon" type="comboboxcolumn" headeralign="center" allowsort="true" width="80">
+                                                                    $Helper.GetResource("g_icon")
+                                                                    <input property="editor" class="mini-combobox" style="width:100%;" data="GendersIcon" />
+                                                                </div><!--图标-->
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="tab_6-6" class="tab-pane">
+                                    <form action="extra_profile.html#">
+                                        <div style="width:800px;height:500px;">
+                                            <div class="mini-splitter" vertical="true" style="width:800px;height:500px;">
+                                                <div size="50%" showcollapsebutton="true">
+                                                    <div class="mini-toolbar">
+                                                        <!--<a class="mini-button blue" id="FlowProxy.AddForm" onclick="OnWizardDefaultProxyHuman(this)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add_entrunst")</a>新增委托｛这是原来的｝-->
+                                                        <a class="mini-button blue" id="FlowProxy.AddForm" onclick="OnWizardDeptHuman(this)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add_entrunst")</a><!-- 这是新增的 -->
+                                                        <a class="mini-button blue" id="FlowProxy.Delete" onclick="OnBtnDelete('FlowProxy')"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                                                        <a class="mini-button blue" id="FlowProxy.Save" onclick="OnBtnSaveProxy('FlowProxy')"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                                                        <a class="mini-button blue" id="Human.Refresh" onclick="LoadFlowProxy()"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                                    </div>
+                                                    <div id="FlowProxy" class="mini-datagrid" style="width: 800px; height: 200px;" allowresize="true"
+                                                         allowcelledit="true" multiselect="true" showpager="false"
+                                                         idfield="proxyID" autoload="false" allowcellselect="true" onselect="FlowProxy_Select"
+                                                         oncellbeginedit="FlowProxy_BeginEdit">
+                                                        <div property="columns">
+                                                            <div type="indexcolumn" width="40"></div>
+                                                            <div field="IsEnabled" type="checkboxcolumn" truevalue="1" falsevalue="0" width="60">$Helper.GetResource("basedata_effe")</div><!--有效-->
+                                                            <div field="DefaultProxyHumanName" width="200">$Helper.GetResource("g_default_entrunst")</div><!--缺省受托人-->
+                                                            <div field="StartDate" dateformat="yyyy-MM-dd" width="250">$Helper.GetResource("g_begin_date")<input property="editor" class="mini-datepicker" style="width: 100%;" /></div><!--开始日期-->
+                                                            <div field="EndDate" dateformat="yyyy-MM-dd" width="250">$Helper.GetResource("g_end_date")<input property="editor" class="mini-datepicker" style="width: 100%;" /></div><!--结束日期-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div showcollapsebutton="true">
+
+                                                    <div class="mini-toolbar">
+                                                        <a class="mini-button blue" iconcls="fa-plus" id="FlowProxyList.Add" onclick="OnWizardProject(true,this)">$Helper.GetResource("g_entrunst_add_project")</a><!--新增项目委托-->
+                                                        <a class="mini-button blue" iconcls="fa-plus" id="FlowProxyList.Add" onclick="OnWizardWorkFlow(true,this)">新增菜单委托</a><!--新增流程委托-->
+
+                                                        <a class="mini-button blue" id="FlowProxy.Save" onclick="OnBtnSaveProxy('FlowProxyList')"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                                                        <a class="mini-button blue" iconcls="fa-trash-o" id="FlowProxyList.Delete" onclick="OnBtnDelete('FlowProxyList')">$Helper.GetResource("g_delete")</a><!--删除-->
+                                                    </div>
+                                                    <div id="FlowProxyList" class="mini-datagrid" style="width: 800px; height: 200px;" allowresize="true"
+                                                         allowcelledit="true" allowcellselect="true" multiselect="true" showpager="false"
+                                                         idfield="Id" autoload="false">
+                                                        <div property="columns">
+                                                            <div type="indexcolumn" width="40"></div>
+                                                            <div field="IsEnabled" type="checkboxcolumn" truevalue="1" falsevalue="0" width="60">$Helper.GetResource("basedata_effe")</div><!--有效-->
+                                                            <div field="PropxyHumanName" width="200">
+                                                                <input property="editor" id="FlowProxyList.PropxyHumanName"
+                                                                       name="PropxyHumanName" textname="PropxyHumanName" class="mini-buttonedit"
+                                                                       onbuttonclick="OnWizardDefaultProxyHuman( this)" allowinput="false" />$Helper.GetResource("g_entrunst_human")
+                                                            </div><!--受托人-->
+                                                            <div field="ProjectName" width="250">
+                                                                <input property="editor" id="FlowProxyList.ProjectName"
+                                                                       name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                                       onbuttonclick="OnWizardProject(false,this)" allowinput="false" />$Helper.GetResource("g_entrunst_project")
+                                                            </div><!--受托项目-->
+                                                            <div field="MenuName" width="250">
+                                                                <input property="editor" id="FlowProxyList.MenuName"
+                                                                       name="MenuName" textname="MenuName" class="mini-buttonedit"
+                                                                       onbuttonclick="OnWizardWorkFlow(false,this)" allowinput="false" />受托菜单
+                                                            </div><!--受托流程-->
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/Scripts/bootstrap/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        $session = {
+            HumanId: "$!CurrentSession.HumanId",
+            HumanName: "$!CurrentSession.HumanName",
+            IsITAdmin: "$!CurrentSession.IsITAdmin",
+            HumanHeadBig: "$!CurrentSession.HumanHeadBig",
+            HumanHeadSmall: "$!CurrentSession.HumanHeadSmall",
+            DeptId: "$!CurrentSession.DeptId",
+        }
+    </script>
+    <script type="text/javascript">
+        mini.parse();
+        function beforenodeselect(e) {
+            //禁止选中父节点
+            if (e.isLeaf == false) e.cancel = true;
+        }
+        function FlowProxy_BeginEdit(e) {
+            if(e.field=="IsEnabled"&&e.value=="0")
+            {
+                var data = e.sender.data;
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[i];
+                    if (d.IsEnabled == "1") {
+                        Power.ui.alert("只能有一个缺省受托人");
+                        e.cancel = true;
+                        break;
+                    }
+                }
+            }
+        }
+        function FlowProxy_Select(e) {
+            if (e.record._state == "added") {
+                Power.ui.alert("请先保存");
+                return;
+            }
+            FlowProxyList();
+        }
+        function FlowProxyList() {
+            var g = mini.get("FlowProxy");
+            if (!g.getSelected() || !g.getSelected().proxyID)
+                return;
+
+            var p = { KeyWord: "FlowProxyList" };
+            p.swhere = "ProxyId='" + g.getSelected().proxyID + "'";
+            FormFuns.GridPageLoad(p, function (o) {
+                if (o.success) {
+                    var grid = mini.get("FlowProxyList");
+                    grid.setData(mini.decode(o.data.value));
+                }
+                else
+                    Power.ui.error(o.message);
+            });
+        }
+        var GendersColor = [{ id: "tile marginb bg-green", text: app_global["g_green"] }, { id: "tile marginb bg-blue", text: app_global["g_blue"] },
+                       { id: "tile marginb bg-yellow", text: app_global["g_yellow"] }, { id: "tile marginb bg-red", text: app_global["g_red"] },
+                       { id: "tile marginb bg-purple", text: app_global["g_purple"] }, { id: "tile marginb bg-dark", text: app_global["g_black"] }];
+        var GendersIcon = [{ id: "", text: app_global["g_none"] }, { id: "fa fa-tags", text: app_global["g_tags"] }, { id: "fa fa-tasks", text: app_global["g_tasks"] },
+                       { id: "fa fa-calendar", text: app_global["g_calendar"] }, { id: "fa fa-flag", text: app_global["g_flag"] },
+                       { id: "fa fa-bar-chart-o", text: app_global["g_chart"] }, { id: "fa  fa-laptop", text: app_global["g_laptop"] }];
+
+        function SetHeaderPic(headtype, fileid) {
+            if (fileid) {
+                var src = "/File/Download/ftp/" + fileid;
+                if (headtype == "big") {
+                    $("#headerPic").attr("src", src);
+                    $("#userHeader").attr("src", src);
+                }
+                if (headtype == "small") {
+                    $("#headerPic_Small").attr("src", src);
+                }
+            }
+        }
+
+        $(function () {
+            SetHeaderPic("big", $session.HumanHeadBig);
+            SetHeaderPic("small", $session.HumanHeadSmall);
+            LoadPwdRole();//获取密码规则
+            if ($session.IsITAdmin == "True") {
+                $("#tab_1-1").css("display", "none");
+                $("#tab_2-2").css("display", "none");
+                $("#tab_3-3").css("display", "none");
+                $("#tab_5-5").css("display", "none");
+                $("#tab_6-6").css("display", "none");
+                $("#li1").css("display", "none");
+                $("#li2").css("display", "none");
+                $("#li3").css("display", "none");
+                $("#li5").css("display", "none");
+                $("#li6").css("display", "none");
+                $("#tab_4-4").addClass("active");
+                $("#li4").addClass("active");
+            }
+            else {
+                //获取当前员工已经设置的菜单
+                LoadMenu();
+                LoadFlowProxy();
+            }
+
+            $.ajax({
+                url: "/Account/GetUserInfo",
+                data: {},
+                cache: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o) {
+                        var form = new mini.Form("#form1");
+                        form.setData(o.data);
+                        $("#puserinfo").append(o.data.Memo);
+                        $("#position").append("<i class=\"fa fa-briefcase\"></i>" + o.data.PositionName);
+                        $("#birth").append("<i class=\"fa fa-calendar\"></i>" + o.data.Birthday)
+                    }
+                }
+            })
+
+
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 1024,
+                fileTypeExts: "*.jpg;*.png;*.gif;*.bmp",
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": app_global["profilepage_upload_big"],//"上传大头像"
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: "Human",
+                    KeyValue: $session.HumanId,
+                    _filename: $session.HumanId + '-big.png'
+                },
+                onUploadStart: function () {//上传前先查询原有的记录
+                    $("#loading").show();
+                },
+                onUploadComplete: function (file, rtext, fileid) {
+                    SetHeaderPic("big", fileid);
+                    $("#loading").hide();
+                    //更新并删除之前上传的头像
+                    $.ajax({
+                        url: "/Account/UpdateUserHeader",
+                        data: { humanId: $session.HumanId, HeaderType: "big", fileId: fileid },
+                        cache: false,
+                        success: function (text) {
+                        }
+                    });
+                },
+                queue: "<div>" + app_global["profilepage_upload_info"] + "</div>",//上传中，请稍后……
+                onDialogClose: function () {
+                }
+            });
+            $("#btnUpload_Small").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 128,
+                fileTypeExts: "*.jpg;*.png;*.gif;*.bmp",
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": app_global["profilepage_upload_small"],//"上传小头像"
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: "Human",
+                    KeyValue: $session.HumanId,
+                    _filename: $session.HumanId + '-small.png'
+                },
+                onUploadStart: function () {
+                    $("#loading").show();
+                },
+                onUploadComplete: function (file, rtext, fileid) {
+                    SetHeaderPic("small", fileid);
+                    $("#loading").hide();
+                    //更新并删除之前上传的头像
+                    $.ajax({
+                        url: "/Account/UpdateUserHeader",
+                        data: { humanId: $session.HumanId, HeaderType: "small", fileId: fileid },
+                        cache: false,
+                        success: function (text) {
+                        }
+                    });
+                },
+                queue: "<div>" + app_global["profilepage_upload_info"] + "</div>",//上传中，请稍后……
+                onDialogClose: function () {
+                }
+            });
+        });
+        var minLength = 0;
+        var hasNumber = false;
+        var hasSymbol = false;
+        var hasEnglish = false;
+        var hasValidation = false;
+        var hasPasswordStre = false;
+        function LoadPwdRole() {
+            $.ajax({
+                url: "/Account/PassRole",
+                data: {},
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    if (!tmp.success) {
+                        Power.ui.error(tmp.message);
+                        return;
+                    }
+                    else {
+                        minLength = tmp.data.minLength;
+                        hasNumber = tmp.data.hasNumber;
+                        hasSymbol = tmp.data.hasSymbol;
+                        hasEnglish = tmp.data.hasEnglish;
+                        hasValidation = tmp.data.hasValidation;
+                        hasPasswordStre = tmp.data.hasPasswordStre;
+                    }
+
+                }
+            })
+        }
+        function PwdStrong() {
+            var v = $("#newPassWord").val();
+            if (!hasPasswordStre)
+                return;
+            var html = "";
+            if (minLength > 0 && v.length < minLength) {
+                html += "密码至少为" + minLength + "位";
+            }
+            debugger;
+            if (hasNumber) {
+                var pattern = new RegExp("[0-9]+");
+                if (!pattern.test(v))
+                    html += "  密码至少包含1个数字";
+
+            }
+            if (hasSymbol) {
+                var pattern = /[`~!@#\$%\^\&\*\(\)_\+<>\?:"\{\},\.\\\/;'\[\]|]/im;
+                if (!pattern.test(v))
+                    html += "  密码至少包含1个特殊字符";
+            }
+            if (hasEnglish) {
+                var pattern = new RegExp("[a-z]+");
+                if (!pattern.test(v))
+                    html += "  密码至少包含1个小写英文";
+                var pattern = new RegExp("[A-Z]+");
+                if (!pattern.test(v))
+                    html += "  密码至少包含1个大写英文";
+            }
+            $("#passInfo").html(html);
+        }
+        function changePassWord() {
+            if ($("#passInfo").html().length > 0)
+                return false;
+            if ($("#newPassWord").val() != $("#againPassWord").val()) {
+                $("#passInfo").html(app_global["profilepage_pass_change"]);//2次密码不一致
+            }
+            else {
+                $.ajax({
+                    url: "/Account/ChangePass",
+                    data: { oldPassWord: base64swhere($("#oldPassWord").val()), newPassWord: base64swhere($("#newPassWord").val()) },
+                    cache: false,
+                    success: function (text) {
+                        var tmp = mini.decode(text).message;
+                        if (tmp == undefined || tmp.length == 0) {
+                            return null;
+                        }
+                        $("#passInfo").html(tmp);
+                    }
+                })
+            }
+        }
+        function SaveInfo() {
+            $("#SaveInfo").html("");
+            var form = new mini.Form("#form1");
+
+            form.validate();
+            if (form.isValid() == false) return;
+            var fields = form.getFields();
+            var data = new Object();
+            for (var i = 0; i < fields.length; i++) {
+                var c = fields[i];
+                if (c.type != "datepicker")
+                    data[c.name] = c.getValue();
+                else
+                    data[c.name] = c.getFormValue();
+            }
+            $.ajax({
+                url: "/Account/SaveUserInfo",
+                type: "POST",
+                data: data,
+                cache: false,
+                success: function (text) {
+                    var tmpdata = mini.decode(text).message;
+                    if (tmpdata == undefined || tmpdata.length == 0) {
+                        return null;
+                    }
+                    $("#SaveInfo").html(tmpdata);
+                }
+            })
+        }
+
+        function onIDCardsValidation(e) {
+            if (e.isValid) {
+                var pattern = /\d*/;
+                if ((e.value.length != 15 && e.value.length != 18) || pattern.test(e.value) == false) {
+                    e.errorText = app_global["profilepage_vali_idcard"]; //必须输入15~18位数字
+                    e.isValid = false;
+                }
+            }
+        }
+        function LoadMenu() {
+            $.ajax({
+                url: "/Account/GetMenuObject",
+                data: {},
+                cache: false,
+                success: function (text) {
+                    var tmpdata = mini.decode(text);
+                    if (tmpdata) {
+
+                        var objs = new Array();
+                        for (var i = 0; i < tmpdata.length; i++) {
+                            var obj = new Object();
+                            var json = mini.decode(tmpdata[i].IconClass);
+                            obj.Id = tmpdata[i].WidgetMenuId;
+                            obj.ObjectName = tmpdata[i].ObjectName;
+                            if (json != null) {
+                                obj.Color = json.color;
+                                obj.Icon = json.icon;
+                            }
+                            else {
+                                obj.Color = "";
+                                obj.Icon = "";
+                            }
+                            objs.add(obj);
+                        }
+                        mini.get("datagridmenu").setData(objs);
+                        //获取当前人员未设置的菜单
+                        $.ajax({
+                            url: "/Account/GetMenu",
+                            data: {},
+                            cache: false,
+                            success: function (text) {
+                                var tmpdata = mini.decode(text);
+                                if (tmpdata) {
+                                    var data = new Array();
+                                    for (var j = 0; j < tmpdata.length; j++) {
+                                        if (objs.length > 0) {
+                                            for (var i = 0; i < objs.length; i++) {
+                                                if (objs[i].Id == tmpdata[j].Id)
+                                                    break;
+                                                if (i == objs.length - 1)
+                                                    data.add(tmpdata[j]);
+                                            }
+                                        }
+                                        else
+                                            data.add(tmpdata[j]);
+                                    }
+                                    mini.get("treemenu").loadList(data, "Id", "ParentId");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function add() {
+            var tree = mini.get("treemenu");
+            $("#loading").show();
+            var selectNodes = tree.getCheckedNodes(false);
+            var s = 0;
+            for (var i = 0; i < selectNodes.length; i++) {
+                $.ajax({
+                    url: "/Account/SaveHumanObject",
+                    data: { menuId: selectNodes[i].Id, xtype: "add", objectname: selectNodes[i].Name, classicon: "" },
+                    cache: false,
+                    success: function (text) {
+                        s++;
+                        if (s == selectNodes.length) {
+                            LoadMenu();
+                            $("#loading").hide();
+                        }
+                    }
+                });
+            }
+        }
+        function addAll() {
+            var tree = mini.get("treemenu");
+            $("#loading").show();
+            var selectNodes = tree.getAllChildNodes();
+            var s = 0;
+            for (var i = 0; i < selectNodes.length; i++) {
+                $.ajax({
+                    url: "/Account/SaveHumanObject",
+                    data: { menuId: selectNodes[i].Id, xtype: "add", objectname: selectNodes[i].Name, classicon: "" },
+                    cache: false,
+                    success: function (text) {
+                        s++;
+                        if (s == selectNodes.length) {
+                            LoadMenu();
+                            $("#loading").hide();
+                        }
+                    }
+                });
+            }
+        }
+        function removes() {
+            var grid = mini.get("datagridmenu");
+            $("#loading").show();
+            var selectNodes = grid.getSelecteds();
+            var s = 0;
+            for (var i = 0; i < selectNodes.length; i++) {
+                $.ajax({
+                    url: "/Account/SaveHumanObject",
+                    data: { menuId: selectNodes[i].Id, xtype: "remove", objectname: "", classicon: "" },
+                    cache: false,
+                    success: function (text) {
+                        s++;
+                        if (s == selectNodes.length) {
+                            LoadMenu();
+                            $("#loading").hide();
+                        }
+                    }
+                });
+            }
+        }
+        function removeAll() {
+            mini.get("datagridmenu").selectAll();
+            removes();
+        }
+        function OnCellEndEdit(e) {
+            var record = e.record;
+            var icn = '{"color":"' + record.Color + '","icon":"' + record.Icon + '"}';
+            $.ajax({
+                url: "/Account/SaveHumanObject",
+                data: { menuId: record.Id, xtype: "modify", objectname: record.ObjectName, classicon: icn },
+                cache: false,
+                success: function (text) {
+                    $.ajax({
+                        url: "/Account/GetMenuObject",
+                        data: {},
+                        cache: false,
+                        success: function (text) {
+                            var tmpdata = mini.decode(text);
+                            if (tmpdata) {
+
+                                var objs = new Array();
+                                for (var i = 0; i < tmpdata.length; i++) {
+                                    var obj = new Object();
+                                    var json = mini.decode(tmpdata[i].IconClass);
+                                    obj.Id = tmpdata[i].WidgetMenuId;
+                                    obj.ObjectName = tmpdata[i].ObjectName;
+                                    if (json != null) {
+                                        obj.Color = json.color;
+                                        obj.Icon = json.icon;
+                                    }
+                                    else {
+                                        obj.Color = "";
+                                        obj.Icon = "";
+                                    }
+                                    objs.add(obj);
+                                }
+                                mini.get("datagridmenu").setData(objs);
+
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        /* begin 委托操作 */
+        function LoadFlowProxy() {
+            var p = { KeyWord: "FlowProxy" };
+            p.swhere = "HumanId='" + $session.HumanId + "'";
+            FormFuns.GridPageLoad(p, function (o) {
+                if (o.success) {
+                    var grid = mini.get("FlowProxy");
+                    grid.setData(mini.decode(o.data.value));
+                }
+                else
+                    Power.ui.error(o.message);
+            });
+        }
+
+        function OnWizardProject(mulit, e) {
+            var g = mini.get("FlowProxy");
+            if (!g.getSelected()) {
+                Power.ui.alert("请先选择委托主表记录");
+                return;
+            }
+            var url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/Systems/rightPageWizardUserEPS.html";
+            if (mulit)
+                url += "?m=1";
+            else
+                url += "?m=0";
+            mini.open({
+                url: url,
+                width: 720,
+                title: "",
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var data = this.getIFrameEl().contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        return;
+                    }
+                    data = mini.clone(data);
+                    debugger;
+                    //允许多选，则默认选择内容都是新增项
+                    var grid = mini.get("FlowProxyList");
+                    var record = mini.get("FlowProxy").getSelected();
+                    if (mulit) {
+                        for (var i = 0; i < data.length; i++) {
+                            var srow = data[i];
+                            //触发新增一行记录操作
+                            var row = {
+                                ProjectID: srow.project_guid, ProjectName: srow.project_name, IsEnabled: 1,
+                                PropxyHumanID: record.DefaultProxyHumanID,
+                                PropxyHumanName: record.DefaultProxyHumanName, ProxyId: record.proxyID
+                            };
+                            grid.addRow(row, 0);
+                        }
+                    }
+                    else {
+                        var data0 = data[0];
+                        var sender = mini.get("FlowProxyList");
+                        var row = sender.getSelected();
+                        if (!row) {
+                            Power.ui.alert("未选中要修改的行");
+                            return;
+                        }
+                        //FormFuns.CopyFieldValue(row, data0, config.fields);
+                        var updvalue = {
+                            ProjectID: data0.project_guid, ProjectName: data0.project_name
+                        };
+
+                        sender.updateRow(row, updvalue);
+                        sender.cancelEdit();
+
+                    }
+                }
+            });
+        }
+
+        function OnWizardDeptHuman1(e) {
+            var deptid = $session.DeptId;
+            mini.open({
+                url: "/Form/Wizard?wizardid=5421fb3a-c5be-4d46-aba4-21629f9ff53d&formid=&btnid=",
+                width: 720,
+                title: "",
+                onload: function () {
+                    //第一种，原来的
+                    //var iframe = this.getIFrameEl();
+                    //iframe.contentWindow.Select.SetWhere("");
+                    //iframe.contentWindow.Select.LoadStepFirst();   
+                    //第二种
+                    //var cwin = this.getIFrameEl().contentWindow;
+                    //if (cwin.Select) {
+                    //    //人员单选
+                    //    if (cwin.WizardParams) cwin.WizardParams.multi = 1;
+                    //    if (cwin.Select.SetWhere) cwin.Select.SetWhere("");
+                    //    if (cwin.Select.LoadStepFirst) cwin.Select.LoadStepFirst();
+                    //}
+                    //第三种  
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var data = this.getIFrameEl().contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        return;
+                    }
+                    data = mini.clone(data);
+                    //允许多选，则默认选择内容都是新增项
+                    if (e.id == "FlowProxy.AddForm") {
+                        var grid = mini.get("FlowProxy");
+                        for (var i = 0; i < data.length; i++) {
+                            var srow = data[i];
+                            //触发新增一行记录操作
+                            var row = { DefaultProxyHumanId: srow.Id, DefaultProxyHumanName: srow.Name, IsEnabled: 1 };
+                            grid.addRow(row, 0);
+                        }
+                    }
+                    else {
+                        var grid = mini.get("FlowProxyList");
+                        var record = grid.getSelected();
+                        if (record) {
+                            debugger;
+                            var d = data[0];
+                            var row = { PropxyHumanName: d.Name, PropxyHumanID: d.Id };
+                            grid.updateRow(record, row);
+                            OnBtnSaveProxy("FlowProxyList");
+                        }
+                    }
+                }
+            });
+        }
+        function OnWizardDeptHuman(e)
+        {
+            var Grid = mini.get("FlowProxy");
+            var deptid = $session.DeptId;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXML/zh-CN/StdSystem/WizardDeptHumanListAl.htm&multi=1&deptid=" + deptid,
+                showMaxButton: true,
+                width: 1200,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    //debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var firstDate = new Date();
+                        firstDate.setDate(1); //第一天
+                        var endDate = new Date(firstDate);
+                        endDate.setMonth(firstDate.getMonth() + 1);
+                        endDate.setDate(0);
+                        var row = {};
+                        row.proxyID = CreateGUID();
+                        row.StartDate = firstDate;
+                        row.EndDate = endDate;
+                        row.HumanID = $session.HumanId;
+                        row.HumanName = $session.HumanName;
+                        row.DefaultProxyHumanID = data[i].Id;
+                        row.DefaultProxyHumanName = data[i].Name;
+                        row.IsEnabled = 1;
+                        Grid.addRow(row, 0)
+                    }
+                }
+            })
+        }
+
+
+        function OnWizardDefaultProxyHuman(e) {
+            mini.open({
+                url: "/Form/Wizard?wizardid=fe2169c8-72ef-4965-a152-12848cc8a383&formid=&btnid=",
+                width: 720,
+                title: "",
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.Select.SetWhere("");
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var data = this.getIFrameEl().contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        return;
+                    }
+                    data = mini.clone(data);
+                    //允许多选，则默认选择内容都是新增项
+                    if (e.id == "FlowProxy.AddForm") {
+                        var grid = mini.get("FlowProxy");
+                        for (var i = 0; i < data.length; i++) {
+                            var srow = data[i];
+                            //触发新增一行记录操作
+                            var row = { DefaultProxyHumanId: srow.Id, DefaultProxyHumanName: srow.Name, IsEnabled: 1 };
+                            grid.addRow(row, 0);
+                        }
+                    }
+                    else {
+                        var grid = mini.get("FlowProxyList");
+                        var record = grid.getSelected();
+                        if (record) {
+                            debugger;
+                            var d = data[0];
+                            var row = { PropxyHumanName: d.Name, PropxyHumanID: d.Id };
+                            grid.updateRow(record, row);
+                            OnBtnSaveProxy("FlowProxyList");
+                        }
+                    }
+                }
+            });
+        }
+
+        function OnWizardWorkFlow(mulit, e) {
+            var g = mini.get("FlowProxy");
+            if (!g.getSelected()) {
+                Power.ui.alert("请先选择委托主表记录");
+                return;
+            }
+            var url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/Systems/rightPageWizardUserMenu.html";
+            if (mulit)
+                url += "?m=1";
+            else
+                url += "?m=0";
+            mini.open({
+                url: url,
+                width: 720,
+                title: "",
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var data = this.getIFrameEl().contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        return;
+                    }
+                    data = mini.clone(data);
+                    debugger;
+                    //允许多选，则默认选择内容都是新增项
+                    var grid = mini.get("FlowProxyList");
+                    var record = mini.get("FlowProxy").getSelected();
+                    if (mulit) {
+                        for (var i = 0; i < data.length; i++) {
+                            var srow = data[i];
+                            //触发新增一行记录操作
+                            var row = {
+                                MenuId: srow.Id, MenuName: srow.Name, IsEnabled: 1,
+                                PropxyHumanID: record.DefaultProxyHumanID,
+                                PropxyHumanName: record.DefaultProxyHumanName,
+                                ProxyId: record.proxyID
+                            };
+                            grid.addRow(row, 0);
+                        }
+                    }
+                    else {
+                        var data0 = data[0];
+                        var sender = mini.get("FlowProxyList");
+                        var row = sender.getSelected();
+                        if (!row) {
+                            Power.ui.alert("未选中要修改的行");
+                            return;
+                        }
+                        //FormFuns.CopyFieldValue(row, data0, config.fields);
+                        var updvalue = {
+                            MenuId: data0.Id, MenuName: data0.Name
+                        };
+
+                        sender.updateRow(row, updvalue);
+                        sender.cancelEdit();
+
+                    }
+                }
+            });
+        }
+
+        function OnBtnDelete(id) {
+            var grid = mini.get(id);
+            if (grid.multiSelect) {
+                var rows = grid.getSelecteds();
+            }
+            else {
+                var rows = [];
+                rows.push(grid.getSelected());
+            }
+            if (!rows) {
+                Power.ui.warning(app_global["select_delete_row"]);//"请选中要删除的行"
+                return;
+            }
+            grid.removeRows(rows, false);
+        }
+
+        function OnBtnSaveProxy(id) {
+            var grid = mini.get(id);
+            var pack = {};
+            pack[id] = { data: [] };
+            pack[id].data = grid.getChanges(null, false); //获取所有修改行及其字段
+            if (pack[id].data.length == 0) return;
+
+            //检查是否有修改，减少服务器交互
+            var jdata = { formId: "", Params: "" };
+            jdata.jsonData = mini.encode(pack);
+
+            $.ajax({
+                url: "/Form/SaveWebForm",
+                type: "POST",
+                data: jdata,
+                cache: false,
+                success: function (text) {
+                    var tmpdata = mini.decode(text);
+                    if (tmpdata.success == false)
+                        Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                    else {
+                        Power.form.success(app_global["rightpage_alert_5"]);//保存成功
+                        if (id == "FlowProxy") {
+                            LoadFlowProxy();
+                            FlowProxyList();
+                        }
+                        else
+                            FlowProxyList();
+                    }
+                }
+            });
+        }
+        /* end 委托操作 */
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>流程统计分析</title>
+    <!-- 引入 echarts.js -->
+    <script src="/Scripts/plugins/echarts/3.0/echarts.js"></script>  
+    
+    <script src="/Scripts/PlatForm/FormManage.js" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+      <script src="/Scripts/boot.js"></script>
+</head>
+<body>
+    
+        <div class="mini-splitter" vertical="true" style="width:1200px;height:600px;">
+            <div size="50%" showcollapsebutton="true"  >
+                <div id="nodeChart" style="width: 1200px; height: 300px;"></div>
+            </div>
+            <div showcollapsebutton="true">
+                <div id="userChart" style="width: 1200px; height: 300px;"></div>
+            </div>
+        </div>  
+    
+    <script type="text/javascript">
+         
+        var formManage = new FormManage();
+       
+        var SelectData = null;
+ 
+
+        var EndRead = function (data) {
+            
+            SelectData = data.data.Result.SelectData;
+
+            var nodeGroupList = [];
+            $.each(SelectData.WorkFlowNodeGroup, function () {
+                if (this.HandleCount == 0) return;
+                var item = {};
+                item.name = this.NodeName;
+                item.value = (this.HandleTime / this.HandleCount) * 100;
+                nodeGroupList.push(item);
+            });
+         
+            var myNodeChart = echarts.init(document.getElementById('nodeChart'));
+
+            var optionNode = {
+                title: {
+                    text: '流程节点耗时分析表',
+                    subtext: '',
+                    x: 'right'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} :  ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left', 
+                },
+                series: [
+                    {
+                        name: '节点占用时间率',
+                        type: 'pie',
+                        radius: '35%',
+                        center: ['30%', '30%'],
+                        data: nodeGroupList,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    } 
+                ]
+            };
+
+            myNodeChart.setOption(optionNode);
+
+            window.addEventListener('resize', function () {
+                myNodeChart.setOption({
+                    graphic: echarts.util.map(data, function (item, dataIndex) {
+                        return {
+                            position: myChart.convertToPixel('grid', item)
+                        };
+                    })
+                });
+            });
+
+            //----------------------------------------用户占用率------------------------------
+            var userValueList = [];
+            var userNameList = [];
+            $.each(SelectData.WorkFlowUserGroup, function () {
+                if (this.HandleCount == 0) return;
+                var item = {};
+                item.name = this.UserName;
+                item.value = (this.HandleTime / this.HandleCount) ;
+                userNameList.push(item.name);
+                userValueList.push(item.value);
+            });
+            var myUserChart = echarts.init(document.getElementById('userChart'));
+
+            var optionUser = {
+                title: {
+                    text: '流程人员耗时率',
+                    subtext: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['总耗时', '百分比']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: userNameList,
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '耗时率',
+                        type: 'bar',
+                        data: userValueList,
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        }, 
+                    } 
+                ]
+            };
+
+           myUserChart.setOption(optionUser);
+
+            window.addEventListener('resize', function () {
+                myUserChart.setOption({
+                    graphic: echarts.util.map(data, function (item, dataIndex) {
+                        return {
+                            position: myChart.convertToPixel('grid', item)
+                        };
+                    })
+                });
+            });
+        }
+        var SetData = function (obj) {
+            var bindList = [];
+
+            var bindData = { Name: "WorkFlowNodeGroup", "KeyWord": "WorkFlowNodeGroup", "KeyWordType": "ViewEntity","Where":"","Params":obj, "OrderField": "", "Description": "节点统计" };
+            bindList.push(bindData);
+            bindData = { Name: "WorkFlowUserGroup", "KeyWord": "WorkFlowUserGroup", "KeyWordType": "ViewEntity", "Where": "", "Params": obj, "OrderField": "", "Description": "节点统计" };
+            bindList.push(bindData);
+            
+            formManage.SimpleReadBindList(EndRead, bindList);
+        }
+
+        $(document).ready(function () {
+
+            var obj = {};
+            obj.KeyWord = "GEDI_Supplier_Review";
+            SetData(obj);
+        });
+
+</script>
+</body>
+</html>

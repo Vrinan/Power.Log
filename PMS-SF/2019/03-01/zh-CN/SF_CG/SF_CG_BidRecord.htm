@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>招标</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_CG_BidRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_CG_BidRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_CG_BidRecord.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="基本数据">
+                            <div id="SF_CG_BidRecord" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="SF_CG_BidRecord.Code" name="Code" class="mini-textbox" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_BidRecord.Status" name="Status" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td><input id="SF_CG_BidRecord.Title" name="Title" class="mini-textbox" required="false" /></td>
+                                        <!-- <td>项目名称</td>
+                                        <td>
+                                            <input id="SF_CG_BidRecord.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit" emptytext="请选择项目..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" />
+                                            <input id="SF_CG_BidRecord.ProjName" name="ProjName" textname="ProjName" class="mini-textbox" required="false" readonly="readonly" />
+                                            <input id="SF_CG_BidRecord.ProjId" name="ProjId" textname="ProjId" class="mini-hidden" allowInput="false" />
+                                        </td> -->
+                                    </tr>
+                                    <tr>  
+                                        <td>招标公告编号</td>
+                                        <td><input id="SF_CG_BidRecord.BidCode" name="BidCode" class="mini-textbox"  /></td>
+                                        <td>采购方案</td>
+                                        <!-- <td><input id="SF_CG_BidRecord.EntrustCode" name="EntrustCode" textname="EntrustCode" class="mini-buttonedit" emptytext="请选择采购方案..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" /></td>
+                                        <input id="SF_CG_BidRecord.EntrustId" name="EntrustId" textname="EntrustId" class="mini-hidden" allowInput="false" /> -->
+                                        <td><input id="SF_CG_BidRecord.SchemeCode" name="SchemeCode" textname="SchemeCode"
+                                                class="mini-buttonedit" emptytext="请选择采购方案..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                allowInput="false" required="required"/>
+                                            <input id="SF_CG_BidRecord.SchemeId" name="SchemeId" textname="SchemeId" class="mini-hidden" allowInput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>招标人</td>
+                                        <td><input id="SF_CG_BidRecord.BidCompany" name="BidCompany" textname="BidCompany"class="mini-textbox" /></td>
+                                        <td>联系电话</td>
+                                        <td><input id="SF_CG_BidRecord.BidCompanyPhone" name="BidCompanyPhone" textname="BidCompanyPhone" class="mini-textbox" /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>招标代理机构</td>
+                                        <td><input id="SF_CG_BidRecord.BidProxyCompany" name="BidProxyCompany" class="mini-textbox"  /></td>
+                                        <td>联系电话</td>
+                                        <td><input id="SF_CG_BidRecord.BidProxyCompanyPhone" name="BidProxyCompanyPhone" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>第一中标候选人</td>
+                                        <td colspan="3"><input id="SF_CG_BidRecord.FirstCandidate" name="FirstCandidate" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>第二中标候选人</td>
+                                        <td colspan="3"><input id="SF_CG_BidRecord.SecondCandidate" name="SecondCandidate" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>第三中标候选人</td>
+                                        <td colspan="3"><input id="SF_CG_BidRecord.ThirdCandidate" name="ThirdCandidate" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>计划类型</td>
+                                        <td><input id="SF_CG_BidRecord.PlanType" name="PlanType" class="mini-combobox" allowInput="false" readonly/></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>拟中标单位</td>
+                                        <td><input id="SF_CG_BidRecord.VirtualBidCompany" name="VirtualBidCompany" class="mini-textbox"  /></td>
+                                        <td>中标金额(元)</td>
+                                        <td><input id="SF_CG_BidRecord.VirtualBidPrice" name="VirtualBidPrice" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>投诉受理部门</td>
+                                        <td><input id="SF_CG_BidRecord.ComplaintsCompany" name="ComplaintsCompany" class="mini-textbox"  /></td>
+                                        <td>投诉受理部门联系电话</td>
+                                        <td><input id="SF_CG_BidRecord.ComplaintsCompanyPhone" name="ComplaintsCompanyPhone" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>投诉受理部门</td>
+                                        <td><input id="SF_CG_BidRecord.ComplaintsCompany" name="ComplaintsCompany" class="mini-textbox"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>币种</td>
+                                        <td><input id="SF_CG_BidRecord.CurrencyType" name="CurrencyType" class="mini-combobox" /></td>    
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物资明细">
+                            <div class="mini-toolbar">
+                                <!-- <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_BidRecordList.Add1" onclick="PowerForm.OnBtnWizard(this)">从物资库选择</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_BidRecordList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a> -->
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_BidRecordList.AdjustMat" onclick="PowerForm.OnBtnWizard(this)">选择调整物资</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_BidRecordList.Delete" onclick="OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa fa-refresh" id="SF_CG_BidRecordList.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                <div id="SF_CG_BidRecordList-Print" class="btn-group"></div>
+                                <div id="SF_CG_BidRecordList-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_BidRecordList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true" sortField="Left(PlanCode,Len(PlanCode)-CHARINDEX('-' ,Reverse(PlanCode))),Cast(Right(PlanCode,CHARINDEX('-' ,Reverse(PlanCode))-1) AS INT)" 
+                                     editNextOnEnterKey="true" data-options="{canImport:true}" oncellbeginedit="OnCellBeginEdit" oncellendedit="Oncellendedit" >
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn" width="35">序号</div>
+                                        <div field="Code" width="100" allowSort="true" >物资编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanCode" width="130" allowSort="true"  >计划编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="100" allowSort="true" >物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Specification" width="100" allowSort="true" >规格型号/技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <!-- <div field="Model" width="100" allowSort="true" >技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                        <div field="PID" width="100" allowSort="true" >PID编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatUnit" width="100" allowSort="true" >单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Supplier" width="140" allowSort="true">厂家/品牌/供应商<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="SupplyDate" width="100" allowSort="true">供货周期<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Amount" width="100" allowSort="true" numberformat="0" >请购数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="0" style="width: 100%;" /></div>
+                                        <div field="BidPrice" width="100" allowSort="true" >中标单价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="BidTotalPrice" width="100" allowSort="true" >中标总价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="Remark" width="150" allowSort="true" >备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        //重选向导,明细就删
+        var IsReloadSchemeList = false;
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function OnBtnDel(e){
+            var gridId =  e.id.split(".")[0];
+            var grid = mini.get(gridId);
+            var rows = grid.getSelecteds();
+            rows.forEach(function (item,i) {
+                //只允许删除调整物资
+                if(item.IsAdjust=="1"){
+                    grid.removeRow(item);
+                }
+            });
+            PowerForm.OnBtnSave(e);
+            Power.ui.success("仅对调整物资作删除");
+        }
+        function OnCellBeginEdit(e) {
+            //自动计算预估总价,不给编辑,同理，物资库LongCode，物资GUId,物资名称
+            if(e.field=="BidTotalPrice"||e.field=="Code"||e.field=="MatId"
+               ||e.field=="MatName"||e.field=="PlanCode"||e.field=="PlanId"){
+                e.cancel = true;
+            }
+        }
+        function Oncellendedit(e){
+            //自动求金额
+            if(e.field=="Amount"||e.field=="BidPrice"){
+                var record = e.record;
+                var sender = e.sender;
+                var Amount = record.Amount == null ? 0 : parseFloat(record.Amount);
+                var BidPrice = record.BidPrice == null ? 0 : parseFloat(record.BidPrice);
+                var BidTotalPrice = Amount * BidPrice;
+                sender.updateRow(record, { "BidTotalPrice": BidTotalPrice });
+            }
+            var grid = mini.get("SF_CG_BidRecordList");
+            var sum = new Number;
+            var row = grid.findRow(function (row) {
+                sum = sum + parseFloat(row.BidTotalPrice);
+            });
+            mini.get("SF_CG_BidRecord.VirtualBidPrice").setValue(sum);
+            //如果编辑过中标单价或者数量,就给保存
+            IsReloadSchemeList=false;
+        }
+        PowerForm.EventAfterLoadData = function (e) {
+            if (mini.get("SF_CG_BidRecord.Status").getValue()== "50") {
+                mini.get("SF_CG_BidRecordList.AdjustMat").disable(true);
+            }
+        }
+        PowerForm.EventWizardData = function(e, data) {
+            if(e.id=="SF_CG_BidRecord.SchemeCode"){
+                IsReloadSchemeList=true;
+            }
+        }
+        //调整物资IsAdjust=1
+        PowerForm.EventBeforeAddRow=function(e,data){
+            if(e.id=="SF_CG_BidRecordList"){
+                data.IsAdjust=1;
+            }
+        }
+        //保存前,把之前选择的招标委托,状态字段(IsChosen)改成未选择(0)
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            //var D=mini.get("SF_CG_BidRecord.EntrustId").value;
+            var D=mini.get("SF_CG_BidRecord.SchemeId").value;
+            var par = { "SchemeId": D ,"KeyValue":formconfig.KeyValue,"KeyWord":"SF_CG_BidRecord","Type":"Before"};
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                debugger;
+            });
+        }
+        //保存后,选择的招标委托,状态字段(IsChosen)改成已选择(1)
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            //var D=mini.get("SF_CG_BidRecord.EntrustId").value;
+            var D=mini.get("SF_CG_BidRecord.SchemeId").value;
+            var par = { "SchemeId": D ,"KeyValue":formconfig.KeyValue,"KeyWord":"SF_CG_BidRecord","Type":"After","IsReloadSchemeList":IsReloadSchemeList};
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                IsReloadSchemeList=false;
+                debugger;
+            });
+        }
+    </script>
+</body>
+</html>

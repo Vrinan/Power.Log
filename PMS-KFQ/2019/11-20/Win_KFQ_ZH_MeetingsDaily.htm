@@ -1,0 +1,465 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <link rel="stylesheet" href="/Scripts/calendar/jquery-ui-1.10.3.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/jquery.webui-popover.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="/Scripts/calendar/jquery-1.11.0.min.js"></script>
+
+    <script type="text/javascript" src="/Scripts/calendar/moment.min.js"></script>
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.print.css" type="text/css" media="print" />
+    <script type="text/javascript" src="/Scripts/calendar/fullcalendar.min.js"></script>
+    
+   
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+    <style>
+        .fc-day-header.fc-widget-header,
+        .fc-toolbar {
+            display: none;
+        }
+
+        .fc-content a[role='dismiss-sm'] {
+            text-decoration: none;
+            position: absolute;
+            top: -3px;
+            right: 0;
+            color: white;
+            font-size: 14px;
+            padding: 0 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12" style="padding-left: 5px; padding-right: 5px;">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" onclick="addWeekReport()">
+                                <i class="fa fa-plus"></i>新增会议</a>
+                            <a class="mini-button blue" id="Prev" onclick="Prev()">
+                                <i class="fa fa-arrow-left"></i>
+                                上月
+                            </a>
+                            <a class="mini-button blue" id="Today" onclick="Today()">
+                                <i class="fa fa-align-justify">
+                                </i>当月
+                            </a>
+                            <a class="mini-button blue" id="Next" onclick="Next()">
+                                <i class="fa fa-arrow-right">
+                                </i>下月
+                            </a>
+                            <a class="mini-button blue" onclick="weeksum()">
+                                </i>会议统计
+                            </a>
+                            <span id="CalendarStr" style="font-size: 20px; font-weight: bold; margin-left: 230px;
+                                    vertical-align: bottom;"></span>
+                        </div>
+
+                        <div class="tools" style="margin-top: 5px;color:red">
+                            <labe id='lblproject'>
+                                </label>
+                        </div>
+                    </div>
+                    <div class="mini-fit">
+                        <div class="content" style="height: 100%">
+                            <div class="container" style="width: 100%">
+                                <div class="row" style="height: 100%">
+                                    <!--end col-md-3-->
+                                    <div class="col-md-12">
+                                        <div class="portlet-body" style="height: 500px" id="RoomList">
+                                            <div id="calendar" style="margin-top:40px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var today = new Date();
+        var month = today.getMonth() + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var day = parseInt(today.getDate(), 10) < 10 ? "0" + parseInt(today.getDate(), 10) : parseInt(today.getDate(), 10);
+        var todaystr = today.getFullYear() + "-" + month + "-" + day;
+
+        var RoomList = null;
+        var PowerForm = new SingleForm();
+        $(function () {
+
+            $("#calendar").fullCalendar({
+                lang: 'zh-cn',
+                aspectRatio: 1.6,
+                forceEventDuration: true,
+                droppable: true,
+                editable: true,
+                eventOverlap: false,
+                allDayDefault: false,
+                timeFormat: "HH:mm",
+                axisFormat: "HH:mm",
+                minTime: '8:00',
+                maxTime: '18:00',
+                allDaySlot: false,
+                events: [],
+                eventColor: '#4b8df8',   // an option!
+                textColor: 'black',
+                header: {
+                    left: '', //prev today next
+                    center: '', //title
+                    right: ""//month,agendaWeek,agendaDay
+                },
+                dayClick: DayClick,
+                eventClick: EventClick,
+                eventMouseover: EventMouseOver,
+                eventMouseOut: EventMouseOut,
+                eventAfterRender: EventAfterRender,
+                viewRender: EventViewRender
+            });
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+
+            $('[id^=calendar]').on('click', '[role^="dismiss"]', function (e) {
+                e.preventDefault();
+                var tarId = $(this).attr("data-target");
+                var result = DeleteLog(tarId);
+                if (result) {
+                    $(this).parents("[id^=calendar]").fullCalendar("removeEvents", tarId);
+                }
+            });
+        });
+
+        function DeleteLog(Id) {
+            var r = confirm("确定删除周报?");
+            if (r == false)
+                return;
+            var ProjectWeekly = { data: [{ 'Id': Id, '_state': 'removed' }] };
+
+            var jdata = { formId: FormId };
+            var sendData = { "ProjectWeekly": ProjectWeekly };
+            jdata.jsonData = mini.encode(sendData);
+            jdata.Params = base64encode(mini.encode({ RightEpsProjId: false }));
+
+            result = false;
+            $.ajax({
+                url: "/Form/SaveWebForm",
+                type: "POST",
+                async: false,
+                data: jdata,
+                success: function (text) {
+                    var tmpdata = mini.decode(text);
+                    if (tmpdata.success == false) {
+                        alert(tmpdata.message);
+                        // Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                    }
+                    else {
+                        result = true;
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        function RenderCalendar(ProejctId) {
+            var LogList = [];
+
+            if (ProejctId != undefined) {
+                var one = {};
+                one.KeyWord = "ProjectWeekly"; //数据集的名字
+                one.swhere = "EpsProjId='" + ProejctId + "'";
+                one.url = "/Form/GridPageLoadEx";
+                FormFuns.GridPageLoad(one, function (o) {
+                    var ProjectWeekly = mini.decode(o.data.value);
+                    for (var j = 0; j < ProjectWeekly.length; j++) {
+
+                        var candelete = true;
+                        if (ProjectWeekly[j].RegHumId != sessiondata.HumanId) {
+                            candelete = false;
+                        }
+
+                        LogList.push({ id: ProjectWeekly[j].Id, title: ProjectWeekly[j].RegHumName, start: ProjectWeekly[j].LogDate, description: ProjectWeekly[j].ThisWeekPhase, hasright: candelete });
+
+                    }
+                    $("#calendar").fullCalendar('removeEvents');
+                    $("#calendar").fullCalendar('addEventSource', LogList);
+                })
+            }
+
+        }
+
+        function DayClick(date, jsEvent, view) {
+            return;
+            var row = mini.get("EPSProject").getSelectedNode();
+            if (row != undefined) {
+                myaddform(date.format("YYYY-MM-DD"), row);
+                $("#modal-day-click").data("data-date", date);
+            }
+        }
+
+        function myaddform(date, epsnode, fnback) {
+            var win = mini.open({
+                url: "/Form/AddForm/2a0ff502-1291-46ae-90ff-87e6c4328261/?time=" + date + "&EpsProjId=" + epsnode.project_guid + "&OwnProjName=" + epsnode.project_name,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                onload: function () {
+                    var p = { EpsProjId: epsnode.project_guid, OwnProjId: epsnode.project_guid, OwnProjName: epsnode.project_name };
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.SetNewDefault(p);
+                },
+                ondestroy: function () {
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    if (data != undefined) {
+                        data = mini.clone(data);
+                        if (data.FormState == "edit") {
+                            var Log = { id: data.KeyValue, title: data.config.joindata.currow.RegHumName, start: data.config.joindata.currow.LogDate, description: "" };
+                            $("#calendar").fullCalendar("renderEvent", Log, true);
+                        }
+                    }
+                    if (fnback != undefined) {
+                        fnback(data);
+                    }
+
+                }
+            });
+        }
+
+        function EventClick(calevent, jsEvent, view) {
+            if (typeof jsEvent.target.getAttribute("role") === 'string')
+                if (jsEvent.target.getAttribute("role").indexOf("dismiss") !== -1)
+                    return;
+
+            if (calevent.start.format("YYYY-MM-DD") == todaystr) {
+                myopenform('edit', calevent.id);
+            }
+            else {
+                myopenform('view', calevent.id);
+            }
+        }
+
+        function myopenform(act, keyvalue, fnback) {
+            var url = "/Form/ValidForm/2a0ff502-1291-46ae-90ff-87e6c4328261/" + act + "/" + keyvalue;
+            var win = mini.open({
+                url: url,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                ondestroy: function () {
+                    if (fnback != undefined)
+                        fnback();
+                }
+            });
+        }
+
+        function EventMouseOver(calevent, jsEvent, view) {
+            if (view.name === "agendaDay" || view.name === "agendaWeek") {
+                //console.log("agenda");
+                return;
+            }
+            var title = calevent.title;
+            var desc = calevent.description;
+            var content = "<table><tr><td>本周阶段：</td><td>" + desc + "</td></tr></table>";
+            $(this).attr("data-title", title)
+                .attr("data-content", content);
+            $(this).webuiPopover({
+                title: 'Title',
+                content: 'Content',
+                trigger: 'hover',
+                placement: 'auto',
+                width: 'auto',
+                height: 'auto'
+            });
+
+        }
+
+        function EventMouseOut(calevent, jsEvent, view) {
+            $(this).attr("data-title", "")
+                .attr("data-content", "");
+        }
+
+        function EventAfterRender(event, element, view) {
+            $(element).find(".fc-content").css("position", "relative")
+                .append("<a href='#' data-target='" + event.id + "' title='删除' role='dismiss-sm'>×<a>");
+            if (event.hasright == false) {
+                $(element).find("[role^=dismiss]").css("display", "none");
+            }
+        }
+
+        function EventViewRender(view, element) {
+            var roomId = $(element).parents("div[id^='calendar']").attr("data-roomid");
+            view.roomId = roomId;
+        }
+        function Prev() {
+            var currDate = $("#calendar").fullCalendar("getDate");
+            $("#calendar").fullCalendar("gotoDate", currDate.subtract(1, "month"));
+
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+            $("#CalendarStr").html(today);
+        }
+
+        function Next() {
+            var currDate = $("#calendar").fullCalendar("getDate");
+            $("#calendar").fullCalendar("gotoDate", currDate.add(1, "month"));
+
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+        }
+
+        function Today() {
+            $("#calendar").fullCalendar("today");
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+        }
+
+        function durationValidate(startDate, endDate) {
+            if (typeof startDate !== 'object' || typeof endDate !== 'object')
+                return;
+            //获取当天所有事件
+            var eventsToday = $("#calendar").fullCalendar('clientEvents', function (eventObj) {
+                var start = new moment(startDate),
+                    end = new moment(endDate);
+                start.set("hour", 0).set("minute", 0);
+                end.set("hour", 24).set("minute", 0);
+                if (eventObj.start.isAfter(start) && eventObj.end.isBefore(end))
+                    return true;
+                else
+                    return false;
+            });
+            //console.log(eventsToday);
+            //遍历事件，验证是否冲突
+            var len = eventsToday.length;
+            if (len !== 0) {
+                //开始+1结束-1 用于处理相同时间点比较
+                endDate.subtract(1, 's');
+                startDate.add(1, 's');
+                for (var i = 0; i < len;) {
+                    var tarStart = eventsToday[i].start,
+                        tarEnd = eventsToday[i].end;
+                    if (startDate.isBefore(tarEnd) && endDate.isAfter(tarStart))
+                        break;
+                    i++;
+                }
+                //console.log("target:",tarStart.format(),tarEnd.format());
+                //console.log("newevent:",startDate.format(),endDate.format());
+                //恢复之前修改
+                startDate.subtract(1, 's');
+                endDate.add(1, 's')
+            }
+            //console.log("newevent:",startDate.format(),endDate.format());
+            if (!len || i === len)//循环未提前退出
+                return { start: startDate, end: endDate };
+            else
+                return false;
+        }
+
+        function onNodeSelect(e) {
+            $("#lblproject").html(e.node.project_name)
+            RenderCalendar(e.node.project_guid);
+        }
+
+        function doSearch() {
+            var tree = mini.get("EPSProject");
+            var txt = mini.get("projectSearch").getValue();
+            if (txt == undefined || txt.length == 0) {
+                tree.clearFilter();
+            }
+            else {
+                tree.filter(function (node) {
+                    if (node.project_name.indexOf(txt) != -1) return true;
+                });
+            }
+        }
+
+        function addWeekReport() {
+            var node = mini.get('EPSProject').getSelected();
+            if (node == undefined) {
+                alert('请先选择项目.');
+                //top.Power.ui.warning('请先选择项目.');
+                return;
+            }
+            var p = {};
+            p.datasetCode = "CheckProjPlanIsAppr";//编号
+            p.pageIndex = 0;
+            p.pageSize = 0;
+            p.ignorefilter = "0";
+            var ext = { projid: node.project_guid };//变量
+            p.extparams = JSON.stringify(ext)
+            $.ajax({
+                url: "/DataSet/GetDataJson",
+                dataType: "JSON",
+                data: p,
+                async: false,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.data.CheckProjPlanIsAppr.data.length == 0) {
+                            alert('项目计划未批准或未编制,不允许填报项目周报');
+                            return;
+                        }
+                        //新增项目周报
+                        var par = { epsprojid: node.project_guid };
+                        FormFuns.APIExec("ProjectWeekly", "BO", "GetCurrWeekReport", par, function (text) {
+                            var tmp = mini.decode(text);
+                            if (tmp.success) {
+                                var id = tmp.data.value;
+                                if (id == undefined || id.length == 0) {
+                                    var today = new Date();
+                                    myaddform(today.format("yyyy-MM-dd"), node);
+                                }
+                                else {
+                                    myopenform('edit', id);
+                                }
+                            }
+                            else
+                                alert(tmp.message);
+                        });
+                    }
+                    else {
+                        Power.ui.error(o.message);
+                    }
+                }
+            });
+
+
+        }
+
+        function weeksum(){
+            window.open('/Form/EditForm/9a89a805-b616-4945-86c0-8b614fe714dd/','_blank')
+        }
+    </script>
+</body>
+
+</html>

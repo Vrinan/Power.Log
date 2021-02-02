@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="V_ZDelta_QualityCheck.Title">
+                                <i class=""></i>
+                            </a>
+                            <a class="mini-button blue" onclick="FormFuns.ExportDataToXls('V_ZDelta_QualityCheck','质量验收评定',null,null);">
+                                <i class="fa fa-sign-out"></i>导出</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="V_ZDelta_QualityCheck" class="mini-datagrid" style="width: 100%;height: 100%;" idField="Id" allowCellSelect="true" allowCellEdit="true" allowresize="true" allowAlternating="true" showPager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                <div field="WBS_NAME" name="WBS_NAME" header="标段" headeralign="center" align="left" width="120"></div>
+                                <div header="单位工程" headerAlign="center">
+                                    <div property="columns">
+                                        <div field="UNITTOTALCOUNT" name="UNITTOTALCOUNT" header="总数量" headeralign="center" align="right" width="80" ></div>
+										<div field="UNITPROCESSCOUNT" name="UNITPROCESSCOUNT" header="验评中" headeralign="center" align="right" width="80" ></div>
+										<div field="UNITFINISHCOUNT" name="UNITFINISHCOUNT" header="已验评" headeralign="center" align="right" width="80" ></div>
+                                    </div>
+								</div>
+								<div header="分部工程" headerAlign="center">
+                                    <div property="columns">
+                                        <div field="DIVISIONTOTALCOUNT" name="DIVISIONTOTALCOUNT" header="总数量" headeralign="center" align="right" width="80" ></div>
+										<div field="DIVISIONPROCESSCOUNT" name="DIVISIONPROCESSCOUNT" header="验评中" headeralign="center" align="right" width="80" ></div>
+										<div field="DIVISIONFINISHCOUNT" name="DIVISIONFINISHCOUNT" header="已验评" headeralign="center" align="right" width="80" ></div>
+                                    </div>
+								</div>
+								<div header="单元工程" headerAlign="center">
+                                    <div property="columns">
+
+                                    <div header="全部单元工程" headerAlign="center">
+                                        <div property="columns">
+                                            <div field="SUBITEMTOTALCOUNT" name="SUBITEMTOTALCOUNT" header="总数量" headeralign="center" align="right" width="80" ></div>
+                                            <div field="SUBITEMPROCESSCOUNT" name="SUBITEMPROCESSCOUNT" header="验评中" headeralign="center" align="right" width="80" ></div>
+                                            <div field="SUBITEMFINISHCOUNT" name="SUBITEMFINISHCOUNT" header="已验评" headeralign="center" align="right" width="80" ></div>
+                                        </div>
+                                    </div>
+                                    <div header="重要隐蔽及关键部位" headerAlign="center">
+                                        <div property="columns">
+                                            <div field="SUBITEMKEYTOTALCOUNT" name="SUBITEMKEYTOTALCOUNT" header="数量" headeralign="center" align="right" width="100" ></div>
+                                            <div field="SUBITEMKEYPROCESSCOUNT" name="SUBITEMKEYPROCESSCOUNT" header="验评中" headeralign="center" align="right" width="100" ></div>
+                                            <div field="SUBITEMKEYFINISHCOUNT" name="SUBITEMKEYFINISHCOUNT" header="已验评" headeralign="center" align="right" width="100" ></div>
+                                        </div>
+                                    </div>
+                                    <div field="SUBITEMQUALIFIEDCOUNT" name="SUBITEMQUALIFIEDCOUNT" header="合格数" headeralign="center" align="right" width="100" ></div>
+                                    <div field="SUBITEMEXCELLENTCOUNT" name="SUBITEMEXCELLENTCOUNT" header="优良数" headeralign="center" align="right" width="100" ></div>
+                                    <div field="per" name="per" header="优良率" headeralign="center" align="right" width="100" ></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+		var dataList=[];
+		var grid = mini.get("V_ZDelta_QualityCheck");
+
+		$.ajax({
+				url: "/ZDelta_Report/GetQualityCheck",
+				data: {},
+				type: "POST",
+				async: false,
+				success: function (text) {
+					var o = mini.decode(text);
+					if (o.success) {
+						dataList=o.data.QualityCheck;
+
+                        //合计
+                        var totalObj = {"WBS_NAME":"合计"};
+                        var Array = ["UNITTOTAL", "UNITPROCESS", "UNITFINISH", "DIVISIONTOTAL", "DIVISIONPROCESS", "DIVISIONFINISH", "SUBITEMTOTAL", "SUBITEMPROCESS","SUBITEMFINISH","SUBITEMKEYTOTAL","SUBITEMKEYPROCESS","SUBITEMKEYFINISH","SUBITEMQUALIFIED","SUBITEMEXCELLENT"];
+                        //初始化=0
+                        Array.forEach(function(arrayItem){
+                            var arrayName = arrayItem+"COUNT";
+                            totalObj[arrayName]=Number(0);
+                        })
+                        //循环赋值
+                        dataList.forEach(function(item){
+                            Array.forEach(function(arrayItem){
+                                var arrayName = arrayItem+"COUNT";
+                                totalObj[arrayName]=Number(totalObj[arrayName]) + Number(item[arrayName]);
+                            })
+                        });
+                        dataList.push(totalObj);
+						grid.setData(dataList);
+					}
+				}
+			});
+		
+		grid.on("drawcell", function (e) {
+			var record = e.record,
+				column = e.column,
+				field = e.field,
+				value = e.value;
+			if (field == "per") {
+				if(parseFloat(record.SUBITEMTOTALCOUNT)==0 || parseFloat(record.SUBITEMEXCELLENTCOUNT)==0)
+				{
+					e.cellHtml = "0";
+				}
+				else
+				{
+					e.cellHtml = ""+ ((parseFloat(record.SUBITEMEXCELLENTCOUNT)/parseFloat(record.SUBITEMFINISHCOUNT))*100).toFixed(2) + "%";
+				}
+			}
+            if(field == "WBS_NAME" && record.WBS_NAME == "合计"){
+                e.rowStyle = "font-weight:bold;";
+            }
+            if(!IsEmpty(field) && (field.indexOf("PROCESS")>-1 || field.indexOf("FINISH")>-1) && record.WBS_NAME != "合计")
+            {
+                e.cellHtml = "<a href='#' onclick=\"ViewQCMainForm('"+field+"','"+record.WBS_SHORT_NAME+"')\">" + e.value + "</a>";
+            }
+		});
+
+        function ViewQCMainForm(field,code)
+        {
+            //传递参数type
+            //工程类型单位/Unit  分部/Division 单元/SubItem
+            var type="";
+            if(field.indexOf("UNIT")>-1)
+            {
+                type="Unit";
+            }
+            else if(field.indexOf("DIVISION")>-1)
+            {
+                type="Division";
+            }
+            else if(field.indexOf("SUBITEM")>-1)
+            {
+                type="SubItem";
+            }
+
+            //传递参数state
+            //验评中/PROCESS  已验评/FINISH
+            var state=0;
+            if(field.indexOf("PROCESS")>-1)
+            {
+                state=20;
+            }
+            else if(field.indexOf("FINISH")>-1)
+            {
+                state=50;
+            }
+
+            //传递参数code
+            //获取标段编号最后两位A1 etc..
+            code = code.substr(code.length-2,2);
+
+            //传递参数是否关键
+            iskey=0;
+            if(field.indexOf("KEY")>-1)
+            {
+                iskey=1;
+            }
+            ViewForm("6e9bf9da-cccd-4124-adae-c32bd3a9c26a","?type="+type+"&qbsCode="+code+"&state="+state+"&iskey="+iskey+"");
+        }
+
+        
+    </script>
+</body>
+
+</html>
+

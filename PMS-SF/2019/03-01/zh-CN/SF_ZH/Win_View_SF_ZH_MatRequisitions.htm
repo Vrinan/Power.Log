@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_ZH_MatRequisitions.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div class="btn-group customcolumn" gridid="View_SF_ZH_MatRequisitions">栏位</div>
+                            <div class="btn-group customfilter" gridid="View_SF_ZH_MatRequisitions">过滤</div>
+                            <div id="View_SF_ZH_MatRequisitions-Export" class="btn-group"></div>
+                            <a class="mini-button blue" id="View_SF_ZH_MatRequisitions.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_ZH_MatRequisitions-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="PowerForm.ColseCombobox" onvaluechanged="PowerForm.GroupChanged(this)" style="width: 130px;" />
+                            <input id="View_SF_ZH_MatRequisitions-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_ZH_MatRequisitions-search">
+                            <input id="View_SF_ZH_MatRequisitions-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_ZH_MatRequisitions-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_ZH_MatRequisitions" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                             showpager="true" pagesize="50" sizelist="[50,100,200,500]" allowcellselect="true" ondrawcell="DrawCell" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <div type="indexcolumn" width="45">序号</div>
+                                <div field="Code" width="150" allowsort="true">采买编号</div>
+                                <div field="Title" width="150" allowsort="true">采买名称</div>
+                                <div field="Purchaser" width="80" allowsort="true">申请人</div>
+                                <div field="Department" width="80" allowsort="true">申请部门</div>
+                                <div field="MatCode" width="150" allowsort="true">物料编码</div>
+                                <div field="MatName" width="150" allowsort="true">物料名称</div>
+                                <div field="MatModle" width="200" allowsort="true">物资描述</div>
+                                <div field="MatUnit" width="80" allowsort="true">单位</div>
+
+                                <div field="Amount" width="80" allowsort="true">申请数量</div>
+                                <div field="RatifyAmount" width="80" allowsort="true">批准数量</div>
+                                <div field="Price" width="80" allowsort="true">单价</div>
+                                <div field="TotalPrice" width="150" allowsort="true">金额</div>
+                                <div field="ReceiveAmount" width="80" allowsort="true">领用数量</div>
+                                <div field="RegDate" width="200" allowsort="true">申请日期</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            var grid = mini.get("View_SF_ZH_MatRequisitions");
+
+            PowerForm.Init();
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            var grid = mini.get("View_SF_ZH_MatRequisitions");
+            //grid.frozenColumns(0, 6);
+        });
+        function DrawCell(e) {
+            var record = e.record;
+        }
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search(){
+            mini.get('View_SF_ZH_MatRequisitions').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_ZH_MatRequisitions") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " a.RegDate>='" + mini.get("QStartDate").getFormValue() + "' and a.RegDate<='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+                else {
+                    e.params.swhere += "and a.RegDate>='" + mini.get("QStartDate").getFormValue() + "' and a.RegDate<='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+            }
+        }
+        mini.parse();
+    </script>
+</body>
+</html>

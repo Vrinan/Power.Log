@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+        <div class="col-md-4" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div>
+                        <!-- <a class="mini-button blue" id="BaseDataList.AddForm" onclick="PowerForm.OnBtnAdd(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                        <a class="mini-button blue" id="BaseDataList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="BaseDataList.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a> -->
+                        <a class="mini-button blue" id="BaseDataList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="BaseDataList" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" sortField="LongCode"
+                             multiselect="false" allowresize="true" allowcelledit="false" allowcellselect="true" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn">序号</div>
+                                <div field="Name" header="设计阶段" allowsort="true">
+                                    设计阶段
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                            <a class="mini-button blue" id="InfoBaseDataList.AddForm" onclick="PowerForm.OnBtnAdd(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="InfoBaseDataList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="InfoBaseDataList.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                        <a class="mini-button blue" id="InfoBaseDataList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    </div>
+                    <div class="tools">
+                        <input id="InfoBaseDataList-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="InfoBaseDataList-search">
+                            <input id="InfoBaseDataList-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="InfoBaseDataList-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="InfoBaseDataList" class="mini-datagrid" style="width: 100%; height: 100%;" sortField="sequ"
+                             idField="Id" allowcelledit="true" allowcellselect="true" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <!-- <div type="checkboxcolumn" field="Isrequired" truevalue="1" falsevalue="0" width="30">必须归档</div> -->
+                                <div field="Name">质量记录名称<input property="editor" class="mini-textbox" style="width: 100%;" allowSort="true"/></div>
+                                <div field="Remark">备注<input property="editor" class="mini-textbox" style="width: 100%;" allowSort="true"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        
+
+    </script>
+</body>
+</html>

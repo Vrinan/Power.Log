@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue"><i class="fa fa-cogs"></i>费用工作表（WBS）</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                        <div class="portlet-body" style="height: 100%">
+                            <div id="WBS" idfield="wbs_guid" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                                 treecolumn="text" parentfield="parent_wbs_guid" resultastree="false" multiselect="true"
+                                 allowresize="true" allowcelledit="true" allowcellselect="true" frozenstartcolumn="0" frozenendcolumn="2">
+
+                                <div property="columns">
+                                    <div type="indexcolumn" width="20"></div>
+                                    <div field="wbs_short_name" name="text" headeralign="center" width="120">
+                                        WBS编码
+                                    </div>
+                                    <div field="wbs_name" headeralign="center" width="120">
+                                        WBS名称
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        var cols = [];
+        var CbsTitle = [];
+        //数据时触发
+        PowerForm.EventAfterLoadData = function (e) {
+            //动态增加列
+            if (e.sender.id == "WBS") {
+                debugger;
+                $.ajax({
+                    url: "/Cost/GetCBSSheetHeaderc",
+                    data: {
+                        strEpsProjId: strEpsProjId
+                    },
+                    async: false,
+                    dataType: "JSON",
+                    success: function (headerData) {
+                        CbsTitle = headerData.list;
+                    }
+                });
+                var colmA;
+                $.each(CbsTitle, function () {
+                    var columns = e.sender.getColumns();
+                    var colmB;
+                    var thisCbs = this;
+                    var filterCols = $.grep(columns, function (item) {
+                        return item.field == thisCbs.Id;
+                    });
+                    if (filterCols.length == 0) {
+                        colmB = {
+                            header: this.CbsTitle,
+                            headerAlign: "center",
+                            align: "center",
+                            field: this.Id,
+                            width: 100
+
+                        };
+                        if (this.CalColumn != null && this.CalColumn != "") {
+                            colmB.name = this.CalColumn;
+                            colmB.renderer = CalColumnRenderer;
+                        }
+                        cols.push(this.Id);
+                        //colB.push(colmB);
+                    }
+
+                    var filterColsA = $.grep(columns, function (item) {
+                        return $.trim(item.field) == $.trim(thisCbs.CbsType);
+                    });
+                    if (filterColsA.length == 0) {
+                        colmA = {
+                            header: this.CbsType,
+                            headerAlign: "center",
+                            align: "center",
+                            field: this.CbsType,
+                            width: 100,
+                            columns: []
+                        };
+                        colmA.columns.push(colmB);
+                        columns.push(colmA);
+                    } else {
+                        colmA.columns.push(colmB);
+                    }
+
+                    e.sender.setColumns(columns);
+
+                });
+
+                LoadData(strEpsProjId, e);
+
+            }
+        }
+        function GetName(name, arr) {
+            var fh = '';
+            if (name.substring(0, 1) == '+')
+                fh = '+';
+            else
+                fh = '-';
+            var a = { fh: fh };
+            name = name.substring(1, name.length);
+            if (name.indexOf('+') == -1) {//没有加号
+                if (name.indexOf('-') == -1) {//减号，为最后一个
+                    a.name = name;
+                    arr.push(a);
+                    return;
+                }
+                else {
+                    a.name = name.substring(0, name.indexOf('-'));//全减号
+                    arr.push(a);
+                    GetName(name.substring(name.indexOf('-') , name.length),arr);
+                }
+            }
+            else if (name.indexOf('-') == -1) {
+                if (name.indexOf('+') == -1) {
+                    a.name = name;
+                    arr.push(a);
+                    return;
+                }
+                else {
+                    a.name = name.substring(0, name.indexOf('+') );//全加号
+                    arr.push(a);
+                    GetName(name.substring(name.indexOf('+') , name.length), arr);
+
+                }
+            }
+            else if (name.indexOf('+') < name.indexOf('-')) {
+                //+在前
+                a.name = name.substring(0, name.indexOf('+'));
+                arr.push(a);
+                GetName(name.substring(name.indexOf('+') , name.length), arr);
+
+            }
+            else if (name.indexOf('+') > name.indexOf('-')) {
+                a.name = name.substring(0, name.indexOf('-'));
+                arr.push(a);
+                GetName(name.substring(name.indexOf('-') , name.length), arr);
+            }
+        }
+        function CalColumnRenderer(e) {
+            //有name则按条件计算
+            if (e.column.name != null && e.column.name != "") {
+                var c = 0;//总值
+                var name = '+' + e.column.name;
+                var arr = [];
+                GetName(name, arr);
+                for (var i = 0; i < arr.length; i++) {
+                    var a = arr[i];
+                    for (var j = 0; j < CbsTitle.length ; j++) {
+                        var d = CbsTitle[j];
+                        if (a.name == d.CbsTitle) {
+                            switch (a.fh) {
+                                case "+":
+                                    c = c + parseFloat(e.record[d.Id]||0);
+                                    break;
+                                case "-":
+                                    c = c - parseFloat(e.record[d.Id] || 0);
+                                    break;
+                                default:
+                                    break;
+
+                            }
+                        }
+                    } 
+                }
+
+              
+                return c;
+            }
+        }
+        function LoadData(proj_Guid, e) {
+            debugger;
+            $.ajax({
+                url: "/Cost/WBSShare",
+                data: { proj_Guid: proj_Guid },
+                async: false,
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("WBS");
+                        data = mini.arrayToTree(o.data.value, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+                        for (var i = 0; i < data.length; i++) {
+                            fnmax(data[i]);
+                        }
+                        grid.loadList(o.data.value, "wbs_guid", "parent_wbs_guid");
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+
+        var fnmax = function (node) {
+            var obj = {};
+            for (var i = 0; i < cols.length; i++) {
+                obj[cols[i]] = node[cols[i]] == null ? 0 : parseFloat(node[cols[i]]);
+            }
+            if (node.children && node.children.length > 0) {
+                for (var i = 0; i < node.children.length; i++) {
+                    var temp = fnmax(node.children[i]);
+                    for (var j = 0; j < cols.length; j++) {
+                        obj[cols[j]] += temp[cols[j]] == null ? 0 : parseFloat(temp[cols[j]]);
+                    }
+                }
+            }
+
+            for (var i = 0; i < cols.length; i++) {
+                node[cols[i]] = obj[cols[i]];
+            }
+            return obj;
+        }
+
+    </script>
+</body>
+</html>

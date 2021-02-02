@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="view_NewTrainPlanList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <!--<div id="view_NewTrainPlanList-Export" title="设备检修周计划汇总" class="btn-group"></div>-->
+                            <a class="mini-button blue" id="view_NewTrainPlanList.Export" onclick="PowerForm.AlExport('view_NewTrainPlanList', '培训计划统计', 'Title')"><i class="fa fa-sign-out"></i>导出</a>
+                            <label style="font-size:14px">标题：</label>
+                            <input id="title" name="title" class="mini-textbox" width="100px" />
+
+                            <label style="font-size:14px">岗位性质：</label>
+                            <input property="editor" class="mini-combobox" id="AType" onvaluechanged="Changed" style="width:100px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'在册',text:'在册'},{Id:'劳务',text:'劳务'}]" />
+
+                            <label style="font-size:14px">培训类别：</label>
+                            <input property="editor" class="mini-combobox" id="BType" onvaluechanged="Changed" style="width:100px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'专业技术人员培训',text:'专业技术人员培训'},{Id:'经营管理人员培训',text:'经营管理人员培训'},{Id:'生产运行维护人员培训',text:'生产运行维护人员培训'},{Id:'新员工入职培训',text:'新员工入职培训'},{Id:'特种作业持证培训',text:'特种作业持证培训'},{Id:'其他',text:'其他'}]"  />
+
+                            <label style="font-size:14px">培训方式：</label>
+                            <input property="editor" class="mini-combobox" id="CType" onvaluechanged="Changed" style="width:100px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'企业内培',text:'企业内培'},{Id:'送外培训',text:'送外培训'}]" />
+
+                            &nbsp;&nbsp;&nbsp;
+                            <span>录入日期</span>
+                            <input id="start" name="start" class="mini-datepicker" width="100px" />
+                            <input id="end" name="end" class="mini-datepicker" width="100px"/>
+                            <a class="mini-button yellow" onclick="Query">查询</a>
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="view_NewTrainPlanList" class="mini-datagrid" onload="onLoad" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id" showPager="false">
+                            <div property="columns">
+                                <!--<div type="indexcolumn">序号</div>-->
+                                <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">
+                                    标题
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="RegDate" width="100" allowSort="true" dateformat="yyyy-MM-dd" headeralign="center">
+                                    录入日期
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="TrainDeptName" width="100" allowSort="true" headeralign="center">
+                                    参培部门
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TrainHumanName" width="100" allowSort="true" headeralign="center">
+                                    参培人员
+                                    <input property="editor" id="SF_ZH_NewTrainPlan_list.TrainHumanName" class="mini-buttonedit" name="TrainHumanName" textname="TrainHumanName"
+                                    onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" style="width:100%;" />
+                                </div>
+                                <div field="TrainHumanIds" width="100" allowSort="true" headeralign="center">
+                                    参培人员Ids
+                                    <input property="editor" class="mini-textbox" style="width: 100%;"/>
+                                </div>
+                                <div field="PosiType" width="150" allowSort="true" type="comboboxcolumn" headeralign="center">
+                                    参培人员岗位性质
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <div field="TrainNumber" width="100" allowSort="true" headeralign="center">
+                                    人数
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TrainMode" width="100" allowSort="true" type="comboboxcolumn" headeralign="center">
+                                    培训类别
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <div field="TrainType" width="100" allowSort="true" type="comboboxcolumn" headeralign="center">
+                                    培训方式
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <div field="StartDate" width="100" allowSort="true" dateformat="yyyy-MM-dd" headeralign="center">
+                                    培训开始时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="EndDate" width="100" allowSort="true" dateformat="yyyy-MM-dd" headeralign="center">
+                                    培训结束时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="PartyB" width="100" allowSort="true" headeralign="center">
+                                    培训内容
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Address" width="100" allowSort="true" headeralign="center">
+                                    培训地点
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Teacher" width="150" allowSort="true" headeralign="center">
+                                    合作培训机构/讲师
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Money" width="100" allowSort="true" headeralign="center" numberformat="n2">
+                                    费用预算(元)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999"/>
+                                </div>
+                                <div field="MainPartyA" width="100" allowSort="true" headeralign="center">
+                                    主办单位
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+
+            mini.get("start").setValue(firstDate);
+            mini.get("end").setValue(endDate);
+            // mini.get("BType").setValue(1);
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function Changed() {
+            mini.get('view_NewTrainPlanList').reload();
+        }
+
+        function onLoad(e) {
+            mini.get('view_NewTrainPlanList').mergeColumns(["Title","TrainDeptName"]);
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            var start = mini.get("start").getValue().format("yyyy-MM-dd");
+            var end = mini.get("end").getValue().format("yyyy-MM-dd");
+            var title = mini.get("title").getValue();
+            var AType = mini.get("AType").getValue();
+            var BType = mini.get("BType").getValue();
+            var CType = mini.get("CType").getValue();
+
+            if (e.params.swhere == "") {
+                e.params.swhere = " RegDate between '" + start + "' and '" + end + "'  and Title like '%" + title + "%' and PosiType like '%" + AType + "%' and TrainMode like '%" + BType + "%' and TrainType like '%" + CType + "%' ";
+            }
+            else {
+                e.params.swhere = " and RegDate between '" + start + "' and '" + end + "'  and Title like '%" + title + "%' and PosiType like '%" + AType + "%' and TrainMode like '%" + BType + "%' and TrainType like '%" + CType + "%' ";
+            }
+
+        }
+
+        function Query()
+        {
+            mini.get('view_NewTrainPlanList').reload();
+        }
+
+        mini.get("view_NewTrainPlanList").on("drawcell", function (e) {
+            if (e.column.field == "Title") {
+                if (!e.value) return false;
+                var record = e.record;
+                var sender = e.sender;
+                var id = record.MasterId;
+                e.cellHtml = "<a href='javascript:void(0);' onclick=\"ViewForm('" + id + "')\">" + e.value + "</a>";
+            }
+        })
+
+        function ViewForm(id) {
+            var url = "/Form/ValidForm/" + "4b363ae1-f2da-4a5e-8241-a628542d9411" + "/" + "/view/" + id;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var EditOnlineUrl = '$!Helper.GetConfigRunTimeValue("FtpConfig", "EditOnlineUrl")';
+    </script>
+    <style type="text/css">
+        #btnUpload_Small > .btn {
+            padding: 2px 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>$Helper.GetResource("human_define")<!--人员维护-->
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="Human.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                        <a class="mini-button blue" id="Human.SaveAdd" onclick="PowerForm.OnBtnSaveAdd(this)"><i class="fa fa-save"></i>$Helper.GetResource("g_saveadd")</a><!--保存&新增-->
+                        <a class="mini-button blue" id="Human.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                        <div id="btnUpload_Small"></div>
+                        <a class="mini-button blue" id="Human.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="$Helper.GetResource('g_general')">
+                            <!--通常-->
+                            <div id="Human" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            <label for="txtcode">
+                                                $Helper.GetResource("g_code")
+                                            </label><!--编号-->
+                                        </td>
+                                        <td>
+                                            <input id="Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="txtname">
+                                                $Helper.GetResource("human_name")
+                                            </label><!--姓名-->
+                                        </td>
+                                        <td>
+                                            <input id="Name" name="Name" class="mini-textbox" required="true" />
+
+                                        </td>
+                                        <td rowspan="3">
+                                            <div style="text-align:center">
+                                                <img id="headerPic_Small" style="width:110px;height:120px" alt="">
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtsex">
+                                                $Helper.GetResource("g_sex")
+                                            </label><!--性别-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.Sex" name="Sex" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="txtMarriage">$Helper.GetResource("g_marriage")</label><!--婚姻状况-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.Marriage" name="Marriage" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtdeptname">$Helper.GetResource("g_national") </label><!--民族-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.Native" name="Native" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="txtdeptname">$Helper.GetResource("g_political")</label><!--政治面貌-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.Political" name="Political" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtBirthday">$Helper.GetResource("g_birthday")</label><!--出生日期-->
+                                        </td>
+                                        <td>
+                                            <input id="Birthday" name="Birthday" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="txtLocal">
+                                                $Helper.GetResource("g_native")
+                                            </label><!--籍贯-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="Local" name="Local" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtCountry">
+                                                $Helper.GetResource("g_country")
+                                            </label><!--国家-->
+                                        </td>
+                                        <td>
+                                            <input id="Country" name="Country" class="mini-textbox" />
+
+                                        </td>
+
+                                        <td>
+                                            <label for="txtCity">
+                                                $Helper.GetResource("g_city")
+                                            </label><!--城市-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="City" name="City" class="mini-textbox" />
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtIdCard">
+                                                $Helper.GetResource("g_idcard")
+                                            </label><!--身份证-->
+                                        </td>
+                                        <td colspan="4">
+                                            <input id="IdCard" name="IdCard" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            岗位性质
+                                        </td>
+                                        <td>
+                                            <input id="Human.PositionType" name="PositionType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            <label for="txtPassPort">$Helper.GetResource("g_passport") </label><!--护照-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="PassPort" name="PassPort" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <label for="txtAddress">
+                                                $Helper.GetResource("human_address")
+                                            </label><!--当前住址-->
+                                        </td>
+                                        <td colspan="4">
+                                            <input id="Address" name="Address" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <label for="txtLocalAddress">
+                                                $Helper.GetResource("human_native_address")
+                                            </label><!--户籍所在地-->
+                                        </td>
+                                        <td colspan="4">
+                                            <input id="LocalAddress" name="LocalAddress" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtBankName">
+                                                $Helper.GetResource("human_bank")
+                                            </label><!--开户行-->
+                                        </td>
+                                        <td>
+                                            <input id="BankName" name="BankName" class="mini-textbox" />
+                                        </td>
+
+                                        <td>
+                                            <label for="txtBankCode">
+                                                $Helper.GetResource("human_bank_code")
+                                            </label><!--银行代码-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="BankCode" name="BankCode" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtBankAccount">$Helper.GetResource("human_bank_number")</label><!--银行卡号-->
+                                        </td>
+                                        <td>
+                                            <input id="BankAccount" name="BankAccount" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="txtJobTitle">
+                                                $Helper.GetResource("human_title")
+                                            </label><!--职称-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="Human.JobTitle" name="JobTitle" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtDegree">
+                                                $Helper.GetResource("g_degree")
+                                            </label><!--学历-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.Degree" name="Degree" class="mini-combobox"
+                                                   allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="txtSchoole">$Helper.GetResource("human_school")</label><!--毕业院校-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="Schoole" name="Schoole" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtHumanType">$Helper.GetResource("human_human_type")</label><!--人员类型-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.HumanType" name="HumanType" class="mini-combobox" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="txtMajorName">
+                                                $Helper.GetResource("human_professional")
+                                            </label><!--主专业-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="MajorId" name="MajorId" class="mini-textbox" style="display:none;" />
+                                            <input id="Human.MajorName" name="MajorName" textname="MajorName" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <label for="txtposiname">
+                                                $Helper.GetResource("rightpage_postion")
+                                            </label><!--主岗位-->
+                                        </td>
+                                        <td>
+                                            <input id="PosiName" name="PosiName" class="mini-textbox" readonly="readonly" />
+                                            <!--      <input id="Human.PosiName" name="PosiName" class="mini-buttonedit" required="true"
+                                            selectonfocus="true" />-->
+                                        </td>
+                                        <td>
+                                            <label for="txtDeptName">
+                                                $Helper.GetResource("rightpage_dept")
+                                            </label><!--主部门-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="DeptName" name="DeptName" class="mini-textbox" readonly="readonly" />
+                                            <!--<input id="Human.DeptName" name="DeptName" class="mini-buttonedit" required="true"
+                                            selectonfocus="true" />-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtMobile">
+                                                $Helper.GetResource("g_mobile")
+                                            </label><!--手机-->
+                                        </td>
+                                        <td>
+                                            <input id="Mobile" name="Mobile" class="mini-textbox" />
+                                        </td>
+
+                                        <td>
+                                            <label for="txtPhone">
+                                                $Helper.GetResource("g_phone")
+                                            </label><!--座机-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="Phone" name="Phone" class="mini-textbox" />
+                                        </td>
+
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtFax">
+                                                $Helper.GetResource("g_fax")
+                                            </label><!--传真-->
+                                        </td>
+                                        <td>
+                                            <input id="Fax" name="Fax" class="mini-textbox" />
+                                        </td>
+
+                                        <td>
+                                            <label for="txtOfficePhone">
+                                                $Helper.GetResource("g_office_phone")
+                                            </label><!--办公室电话-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="OfficePhone" name="OfficePhone" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtEmail">$Helper.GetResource("g_email")</label><!--邮件地址-->
+                                        </td>
+                                        <td>
+                                            <input id="Email" name="Email" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="txtPostCode">
+                                                $Helper.GetResource("g_postcode")
+                                            </label><!--邮编-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="PostCode" name="PostCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtQQ">
+                                                $Helper.GetResource("g_qq")
+                                            </label><!--QQ-->
+                                        </td>
+                                        <td>
+                                            <input id="QQ" name="QQ" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="txtWeChat">$Helper.GetResource("g_wechat")</label><!--微信-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="WeChat" name="WeChat" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtWorkStart">$Helper.GetResource("human_joinwork_date")</label><!--参加工作时间-->
+                                        </td>
+                                        <td>
+                                            <input id="WorkStart" name="WorkStart" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="txtJoinStart">$Helper.GetResource("human_join_date") </label><!--入职日期-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="JoinStart" name="JoinStart" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtContractStart">$Helper.GetResource("human_contract_start_date")</label><!--合同开始日期-->
+                                        </td>
+                                        <td>
+                                            <input id="ContractStart" name="ContractStart" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="txContractEnd">$Helper.GetResource("human_contract_end_date") </label><!--合同结束日期-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="ContractEnd" name="ContractEnd" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <label for="txContractEnd">$Helper.GetResource("human_departure") </label><!--是否已离职-->
+                                        </td>
+                                        <td>
+                                            <input id="Human.IsQuit" name="IsQuit" class="mini-combobox" required="true"
+                                                   allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="txtQuitDate">$Helper.GetResource("human_departure_date") </label><!--离职日期-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="QuitDate" name="QuitDate" class="mini-datepicker" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtSalaryEndDate">$Helper.GetResource("human_wage_end_date") </label><!--发薪截止日期-->
+                                        </td>
+                                        <td>
+                                            <input id="SalaryEndDate" name="SalaryEndDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="txtQuitReason">$Helper.GetResource("human_departure_reason") </label><!--离职原因-->
+                                        </td>
+                                        <td colspan="2">
+                                            <input id="QuitReason" name="QuitReason" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="$Helper.GetResource('human_dept_posi')">
+                            <!--岗位/部门-->
+                            <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="50%" showcollapsebutton="false">
+                                    <!--岗位-->
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" id="HumanRelationPosi.AddForm" onclick="PowerForm.OnBtnWizard(this,false)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                                        <a class="mini-button blue" id="HumanRelationPosi.Save" onclick="OnBtnPosiSave()"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                                        <a class="mini-button blue" id="HumanRelationPosi.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                        <a class="mini-button blue" id="HumanRelationPosi.Delete" onclick="PowerForm.OnBtnDel(this, null, { autosave: false })"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                                    </div>
+
+                                    <div class="mini-fit">
+                                        <div id="HumanRelationPosi" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                             idfield="Id" allowresize="true" showpager="false" allowcellselect="true">
+                                            <div property="columns">
+                                                <div type="indexcolumn" width="10"></div>
+                                                <div field="PosiName" width="70">$Helper.GetResource("g_belong_position")</div><!--所属岗位-->
+                                                <div name="action" renderer="PosiRenderer" width="20">操作</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div showcollapsebutton="false">
+                                    <!--部门-->
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" id="HumanRelationDept.AddForm" onclick="PowerForm.OnBtnWizard(this,false)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                                        <a class="mini-button blue" id="HumanRelationDept.Save" onclick="OnBtnDeptSave()"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                                        <a class="mini-button blue" id="HumanRelationDept.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                        <a class="mini-button blue" id="HumanRelationDept.Delete" onclick="PowerForm.OnBtnDel(this, null, {autosave:false})"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="HumanRelationDept" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                             idfield="Id" allowresize="true" showpager="false" allowcellselect="true">
+                                            <div property="columns">
+                                                <div type="indexcolumn" width="10"></div>
+                                                <div field="DeptName" width="70">$Helper.GetResource("position_dept")</div><!--所属部门-->
+                                                <div name="action" renderer="DeptRenderer" width="20">操作</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="$Helper.GetResource('human_sign')">
+                            <!--人员签章-->
+                            <div class="mini-toolbar">
+                                <div id="btnUpload"></div><!--上传-->
+                                <button class="btn blue" id="HumanSign.View" onclick="ViewSign()">
+                                    <i class="fa fa-eye"></i>$Helper.GetResource("g_view")
+                                </button> <!--查看-->
+                                <button class="btn blue" id="HumanSign.Delete" onclick="PowerForm.OnBtnDel(this)">
+                                    <i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")
+                                </button><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="HumanSign" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                     idfield="Id" allowresize="true" showpager="false"
+                                     allowcelledit="true" allowcellselect="true" onrowdblclick="ViewSign" ondrawcell="DrawCell">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div name="title" field="Sequ" width="60">
+                                            $Helper.GetResource("g_sequ")
+                                        </div><!--序号-->
+                                        <div field="Name" width="60">
+                                            $Helper.GetResource("g_name")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--名称-->
+                                        <div type="comboboxcolumn" name="Type" field="Type" width="60">
+                                            $Helper.GetResource("g_type")
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div name="PassWord" field="PassWord" width="60">
+                                            $Helper.GetResource("g_password")
+                                            <input property="editor" class="mini-password" style="width: 100%;" />
+                                        </div><!--序号-->
+                                        <div type="radiobuttoncolumn" field="Actived" truevalue="true" falsevalue="false" headeralign="center">$Helper.GetResource("basedata_effe") </div><!--生效-->
+                                        <div field="UpdDate" width="80" dateformat="yyyy-MM-dd">$Helper.GetResource("basedata_reg_date")</div><!--录入日期-->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var keyvalue = CreateGUID();
+        var formData = {};
+        formData.KeyWord = "HumanSign";
+        formData.KeyValue = keyvalue;
+        $(function () {
+            PowerForm.Init();
+            mini.get("HumanRelationPosi.Save").hide();
+            mini.get("HumanRelationDept.Save").hide();
+            mini.get("HumanRelationPosi.Refresh").hide();
+            mini.get("HumanRelationDept.Refresh").hide();
+
+            var config = FormFuns.GetConfig("Human");
+            var effected = formconfig.Effected;
+
+            if ((formconfig.FormState == "view") || (!keywordright[config.KeyWord]) || FormFuns.WorkflowReadOnly(effected) || effected == true) {
+                $("#btnUpload").css("display", "none");
+                $("#HumanSign.Delete").css("display", "none");
+            }
+            var grid = mini.get("HumanSign");
+            var config = FormFuns.GetConfig("Human", null);
+            $("#btnUpload").uploadify({
+                fileTypeExts: "*.jpg;*.png;*.bmp",
+                fileSizeLimit: 1024,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                buttonText: "<i class=\"fa fa-upload\"></i>" + app_global['docfile_upload'],  //上传文件
+                swf: '/Scripts/plugins/uploadify/uploadify.swf',
+                uploader: '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: formData,
+                onUploadStart: function () {
+                    grid.loading(app_global["sync_loading_upload"]);//"上传中，请稍后......"
+                },
+                onUploadComplete: function () {
+
+                    $.ajax({
+                        url: "/Form/UploadHumanSign",
+                        type: "POST",
+                        data: { KeyValue: keyvalue, HumanId: config.currow.Id },
+                        cacha: false,
+                        success: function (text) {
+                            grid.reload();
+                            keyvalue = CreateGUID();
+                            formData.KeyValue = keyvalue;
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                    //$(".uploadify-queue")
+                    //var messageid = mini.loading("Loading, Please wait ...", "Loading");
+                }
+            });
+
+            $("#btnUpload_Small").uploadify({
+                height: 25,
+                width: 56,
+                fileSizeLimit: 128,
+                fileTypeExts: "*.jpg;*.png;*.gif;*.bmp",
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-upload\"></i> " + app_global["human_upload_head"],//"上传头像"
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: "Human",
+                    KeyValue: formconfig.KeyValue,
+                    _filename: formconfig.KeyValue + '-small.png'
+                },
+                onUploadStart: function () {
+                    $("#loading").show();
+                },
+                onUploadComplete: function (file, rtext, fileid) {
+                    SetHeaderPic("small", fileid);
+                    formconfig.config.joindata.currow.HeadSmall = fileid;
+                    $("#loading").hide();
+                    //更新并删除之前上传的头像
+                    $.ajax({
+                        url: "/Account/UpdateUserHeader",
+                        data: { humanId: formconfig.KeyValue, HeaderType: "small", fileId: fileid },
+                        cache: false,
+                        success: function (text) {
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+
+            //如果是金格的在线编辑，就隐藏签章类型列，如果是PageOffice的在线编辑，就隐藏密码列
+            if (EditOnlineUrl != "")
+                mini.get("HumanSign").hideColumn("PassWord");
+            else
+                mini.get("HumanSign").hideColumn("Type");
+        });
+
+
+        function PosiRenderer(e) {
+            var record = e.record;
+            var s = "<a onclick=\"SetPosiDept('" + record.HumanId + "','" + record.RelationId + "','" + record.PosiName + "','P')\">设为主岗位</a>";
+            if (record.IsMain == 1)
+                s = "主岗位";
+            return s;
+        }
+        function DeptRenderer(e) {
+            var record = e.record;
+            var s = "<a onclick=\"SetPosiDept('" + record.HumanId + "','" + record.RelationId + "','" + record.DeptName + "','D')\">设为主部门</a>";
+            if (record.IsMain == 1)
+                s = "主部门";
+            return s;
+        }
+        //点击保存事件
+        function OnBtnPosiSave() {
+            PowerForm.OnBtnSave({ id: "HumanRelationPosi.Save" });
+
+        }
+        function OnBtnDeptSave() {
+            PowerForm.OnBtnSave({ id: "HumanRelationDept.Save" });
+        }
+
+        function SetPosiDept(humanid, relationid, relatioinname, type) {
+            if (type == "P") {
+                OnBtnPosiSave();
+            }
+            if (type == "D") {
+                OnBtnDeptSave();
+            }
+            $.ajax({
+                url: "/Form/SetPosiDept",
+                data: { humanid: humanid, relationid: relationid, relatioinname: relatioinname, type: type },
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    if (tmp.success) {
+
+                        Power.ui.success("设置成功");
+                    }
+                    else
+                        Power.ui.error(tmp.message)
+                    //主表刷新，否则保存主表会导致重新保存了数据库
+                    var a = {};
+                    a.id = "Human.Refresh";
+                    PowerForm.OnBtnRefresh(a);
+                    var b = {};
+                    b.id = "HumanRelationPosi.Refresh";
+                    PowerForm.OnBtnRefresh(b);
+                    var c = {};
+                    c.id = "HumanRelationDept.Refresh";
+                    PowerForm.OnBtnRefresh(c);
+                }
+            });
+        }
+        function SetHeaderPic(headtype, fileid) {
+            if (fileid) {
+                var src = "/File/Download/ftp/" + fileid;
+                $("#headerPic_Small").attr("src", src);
+            }
+        }
+        function ViewSign() {
+            var grid = mini.get("HumanSign");
+            var row = grid.getSelected();
+            if (!row)
+                return;
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/HumanSign.htm&id=" + row.Id,
+                width: 400,
+                height: 300,
+                title: "",
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                }
+            });
+            //$.ajax({
+            //    url: "/Form/ViewSign",
+            //    type: "POST",
+            //    data: {  signId: row.Id },
+            //    cache: false,
+            //    success: function (text) {
+
+            //    }
+            //});
+        }
+        PowerForm.EventAfterFormLoad = function (e) {
+
+            SetHeaderPic("small", formconfig.config.joindata.currow.HeadSmall);
+        }
+        PowerForm.EventAfterLoadData = function (e) {
+            if (e.sender.id == "HumanSign") {
+                var data = mini.get("HumanSign").data;
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[i];
+                    if (d.PassWord != null && d.PassWord != "") {
+                        var record = mini.get("HumanSign").getRow(d.Id);
+                        mini.get("HumanSign").updateRow(record, { PassWord: Base64.decode(d.PassWord) });
+
+                    }
+                }
+                var col = e.sender.getColumn("Type");
+                col.editor.valueField = "id";
+                col.editor.textField = "text";
+                col.editor.data = [{ id: '印章', text: '印章' }, { id: '手写', text: '签名' }];
+
+            }
+        }
+        function DrawCell(e) {
+            if (e.field == "PassWord")
+                e.cellHtml = "******";
+        }
+    </script>
+</body>
+</html>

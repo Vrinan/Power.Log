@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>招标文件评审
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_BiddingFiles.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_BiddingFiles.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_BiddingFiles.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_BiddingFiles" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            承揽额
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ContractedAmount" name="ContractedAmount" class="mini-spinner" minvalue="0" maxvalue="999999999" Format="n2"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            业主信用
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.OwnsCredit" name="OwnsCredit" class="mini-combobox"/>
+                                        </td>
+                                        <td>
+                                            招标模式
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.BiddingType" name="BiddingType" class="mini-combobox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标文件编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.BiddingFilesCode" name="BiddingFilesCode" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            招标时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.BiddingBegin" name="BiddingBegin" class="mini-datepicker" allowinput="false"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            截止时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.BiddingEnd" name="BiddingEnd" class="mini-datepicker" allowinput="false"/>
+                                        </td>
+                                        <td>
+                                            开标时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.OpenBidding" name="OpenBidding" class="mini-datepicker" allowinput="false"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工期（天）
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.Duration" name="Duration" class="mini-spinner" minvalue="0" maxvalue="9999999" />
+                                        </td>
+                                    </tr>
+
+                                    <tr bgcolor="#F0F8FF">
+                                        <td class="cell td-label" colspan="4" rowspan="1">
+                                            <label class="design mini-powerlabel">招标信息</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjCode" name="ProjCode" textname="ProjCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjName" name="ProjName" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            信息来源
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjSource" name="ProjSource" class="mini-textbox" readonly/>
+                                        </td>
+                                        <td>
+                                            工程概况
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjOverview" name="ProjOverview" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程地址
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjLocation" name="ProjLocation" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            业主单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjOwnUnit" name="ProjOwnUnit" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目区域
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.ProjArea" name="ProjArea" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            购买标书编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.FilesCode" name="FilesCode" textname="FilesCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择标书..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>                                      
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            购买标书名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.FilesTitle" name="FilesTitle" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingFiles.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='标段信息'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_BiddingFiles_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_BiddingFiles_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_BiddingFiles_dtl" class="mini-datagrid" style="height: 100%;" multiselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div type="checkcolumn"></div>
+                                        <!--名称-->
+                                        <div field="LotContent" headeralign="center">
+                                            标段内容
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="LotAmount" headeralign="center" NumberFormat="n2">
+                                            标段金额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;"  minvalue="0" maxvalue="999999999"/>
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="RegDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                            记录日期
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        //PowerForm.EventWizardData = function (e, data) {
+        //    if (e.id == "SF_BiddingFiles.ProjCode") {
+        //        mini.get("SF_BiddingFiles.Save").doClick();
+                //mini.get("SF_BiddingFiles.projcode").setValue(data[0].projectid);
+                //e.Next = false;
+        	    ////console.log(data);
+        		//debugger
+        		// var grid= mini.get("SF_BiddingFiles_Dtl");
+        		//var row= grid.getSelected();
+        		//grid.updateRow(row, { PlanName:data.plan_name, Plan_Guid:data.proj_plan_guid });
+        	    ////var o = mini.decode(data);
+        		//mini.get("SF_BiddingFiles_Dtl.PlanName").setText(data[0].plan_name);
+        		//mini.get("SF_BiddingFiles_Dtl.PlanName").setValue(data[0].plan_name);
+        //    }
+        //}
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (btnid == "SF_BiddingFiles.ProjCode" || btnid == ("SF_BiddingFiles.FilesCode")) {
+                mini.get("SF_BiddingFiles.Save").doClick();
+            }
+        }
+
+        //function onValueChanged() {
+        //    var ProjectStartDate = mini.get("SF_BiddingFiles.TenderBegin").value;//开始时间
+        //    var ProjectEndDate = mini.get("SF_BiddingFiles.TenderEnd").value;//结束时间
+        //    var startDate = new Date(ProjectStartDate);
+        //    var endDate = new Date(ProjectEndDate);
+        //    if(Date.parse(startDate) - Date.parse(endDate)>0)
+        //        {
+        //            Power.ui.alert("'开始时间'不能晚于'截止时间'!");
+        //            mini.get("SF_BiddingFiles.TenderBegin").setValue("");
+        //            mini.get("SF_BiddingFiles.TenderEnd").setValue("");
+        //            return;
+        //        }
+        //}
+    </script>
+</body>
+</html>

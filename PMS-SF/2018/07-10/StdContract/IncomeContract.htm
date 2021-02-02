@@ -1,0 +1,977 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>进项合同
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_IncomeContract.ViewForm" onclick="ViewForma()"><i class="fa fa-eye"></i>查看合同评审</a>
+                    <a class="mini-button blue" id="PS_IncomeContract.Statistics" onclick="Statistics()"><i class="fa fa-bar-chart-o"></i>统计</a>
+                    <!--<a class="mini-button blue" id="PS_IncomeContract.share" onclick="Share()"><i class="fa fa-share-alt"></i>分摊</a>-->
+                    <a class="mini-button blue" id="PS_IncomeContract.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_IncomeContract.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_IncomeContract.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_IncomeContract" name="PS_IncomeContract" class="form">
+                                <table id="IncomeContract_table" class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <!--<input id="PS_IncomeContract.ContractCode" name="ContractCode" class="mini-textbox" required="true" requirederrortext="合同编号不能为空" />-->
+                                            <input id="PS_IncomeContract.ContractCode" name="ContractCode" textname="ContractCode" class="mini-buttonedit"
+                                                   emptytext="请选择进项合同评审..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_IncomeContract.Status">合同状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_IncomeContract.EPSProjectName" name="EPSProjectName" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractName" name="ContractName" class="mini-textbox" required="true" requirederrortext="合同名称不能为空" />
+                                        </td>
+                                        <td>
+                                            执行情况
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.RunStatus" name="RunStatus" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractType" name="ContractType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            合同形式
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractForm" name="ContractForm" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractAmount" name="ContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" format="n2" />
+                                        </td>
+                                        <td>
+                                            变更金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ChangeAmount" name="ChangeAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最终金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.FinalContractAmount" name="FinalContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" format="n2" />
+                                        </td>
+                                        <td>
+                                            币种
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.CurrencyType" name="CurrencyType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            产品类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ProductType" name="ProductType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            评审方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ReviewWay" name="ReviewWay" class="mini-combobox" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            评审日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ReviewDate" name="ReviewDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            签订日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.SignedDate" name="SignedDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            甲方
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.PartyA" name="PartyA" class="mini-textbox" readonly />
+                                            <!--<input id="PS_IncomeContract.PartyA" name="PartyA" textname="PartyA" class="mini-buttonedit"
+                                                   emptytext="请选择甲方..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" readonly />-->
+                                        </td>
+                                        <td>
+                                            甲方签署人
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.PartyAPerson" name="PartyAPerson" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            乙方
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.PartyB" name="PartyB" textname="PartyB" class="mini-buttonedit"
+                                                   emptytext="请选择乙方..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            乙方签署人
+                                        </td>
+                                        <td>
+                                            <!--    <input id="PS_IncomeContract.PartyBSighPerson" name="PartyBSighPerson" class="mini-textbox" />     -->
+                                            <input id="PS_IncomeContract.PartyBSighPerson" name="PartyBSighPerson" textname="PartyBSighPerson" class="mini-buttonedit"
+                                                   emptytext="请选择乙方签署人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            开工日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractStrartDate" name="ContractStrartDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            完工日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.ContractEndDate" name="ContractEndDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+                                            支付方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.PayType" name="PayType" class="mini-combobox" required="true" />
+                                        </td>-->
+                                        <td>
+                                            有无甲供
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.OrArmour" name="OrArmour" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>备注</td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractReview.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            是否收保函
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.IsGuarantee" name="IsGuarantee" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td>
+                                        <td>
+                                            保证金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.GuaranteeAmount" name="GuaranteeAmount" class="mini-spinner" maxvalue="999999999" minvalue="0" format="n2" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContract.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='工程量清单' visible="false">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="25%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+
+                                        <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContract_PiClass.Add" onclick="AddPI()">选择清单库</a><!--新增-->
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContract_PiClass.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="PS_SubContract_PiClass" class="mini-tree" style="width: 100%; height: 100%" showtreeicon="true" textfield="PiClassName"
+                                             idfield="Id" parentfield="ParentId" expandonload="true" data-options="{lazyload:false}"
+                                             expandonload="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="75%" showcollapsebutton="true">
+                                    <!--数据明细-->
+                                    <div class="mini-toolbar">
+                                        <!--<a class="mini-button blue" iconcls="fa-plus" id="PS_IncomeContract_PI.AddByClass" onclick="OnBtntx(this)">提取全部</a>--><!--新增-->
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="PS_IncomeContract_PI.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="PS_IncomeContract_PI" class="mini-datagrid" style="height: 100%;" showsummaryrow="true" oncellendedit="EidtApp"
+                                             idfield="Id" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true">
+                                            <div property="columns">
+                                                <div type="checkcolumn" name="checkcolumn"></div>
+                                                <div type="indexcolumn"></div>
+                                                <!--编号-->
+                                                <div field="PiCode" headeralign="center">
+                                                    编号
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                <!--名称-->
+                                                <div field="PiName" headeralign="center">
+                                                    工程量名称
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                <!--单位-->
+                                                <div field="PiUnit" headeralign="center" align="center">
+                                                    单位
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                <!--单价-->
+                                                <div field="PiPrice" headeralign="center" align="center" numberformat="n2">
+                                                    单价
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <!--数量-->
+                                                <div field="PiQuantity" headeralign="center" align="center">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <!--金额-->
+                                                <div field="PiAmount" headeralign="center" summarytype="sum" align="center" numberformat="n2">
+                                                    金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                                </div>
+                                                <div field="List_Type" headeralign="center" type="comboboxcolumn" align="center">
+                                                    清单类型
+                                                    <input property="editor" id="PS_IncomeContract_PI.List_Type" textfield="text" valuefield="id"
+                                                           name="List_Type" class="mini-combobox" required="true" readonly="readonly" style="width: 100%;" />
+                                                </div>
+                                                <!--其他信息-->
+                                                <div field="Memo" headeralign="center">
+                                                    备注
+                                                    <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='收款节点'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_IncomeContract_PayNodes.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_IncomeContract_PayNodes.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_IncomeContract_PayNodes" class="mini-datagrid" style="height: 100%;" oncellendedit="endedit" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" name="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <!--名称-->
+                                        <!--<div field="PayNodes" headeralign="center">
+                                            节点名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>-->
+                                        <!--类型-->
+                                        <div field="PayType" type="comboboxcolumn" headeralign="center" align="center">
+                                            收款类型
+                                            <input property="editor" id="PS_IncomeContract_PayNodes.PayType" name="PayType" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <!--金额-->
+                                        <div field="PayAmount" headeralign="center" align="center" numberformat="n2" summarytype="sum">
+                                            收款金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="CheckAmount" headeralign="center" align="center" numberformat="n2" summarytype="sum">
+                                            剩余应支付金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly/>
+                                        </div>
+                                        <!--描述-->
+                                        <!--<div field="PayDescription" headeralign="center">
+                                            描述
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>-->
+                                        <!--其他信息-->
+                                        <div field="Remarks" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='金额明细' name="SF_InContract_AmountList">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_InContract_AmountList.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_InContract_AmountList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_InContract_AmountList" class="mini-datagrid" style="height: 100%;" showsummaryrow="true" oncellendedit="endeditAamountList"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="AmountType" headeralign="center" type="comboboxcolumn">
+                                            费用类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="NoTaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            不含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="TaxRate" headeralign="center">
+                                            税率（%）
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="TaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            税费
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                        <div title='相关信息'>
+                            <div class="portlet box gray" style="height: 100%">
+                                <div class="mini-tabs" id="Div1" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                                    <div title="合同审批">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractReview" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="ContractCode" name="ContractCode" guideid="" datatype="" allowsort="true" currencyunit="" header="合同编号" align="left">合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ProjectName" name="ProjectName" guideid="" datatype="" allowsort="true" currencyunit="" header="项目机会" align="left">项目机会<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="请款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractApplyMoney" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ApplyAmount" name="ApplyAmount" guideid="" datatype="" allowsort="true" currencyunit="" header="申请金额" align="left" numberformat="n2">申请金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="开票记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_InvoiceRecord" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="InvoiceAmount" name="InvoiceAmount" summarytype="sum" header="发票金额" align="left" numberformat="n2">发票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="InvoiceDate" name="InvoiceDate" guideid="" datatype="" allowsort="true" currencyunit="" header="开票日期" dateformat="yyyy-MM-dd" align="left">开票日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="回款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractReceipt" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ReceiveAmount" summarytype="sum" name="ReceiveAmount" guideid="" datatype="" allowsort="true" currencyunit="" header="到款金额" align="left" numberformat="n2">到款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="ReceiveDate" name="ReceiveDate" guideid="" datatype="" allowsort="true" currencyunit="" header="到款日期" dateformat="yyyy-MM-dd" align="left">到款日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="变更记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_IncomeContractChange" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                 allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="扣款记录">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractCharged" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ChargedAmount" name="ChargedAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="扣款金额" align="left" numberformat="n2">申请索赔金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="合同结算">
+                                        <div class="mini-fit">
+                                            <div id="PS_ContractSettlement" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" allowalternating="false" pagesize="15" showsummaryrow="true" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="ContractName" name="ContractName" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SettlementAmount" name="SettlementAmount" summarytype="sum" guideid="" datatype="" allowsort="true" currencyunit="" header="结算金额" align="left" numberformat="n2">结算金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("PS_ContractReview").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_ContractReview.ViewForm" }, "696ec71e-d26a-46d4-9ed2-6d6de2c4f9ff");
+                OnViewForm("696ec71e-d26a-46d4-9ed2-6d6de2c4f9ff", e.record.Id);
+            });
+            mini.get("PS_IncomeContractChange").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_IncomeContractChange.ViewForm" }, "b6af0b9e-a75c-4baa-bcd5-7e3e326b535f");
+                OnViewForm("b6af0b9e-a75c-4baa-bcd5-7e3e326b535f", e.record.Id);
+            });
+            mini.get("PS_ContractApplyMoney").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_ContractApplyMoney.ViewForm" }, "60952a39-a722-4acc-8a2f-882ffd1192fc");
+                OnViewForm("60952a39-a722-4acc-8a2f-882ffd1192fc", e.record.Id);
+            });
+            mini.get("PS_InvoiceRecord").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_InvoiceRecord.ViewForm" }, "15fa9b9d-634e-439b-93a4-18c9d375de75");
+                OnViewForm("15fa9b9d-634e-439b-93a4-18c9d375de75", e.record.Id);
+            });
+            mini.get("PS_ContractReceipt").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_ContractReceipt.ViewForm" }, "ab969f33-e07b-47b4-92c7-9e95d71e5d8e");
+                OnViewForm("ab969f33-e07b-47b4-92c7-9e95d71e5d8e", e.record.Id);
+            });
+            mini.get("PS_ContractCharged").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_ContractCharged.ViewForm" }, "ead1ff97-8127-448a-8c49-c946673303b1");
+                OnViewForm("ead1ff97-8127-448a-8c49-c946673303b1", e.record.Id);
+            });
+            mini.get("PS_ContractSettlement").on("rowclick", function (e) {
+                //PowerForm.OnBtnViewForm({ id: "PS_ContractSettlement.ViewForm" }, "6665fd96-4c31-4f88-a262-d011ab0d8524");
+                OnViewForm("6665fd96-4c31-4f88-a262-d011ab0d8524", e.record.Id);
+            });
+        });
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/ViewForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 800,
+                height: 600
+            })
+        }
+
+        function endeditAamountList(e) {
+            //var record = e.record;
+            //var grid = mini.get(SF_InContract_AmountList);
+            //if (e.field == "NoTaxAmount" || e.field == "TaxAmount") {
+            //    var s = parseFloat(record.NoTaxAmount) + parseFloat(record.TaxAmount);
+            //    grid.updateRow(record, { "TotalAmount": s });
+            //}
+        }
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get(PS_IncomeContract_PayNodes);
+            //判断、并进行计算
+            if (e.field == "PayAmount") {
+                //    var s = parseFloat(record.NoTaxAmount) + parseFloat(record.TaxAmount);
+                //    grid.updateRow(record, { "TotalAmount": s });
+                grid.updateRow(record, { "CheckAmount": record.PayAmount });
+                var sum = Number(0);
+                var row = grid.findRow(function (row) {
+                    if (row.PayAmount != "" && row.PayAmount != undefined && row.PayAmount != null) {
+                        sum += parseFloat(row.PayAmount);
+                    }
+                })
+                mini.get("PS_IncomeContract.ContractAmount").setValue(sum);
+            }
+        }
+
+        function ViewForma() {
+            var id = formconfig.config.joindata.currow["Id"];
+            var ContractReviewId = formconfig.config.joindata.currow["ContractReviewId"];
+            if (formconfig.FormState == "add") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/696ec71e-d26a-46d4-9ed2-6d6de2c4f9ff/" + "/view/" + ContractReviewId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+
+        PowerForm.EventBeforeOnBtnSave = function (e, data) {
+            var grid = mini.get(PS_IncomeContract_PayNodes);
+            var sum = Number(0);
+            var row = grid.findRow(function (row) {
+                if (row.PayAmount != "" && row.PayAmount != undefined && row.PayAmount != null) {
+                    sum += parseFloat(row.PayAmount);
+                }
+            })
+            mini.get("PS_IncomeContract.ContractAmount").setValue(sum);
+
+            //提示
+            var contractAmount = sum;
+            var gd = mini.get(SF_InContract_AmountList);
+            var sumlist = Number(0);
+            var row = gd.findRow(function (row) {
+                if (row.TotalAmount != "" && row.TotalAmount != undefined && row.TotalAmount != null) {
+                    sumlist += parseFloat(row.TotalAmount);
+                }
+            })
+            var listAmount = sumlist;
+            if (listAmount > contractAmount) {
+                //Power.ui.warning("分摊总额大于合同金额");
+            }
+            if (listAmount < contractAmount) {
+                //Power.ui.warning("合同金额剩余" + (parseFloat(contractAmount) - parseFloat(listAmount)) + "未分摊");
+            }
+
+
+
+            var ContractAmount = mini.get("PS_IncomeContract.ContractAmount").value;
+            var ChangeAmount = mini.get("PS_IncomeContract.ChangeAmount").value;
+            mini.get("PS_IncomeContract.FinalContractAmount").setValue(ContractAmount + ChangeAmount);
+        }
+
+        PowerForm.EventAfterOnBtnDelete = function (e, data) {
+            if (e.field == "SF_InContract_AmountList")
+                mini.get("PS_IncomeContract.Save").doClick();
+        }
+
+        function onValueChanged(e) {
+
+            //判断日期先后顺序
+            var planstart = mini.get("PS_IncomeContract.ContractStrartDate").value;//开始时间
+            var planend = mini.get("PS_IncomeContract.ContractEndDate").value;//结束时间
+            var startDate = new Date(planstart);
+            var endDate = new Date(planend);
+
+            if (Date.parse(startDate) - Date.parse(endDate) > 0) {
+                Power.ui.alert("'开始时间'不能晚于'结束时间'!");
+                mini.get("PS_IncomeContract.ContractStrartDate").setValue("");
+                mini.get("PS_IncomeContract.ContractEndDate").setValue("");
+                return;
+            }
+        }
+
+        function EidtApp(e) {
+            //获取子表节点
+            var record = e.record;
+            var grid = mini.get(PS_IncomeContract_PI);
+
+            var price = record.PiPrice;
+
+            var PiQuantity = record.PiQuantity;
+            //判断、并进行计算
+            if (e.field == "PiQuantity" || e.field == "PiPrice") {
+                grid.updateRow(record, { PiAmount: (price * PiQuantity) });
+            }
+
+        }
+        var selectId = "";
+        function onBeforeNodeSelect(e) {
+            var tree = e.sender;
+            var node = e.node;
+            selectId = node.Id;
+            //alert(node.pi_code_Lid);
+            // FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("PS_IncomeContract_PI"));
+            mini.get("PS_IncomeContract_PI").reload();
+        }
+
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            if (e.Id = "SF_InContract_AmountList") {
+                data.NoTaxAmount = "0";
+                data.TaxAmount = "0";
+                data.TotalAmount = "0";
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = beforeload;
+        function beforeload(e) {
+            debugger;
+            if (e.sender.id == "PS_PI_Class") {
+                if (e.params.swhere != "") {
+                    e.params.swhere = " and PiClassType='p1' and EpsProjId='" + strEpsProjId + "'";
+                }
+                else {
+                    e.params.swhere += "  PiClassType='p1' and EpsProjId='" + strEpsProjId + "'";
+                }
+            }
+            var filter = "1=1"
+            if (e.sender.id == "PS_IncomeContract_PI") {
+                if (selectId == "") {
+                    filter = " 1=1";
+                }
+                else {
+                    filter += "and PiClass_Guid= '" + selectId + ".%' ";
+                }
+                // alert(filter);
+                if (e.params.swhere == "")
+                    e.params.swhere = "1 =1 and " + filter;
+                else
+                    e.params.swhere += "and 1=1 and " + filter;
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = function beforeload(e) {
+            mini.get("PS_IncomeContract.PartyB").setValue("重庆三峰科技有限公司");
+        }
+        function OnBtntx() {
+            var id = formconfig.KeyValue; //获取主表主键值
+            debugger;
+            $.ajax({
+                url: "/Contract/PiToContractInfo",
+                data: { conid: id, type: 'in' },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var sender = FormFuns.GetMiniFormGrid("PS_IncomeContract_PI");
+                        if (!sender) return;
+                        FormFuns.ReLoadData(sender);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            })
+        }
+
+        function AddPI() {
+            var Grid = mini.get("PS_IncomeContract_PI");
+            var conId = formconfig.KeyValue;
+            if (formconfig.FormState == "add") {
+                Power.ui.alert("请先保存主表");
+                return;
+            }
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/WizardWin_PS_CBS.htm&multi=1&conId=" + conId + "&ctype=p1",
+                showMaxButton: true,
+                width: 900,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        data[i].OId = data[i].Id;
+                        data[i].Id = CreateGUID();
+                    }
+                    //先和页面已存在的OId对比一次，已存在的移除
+                    var sender = mini.get("PS_SubContract_PiClass");
+                    var pdata = sender.getDataView();
+                    var newdata = [];;
+                    if (pdata.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            for (var j = 0; j < pdata.length; j++) {
+                                if (data[i].OId == pdata[j].OId) {
+                                    break;
+                                }
+                                else if (j == pdata.length - 1)
+                                    newdata.push(data[i]);
+                            }
+                        }
+                        data = newdata;
+                    }
+                    var odata = mini.clone(data);
+                    //把页面上已经有的数据加入data，用于判断总体ParentId
+                    for (var i = 0; i < pdata.length; i++) {
+                        odata.push(pdata[i]);
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].ParentId == null || data[i].ParentId == "00000000-0000-0000-0000-000000000000") {
+                            continue;
+                        }
+                        for (var j = 0; j < odata.length; j++) {
+                            if (data[i].ParentId == odata[j].OId) {
+                                data[i].ParentId = odata[j].Id;
+                                break;
+                            }
+                        }
+                    }
+                    //debugger;
+                    var rows = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = data[i].Id;
+                        row.ParentId = data[i].ParentId;
+                        row.Sequ = data[i].Sequ;
+                        row.PiClassCode = data[i].PiClassCode;
+                        row.PiClassName = data[i].PiClassName;
+                        row.MasterId = formconfig.config.joindata.currow.Id;
+                        row.ContractType = "进项合同";
+                        row.OId = data[i].OId;
+                        rows.push(row);
+                    }
+                    var orows = mini.clone(rows);
+                    for (var i = 0; i < pdata.length; i++) {
+                        var row = {};
+                        row.Id = pdata[i].Id;
+                        row.ParentId = pdata[i].ParentId;
+                        row.Sequ = pdata[i].Sequ;
+                        row.PiClassCode = pdata[i].PiClassCode;
+                        row.PiClassName = pdata[i].PiClassName;
+                        row.MasterId = formconfig.config.joindata.currow.Id;
+                        row.OId = pdata[i].OId;
+                        row.ContractType = "进项合同";
+                        orows.push(row);
+                    }
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        for (var j = 0; j < orows.length; j++) {
+                            var length = i;
+                            if (row.ParentId == orows[j].Id) {
+                                sender.clearSelect();
+                                sender.selectNode(orows[j]);
+                                sender.addNode(row, length, sender.getSelected());
+                                break;
+                            }
+                            else if (j == orows.length - 1) {
+
+                                sender.clearSelect();
+                                sender.addNode(row, length, null);
+                            }
+                        }
+                    }
+                    // sender.scrollIntoView(rows[rows.length - 1]);
+
+                    var a = { id: "PS_IncomeContract.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            //var en = mini.get("PS_IncomeContract.Save").getEnabled();//获取字表保存按钮状态
+            //if (en) {
+            //    mini.get("PS_IncomeContract_PI.AddByClass").setEnabled(true);
+            //}
+            //else {
+            //    mini.get("PS_IncomeContract_PI.AddByClass").setEnabled(false);
+            //}
+        }
+        function Share() {
+            var ShareAmount = mini.get("PS_IncomeContract.ContractAmount").getValue();
+            debugger;
+            $.ajax({
+                url: "/Cost/CheckShareId",
+                data: { KeyValue: KeyValue, ShareAmount: ShareAmount },
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.detail != "") {
+                            var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 600,
+                                showMaxButton: true,
+                                onload: function () {
+                                },
+                                ondestroy: function () {
+                                }
+                            });
+                        } else {
+                            NewShare();
+                        }
+                    }
+                    else {
+                        Power.ui.loading.close();
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                }
+            });
+
+        }
+        function NewShare() {
+            Power.ui.confirm("确定分摊？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("分摊中。。")
+                    var Code = mini.get("PS_IncomeContract.ContractCode").getValue();
+                    var Title = mini.get("PS_IncomeContract.ContractName").getValue();
+                    var ShareAmount = mini.get("PS_IncomeContract.ContractAmount").getValue();
+                    var Plan_Guid = "";
+                    var guid = formconfig.KeyValue;
+                    $.ajax({
+                        url: "/Cost/AutoShare",
+                        data: {
+                            guid: guid,
+                            KeyWord: KeyWord,
+                            KeyValue: KeyValue,
+                            KeyWordFilter: "",
+                            Plan_Guid: Plan_Guid,
+                            Code: Code,
+                            Title: Title,
+                            type: "In",
+                            ShareAmount: ShareAmount,
+                            strEpsProjId: strEpsProjId
+                        },
+                        async: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (text) {
+                            debugger
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                debugger;
+                                Power.ui.loading.close();
+                                var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                                //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 600,
+                                    showMaxButton: true,
+                                    onload: function () {
+                                    },
+                                    ondestroy: function () {
+                                    }
+                                });
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+        function Statistics() {
+            var Contractid = formconfig.KeyValue;
+            if (FormState == "add") {
+                Power.ui.alert("请先保存合同信息!"); return false;
+            }
+            var url = "/Form/EditForm/9baf767f-ffad-4d53-a8ca-d02b82a6c9da/?Contractid=" + Contractid + "&ViewType=IncomeContract";
+            mini.open({ url: url, width: "80%", heigth: "160%" })
+
+        }
+    </script>
+</body>
+</html>

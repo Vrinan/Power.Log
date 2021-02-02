@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_DelegateApply.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <span>类型</span>
+                            <input id="FillType" class="mini-combobox" shownullitem="true" width="120"></input>
+                            <!--<input id="Date" class="mini-datepicker" width="120">-->
+                            <span>委托部门</span>
+                            <input id="Department" class="mini-textbox" width="120"></input>
+                            <span>委托项目</span>
+                            <input id="Project" class="mini-textbox" width="120"></input>
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+                            <a class="mini-button blue" id="View_SF_DelegateApply.Export" onclick="PowerForm.AlExport('View_SF_DelegateApply', '委托申请单', 'DrugsType,DrugsName','Name')"><i class="fa fa-sign-out"></i>导出</a>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_DelegateApply-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_DelegateApply-search">
+                            <input id="View_SF_DelegateApply-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_DelegateApply-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <!----onload="OnLoad"-->
+                        <div id="View_SF_DelegateApply" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" sortField="Name,DayTime,DrugsType,DrugsName ASC"
+                             showpager="true" pagesize="100" sizelist="[100,200,500]" allowcellselect="true" multiselect="true" allowalternating="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div field="DelegateDateA" name="DelegateDateA" allowsort="true">委托时间</div>
+                                <div field="Code" name="Code" allowsort="true">编号</div>
+                                <div field="Title" name="Title" allowsort="true">标题</div>
+                                <div field="DelegateDept" name="DelegateDept" allowsort="true">委托部门</div>
+                                <div field="DelegateEPS" name="DelegateEPS" allowsort="true">委托项目</div>
+                                <div field="TestingUnit" name="TestingUnit" allowsort="true">检测单位</div>
+                                <div field="ChoiceExplain" name="ChoiceExplain" allowsort="true">选择说明</div>
+                                <div field="Memo" name="Memo" allowsort="true">备注</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+
+            //var firstDate = new Date();
+            //firstDate.setDate(1); //第一天
+            //var endDate = new Date(firstDate);
+            //endDate.setMonth(firstDate.getMonth() + 1);
+            //endDate.setDate(0);
+            //mini.get("QStartDate").setValue(firstDate);
+            //mini.get("QEndDate").setValue(endDate);
+
+            //var grid = mini.get("View_SF_DelegateApply");
+            //grid.groupBy("Name");
+        });
+
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_DelegateApply').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_DelegateApply") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " Department like '%" + mini.get("Department").getFormValue() + "%' and DelegateEPS like '%" + mini.get("Project").getFormValue() +"%' and DrugsType like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+                else {
+                    e.params.swhere = " and Department like '%" + mini.get("Department").getFormValue() + "%' and DelegateEPS like '%" + mini.get("Project").getFormValue() + "%' and DrugsType like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+            }
+        }
+        //function OnLoad(e) {
+        //    var grid = e.sender;
+        //    //mini.get("View_SF_DelegateApply").mergeColumns(["Name", "DayTime", "DrugsType", "DrugsName"]);
+        //    mini.get("View_SF_DelegateApply").mergeColumns(["DelegateDateA", "DrugsType", "DrugsName"]);
+        //}
+    </script>
+</body>
+</html>

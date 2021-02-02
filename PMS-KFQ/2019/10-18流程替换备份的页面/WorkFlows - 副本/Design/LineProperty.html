@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <form id="frmMain" method="post" style="height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>
+                        <span>连线属性</span><!--连线属性-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave">$Helper.GetResource("g_ok")</a><!--确定-->
+                        <a class="mini-button blue" iconcls="fa-times" onclick="CloseWindow">$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="tabMain" class="mini-tabs" activeindex="0" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title="$Helper.GetResource('g_general')" name="tabCommon">
+                                <fieldset style="border: solid 1px #aaa; padding: 3px;">
+                                    <legend>$Helper.GetResource("workflow_base_info")</legend><!--基本信息-->
+                                    <div style="padding: 5px;">
+                                        <table style="table-layout: fixed; " border="0">
+                                            <tr>
+                                                <td style="width: 100px;">$Helper.GetResource("g_code")</td><!--编号-->
+                                                <td style="width: 200px;">
+                                                    <input id="txtLineCode" name="LineCode" style="width: 100%" class="mini-textbox" required="true" />
+                                                </td>
+                                                <td align="center">$Helper.GetResource("g_name")</td><!--名称-->
+                                                <td>
+                                                    <input id="txtTitle" name="title" class="mini-textbox" style="width: 200px" required="true" />
+                                                </td>
+                                            </tr>
+                                             <tr>
+                                                <td style="width: 100px;">连线标签</td><!--节点标签-->
+                                                <td   colspan="3">
+                                                    <div id="cboBookMark" name="BookMark" class="mini-combobox" valuefield="BookMarkCode" textfield="BookMarkName" showColumns="false" showclosebutton="true" multiSelect="true" oncloseclick="clearCombo" >
+                                                        <div property="columns">                                
+                                                            <div field="BookMarkCode" width="60" headeralign="center">编号</div>  
+                                                            <div field="BookMarkName" width="80" headeralign="center">名称</div>
+                                                            <div field="BookMarkType" width="30" headeralign="center">类型</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                           </tr>
+                                            <tr  >
+                                                <td style="width: 100px;">是否串行线</td>
+                                                <td   colspan="3">
+                                                    <input id="chkIsSingleLine" name="IsSingleLine" class="mini-checkbox" required="true"  /> (串行线既选择了本线路，就不能选择其他连线执行发送操作)
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>$Helper.GetResource("workflow_acitve_way")</legend><!--激活方式-->
+                                    <div class="fieldset-contain">
+                                        <table style="table-layout:fixed;width:600px" border="0">
+                                            <tr>
+                                                <td width="100px">  </td>
+                                                <td colspan="2">
+                                                    <div id="rdoActiveType" name="ActiveType" class="mini-radiobuttonlist" onvaluechanged="onActiveTypeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal"
+                                                         data='[{Code:"Normal",Text:"$Helper.GetResource("workflow_unconditional")"},{Code:"CustomFormula" ,Text:"$Helper.GetResource("workflow_customformula")" } ]'>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="trActivePremise" style="display:none">
+                                                <td style="width:100px">$Helper.GetResource("workflow_define_conditions")</td><!--条件定义-->
+                                                <td style="width:200px"><div id="txtActivePremise" name="ActivePremise" class="mini-textbox" style="width:300px" /> </td>
+                                            </tr>
+                                            <tr id="trActiveMero" style="display:none">
+                                                <td style="width:100px">$Helper.GetResource("workflow_about")</td><!--说明-->
+                                                <td style="width:200px"><div id="txtActiveMero" name="ActiveMero" class="mini-textbox" style="width:300px" /> </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            mini.parse();
+            var form = new mini.Form("frmMain");
+            var rdoActiveType = mini.get("rdoActiveType");
+            var cboBookMark = mini.get("cboBookMark");
+
+            var onActiveTypeChanged = function (e) {
+                setActiveType(e.value);
+            }
+            var setActiveType = function (value) {
+                mini.get("txtActivePremise").setValue("");
+                mini.get("txtActiveMero").setValue("");
+                mini.get("txtActivePremise").setRequired(false);
+                mini.get("txtActiveMero").setRequired(false);
+                switch (value) {
+                    case "Normal":
+                        document.getElementById("trActivePremise").style.display = "none";
+                        document.getElementById("trActiveMero").style.display = "none";
+                        break;
+                    case "CustomFormula":
+                        document.getElementById("trActivePremise").style.display = "";
+                        document.getElementById("trActiveMero").style.display = "";
+                        mini.get("txtActivePremise").setRequired(true);
+                        mini.get("txtActivePremise").setRequiredErrorText(app_global["workflow_input_define"]);//"请输入合法的自定义公式"
+                        mini.get("txtActiveMero").setRequired(true);
+                        mini.get("txtActivePremise").setRequiredErrorText(app_global["workflow_input_formula_mean"]);//请输入公式含义说明
+                        break; 
+                }
+
+            }
+            //---------------------end投票系列-----------------------
+            var onCheckInput = function () {
+                var bookMarkLst = cboBookMark.getSelecteds();
+                var iCount = 0;
+                for (var irow = 0; irow < bookMarkLst.length; irow++) {
+                    if (bookMarkLst[irow].BookMarkType != EBookMarkType.Node) continue;
+                    iCount++;
+                }
+                if (iCount > 1) {
+                    alert("对不起，至多绑定一个类型是[节点]的标签");
+                    return false;
+                }
+                var activeType = rdoActiveType.getValue();
+                if (!activeType) {
+                    Power.ui.alert(app_global["workflow_select_active_type"]);//"请您选择一项激活方式"
+                    return false;
+                }
+                return true;
+            }
+            var onSave = function () {
+
+                if (onCheckInput() == false) return;
+
+                CloseWindow("ok");
+            } 
+            //////////////////////////////////
+            function CloseWindow(action) {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }
+            //标准方法接口定义
+            function SetData(line, workFlowData, WorkFlowMode) {
+                  
+                var bookMarkLst = [];
+                for (var irow = 0; irow < workFlowData.BookMarkList.length; irow++) {
+                    var bookmark = workFlowData.BookMarkList[irow];
+                    if (bookmark.BookMarkType != EBookMarkType.Line && bookmark.BookMarkType != EBookMarkType.Normal) continue;
+                    bookMarkLst.push(bookmark);
+                }
+                cboBookMark.setData(bookMarkLst);
+
+                mini.get("txtLineCode").setValue(line.id);
+                if (line.title)
+                    mini.get("txtTitle").setValue(line.title);
+                else
+                    mini.get("txtTitle").setValue(line.name);
+                if (line.IsSingleLine) mini.get("chkIsSingleLine").setValue(line.IsSingleLine);
+                mini.get("cboBookMark").setValue(line.BookMarkCode );
+
+                if (!line.ActiveType) line.ActiveType = "Normal";
+                rdoActiveType.setValue(line.ActiveType);
+                setActiveType(line.ActiveType);
+                mini.get("txtActivePremise").setValue(line.ActivePremise);
+                mini.get("txtActiveMero").setValue(line.ActiveMero);
+
+                switch (WorkFlowMode) {
+                    case "WorkingDesign":    //动态定义模式下， 来自模板的节点，不允许编辑里面内容
+                        form.setEnabled((line.IsFromInstance == true && line.IsInstanced == false));
+                        mini.get("btnSave").setEnabled((line.IsFromInstance == true && line.IsInstanced == false));   //动态定义模式下，只有 来自实例的，且未走实例的，才可编辑
+                        break;
+                    case "WorkFlowHistoryDesign":    //如果是修改历史流程图，则只允许放开bookMarkCode，其他都不可触动
+                        form.setEnabled(false);
+                        cboBookMark.setEnabled(true);
+                        mini.get("txtNodeName").setEnabled(true);
+                        break;
+                    default:
+                        mini.get("btnSave").setEnabled(true);
+                        break;
+                }
+            }
+
+            function GetData() {
+                debugger;
+                var o = form.getData();
+                o.LineType = EFlowLineType.MainLine;
+                if (o.IsSingleLine == "true")  //如果打钩，设置连线类型为排他型
+                    o.LineType = EFlowLineType.ExcludeLine;
+
+                var bookMarkCode = mini.get("cboBookMark").getValue();
+                var bookMarkName = mini.get("cboBookMark").getText();
+                o.BookMarkCode = bookMarkCode;
+                o.BookMarkName = bookMarkName;
+                return o;
+            }
+
+
+        </script>
+    </form>
+</body>
+</html>
+

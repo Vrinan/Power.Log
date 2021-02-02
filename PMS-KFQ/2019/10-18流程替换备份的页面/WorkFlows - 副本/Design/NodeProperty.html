@@ -1,0 +1,609 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>    
+    <script src="/PowerPlat/WorkFlows/Design/js/Configure.js?v=$AppVersion" type="text/javascript"></script>     
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <form id="frmMain" method="post" style="height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>
+                        <span>$Helper.GetResource("workflow_node_porperty")</span><!--节点属性-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave" enabled="false">$Helper.GetResource("g_ok")</a><!--确定-->
+                        <a class="mini-button blue" iconcls="fa-times" onclick="CloseWindow">$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-tabs" id="tabMain" activeindex="0" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title="$Helper.GetResource('g_general')" name="tabCommon">
+                                <!--通常-->
+                                <fieldset>
+                                    <legend>$Helper.GetResource("workflow_base_info")</legend><!--基本信息-->
+                                    <div>
+                                        <table class="table table-bordered mt5">
+                                            <tr>
+                                                <td style="width: 100px;">$Helper.GetResource("workflow_node_code")</td><!--节点编号-->
+                                                <td style="width: 250px;">
+                                                    <input id="txtNodeCode" name="NodeCode" class="mini-textbox" required="true" enabled="false" />
+                                                </td>
+                                                <td style="width: 100px;">$Helper.GetResource("workflow_node_name")</td><!--节点名称-->
+                                                <td style="width: 250px;">
+                                                    <input id="txtNodeName" name="NodeName" class="mini-textbox" required="true" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>$Helper.GetResource("workflow_node_label")</td><!--节点标签-->
+                                                <td>
+                                                    <div id="cboBookMark" name="BookMark" class="mini-combobox" valuefield="BookMarkCode" textfield="BookMarkName" showColumns="false" showclosebutton="true" multiSelect="true" oncloseclick="clearCombo">
+                                                        <div property="columns">
+                                                            <div field="BookMarkCode" width="60" headeralign="center">编号</div>
+                                                            <div field="BookMarkName" width="80" headeralign="center">名称</div>
+                                                            <div field="BookMarkType" width="30" headeralign="center">类型</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>$Helper.GetResource("workflow_node_type")</td><!--节点类型-->
+                                                <td>
+                                                    <div id="cboNodeType" name="NodeType" class="mini-combobox" required="true" onvaluechanged="onNodeTypeChanged" valuefield="Code" value="GeneralNode" textfield="Text">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="trNodeConcurrent">
+                                                <td>$Helper.GetResource("workflow_define_pass")</td><!--通过定义-->
+                                                <td colspan="2">
+                                                    <div id="rdoNodePassMode" name="NodePassMode" class="mini-radiobuttonlist" onvaluechanged="onNodePassModeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="OnlyOne" data="[{'Code':'OnlyOne' ,'Text':'$Helper.GetResource('workflow_anyone_pass')' },{'Code':'All' ,'Text':'$Helper.GetResource('workflow_all_pass')' },{'Code':'Custom' ,'Text':'$Helper.GetResource('workflow_custom_percent')'},{'Code':'Event' ,'Text':'外部事件代码决定'} ]">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="txtCustomPassValue" name="CustomPassValue" class="mini-spinner" minvalue="1" maxvalue="100" value="100" width="60px" enabled="false" increment="10" visible="false"></div><label id="labCustomValue"></label>
+                                                </td>
+                                            </tr>
+                                            <tr id="trNodeConcurrent1">
+                                                <td>选中模式(人员)</td>
+                                                <td colspan="3">
+                                                    <div id="rdoSelectUserMode" name="SelectUserMode" class="mini-radiobuttonlist" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="DeselectAll" data='[{ Code:"DeselectAll" ,Text:"$Helper.GetResource("workflow_select_nothing")" },{ Code:"SelectAll",Text:"$Helper.GetResource("workflow_select_all")"},{Code:"SelectAllAndDisabled",Text:"$Helper.GetResource("workflow_select_all_not_edit")" } ]'>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="trNodeConcurrent2">
+                                                <td>发送目标策略</td><!--发送目标策略-->
+                                                <td colspan="3">
+                                                    <div id="rdoNodeSendUserMode" name="NodeSendUserMode" class="mini-radiobuttonlist" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data="[{'Code':'Normal' ,'Text':'允许发送给目标人(默认模式)' },{'Code':'FirstUserSend' ,'Text':'首位操作者选择发送目标人' },{'Code':'LastUserSend' ,'Text':'最后操作者选择发送目标人'}]">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>$Helper.GetResource("workflow_define_send_scenario")</td><!--发送场景定义-->
+                                                <td colspan="2">
+                                                    <div id="rdoSendUserMode" name="SendUserMode" class="mini-radiobuttonlist" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data='[{ Code:"Normal" ,Text:"$Helper.GetResource("worflow_default_scenario")" },{ Code:"ByDraft" ,Text:"$Helper.GetResource("workflow_bydraft")" },{Code:"BySendUser" ,Text:"$Helper.GetResource("workflow_bysenduser")"},{Code:"ByMainNode" ,Text:"指定节点定义"} ]'
+                                                         onvaluechanged="onSendUserModeChanged">
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <label id="labSendUserModeNode" style="display:none">节点选择：</label> <div id="cboSendUserModeNode" name="SendUserModeNode" class="mini-combobox" valueField="NodeCode" textField="NodeName" style="width:200px" visible="false" multiSelect="true">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>选中模式(节点)</td>
+                                                <td colspan="3">
+                                                    <div id="rdoSelectNodeMode" name="SelectNodeMode" class="mini-radiobuttonlist" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data='[{ Code:"Normal" ,Text:"默认不选中" },{ Code:"SelectedNode" ,Text:"默认选中" },{Code:"SelectedAndDisabled" ,Text:"只能选中"} ]'>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    $Helper.GetResource("workflow_deal_time")
+                                                </td><!--办理期限-->
+                                                <td>
+                                                    <div id="txtLimitDays" name="LimitDays" class="mini-spinner" minvalue="0" maxvalue="1000" value="0" width="80px" increment="1"></div> (0:无期限，单位:天)
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;<div id="chkInputLimitDaysByRun" class="mini-checkbox" name="InputLimitDaysByRun" text="流转时填写" tooltip="流转时会允许设置每个目标人的期望完成时间"></div>
+                                                </td>
+                                                <td>驳回后办理期限</td>
+                                                <td>
+                                                    <div id="txtLimitReturnedDays" name="LimitReturnedDays" class="mini-spinner" minvalue="0" maxvalue="1000" value="0" width="80px" increment="1"></div> $Helper.GetResource("workflow_no_deal_time")
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>驳回默认模式选项：</td>
+                                                <td colspan="3">
+                                                    <div id="rdoDefaultReturnedSendMode" name="DefaultReturnedSendMode" class="mini-radiobuttonlist"
+                                                         data-tooltip="Tooltip left" data-placement="right"
+                                                         style="float:left" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data="[{'Code':'Normal' ,'Text':'正常驳回' },{'Code':'MustSendCurrent' ,'Text':'直接送还本节点(点对点)' },{'Code':'MustReturnAndNormal' ,'Text':'正常驳回，且收件人只能常规发送' } ]"></div>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>序号</td><!--序号-->
+                                                <td>
+                                                    <div id="txtSerialNo" name="SerialNo" class="mini-spinner" minValue="0" maxValue="1000" tooltip="如果所有节点序号都为0(空),则按照默认算法递归排序。 否则按照定义的序号值排序">
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <div id="chkIsMindMustInput" class="mini-checkbox" name="IsMindMustInput" text="意见是否必填" tooltip="发送时意见必须填写。"></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td><!--序号-->
+                                                <td>
+                                                    <div id="chkIsAllowSkipNode" name="IsAllowSkipNode" class="mini-checkbox" value="允许自动跳过本节点">
+                                                        允许自动跳过本节点
+                                                    </div>
+                                                </td>
+                                                <td colspan="3"> (如果当前节点是唯一节点唯一人， 且下一节点也是唯一节点唯一人， 且两个节点的人员相同， 允许忽略本节点）
+                                            </tr>
+                                            <tr>
+                                                <td></td><!--序号-->
+                                                <td>
+                                                    <div id="chkIsTitleAndNodeName" name="IsTitleAndNodeName" class="mini-checkbox" value="标题追加流程节点名称前缀">
+                                                        标题追加流程节点名称前缀
+                                                    </div>
+                                                </td>
+                                                <td colspan="3"> 
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>$Helper.GetResource("workflow_about"):</label><!--说明-->
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="txtDescription" name="Description" class="mini-textbox" />
+                                                </td>
+                                            </tr>
+                                        </table>
+</div>
+                                </fieldset>
+                            </div>  
+
+                             <div title="操控定义">
+                                   <div class="mini-fit">
+                                    <div class="fieldset-contain">
+                                        <div id="gdWorkNodeList" class="mini-datagrid" style="width:100%;height:350px;"  idField="Code" showPager="false"
+                                            allowResize="true"   showTreeIcon="true"  allowSelect="false" allowCellSelect="false" enableHotTrack="false"  ondrawcell="configureUtil.ondrawcell" allowCellWrap="true" >
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="Text" field="Text" width="120" >操作名称</div>
+                                                <div field="ColumnList" width="100%">行为定义</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   </div> 
+                            </div> 
+                             <div title="通知定义">
+                                  <fieldset> 
+                                    <div class="mini-splitter" style="width:100%;height:600px">
+                                       <div size="32%" showCollapseButton="true" style="padding:5px;">                                            
+                                           <div id="gdFlowOperate" class="mini-datagrid" style="width:200px;height:350px;"  idField="Code" showPager="false" onrowclick="onFlowOperateValueChanged">
+                                               <div property="columns">
+                                                    <div  name="IsSeted" width="20"  renderer="onIsResetRenderer">-</div>
+                                                    <div name="Text" field="Text" width="120" >操作名称</div>
+                                                    <div  field="Text" width="30" renderer="onResetRenderer" >--</div>
+                                               </div>
+                                           </div>
+                                       </div>
+                                        <div showCollapseButton="true">
+                                            <div id="gdNotifyList" class="mini-datagrid" style="width:100%;height:350px;"  idField="Code" showPager="false"
+                                                allowResize="true"   showTreeIcon="true"  allowSelect="false" allowCellSelect="false" enableHotTrack="false"  ondrawcell="configureUtil.ondrawcell" allowCellWrap="true" >
+                                                <div property="columns">
+                                                    <div type="indexcolumn"></div>
+                                                    <div name="Text" field="Text" width="120" >操作名称</div>
+                                                    <div field="ColumnList" width="100%">行为定义</div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        
+                                    </div>
+                                   </fieldset> 
+                            </div> 
+                            <div title="$Helper.GetResource('workflow_vote')" name="tabVote">
+                                <!--投票-->
+                                <table class="table table-plain" style="width:auto;">
+                                    <tr>
+                                        <td>
+                                            <div class="mini-checkbox" id="chkIsTurnVote">$Helper.GetResource("workflow_enable_vote")</div><!--是否开启投票-->
+                                        </td>
+                                        <td>$Helper.GetResource("workflow_vote_model")</td><!--投票模式-->
+                                        <td>
+                                            <div class="mini-radiobuttonlist" id="rdoVoteType" valuefield="TypeCode" textfield="TypeName" value="RadioBox" data='[{TypeCode:"RadioBox",TypeName:"$Helper.GetResource("workflow_radio")",selected:"true"},{TypeCode:"CheckBox" ,TypeName:"$Helper.GetResource("workflow_multi_select")"}]'></div>
+                                        </td>
+                                        <td>$Helper.GetResource("workflow_vote_default")</td><!--默认值-->
+                                        <td>
+                                            <div class="mini-textbox" id="txtDefaultVoteValue" name="DefaultVoteValue"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="mini-toolbar">
+                                    <a class="mini-button" iconcls="fa-plus" onclick="addVoteRow()" plain="true">$Helper.GetResource("g_add")</a><!--增加-->
+                                    <a class="mini-button" iconcls="fa-trash-o" onclick="removeVoteRow()" plain="true">$Helper.GetResource("g_delete")</a><!--删除-->
+                                </div>
+
+                                <div id="gdVoteList" class="mini-datagrid" style="width: 100%; height:350px;"
+                                     allowresize="true" allowcelledit="true" allowcellselect="true" showpager="false"
+                                     showemptytext="true">
+                                    <div property="columns">
+                                        <div field="VoteCode" width="60" headeralign="center" allowsort="true">
+                                            $Helper.GetResource("g_code")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--编码-->
+                                        <div field="VoteName" name="VoteName">
+                                            $Helper.GetResource("g_name")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--名称-->
+                                        <div field="Description" width="100" headeralign="center">
+                                            $Helper.GetResource("workflow_about")
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--说明-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            mini.parse();
+
+       
+            var configureUtil = new WorkFlowConfigureUtil();
+
+            var form = new mini.Form("frmMain");
+            var tabMain = mini.get("tabMain");
+                
+            var gdWorkNodeList = mini.get("gdWorkNodeList");
+            var gdNotifyList = mini.get("gdNotifyList");
+            var gdFlowOperate = mini.get("gdFlowOperate");
+            var gdVoteList = mini.get("gdVoteList");
+            var cboNodeType = mini.get("cboNodeType");
+            var cboBookMark = mini.get("cboBookMark");
+            var rdoSendUserMode = mini.get("rdoSendUserMode");
+            var cboSendUserModeNode = mini.get("cboSendUserModeNode");
+            var rdoSelectNodeMode = mini.get("rdoSelectNodeMode"); 
+             
+            var NodeList = null;
+              
+            var onNodePassModeChanged = function (e) {
+
+                if (e.value == "Custom") {
+                    mini.get("txtCustomPassValue").setVisible(true);
+                    mini.get("txtCustomPassValue").setEnabled(true);
+                    document.getElementById("labCustomValue").innerText = " %";
+                }
+                else {
+                    mini.get("txtCustomPassValue").setVisible(false);
+                    mini.get("txtCustomPassValue").setEnabled(false);
+                    document.getElementById("labCustomValue").innerText = " ";
+                }
+            }
+            var onSendUserModeChanged = function (e) {
+
+                if (e.value == "ByMainNode") {
+                    mini.get("cboSendUserModeNode").setVisible(true);
+                    mini.get("cboSendUserModeNode").setEnabled(true);
+                    document.getElementById("labSendUserModeNode").style.display = "";
+                }
+                else {
+                    mini.get("cboSendUserModeNode").setVisible(false);
+                    mini.get("cboSendUserModeNode").setEnabled(false);
+                    document.getElementById("labSendUserModeNode").style.display = "none";
+                }
+            }
+            //---------------------投票系列---------------------
+            var addVoteRow = function () {
+                var row = {}
+                gdVoteList.addRow(row);
+            }
+            var removeVoteRow = function () {
+                var rows = gdVoteList.getSelecteds();
+                if (rows.length <= 0) return;
+                gdVoteList.removeRows(rows, true);
+            }
+            //---------------------end投票系列-----------------------
+            var onCheckInput = function () {
+
+                var nodeType = cboNodeType.getValue();
+                if (!nodeType) {
+                    alert("节点类型必须选择");
+                    return false;
+                }
+                var bookMarkLst = cboBookMark.getSelecteds();
+                var iCount = 0;
+                for (var irow = 0; irow < bookMarkLst.length; irow++) {
+                    if (bookMarkLst[irow].BookMarkType != EBookMarkType.Node) continue;
+                    iCount++;
+                }
+                if (iCount > 1) {
+                    alert("对不起，至多绑定一个类型是[节点]的标签");
+                    return false;
+                }
+
+                if (mini.get("chkIsTurnVote").getValue() == "true") {
+                    if (gdVoteList.getData().length == 0) {
+                        alert("对不起，请设定投票内容项");
+                        return false;
+                    } 
+                }
+
+                switch (nodeType) {
+                    case "ConcurrentNode":   //群发节点   
+                        if (!mini.get("rdoNodePassMode").getValue()) {
+                            alert("请选择群发节点通过策略");
+                            return false;
+                        }    
+                        break;
+                }
+             
+                switch (nodeType) {
+                    case "ConcurrentNode":   //群发节点   
+                    case "GeneralMultiNode":  //分发节点
+                        if (!mini.get("rdoNodeSendUserMode").getValue()) {
+                            alert("请选择群发节点发送策略");
+                            return false;
+                        }
+                        break;
+                }
+
+                var sSendUserMode = rdoSendUserMode.getValue();
+                if (sSendUserMode && sSendUserMode == "ByMainNode") {
+                    if (!cboSendUserModeNode.getValue()) {
+                        alert("[指定节点定义]模式下，请至少选择一个目标节点");
+                        return false;
+                    }
+                }
+                
+
+                return true;
+            }
+            var onSave = function () {
+                 
+                if (onCheckInput() == false) return;
+
+                CloseWindow("ok");
+            }
+            //////////////////////////////////
+            function CloseWindow(action) {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }
+            
+            var onNodeTypeChanged = function (e) {
+
+            }
+
+            var onResetFlowOperate = function (code) {
+
+                configureUtil.ResetFlowOperate(code);  //重置某个选项
+            }
+            var onIsResetRenderer = function (e) {
+
+                var record = e.record;
+                var s = "";
+                if (record.IsReset == true) s = '√';
+                return s;
+            }
+            var onResetRenderer = function (e) {
+                var record = e.record;
+                var s = "";
+                s = "<a class='New_Button' href='javascript:onResetFlowOperate(\"" + record.Code + "\")' toolTip='重置'>×</a>";
+                return s;
+            }
+            var onFlowOperateValueChanged = function (e) {
+
+                var listbox = e.sender;
+                var row = listbox.getSelected();
+                if (!row) return;
+
+                configureUtil.LoadNotifyList(row.Code);
+            }
+            //------------------------------------------------------------------------------------
+            //标准方法接口定义
+            function SetData(node, title, workFlowData, WorkFlowMode,nodeList) {
+                 
+                mini.get("txtNodeCode").setValue(node.id);
+                mini.get("txtNodeName").setValue(title);
+                mini.get("txtDescription").setValue(node.Description);
+                
+               
+                var bookMarkLst = [];
+                for (var irow = 0; irow < workFlowData.BookMarkList.length; irow++) {
+                    var bookmark = workFlowData.BookMarkList[irow];
+                    if (bookmark.BookMarkType != EBookMarkType.Node && bookmark.BookMarkType != EBookMarkType.Normal) continue;
+                    bookMarkLst.push(bookmark);
+                }
+                cboBookMark.setData(bookMarkLst);
+               
+                cboNodeType.setData(workFlowData.SelectData.NodeType);
+                var NodeType = node.NodeType ;
+                cboNodeType.setValue(NodeType);
+ 
+                 
+                if (!node.NodeProperty) node.NodeProperty = {};
+                if (node.NodeProperty) {
+                    if (node.NodeProperty.SendUserMode) rdoSendUserMode.setValue(node.NodeProperty.SendUserMode);
+                    cboSendUserModeNode.setData(nodeList);
+
+                    if (node.NodeProperty.SendUserMode == "ByMainNode") {                        
+                        if (node.NodeProperty.SendUserModeNode) cboSendUserModeNode.setValue(node.NodeProperty.SendUserModeNode.join(","));
+                        mini.get("cboSendUserModeNode").setVisible(true);
+                        mini.get("cboSendUserModeNode").setEnabled(true);
+                        document.getElementById("labSendUserModeNode").style.display = "";
+                    }
+
+                    if (node.NodeProperty.SelectNodeMode) rdoSelectNodeMode.setValue(node.NodeProperty.SelectNodeMode);
+                }
+
+                if (!node.LimitDays) node.LimitDays = 0;
+                if (!node.LimitReturnedDays) node.LimitReturnedDays = node.LimitDays;
+                mini.get("txtLimitDays").setValue(node.LimitDays); 
+                if (node.InputLimitDaysByRun) mini.get("chkInputLimitDaysByRun").setValue(node.InputLimitDaysByRun);
+                mini.get("txtLimitReturnedDays").setValue(node.LimitReturnedDays);
+                
+                if (node.DefaultReturnedSendMode) mini.get("rdoDefaultReturnedSendMode").setValue(node.DefaultReturnedSendMode);
+
+                if (!node.SerialNo) node.SerialNo = 0;
+                mini.get("txtSerialNo").setValue(node.SerialNo);
+                if (node.IsMindMustInput) mini.get("chkIsMindMustInput").setValue(node.IsMindMustInput);
+                if (node.IsAllowSkipNode) mini.get("chkIsAllowSkipNode").setValue(node.IsAllowSkipNode);
+                if (node.IsTitleAndNodeName) mini.get("chkIsTitleAndNodeName").setValue(node.IsTitleAndNodeName);
+                
+
+                cboBookMark.setValue(node.BookMarkCode);
+                mini.get("txtSerialNo").setValue(node.SerialNo);
+                cboBookMark.setValue(node.BookMarkCode);
+                 
+                //如果是群发节点
+                var nodeConfig = node.NodeProperty.NodeConfig;
+                 document.getElementById("trNodeConcurrent").style.display = (NodeType == "ConcurrentNode") ? "" : "none";
+                 document.getElementById("trNodeConcurrent1").style.display = (NodeType == "ConcurrentNode" || NodeType == "GeneralMultiNode") ? "" : "none";
+                 document.getElementById("trNodeConcurrent2").style.display = (NodeType == "ConcurrentNode") ? "" : "none";
+               
+                 
+                if (nodeConfig && NodeType == "ConcurrentNode") {
+                    mini.get("rdoNodePassMode").setValue(nodeConfig.NodePassMode);
+                    mini.get("txtCustomPassValue").setValue(nodeConfig.CustomPassValue);
+                    mini.get("rdoSelectUserMode").setValue(nodeConfig.SelectUserMode);
+                    if(nodeConfig.NodeSendUserMode)
+                        mini.get("rdoNodeSendUserMode").setValue(nodeConfig.NodeSendUserMode);
+                    else
+                        mini.get("rdoNodeSendUserMode").setValue("Normal");
+                    if (nodeConfig.NodePassMode == "Custom") {
+                        mini.get("txtCustomPassValue").setEnabled(true);
+                        mini.get("txtCustomPassValue").setVisible(true);
+                        document.getElementById("labCustomValue").innerText = " %";
+                    }
+                }
+
+                if (nodeConfig && NodeType == "GeneralMultiNode") { 
+                    mini.get("rdoSelectUserMode").setValue(nodeConfig.SelectUserMode);
+                    if (nodeConfig.NodeSendUserMode)
+                        mini.get("rdoNodeSendUserMode").setValue(nodeConfig.NodeSendUserMode);
+                    else
+                        mini.get("rdoNodeSendUserMode").setValue("Normal"); 
+                }
+
+                //-------------投票系列------------------
+                if (node.VoteInfo) {
+                    mini.get("chkIsTurnVote").setValue(node.VoteInfo.IsTurnVote);
+                    mini.get("rdoVoteType").setValue(node.VoteInfo.VoteType);
+                    mini.get("txtDefaultVoteValue").setValue(node.VoteInfo.DefaultVoteValue);
+                    mini.get("gdVoteList").setData(node.VoteInfo.VoteList);
+                }
+                //----end 投票域
+
+                var data = {};
+                data.SubOperate = "ReadNodeConfig";   //子指令集,保存选择的人员到指定节点中 
+               
+                var msg = {};
+                msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+                msg.data = data;
+                msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+                configureUtil.LoadConfigure("Node", msg, node.RightConfigure, null);  //加载配置
+                 
+
+                switch (WorkFlowMode) {
+                    case "WorkingDesign":    //动态定义模式下， 来自模板的节点，不允许编辑里面内容
+                        form.setEnabled((node.IsFromInstance == true && node.IsInstanced == false));
+                        mini.get("btnSave").setEnabled((node.IsFromInstance == true && node.IsInstanced == false));   //动态定义模式下，只有 来自实例的，且未走实例的，才可编辑
+                        break;
+                    case "WorkFlowHistoryDesign":    //如果是修改历史流程图，则只允许放开bookMarkCode，其他都不可触动
+                        form.setEnabled(false);
+                        cboBookMark.setEnabled(true);
+                        mini.get("txtNodeName").setEnabled(true);
+                        mini.get("btnSave").setEnabled(true);
+                        break;
+                    default:
+                        mini.get("btnSave").setEnabled(true);
+                        break;
+                } 
+            }
+
+
+            function GetData(node) {
+                var NodeType = cboNodeType.getValue();
+                 
+                var result = new Object();
+                result.title = mini.get("txtNodeName").getValue();
+                result.NodeName = result.title;
+                result.Description = mini.get("txtDescription").getValue();
+                result.NodeType = NodeType;
+
+                result.LimitDays = mini.get("txtLimitDays").getValue();
+                result.LimitReturnedDays = mini.get("txtLimitReturnedDays").getValue();
+                result.DefaultReturnedSendMode = mini.get("rdoDefaultReturnedSendMode").getValue();
+                result.SerialNo = mini.get("txtSerialNo").getValue();
+                result.IsMindMustInput = mini.get("chkIsMindMustInput").getValue();
+                result.IsAllowSkipNode = mini.get("chkIsAllowSkipNode").getValue();
+                result.IsTitleAndNodeName = mini.get("chkIsTitleAndNodeName").getValue();
+                
+                result.InputLimitDaysByRun = mini.get("chkInputLimitDaysByRun").getValue();
+                
+                result.BookMarkCode = cboBookMark.getValue();
+               
+                result.BookMarkName =  cboBookMark.getText();
+                result.SelectNodeMode = rdoSelectNodeMode.getValue();
+                
+                result.NodeProperty = {};
+                result.NodeProperty.SendUserMode =  rdoSendUserMode.getValue();
+                result.NodeProperty.SelectNodeMode = rdoSelectNodeMode.getValue();
+                  
+                 
+                if (result.NodeProperty.SendUserMode == "ByMainNode") {
+                    var sSendUserModeNode = cboSendUserModeNode.getValue();
+                    result.NodeProperty.SendUserModeNode = sSendUserModeNode.split(",");
+                } 
+                 
+                result.NodeProperty.NodeConfig = {};
+                switch (result.NodeType) {
+                    case "ConcurrentNode":   //群发节点 
+                        var nodeConfig = {};
+                        nodeConfig.NodePassMode = mini.get("rdoNodePassMode").getValue();
+                        nodeConfig.CustomPassValue = mini.get("txtCustomPassValue").getValue();
+                        nodeConfig.SelectUserMode = mini.get("rdoSelectUserMode").getValue();
+                        nodeConfig.NodeSendUserMode = mini.get("rdoNodeSendUserMode").getValue();
+                        result.NodeProperty.NodeConfig = nodeConfig; 
+                        break;
+                    case "GeneralMultiNode":
+                        var nodeConfig = {}; 
+                        nodeConfig.SelectUserMode = mini.get("rdoSelectUserMode").getValue(); 
+                        result.NodeProperty.NodeConfig = nodeConfig;
+                        break;
+                }
+               
+                var tmpData = configureUtil.getItemList();
+                
+                result.RightConfigure = {};
+                result.RightConfigure.WorkNodeSelected = tmpData.WorkNodeSelected;
+                result.RightConfigure.NotifySelected = tmpData.NotifySelected;
+
+                //-------------投票系列------------------
+                result.VoteInfo = {};
+                result.VoteInfo.IsTurnVote = mini.get("chkIsTurnVote").getValue();
+                result.VoteInfo.VoteType = mini.get("rdoVoteType").getValue();
+                result.VoteInfo.DefaultVoteValue = mini.get("txtDefaultVoteValue").getValue();
+                result.VoteInfo.VoteList = mini.get("gdVoteList").getData();
+                
+                return result;
+            } 
+        </script>
+    </form>
+</body>
+</html>
+

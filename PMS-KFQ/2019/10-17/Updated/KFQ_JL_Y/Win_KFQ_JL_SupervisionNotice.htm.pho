@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <link href="/Apps/js/mui/css/mui.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/js/mui/css/mui.picker.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/AppCommon.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/newWindow.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var SingleParams = "";
+        var strEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="win-content">
+        <div class="search-wrap bottom-line">
+            <div class="mui-input-row mui-search">
+                <input id="searchKey" type="search" class="mui-input-clear" placeholder="">
+            </div>
+        </div>
+        <div class="list-wrap">
+            <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <ul id="KFQ_JL_SupervisionNotice" class="mui-table-view win-form-lists"></ul>
+                    <div id="pullLast" class="pull-down-last-show hide">没有更多数据了</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-wrap top-line">
+            <div class="action-table">
+                <div id="win_add_from" class="table-list-action win-add-form">
+                    <span>新增</span>
+                </div>
+                <div id="win_show_action_block" class="table-list-action win-show-action-block">
+                    <span>删除</span>
+                </div>
+            </div>
+            <div class="action-table hide">
+                <div id="win_delete_form" class="table-list-action win-delete-form font-color-red">
+                    <span>确定删除</span>
+                </div>
+                <div id="win_hide_action_block" class="table-list-action win-hide-action-block font-color-sky">
+                    <span>返回</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/Apps/js/jquery-1.8.3.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/js/mui/js/mui.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/js/mui/js/mui.picker.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/newAppjs/appUtils.js?v=$AppVersion"></script>
+<script src="/Apps/newAppjs/appPhysicalUtils.js?v=$AppVersion"></script>
+<script src="/Apps/newAppjs/appFlowsEnums.js?v=$AppVersion"></script>
+<script src="/Apps/newAppjs/Win_AppForm.js?v=$AppVersion" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        var win_appForm = new Win_AppForm();
+        
+        win_appForm.init({
+            // 根据字段要搜索相关数据
+            // searchField 的value指的是匹配的字段 目前支持多个字段 可以是字符串，也可以是数组
+            searchField: ["Title"], // "ContractName" or ["ContractName"]
+            // 获取窗体中的表单列表的参数 
+            dataParams: {
+                KeyWord: "KFQ_JL_SupervisionNotice",
+                select: "",
+                // KeyWordType BO/ViewEntity;默认BO
+                KeyWordType: "BO",
+                swhere: " 1=1 and NoticeType = 'N1' ",
+                size: "10",
+                index: "0",
+                sort: " RegDate DESC "
+            },
+            htmlParams: {
+                gridid: "KFQ_JL_SupervisionNotice", 
+                formid: OpenFormId,
+                idfield: "Id",
+                title: { value: "Title", format: "", name: "" },
+                left: { value: "Code", format: "" },
+                center: { value: "ProjectName", format: "" },
+                right: { value: "RegDate", format: "yyyy-MM-dd" },
+                tag: { value: "Status", format: "combobox" },
+            },
+            loadBefore: function (params) {
+                return params;
+            },
+            loadAfter: function (data) {
+                return data;
+            },
+        }, function() {
+        });
+    });
+</script>
+
+</html>

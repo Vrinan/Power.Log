@@ -1,0 +1,381 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+    <style type="text/css">
+        .style1
+        {
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <!--标准按钮-->
+
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-reorder"></i>合同变更评审
+                        </div>
+                        $!WorkFlowButtons
+                        <div class="actions">
+                            <a class="mini-button blue" id="btnActive" style="display: none;" onclick="WorkFlowUtils.ActiveWorkFlow(this);"><i class="fa fa-save"></i>送审</a> <a class="mini-button blue" id="pm_cont_chaccredit.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>
+                                    保存</a> <a class="mini-button blue" id="pm_cont_chaccredit.SaveAdd" onclick="PowerForm.OnBtnSaveAdd(this)">
+                                        <i class="fa fa-save"></i>保存&amp;新增</a> <a class="mini-button blue" id="pm_cont_chaccredit.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="btnPrint" class="btn-group"></div>
+                            <a class="mini-button blue" id="pm_cont_chaccredit.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                                <i class="fa fa-power-off"></i>关闭</a>
+                        </div>
+                    </div>
+                <div class="mini-fit">
+    <div class="portlet-body" style="height: 100%;">
+        <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+            <!--tab 通常 -->
+            <div title="通常" iconcls="fa fa-h-square">
+                <div id="pm_cont_chaccredit" class="form">
+                    <table class="table table-bordered">
+					<tr>
+						<td  style="width: 11%">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目编号' id='lbl_1' class=' mini-powerlabel design' data-options=''>
+								项目编号
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='project_id' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='project_id' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.project_id' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+						<td  style="width: 11%">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='状态' id='lbl_2' class=' mini-powerlabel design' data-options=''>
+								状态
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='Status' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='Status' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='1000' popupminheight='30' popupmaxheight='200' popupminwidth='50' popupmaxwidth='2000' popupwidth='100%' popup='[object Object]' pinyinfield='tag' id="pm_cont_chaccredit.Status" class="mini-combobox design" data-options=''>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目名称' id='lbl_3' class=' mini-powerlabel design' data-options=''>
+								项目名称
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<input datafield='projectname' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='projectname' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.projectname' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+					</tr>
+					<tr>
+						<td class="style1">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='申请单号 ' id='lbl_5' class=' mini-powerlabel design' data-options=''>
+								申请单号
+							</div>
+						</td>
+						<td >
+                        <input id="pm_cont_chaccredit.ask_code" name="ask_code" class="mini-buttonedit design"  textname="ask_code" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" required />
+							<!--<input datafield='ask_code' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ask_code' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' id="pm_cont_chaccredit.ask_code" class="mini-buttonedit design" data-options=''>-->
+						</td>
+						<td class="style1">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='申请名称' id='lbl_10' class=' mini-powerlabel design' data-options=''>
+								申请名称
+							</div>
+						</td>
+						<td class="style1">
+							<input datafield='ask_title' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='ask_title' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.ask_title' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同编号' id='lbl_6' class=' mini-powerlabel design' data-options=''>
+								合同编号
+							</div>
+						</td>
+						<td class="cell" id="selected">
+							<input datafield='cont_code' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='cont_code' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.cont_code' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同名称' id='lbl_11' class=' mini-powerlabel design' data-options=''>
+								合同名称
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='cont_name' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='cont_name' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.cont_name' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审单号' id='lbl_7' class=' mini-powerlabel design' data-options=''>
+								编号
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='code' loadingmsg='Loading...' allowanim='true' visible='true' 
+                                enabled='true' name='code' requirederrortext='不能为空' errormode='icon' 
+                                validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' 
+                                allowinput='true' id='pm_cont_chaccredit.code' class="mini-textbox design" 
+                                data-options='' readonly="true">
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审单名称' id='lbl_12' class=' mini-powerlabel design' data-options=''>
+								名称
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='Title' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='Title' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_chaccredit.Title' class="mini-textbox design" data-options=''>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='预计变更金额' id='lbl_8' class=' mini-powerlabel design' data-options=''>
+								预计变更金额
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='changemoney' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='changemoney' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.changemoney' 
+                                class="mini-spinner"  numberformat="n2" format="n2" allowlimitvalue="false" data-options='' readonly="true">
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='主货币' id='lbl_13' class=' mini-powerlabel design' data-options=''>
+								主货币
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='moneytype' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='moneytype' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                maxlength='5000' allowinput='true' id='pm_cont_chaccredit.moneytype' 
+                                class="mini-textbox design" data-options='' readonly="true">
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='甲方' id='lbl_9' class=' mini-powerlabel design' data-options=''>
+								甲方
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='fcontactname' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='fcontactname' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_chaccredit.fcontactname' class="mini-textbox design" data-options='' readonly="readonly">
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='乙方' id='lbl_14' class=' mini-powerlabel design' data-options=''>
+								乙方
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='scontactname' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='scontactname' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_chaccredit.scontactname' class="mini-textbox design" data-options='' readonly="readonly">
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更发起人' id='lbl_15' class=' mini-powerlabel design' data-options=''>
+								变更发起人
+							</div>
+						</td>
+						<td class="cell">
+
+                        <input id="pm_cont_chaccredit.pcontactname" name="pcontactname" class="mini-buttonedit design"  textname="pcontactname" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" required />
+						<!--	<input datafield='pcontactname' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='pcontactname' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' id="pm_cont_chaccredit.pcontactname" class="mini-buttonedit design" data-options=''>-->
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更类型' id='lbl_16' class=' mini-powerlabel design' data-options=''>
+								变更类型
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='ctype' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ctype' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='1000' popupminheight='30' popupmaxheight='200' popupminwidth='50' popupmaxwidth='2000' popupwidth='100%' popup='[object Object]' pinyinfield='tag' id="pm_cont_chaccredit.ctype" class="mini-combobox design" data-options=''>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更事由' id='lbl_17' class=' mini-powerlabel design' data-options=''>
+								变更事由
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<textarea datafield='pmdesc' value='							' defaultvalue='							' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='pmdesc' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' id='pm_cont_chaccredit.pmdesc' class='mini-textarea design' data-options=''>
+							</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='拟变更内容' id='lbl_18' class=' mini-powerlabel design' data-options=''>
+								拟变更内容
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<textarea datafield='changedesc'loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='changedesc' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' id='pm_cont_chaccredit.changedesc' class='mini-textarea design' data-options=''>
+							</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更依据' id='lbl_19' class=' mini-powerlabel design' data-options=''>
+								变更依据
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<textarea datafield='cdesc' value='							' defaultvalue='							' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='cdesc' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' id='pm_cont_chaccredit.cdesc' class='mini-textarea design' data-options=''>
+							</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审结论' id='lbl_20' class=' mini-powerlabel design' data-options=''>
+								评审结论
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<textarea datafield='result' value='							' defaultvalue='							' 
+                                loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' 
+                                name='result' requirederrortext='不能为空' errormode='icon' validateonleave='true' 
+                                validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' 
+                                id='pm_cont_chaccredit.result' class='mini-textarea design' data-options='' 
+                                style="true">
+							</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审人员' id='lbl_22' class=' mini-powerlabel design' data-options=''>
+								评审人员
+							</div>
+						</td>
+						<td class="cell" valign="middle" rowspan="1" colspan="3">
+							<input datafield='otherhumans' loadingmsg='Loading...' allowanim='true' 
+                                visible='true' enabled='true' name='otherhumans' requirederrortext='不能为空' 
+                                errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' 
+                                allowinput='true' maxlength='1000' id="pm_cont_chaccredit.otherhumans" 
+                                class="mini-textbox design" data-options='' >
+						</td>
+					</tr>
+					<tr>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录入人' id='lbl_21' class=' mini-powerlabel design' data-options=''>
+								录入人
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='RegHumName' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='RegHumName' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_chaccredit.RegHumName' class="mini-textbox design" data-options=''>
+						</td>
+						<td class="cell">
+							<div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录入日期' id='lbl_23' class=' mini-powerlabel design' data-options=''>
+								录入日期
+							</div>
+						</td>
+						<td class="cell">
+							<input datafield='RegDate' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='RegDate' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' popupminheight='30' popupmaxheight='2000' popupminwidth='50' popupmaxwidth='2000' popup='[object Object]' showclearbutton='true' showtodaybutton='true' timeformat='H:mm' viewdate='Wed Oct 22 2014 14:42:00 GMT 0800 (中国标准时间)' format='yyyy-MM-dd' id="pm_cont_chaccredit.RegDate" class="mini-datepicker design" data-options=''>
+						</td>
+					</tr>
+                        <tr>
+                            <td class="cell">
+						
+						</td>
+						<td class="cell">
+							<input datafield='ask_nsid' loadingmsg='Loading...' allowanim='true' visible='false' enabled='true' readonly='true' name='ask_nsid' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true'  id='pm_cont_chaccredit.ask_nsid' class="mini-textbox design" data-options=''>
+						</td>
+                        </tr>
+				<!--</tbody>
+			</table>
+		</div>
+	</div>-->
+    
+                    </table>
+                </div>
+            </div>
+                                       <!--tab 通常 end-->
+            <div title="收发文记录" iconcls="fa fa-file-text">
+                <div class="mini-toolbar" id="toolbar_admin">
+                    <a class="mini-button blue" id="pm_cont_chaccredittdtl.Add" onclick="PowerForm.OnBtnAdd(this)">
+                        <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="pm_cont_chaccredittdtl.Save"
+                            onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                id="pm_cont_chaccredittdtl.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                </i>删除</a>
+                </div>
+                <div class="mini-fit">
+                    <div id="pm_cont_chaccredittdtl" class="mini-datagrid" style="width: 100%; height: 100%;"
+                        allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                        idfield="id" showpager="true">
+                        <div property="columns">
+                            <div type="checkcolumn" width="40">
+                            </div>
+                            <div type="indexcolumn" width="45">
+                                序号</div> 
+                                    <div field="code" header="编号" allowsort="true">编号<input property="editor" id="pm_cont_chaccredittdtl.code" name="code" class="mini-buttonedit design"  textname="code" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%"   /></div>
+                                    <div field="title" header="主题" allowsort="true">主题<input  class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="sendcontact" header="发件方" allowsort="true">发件方<input  class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="sendhuman" header="发件人" allowsort="true">发件人<input   class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="rececontact" header="收件方" allowsort="true">收件方<input   class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="recehuman" header="收件人" allowsort="true">收件人<input   class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="recedate" header="日期" allowsort="true" dateformat="yyyy-MM-dd">日期<input class="mini-datepicker" style="width: 100%;"></div>
+                                    <div field="dec" header="收文说明" allowsort="true">收文说明<input  class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="remark" header="备注" allowsort="true">备注<input property="editor" class="mini-textarea" style="width: 100%;"></div>
+
+	 </div>
+                    </div>
+                </div>
+            </div>
+<div title="附件" name="attachfile" url=""></div>
+</div>
+                </div>
+            </div>
+        </div>
+<script type="text/javascript">
+var PowerForm = new WebForm();
+ $(function () {
+ PowerForm.Init();
+});
+
+ PowerForm.EventWizardWhere = function (e) {
+     var ask_nsid = mini.get("pm_cont_chaccredit.ask_nsid").getValue();
+
+     if (e.id == "pm_cont_chaccredit.pcontactname" && (ask_nsid == null || ask_nsid == "")) {
+         alert("请先选择变更申请信息！");
+         e.canOpen = false;
+     }
+
+     else e.canOpen = true;
+
+ }
+
+</script>
+</body>
+</html>

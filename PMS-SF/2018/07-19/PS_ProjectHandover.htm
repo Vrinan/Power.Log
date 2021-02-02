@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目交接单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_ProjectHandover.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a>
+                    <!--保存-->
+                    <a class="mini-button blue" id="PS_ProjectHandover.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新</a>
+                    <!--刷新-->
+                    <a class="mini-button blue" id="PS_ProjectHandover.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                    <!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_ProjectHandover" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <!--<input id="PS_ProjectHandover.ProjectCode" name="ProjectCode" class="mini-textbox" required="true" />-->
+                                            <input id="PS_ProjectHandover.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit" emptytext="请选择项目跟踪..."
+                                                onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" required />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ProjectHandover.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td >
+                                            <input id="PS_ProjectHandover.ProjectName" name="ProjectName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjectTracking">项目来源</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectTracking" name="ProjectTracking" class="mini-combobox" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjectShortName">项目简称</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectShortName" name="ProjectShortName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            项目性质
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectType" name="ProjectType" class="mini-combobox"  />
+
+                                            <!-- <td>
+                                                <label for="PS_ProjectHandover.ProjectType">项目性质</label>
+                                            </td> -->
+                                            <!-- <td>
+                                                <input id="PS_ProjectHandover.ProjectType" name="ProjectShortName" class="mini-textbox" /> -->
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjectStartDate">计划开始</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectStartDate" name="ProjectStartDate" dateformat="yyyy-MM-dd" class="mini-datepicker" onvaluechanged="onValueChanged"
+                                                required />
+                                        </td>
+                                        <td>计划结束</td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectEndDate" name="ProjectEndDate" dateformat="yyyy-MM-dd" class="mini-datepicker" onvaluechanged="onValueChanged"
+                                                required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjectEps">所属EPS</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjectEps" name="ProjectEps" class="mini-textbox" emptytext="项目部" allowinput="false" />
+                                            
+                                        </td>
+                                            <td>
+                                                项目规模
+                                            </td>
+                                            <td>
+                                                <input id="PS_ProjectHandover.ProjectSize" name="ProjectSize" class="mini-textbox"  />
+                                            </td>
+
+                                        <!-- <td>
+                                                <label for="PS_ProjectHandover.ProjectSize">项目类型</label>
+                                        </td> -->
+                                      
+                                    </tr>
+
+                                    <tr>
+                                            <td>
+                                                    项目地点
+                                                </td>
+                                                <td>
+                                                    <input id="PS_ProjectHandover.ProjectLocation" name="ProjectLocation" class="mini-textbox"       />
+                                                </td>
+                                        <!-- <td>
+                                            <label for="PS_ProjectHandover.ProjectLocation">项目地点</label>
+                                        </td>
+                                        <td>
+
+                                            <input id="PS_ProjectHandover.ProjectLocation" name="ProjectLocation" textname="ProjectLocation" class="mini-buttonedit"
+                                                emptytext="请选择投标评审项目地点..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true"
+                                                required />
+                                        </td> -->
+                                        <td>
+                                            投标金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.BidAmount" name="BidAmount" class="mini-spinner"     minValue="0" maxValue="99999999999999999999999999999"  />
+                                        </td>
+                                        <!-- <td>
+                                            <label for="PS_ProjectHandover.BidAmount">投标金额</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.BidAmount" name="BidAmount" class="mini-spinner" allowlimitvalue="false" format="n2" readonly/>
+                                        </td> -->
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td>
+                                            <label for="PS_ProjectHandover.ClientName">客户名称</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ClientName" name="ClientName" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ProjectHandover.Duration">计划工期</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.Duration" name="Duration" class="mini-textbox"  />
+                                        </td>
+                                        <!-- <td>
+
+                                        计划工期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.Duration" name="Duration" textname="Duration" class="mini-buttonedit" emptytext="请选择计划工期..."
+                                                onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                        </td> -->
+                                        <td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjSchedule">项目进度（客户）</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.ProjSchedule" name="ProjSchedule" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ProjectHandover.DutyAmount">履约保证金（保函）金额</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.DutyAmount" name="DutyAmount" class="mini-textbox" allowlimitvalue="false" format="n2" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectHandover.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            <label for="PS_ProjectHandover.ProjectOverview">项目概况</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.ProjectOverview" name="ProjectOverview" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>-->
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function onValueChanged() {
+
+            var ProjectStartDate = mini.get("PS_ProjectHandover.ProjectStartDate").value;//开始时间
+            var ProjectEndDate = mini.get("PS_ProjectHandover.ProjectEndDate").value;//结束时间
+            var startDate = new Date(ProjectStartDate);
+            var endDate = new Date(ProjectEndDate);
+
+            if (Date.parse(startDate) - Date.parse(endDate) > 0) {
+                Power.ui.alert("'计划开始时间'不能晚于'计划结束时间'!");
+                mini.get("PS_ProjectHandover.ProjectStartDate").setValue("");
+                mini.get("PS_ProjectHandover.ProjectEndDate").setValue("");
+                return;
+            }
+        }
+        // PowerForm.EventWizardData = function(e, data) {
+        //     debugger;
+        //     if (e.id == "PS_ProjectHandover.ProjectCode") {
+        //        switch(data[0].ProjectType){
+        //            case "01":
+        //             data[0].ProjectType="EPC";
+        //             break;
+        //            case "02":
+        //             data[0].ProjectType="设备供货";
+        //             break;
+        //            case "03":
+        //             data[0].ProjectType="技术服务";
+        //             break;
+        //            default:
+        //             break;
+        //        }
+        //     }
+        // }
+    </script>
+</body>
+
+</html>

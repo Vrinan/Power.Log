@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Apps/style/webformstyle.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+
+</head>
+
+<body>
+
+    <div class="listfile">
+        <div class="show buttonlist" id="PS_BidTrack_buttonlist">
+
+            <!--<div id="FielView" class="button a" style="border:0px;display:none;width:30%"><a href="#"><i class="fa fa-eye"></i><span>查看</span></a></div>-->
+            <div class="button a"><a id="PS_BidTrack.Save" href="#" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i><span>保存</span></a></div>
+            <!--<div class="button a"><a href="#"><i class="fa fa-thumbs-up"></i><span>同意</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-mail-reply"></i><span>驳回</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-eye"></i><span>流程监控</span></a></div>-->
+            <!-- <div class="button" style="border:0px;"><a href="#" id="nav"><i class="fa fa-github-square"></i><span>列表</span></a></div>-->
+        </div>
+        <!--<div class="hide buttonlist" id="PS_BidTrack_PayNodes_buttonlist">
+            <div class="button a"><a href="#"><i class="fa fa-plus"></i><span>新增</span></a></div>
+            <div class="button a"><a href="#"><i class="fa fa-trash"></i><span>删除</span></a></div>
+        </div>-->
+        <div class=" hide buttonlist" id="file_buttonlist">
+            <div id="btnUpload" class="button" style="border: 0px;  width: 30%"><a href="#" id="nav"><i class="fa fa-cloud-upload"></i><span>上传图片</span></a></div>
+        </div>
+        <div id="tablist">
+            <section id="PS_BidTrack" class=" form show">
+                <table border="0" cellspacing="1">
+                    <tr>
+                        <td width="30%">
+                            项目名称
+                        </td>
+                        <td width="70%">
+                            <input id="PS_BidTrack.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                   emptytext="请选择投标任务书..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            客户
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.ClientName" name="ClientName" class="mini-textbox" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            开标结果
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.BidResult" name="BidResult" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            投标金额
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.BidAmount" name="BidAmount" class="mini-spinner" changeonmousewhee="false" required="true" allowlimitvalue="false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            开标日期
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.BidDate" name="BidDate" class="mini-datepicker" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            中标日期
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.WinBidDate" name="WinBidDate" class="mini-datepicker" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            预计合同签订日期
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.ContractSignDate" name="ContractSignDate" class="mini-datepicker" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            中标单位
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.WinCompany" name="WinCompany" class="mini-textbox" readonly="readonly" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            丢标原因
+                        </td>
+                        <td>
+                            <input id="PS_BidTrack.LoseReason" name="LoseReason" class="mini-textbox" />
+                        </td>
+                    </tr>
+                </table>
+            </section>
+            <!--<section class="hide" id="PS_BidTrack_PayNodes"></section>-->
+            <section class="hide" id="file">
+                <ul id="FileAttach"></ul>
+            </section>
+            <ul id="ul1">
+                <li class="active"><i class="fa fa-home"></i></br><span>基本信息</span></li>
+                <!--<li><i class="fa fa-cogs"></i></br><span>收款节点</span></li>-->
+                <li><i class="fa fa-file"></i></br><span id="filecount">附件(0)</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="listdiv" id="listdiv">
+        <div class="navbg"></div>
+        <div class="navlist">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenCamera()">打开相机</a></li>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenGallery()">打开相册</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var PowerForm = new MobileWebForm();
+
+        $(function () {
+		PowerForm.Init();
+
+        });
+        mini.parse();
+
+
+    </script>
+</body>
+</html>

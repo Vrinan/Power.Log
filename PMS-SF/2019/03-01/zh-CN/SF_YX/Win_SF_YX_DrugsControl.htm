@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-3 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i> $Helper.GetResource("g_department")
+                        </div><!--部门-->
+                        <div class="tools">
+                            <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="Department" class="mini-tree" style="width: 100%; height: 100%;" showtreeicon="true" textfield="Name"
+                             idfield="Id" parentfield="ParentId" resultastree="false" expandonload="true" data-options="{lazyload:true}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-3-->
+
+            <div class="col-md-9  col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet-body" style="height: 40%">
+                    <div class="tools" style="height:100%">
+                        <div id="calendar" class="mini-calendar" value="2011-12-11" style="width:100%; height:100%;" onvaluechanged="valueChanged"></div>
+                    </div>
+                </div>
+                <!--<div class="portlet box blue" style="height: 60%">-->
+
+                <div showcollapsebutton="true" class="portlet box blue" style="height: 60%">
+                    <div class="portlet box gray" style="height: 100%">
+                        <div class="mini-tabs" id="maintabs" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                            <div title="易制毒" name='SF_YX_DrugsControl'>
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl.getDrugs_1" onclick="getDrugs_1"><i class="fa fa-plus"></i>获取易制毒</a>
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl.Save" onclick="PowerForm.OnBtnSave(this)" visible="true"><i class="fa fa-save"></i>保存</a><!--保存-->
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl.Delete" onclick="DtlZD" visible="true"><i class="fa fa-trash-o"></i>  $Helper.GetResource("g_delete")</a><!--删除-->
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i> $Helper.GetResource("g_refresh")</a><!--刷新-->
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: 100%">
+                                    <div id="SF_YX_DrugsControl" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" idfield="Id" masterfield="Id" detailfield="MasterId"
+                                         allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true" oncellendedit="cellendedit1">
+                                        <div property="columns">
+                                            <div type="checkcolumn"></div>
+                                            <div type="indexcolumn" width="20">序号</div>
+                                            <div field="DayTime" dateformat="yyyy-MM-dd" allowsort="true"> 日期</div><!--日期-->
+                                            <div field="DrugsName" allowsort="true" width="130">化学品名称</div>
+
+                                            <div field="Allowance" header="前期余量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                前期余量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="EstorageNumber" header="入库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                入库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="OstorageNumber" header="出库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                出库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="BalanceNumber" header="结存量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                结存量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" readonly="readonly" />
+                                            </div>
+
+                                            <div field="RegHumName" allowsort="true" width="100">登记人</div><!--名称-->
+                                            <div field="RecordsCode" allowsort="true" width="160">易制毒购买备案证号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                            <div field="TransportUnit" allowsort="true" width="150">运输单位及车牌号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                            <div field="Memo" allowsort="true" width="150">备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                            <div field="UpdHuman" allowsort="true" width="100">最后更新人</div>
+                                            <div field="UpdDate" dateformat="yyyy-MM-dd" allowsort="true">最后更新时间</div><!--日期-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div title="易制爆" name='SF_YX_DrugsControl_dtl'>
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl_dtl.getDrugs_2" onclick="getDrugs_2"><i class="fa fa-plus"></i>获取易制爆</a>
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl_dtl.Save" onclick="PowerForm.OnBtnSave(this)" visible="true"><i class="fa fa-save"></i>保存</a><!--保存-->
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl_dtl.Delete" onclick="DtlZB" visible="true"><i class="fa fa-trash-o"></i>  $Helper.GetResource("g_delete")</a><!--删除-->
+                                        <a class="mini-button blue" id="SF_YX_DrugsControl_dtl.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i> $Helper.GetResource("g_refresh")</a><!--刷新-->
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: 100%">
+                                    <div id="SF_YX_DrugsControl_dtl" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" idfield="Id" masterfield="Id" detailfield="MasterId"
+                                         allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true" oncellendedit="cellendedit2">
+                                        <div property="columns">
+                                            <div type="checkcolumn"></div>
+                                            <div type="indexcolumn" width="20">序号</div>
+                                            <div field="DayTime" dateformat="yyyy-MM-dd" allowsort="true"> 日期</div><!--日期-->
+                                            <div field="DrugsName" allowsort="true" width="130">化学品名称</div>
+
+                                            <div field="Allowance" header="前期余量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                前期余量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="EstorageNumber" header="入库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                入库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="OstorageNumber" header="出库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                出库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                            </div>
+                                            <div field="BalanceNumber" header="结存量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                                结存量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" readonly="readonly" />
+                                            </div>
+
+                                            <div field="RegHumName" allowsort="true" width="100">登记人</div><!--名称-->
+
+                                            <div field="TransportUnit" allowsort="true" width="150">运输单位及车牌号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                            <div field="Memo" allowsort="true" width="150">备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                            <div field="UpdHuman" allowsort="true" width="100">最后更新人</div>
+                                            <div field="UpdDate" dateformat="yyyy-MM-dd" allowsort="true">最后更新时间</div><!--日期-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--</div>-->
+                    <!-- END EXAMPLE TABLE PORTLET-->
+                </div>
+                <!--end col-md-9-->
+            </div>
+        </div>
+        <script type="text/javascript">
+            var PowerForm = new SingleForm();
+            $(function () {
+                PowerForm.Init();
+                //获取当前日期
+                var myDate = new Date();
+                var d = myDate.toLocaleDateString();
+                //Power.ui.success(d);
+                //当前日期赋值给日历控件
+                mini.get("calendar").setValue(d);
+                //PowerForm.setQmenu("SF_YX_DrugsControl", "refresh,delete,moveup,movedown");
+            });
+            mini.parse();
+
+            function DtlZD(){
+                var gridSelecteds = mini.get("SF_YX_DrugsControl").getSelecteds();
+                if(gridSelecteds.length == 0)
+                {
+                    Power.ui.warning("暂无数据");
+                    return;
+                }
+                // var humname = sessiondata.HumanName;
+                var humid = sessiondata.HumanId;
+                var canDel = 1;
+                for(var i = 0;i<gridSelecteds.length;i++)
+                {
+                    if(gridSelecteds[i].RegHumId != humid)
+                    {
+                        canDel = 0;
+                        break;
+                    }
+                }
+                if(canDel == 1 || humid=="ad000000-0000-0000-0000-000000000000")
+                {
+                    PowerForm.OnBtnDel(this);
+                }
+                else
+                {
+                    Power.ui.warning("只能删除自己录入的明细");
+                }
+            }
+
+            function DtlZB(){
+                var gridSelecteds = mini.gey("SF_YX_DrugsControl_dtl").getSelecteds();;
+                if(gridSelecteds.length == 0)
+                {
+                    Power.ui.warning("暂无数据");
+                    return;
+                }
+                // var humname = sessiondata.HumanName;
+                var humid = sessiondata.HumanId;
+                var canDel = 1;
+                for(var i = 0;i<gridSelecteds.length;i++)
+                {
+                    if(gridSelecteds[i].RegHumId != humid)
+                    {
+                        canDel = 0;
+                        break;
+                    }
+                }
+                if(canDel == 1 || humid=="ad000000-0000-0000-0000-000000000000")
+                {
+                    PowerForm.OnBtnDel(this);
+                }
+                else
+                {
+                    Power.ui.warning("只能删除自己录入的明细");
+                }
+            }
+
+
+            PowerForm.EventBeforeLoadData = function (e) {
+                var dayTime = mini.formatDate(mini.get("calendar").getValue(), "yyyy-MM-dd");
+                dayTime += " 00:00:00.000";
+
+                if (e.sender.id == "SF_YX_DrugsControl") {
+                    e.params.swhere += " and DayTime = '" + dayTime + "' and DrugsType = '1'";
+                }
+                if (e.sender.id == "SF_YX_DrugsControl_dtl") {
+                    e.params.swhere += " and DayTime = '" + dayTime + "' and DrugsType = '2'";
+                }
+                if (e.sender.id == "Department") {
+                    var humid = sessiondata.HumanId;
+                    if(humid=='ad000000-0000-0000-0000-000000000000')
+                    {
+                        e.params.swhere += "LongCode like '12%'";
+                    }
+                    else
+                    {
+                        e.params.swhere +=  "LongCode like '12%' and Id=(select case when SecondDeptId is null or SecondDeptId='00000000-0000-0000-0000-000000000000' then DeptId else SecondDeptId end as DeptId  from PB_Human hu where hu.Id='"+humid+"')";
+                    }
+                    
+                }
+            }
+
+            function valueChanged() {
+                var a = mini.formatDate(mini.get("calendar").getValue(), "yyyy-MM-dd");
+                var myDate = new Date();
+                var nowDate = mini.formatDate(myDate, "yyyy-MM-dd");
+                if (a > nowDate) {
+                    Power.ui.warning("不能获取" + nowDate + "之后数据");
+                    mini.get("calendar").setValue(nowDate);
+                }
+                
+                mini.get("SF_YX_DrugsControl.Refresh").doClick();
+                mini.get("SF_YX_DrugsControl_dtl.Refresh").doClick();
+            }
+
+            function getDrugs_1() {
+                var treeSelected = mini.get("Department").getSelected();
+                var dayTime = mini.formatDate(mini.get("calendar").getValue(), "yyyy-MM-dd");
+                var Month = new Date(dayTime).getMonth() + 1;
+                var Year = new Date(dayTime).getFullYear();
+                var Day = new Date(dayTime).getDate();
+                var Drug = "1."
+                if (IsEmpty(treeSelected) == true || IsEmpty(dayTime) == true) {
+                    Power.ui.warning("部门及日期不能为空");
+                }
+                else {
+                    treeId = treeSelected.Id;
+                    Power.ui.loading("获取中……");
+                    var par = { "treeId": treeId, "dayTime": dayTime, "Year": Year, "Month": Month, "Day": Day, "Drug": Drug };
+                    FormFuns.APIExec("SF_YX_DrugsControl", "BO", "getDrugs", par, function (text) {
+                        //var tem = mini.decode(text).data.value;
+                        //Power.ui.loading.close();
+                        //Power.ui.success(tem);
+                        Power.ui.loading.close();
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            var tem = o.data.value;
+                            Power.ui.success(tem);
+                        }
+                        else {
+                            var tem = o.message;
+                            Power.ui.warning(tem);
+                        }
+                        mini.get("SF_YX_DrugsControl.Refresh").doClick();
+                    })
+                }
+            }
+
+            function getDrugs_2() {
+                var treeSelected = mini.get("Department").getSelected();
+                var dayTime = mini.formatDate(mini.get("calendar").getValue(), "yyyy-MM-dd");
+                var Month = new Date(dayTime).getMonth() + 1;
+                var Year = new Date(dayTime).getFullYear();
+                var Day = new Date(dayTime).getDate();
+                var Drug = "2."
+                if (IsEmpty(treeSelected) == true || IsEmpty(dayTime) == true) {
+                    Power.ui.warning("部门及日期不能为空");
+                }
+                else {
+                    treeId = treeSelected.Id;
+                    Power.ui.loading("获取中……");
+                    var par = { "treeId": treeId, "dayTime": dayTime, "Year": Year, "Month": Month, "Day": Day, "Drug": Drug };
+                    FormFuns.APIExec("SF_YX_DrugsControl_dtl", "BO", "getDrugs", par, function (text) {
+                        //var tem = mini.decode(text).data.value;
+                        //Power.ui.loading.close();
+                        //Power.ui.success(tem);
+                        Power.ui.loading.close();
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            var tem = o.data.value;
+                            Power.ui.success(tem);
+                        }
+                        else {
+                            var tem = o.message;
+                            Power.ui.warning(tem);
+                        }
+                        mini.get("SF_YX_DrugsControl_dtl.Refresh").doClick();
+                    })
+                }
+            }
+
+            function cellendedit1(e) {
+                var record = e.record;
+                if (e.field == "Allowance" || e.field == "EstorageNumber" || e.field == "OstorageNumber") {
+
+                    var grid = mini.get("SF_YX_DrugsControl");
+                    //var rows = grid.findRow(function (row) {
+                    //计算结存量
+                    //if (!IsEmpty(row.Allowance) && !IsEmpty(row.EstorageNumber)  && !IsEmpty(row.OstorageNumber)) {
+                    var Number = (parseFloat(record.Allowance) + parseFloat(record.EstorageNumber)) - parseFloat(record.OstorageNumber);
+
+                    grid.updateRow(e.record, { BalanceNumber: Number });
+                    //}
+                    //});
+                }
+            }
+            function cellendedit2(e) {
+                var record = e.record;
+                if (e.field == "Allowance" || e.field == "EstorageNumber" || e.field == "OstorageNumber") {
+
+                    var grid = mini.get("SF_YX_DrugsControl_dtl");
+                    //var rows = grid.findRow(function (row) {
+                    //计算结存量
+                    //if (!IsEmpty(row.Allowance) && !IsEmpty(row.EstorageNumber)  && !IsEmpty(row.OstorageNumber)) {
+                    var Number = (parseFloat(record.Allowance) + parseFloat(record.EstorageNumber)) - parseFloat(record.OstorageNumber);
+
+                    grid.updateRow(e.record, { BalanceNumber: Number });
+                    //}
+                    //});
+                }
+            }
+            PowerForm.EventAfterOnBtnSave = function (e) {
+                mini.get("SF_YX_DrugsControl.Refresh").doClick();
+                mini.get("SF_YX_DrugsControl_dtl.Refresh").doClick();
+            }
+
+        </script>
+</body>
+</html>

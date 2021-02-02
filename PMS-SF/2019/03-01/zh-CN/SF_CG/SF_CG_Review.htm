@@ -1,0 +1,198 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>招标文件评审
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="SF_CG_Review.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存
+                        </a>
+                        <a class="mini-button blue" id="SF_CG_Review.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新
+                        </a>
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="SF_CG_Review.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_CG_Review" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            招标编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>  
+                                        <td>
+                                            采购方案编号
+                                        </td>
+                                        <td><input id="SF_CG_Review.SchemeCode" name="SchemeCode" textname="SchemeCode"
+                                                class="mini-buttonedit" emptytext="请选择采购方案..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                allowInput="false" required="required"/></td>
+                                        <input id="SF_CG_Review.SchemeId" name="SchemeId" textname="SchemeId" class="mini-hidden" allowInput="false" />
+                                        <td>
+                                            采购方案标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.SchemeTitle" name="SchemeTitle" textname="SchemeTitle" class="mini-textbox" allowInput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td  colspan="3">
+                                            <input id="SF_CG_Review.Title" name="Title" textname="Title" class="mini-buttonedit"
+                                                   allowinput="false" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" emptytext="请选择项目名称..." />
+                                            <!--<input id="SF_ZZ_DesignChanges.ProjectInformation" name="ProjectInformation" class="mini-textbox" readonly="readonly"/>-->
+                                        </td>
+                                        <td>
+
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            招标内容
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.Content" name="Content" class="mini-textbox"
+                                                required="true" />
+                                        </td>
+                                        <td>
+                                            招标方式
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.Category" name="Category" class="mini-textbox"
+                                                required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>编制部门</td>
+                                        <td>
+
+                                            <input id="SF_CG_Review.Department" name="Department" class="mini-textbox"
+                                                allowInput="false" />
+                                            <input id="SF_CG_Review.DepartmentId" name="DepartmentId" textname="DepartmentId"
+                                                class="mini-hidden" allowInput="false" />
+                                        </td>
+                                        <td>
+                                            编制日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.DesignDate" name="DesignDate" class="mini-datepicker" allowInput="false" required />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            评审内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CG_Review.Memo" name="Memo" class="mini-textarea" height="200" />
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            编制人
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.RegHumName" name="RegHumName" class="mini-textbox"
+                                                readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Review.RegDate" name="RegDate" class="mini-datepicker"
+                                                readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        PowerForm.EventAfterLoadRight = function (e) {
+            if (e.id == "SF_CG_Review") {
+                if (formconfig.FormState == "add") {
+                    if (mini.get("SF_CG_Review.Department").value == null || mini.get("SF_CG_Review.Department").value == "") {
+                        var DeptId = sessiondata.DeptId == null ? "" : sessiondata.DeptId;
+                        var DeptName = sessiondata.DeptName == null ? "" : sessiondata.DeptName;
+                        mini.get("SF_CG_Review.DepartmentId").setValue(DeptId);
+                        mini.get("SF_CG_Review.Department").setValue(DeptName);
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

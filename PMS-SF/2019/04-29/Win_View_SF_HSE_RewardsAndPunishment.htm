@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_RewardsAndPunishment.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <span>奖惩类别</span>
+                            <input id="FillType" class="mini-combobox" onvaluechanged="search();" shownullitem="true" width="120"></input>
+                            <a class="mini-button blue" id="View_SF_RewardsAndPunishment.Export" onclick="PowerForm.AlExport('View_SF_RewardsAndPunishment', 'HSE奖惩', 'DrugsType,DrugsName','Name')"><i class="fa fa-sign-out"></i>导出</a>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_RewardsAndPunishment-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_RewardsAndPunishment-search">
+                            <input id="View_SF_RewardsAndPunishment-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_RewardsAndPunishment-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <!----onload="OnLoad"-->
+                        <div id="View_SF_RewardsAndPunishment" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" sortFiled="DelegateDateA"
+                             showpager="true" pagesize="100" sizelist="[100,200,500]" allowcellselect="true" multiselect="true" allowalternating="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div type="comboboxcolumn" field="RorP" name="View_SF_RewardsAndPunishment.RorP" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="奖惩类别" align="left">奖惩类别<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="Code" name="Code" allowsort="true">编号</div>
+                                <div field="Title" name="Title" allowsort="true">标题</div>
+                                <div field="RAPAmount" name="RAPAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="奖惩金额" align="left" numberformat="n2">奖惩金额<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+                                <div field="ImplementationHuman" name="ImplementationHuman" allowsort="true">实施人</div>
+                                <div field="OwnerDept" name="OwnerDept" allowsort="true">所属管理部门</div>
+                                <div type="comboboxcolumn" field="IsLeaderFlow" name="View_SF_RewardsAndPunishment.IsLeaderFlow" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="是否需分管领导审批" align="left">是否需分管领导审批<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div type="comboboxcolumn" field="HSEType" name="View_SF_RewardsAndPunishment.HSEType" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="奖惩对象" align="left">奖惩对象<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="HumanName" name="HumanName" allowsort="true">人员</div>
+                                <div field="DeptName" name="DeptName" allowsort="true">部门</div>
+                                <div field="PartyBName" name="PartyBName" allowsort="true">单位</div>
+                                <div field="RAPDate" name="RAPDate" allowsort="true">奖惩时间</div>
+                                <div type="comboboxcolumn" field="RAPType" name="View_SF_RewardsAndPunishment.RAPType" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="奖惩类别" align="left">奖惩类别<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="RAPAmount" name="RAPAmount" allowsort="true">奖惩金额</div>
+                                <div field="RAPReason" name="RAPReason" allowsort="true">奖惩事由</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+        });
+
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_RewardsAndPunishment').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_RewardsAndPunishment") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " RorP like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+                else {
+                    e.params.swhere = " and RorP like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

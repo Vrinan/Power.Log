@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";//
+		 var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换EPS</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="150px" />
+                            <span>起始日期</span>
+                            <input id="QStartDate" class="mini-datepicker" format="yyyy-MM-dd" width="120px"></input>
+                            <span>起始日期</span>
+                            <input id="QEndDate" class="mini-datepicker" format="yyyy-MM-dd" width="120px"></input>
+                           <a class="mini-button yellow" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var currentplan, currenttask;
+        $(function () {
+            currenttask = currentproj;
+            var firstDate = new Date();
+            var StartDate = new Date(firstDate);
+            var EndDate = new Date(firstDate);
+            EndDate.setMonth(firstDate.getMonth() + 1);
+            EndDate.setDate(0);
+            firstDate.setDate(1);
+            StartDate.setMonth(firstDate.getMonth() - 11);
+            StartDate.setDate(1);
+            mini.get("QStartDate").setValue(StartDate);
+            mini.get("QEndDate").setValue(EndDate);
+			SetBtnEditValue("txtPlanName",EpsProjName);
+            LoadData();
+        });
+
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + longcode + "%' and project_type=0";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].project_guid;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        mini.get("btnSearch").on("click", function (e) {
+            LoadData();
+        })
+
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+
+        function LoadData() {
+            var p = {};
+            p.plan_guid = currenttask;
+            p.stratData = mini.get("QStartDate").getFormValue();
+            p.EndData = mini.get("QEndDate").getFormValue();
+            $.ajax({
+                url: "/Market/GetContractInfoChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart(o.list,o.data);
+                    }
+                }
+
+            });
+        }
+
+
+        //加载图表
+        function LoadChart(list,datas) {
+            //标题 
+			var opt = {};
+            var xaxis = { type: 'category', data: [] };
+            var actsum = { "name": "合计", type: 'line', data: [] };
+            var curmax = 0;
+			var texts={data:[]};
+			
+			var series=[];
+			   for (var key in datas){
+			    var itme = { "name": datas[key], type: 'bar', yAxisIndex: 1, data: [] };
+				texts.data.push(datas[key]);
+				var Ids=key;
+			     $.each(list, function () {
+				  for (var key in this){
+				      if (key==Ids){
+					   var values =Math.round(this[key] / 10000 * 100) / 100;
+					   itme.data.push(values);
+					  }
+				  }
+				})
+				 series.push(itme);
+			   }
+			texts.data.push("合计");
+            $.each(list, function () {
+                xaxis.data.push(this.stratData);
+                actsum.data.push(Math.round(this.ContractInfoSum / 10000 * 100) / 100);
+                if (this.ContractInfoSum > curmax) curmax = Math.round(this.ContractInfoSum / 10000 * 100) / 100;
+
+            })
+           series.push(actsum);
+            //opt.calculable = true;
+            opt.title = { text: "" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+			opt.legend = texts;
+            //opt.legend = { data: ["EPC合同", "设计合同", "合计"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', min: 0, max: curmax }, { type: 'value', name: '合计金额(万元)', min: 0, max: curmax }];
+            opt.series = series;
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

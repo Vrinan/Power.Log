@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+	<script type="text/javascript" hasvelocity="true">
+		var OpenFormId = "$Model.data.OpenFormId"
+		var FormId = "$Model.data.FormId"
+		var FormState = "$Model.data.FormState"
+		var KeyValue = "$Model.data.KeyValue"
+		var SingleParams = ""
+	</script>
+</head>
+<body>
+	<div class="row-wrap">
+		<div class="row  row-hd row-hd-responsive" style="height: 100%">
+			<div class="col-md-12 col-hd-12">
+				<!-- BEGIN EXAMPLE TABLE PORTLET-->
+				<div class="portlet box blue" style="height: 100%">
+					<div class="portlet-title">
+						<div class="captiontools">
+							<a class="mini-button blue" id="V_PS_SubContract.ViewForm" onclick="OpenForm()"><i class="fa fa-eye"></i>查看</a>
+                            <div id="V_PS_SubContract-Export" class="btn-group"></div>
+							<!--<a class="mini-button blue" id="V_PS_SubContract.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+							<a class="mini-button blue" id="V_PS_SubContract.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+						</div>
+						<div class="tools">
+							<input id="V_PS_SubContract-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+							<span id="V_PS_SubContract-search">
+								<input id="V_PS_SubContract-search-value" class="mini-textbox" style="width: 150px;" />
+							</span>
+							<a class="mini-button blue" id="V_PS_SubContract-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+						</div>
+					</div>
+					<div class="portlet-body" style="height: 100%">
+						<div id="V_PS_SubContract" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+							<div property="columns">
+								<div type="comboboxcolumn" field="Status" allowsort="true" width="60">状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+								<div field="OwnProjName" allowsort="true" width="160">项目名称</div>								
+								<div field="SubContractCode" allowsort="true" width="120">合同编号</div>
+								<div field="SubContractName" allowsort="true" width="160">合同名称</div>
+								<div field="SubContractAmount" allowsort="true" width="80" NumberFormat="n2">合同金额</div>
+								<div field="ChangeAmount" allowsort="true" width="80" NumberFormat="n2">变更金额</div>
+								<div field="FinalSubContractAmount" allowsort="true" width="80" NumberFormat="n2">变更后金额</div>
+								<div field="PartyB" allowsort="true" width="160">分包商</div>
+								<div field="PartyBPerson" allowsort="true" width="80">乙方签署人</div>
+								<div field="AllocationStatus" allowsort="true" width="60">分摊状态</div>
+								<div field="PartyAPerson" allowsort="true" width="80">甲方签署人</div>
+								<div field="RegHumName" allowsort="true" width="100">录入人</div>
+								<div field="RegDate" allowsort="true" dateformat="yyyy-MM-dd hh:mm:ss" width="120">录入时间</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END EXAMPLE TABLE PORTLET-->
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var PowerForm = new SingleForm();
+		$(function () {
+			PowerForm.Init();
+		});
+		mini.parse();
+		var where = "";
+		PowerForm.EventBeforeLoadData = function (e) {
+		    if (GetValue() == "")
+		        e.cancel = true;
+		    else
+		        e.params.swhere = where;
+		}
+		function SetValue(value) {
+		    mini.get("V_PS_SubContract").reload();
+		    where = value;
+		}
+		function GetValue() {
+		    return where;
+		}
+
+		function OpenForm() {
+		    var row = mini.get("V_PS_SubContract").getSelected();
+		    if (row.SubContractType == "E")
+		        OpenFormId = "2a35ba25-af3c-4614-97cd-04dcf9d932e0";
+		    else if (row.SubContractType == "P")
+		        OpenFormId = "0172ef6c-e0e9-497a-bab6-1eb81a298f82";
+		    else if (row.SubContractType == "C")
+		        OpenFormId = "bcf097ea-4d87-48dd-b880-1e475c19956a";
+		    else if (row.SubContractType == "S")
+		        OpenFormId = "ace1557f-5121-47ea-b80d-deef3fb2e7a9";
+		    var e = { id: "V_PS_SubContract.View" };
+		    PowerForm.OnBtnViewForm(e, OpenFormId)
+		}
+	</script>
+</body>
+</html>

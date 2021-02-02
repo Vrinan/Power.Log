@@ -1,0 +1,45 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" id="mainWindow">
+<head>
+   <title>无标题页</title>
+    <script type="text/javascript">
+        function SetPorgressBar(pos,name)
+        {
+            //设置进度条居中
+            var screenHeight = window["mainWindow"].offsetHeight;
+            var screenWidth = window["mainWindow"].offsetWidth;
+            ProgressBarSide.style.width = Math.round(screenWidth / 2);
+            ProgressBarSide.style.left = Math.round(screenWidth / 4);
+            ProgressBarSide.style.top = Math.round(screenHeight / 2);
+            ProgressBarSide.style.height = "20px";
+            ProgressBarSide.style.display = "";
+            Show.innerHTML=name + "....";
+            //设置进度条百分比                       
+            ProgressBar.style.width = pos + "%";
+            ProgressText.innerHTML = pos + "%";
+             
+        }
+        
+        function getData() {
+           return testobj;             
+        }
+        //完成后隐藏进度条
+        function SetCompleted() {
+            if (window.opener != undefined) {
+                window.opener.SetTextInfo(testobj);   //直接调父页面方法
+            }
+            else
+                window.returnValue = testobj;
+            this.window.close();
+        }
+  </script>  
+</head>
+    <body>
+    <div id="ProgressBarSide" style="position:absolute;height:16px;width:500px;color:Silver;border-width:1px;border-style:Solid;display:none; left: 138px; top: 117px;">
+        <div id="Show" style="position:absolute;height:20px;width:125%;text-align:center;  top: 40px;"></div>
+        <div id="ProgressBar" style="position:absolute;height:20px;width:0%;background-color:#3366FF"></div>
+        <div id="ProgressText" style="position:absolute;height:20px;width:101%;text-align:center;  top: 20px; left: 0px;"></div>
+    </div>
+    </body>
+</html>

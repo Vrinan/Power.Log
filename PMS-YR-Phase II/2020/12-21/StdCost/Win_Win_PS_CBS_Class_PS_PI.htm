@@ -1,0 +1,186 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-5 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <a class="mini-button blue" id="PS_PI_Class.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_PI_Class.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <!--       <a class="mini-button blue" id="PS_PI_Class.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="PS_PI_Class.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                -->
+                            <a class="mini-button blue" id="PS_PI_Class.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="PS_PI_Class.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                            <a class="mini-button blue" id="PS_PI_Class.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                            <a class="mini-button blue" id="PS_PI_Class.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                            <a class="mini-button blue" id="PS_PI_Class.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="PS_PI_Class" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="Id" treecolumn="text" width="890" allowcelledit="true" fitcolumns=""
+                             parentfield="ParentId" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true"
+                             data-options="{lazyload:true}">
+
+                            <div property="columns">
+                                <div name="text" field="PiClassCode" header="分类编码" allowsort="true">分类编码<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+
+                                <div field="PiClassName" header="分类名称" allowsort="true">分类名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                <!--
+                                <div field="CbsClassType" type="comboboxcolumn" header="类型" allowsort="true">类型<input id="PS_PI_Class.CbsClassType" property="editor" class="mini-combobox" style="width: 100%;" /> </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-7 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_PI.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_PI.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="PS_PI.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="PS_PI.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="PS_PI.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <a class="mini-button blue" id="PS_PI.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="PS_PI.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_PI" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" oncellendedit="EidtApp"
+                             allowcelledit="true" allowcellselect="true" multiselect="true" pagesize="15" showpager="true" onupdate="onUpdatedList">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div field="PiCode" width="60">
+                                    支付项编号
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="PiName" width="60">
+                                    支付项名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="PiUnit" width="60">
+                                    单位
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="UnitPrice" width="60">
+                                    单价
+                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                </div>
+                                <div field="PiAmount" width="60">
+                                    数量
+                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                </div>
+                                <div field="PiMoney" width="60">
+                                    金额
+                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                </div>
+                                <div field="CurrencyType" type="comboboxcolumn" width="60">
+                                    币种
+                                    <input property="editor" id="PS_PI.CurrencyType" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+
+        var tree = mini.get("PS_PI_Class");
+        var tree_project_type = -1;
+        tree.on("nodeselect", function (e) {
+            tree_project_type = e.node.project_type;
+        });
+
+        PowerForm.EventBeforeAddForm = function (e) {
+            if (tree_project_type != 1) {
+                Power.form.warning("请选择项目节点进行新增");
+                e.canNext = false;
+            }
+            else {
+                e.canNext = true;
+            }
+        }
+
+
+        function EidtApp(e) {
+            //获取节点
+            var record = e.record;
+            var grid = mini.get(PS_PI);
+
+            var price = record.UnitPrice;
+
+            var PiAmount = record.PiAmount;
+            //判断、并进行计算
+            if (e.field == "PiAmount" || e.field == "UnitPrice") {
+                grid.updateRow(record, { PiMoney: (price * PiAmount) });
+            }
+
+        }
+
+    </script>
+</body>
+</html>
+

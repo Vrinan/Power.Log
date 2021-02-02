@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>专利申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_ApplyForAPatent.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ApplyForAPatent.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ApplyForAPatent.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ApplyForAPatent" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                              <input id="SF_ApplyForAPatent.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ApplyForAPatent.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ApplyForAPatent.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            拟专利申请名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.PatentName" name="PatentName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            发明人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.Inventor" name="Inventor" class="mini-textbox" />
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td>
+                                            实施例
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ApplyForAPatent.Implement" name="Implement" class="mini-textbox" />
+                                        </td>
+                                        
+                                    </tr> 
+									 <tr>
+                                        <td>
+                                            简要介绍
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ApplyForAPatent.BriefIntroduction" name="BriefIntroduction" class="mini-textarea" height="100px"/>
+                                        </td>                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            申请人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.Applicant" name="Applicant" class="mini-textbox"/>
+                                        </td>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.ApplicationDivision" name="ApplicationDivision" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ApplyForAPatent.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterFormLoad = function (e,data) {
+            if (mini.get("SF_ApplyForAPatent.ApplicationDivision").value == '') {
+                //var DeptId = sessiondata.DeptId;
+                var Department = sessiondata.DeptName;
+                //mini.get("SF_ZH_RecruitPlan.DaptId").setValue(DeptId);
+                mini.get("SF_ApplyForAPatent.ApplicationDivision").setValue(Department);
+            }
+        }
+    </script>
+</body>
+</html>

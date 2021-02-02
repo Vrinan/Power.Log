@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--<a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>-->
+                            <!--<a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>-->
+                            <a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_ZH_RecruitPlanAll-Export" title="招聘计划统计" class="btn-group"></div>
+                        </div>
+                        <div class="tools">
+                            <input id="View_SF_ZH_RecruitPlanAll-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_SF_ZH_RecruitPlanAll-search">
+                                <input id="View_SF_ZH_RecruitPlanAll-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_SF_ZH_RecruitPlanAll-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_ZH_RecruitPlanAll" class="mini-datagrid"  style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="ListId" ondrawcell="OnDrawCell" allowCellWrap="true">
+                            <div property="columns">
+                                <div field="Type" name="Type" headeralign="center" header="类型" width="0">
+                                    类型（不显示）
+                                    <input id="View_SF_ZH_RecruitPlanAll.Type" class="mini-textbox" /> 
+                                </div>
+                                <div field="TypeStatus"  headeralign="center" header="状态" type="comboboxcolumn">
+                                    状态
+                                    <input  property="editor" name="TypeStatus"  class="mini-combobox" />
+                                </div>
+                                <div field="RegDate" name="RegDate" headeralign="center"  header="填报日期" dateformat="yyyy-MM-dd">
+                                    填报日期
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div> 
+                                <div field="Department" name="Department" headeralign="center" header="申请部门" >
+                                    申请部门
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div> 
+                                <div field="Position" name="Position" headeralign="center" header="申请岗位">
+                                    申请岗位
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div> 
+                                <div field="PositionType" headeralign="center" header="岗位性质" type="comboboxcolumn">
+                                    岗位性质
+                                    <input property="editor" name="PositionType" class="mini-combobox"/>
+                                </div>
+                                <div header="人数" headerAlign="Center">
+                                    <div property="columns">
+                                        <div field="PositionNum1" header="岗位定员" headerAlign="Center" >
+                                            岗位定员
+                                            <input property="editor" name="PositionNum1" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                        </div>
+                                        <div field="PositionNum" header="岗位现有人数" headerAlign="Center" >
+                                            岗位现有人数
+                                            <input property="editor" name="PositionNum" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                        </div>
+                                        <div header="申请招聘人数" headerAlign="Center">
+                                            <div property="columns">
+                                                <div field="RecruitNum" header="申请招聘总人数" headerAlign="Center" style="width:100px">
+                                                    申请招聘总人数
+                                                    <input property="editor" name="RecruitNum" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                                <div field="HumNumber" header="成熟人才人数" headerAlign="Center" style="width:100px">
+                                                    成熟人才人数
+                                                    <input property="editor" name="HumNumber" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                                <div field="StudentNum" header="应届生人数" headerAlign="Center" style="width:100px">
+                                                    应届生人数
+                                                    <input property="editor" name="StudentNum" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="变更后招聘人数" headerAlign="Center">
+                                            <div property="columns">
+                                                <div field="RecruitNumChange" header="变更后招聘总人数" headerAlign="Center" style="width:120px">
+                                                    变更后申请招聘总人数
+                                                    <input property="editor" name="RecruitNumChange" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                                <div field="HumNumberChange" header="变更后成熟人才人数" headerAlign="Center" style="width:120px">
+                                                    变更后成熟人才人数
+                                                    <input property="editor" name="HumNumberChange" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                                <div field="StudentNumChange" header="变更后应届生人数" headerAlign="Center" style="width:120px">
+                                                    变更后应届生人数
+                                                    <input property="editor" name="StudentNumChange" class="mini-spinner" minvalue="0" maxvalue="9999999999" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div field="Memo" headeralign="center" header="申请原因">
+                                    申请原因
+                                    <input property="editor" name="Memo" class="mini-textbox"/>
+                                </div>
+                                <div header="招聘要求" headerAlign="Center" >
+                                    <div property="columns">
+                                        <div field="Education" header="学历" headeralign="center">
+                                            学历
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Major" header="专业" headeralign="center">
+                                            专业
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Age" header="年龄" headeralign="center">
+                                            年龄
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Certificate" header="资格证书" headeralign="center">
+                                            资格证书
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Experience" header="工作经验" headeralign="center">
+                                            工作经验
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="WorkDate" header="预计到岗时间" headeralign="center" dateformat="yyyy-MM-dd">
+                                            预计到岗时间
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="Duty" header="岗位主要职责" headeralign="center">
+                                            岗位主要职责
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Request" header="任职要求" headeralign="center">
+                                            任职要求
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" header="备注" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            //mini.get("View_SF_ZH_RecruitPlanAll").load();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function OnDrawCell(e) {
+            //有做变更的，显示黄色，计划外的显示蓝色
+            var grid = mini.get("View_SF_ZH_RecruitPlanAll");
+            var record = e.record;
+
+            var Type = record.Type;
+            var RecruitNum = record.RecruitNum;
+            var RecruitNumChange = record.RecruitNumChange;
+            if (Type == 0) {
+                e.rowStyle = "background:#00BFFF";
+                //0是新增
+                //grid.updateRow(record, { TypeStatus: 0 });
+            }
+            else if (RecruitNum - RecruitNumChange > 0) {
+                e.rowStyle = "background:#ADFF2F";
+                //1是变更
+                //grid.updateRow(record, {TypeStatus:1});
+            }
+
+        }
+    </script>
+</body>
+</html>

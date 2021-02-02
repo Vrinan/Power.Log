@@ -1,0 +1,560 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+</head>
+
+<body>
+
+
+    <div class="col-md-12" style="height: 100%;">
+        <div class="portlet box blue" style="height: 100%;">
+            <div class="portlet-title">
+                <div class="caption">
+                </div>
+                <!--流程流转-->
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" onclick="onSave" iconcls="fa-save">确定</a>
+                    <a class="mini-button blue" onclick="CloseWindow" iconcls="fa-close">取消</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-tabs" id="tabMain" activeindex="0" tabposition="left" tabalign="left" style="height: 100%;">
+                <div title="人员选择" name="tabCommon">
+                    <div class="mini-fit" style="background: #FFF;">
+                        <div class="portlet-body" style="height: 100%">
+                            <div id="gdUserConfigList" style="width: 100%; height: 95%;" class="mini-datagrid" showpager="false" allowcellselect="true" allowcelledit="true" oncellbeginedit="onCellBeginEdit" oncellendedit="onCellEndEdit">
+                                <div property="columns">
+                                    <div type="checkboxcolumn" field="Selected" width="30" truevalue="1" falsevalue="0"></div>
+                                    <div field="Text" width="150" headeralign="center">$Helper.GetResource("workflow_about")</div>
+                                    <!--说明-->
+                                    <div field="ShowUserInfo" width="200" headeralign="center">定义信息</div>
+                                    <div field="Status" width="50" headeralign="center" renderer="onNodeStatusRenderer">状态</div>
+                                    <div name="Operate" field="Operate" width="120" headeralign="center" renderer="onUserConfigRenderer">
+                                        操作
+                                        <input property="editor" class="mini-treeselect" style="width: 100%;" valuefield="Code" textfield="Text" onbeforenodeselect="onBeforeNodeSelect" />
+                                    </div>
+                                    <div field="Code" width="50" headeralign="center">项编码</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="逻辑预设">
+                    <div>
+                        <table width="250px">
+                            <tr>
+                                <td colspan="3">
+                                    <div id="chkIsLogicFormula" class="mini-checkbox" onvaluechanged="onLogicFormulaChanged">开启逻辑公式</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100px">公式：</td>
+                                <td>
+                                    <div id="txtUserFormula" name="UserFormula  " class="mini-textbox" enabled="false" emptytext="eg:[项编码1] and [项编码2]"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100px">说明：</td>
+                                <td>
+                                    <div id="txtFormulaDescription" name="FormulaDescription  " class="mini-textbox" enabled="false"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><hr /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" align="left">
+                                    <pre align="left">
+   人员定义中，如果未开启逻辑公式，默认都是 or 关系， 每一项人员定义的结果 相互叠加。
+                                        
+   [容器] 自定义公式 只支持" and or xor "三种运算符。
+    and :  a  and b = a 存在 并且 b 也存在的信息。
+    or :   a  or b =  a 存在 或者 b 也存在的信息。
+    xor:   a xor b =  a 存在 而且 b 不存在的信息。
+
+    例如:  Position And Dept , = 岗位定义中存在的人 并且 部门定义中也存在的人.
+   
+    应对业务场景： 比如某岗位 涵盖 多个 部门， 如果需要 只抓出 此岗位 下 的A 节点经手人部门的人。
+
+                                    <font color="red">只有节点定义为正常模式下，公式才会触发。 [起草者][发送者]等模式均无视公式。</font>
+                                    </pre>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div title="高级">
+                    <div>
+                        <table width="250px">
+                            <tr>
+                                <td colspan="3">
+                                    <div id="chkIsIgnoreUserEmpty" name="IsIgnoreUserEmpty" class="mini-checkbox"  >节点若无驻留人员则忽略</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                mini.parse();
+
+                var gdUserConfigList = mini.get("gdUserConfigList");
+
+                var ResultData = {};   //可返回的数据包
+
+                var NodeList = null;  //所有节点
+
+                var HumanItem = [{ "Alias": "HumanItem", "Code": "PositionLeader", "Text": "岗位上级领导" }, { "Alias": "HumanItem", "Code": "DeptLeader", "Text": "部门上级领导" }, { "Alias": "HumanItem", "Code": "Owner", "Text": "当事人" }, { "Alias": "HumanItem", "Code": "PositionColleague", "Text": "岗位同事" }, { "Alias": "HumanItem", "Code": "DeptColleague", "Text": "部门同事" }, { "Alias": "HumanItem", "Code": "PositionSubs", "Text": "岗位下属" }, { "Alias": "HumanItem", "Code": "PositionSubs", "Text": "部门下属" }];
+
+                //////////////////////////////////
+                function CloseWindow(action) {
+                    if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                    else window.close();
+                }
+                var onSave = function () {
+
+                    var result = gdUserConfigList.getData();
+
+                    var IsLogicFormula = mini.get("chkIsLogicFormula").getValue();//是否开启逻辑公式
+                    var sUserFormula = "";
+                    if (IsLogicFormula == "true") sUserFormula = mini.get("txtUserFormula").getValue();
+
+
+                    var flag = false;
+                    for (var irow = 0; irow < result.length; irow++) {
+                        if (result[irow].Selected != "1") continue;
+                        if (result[irow].Status != true) {
+                            Power.ui.info("对不起，第[" + result[irow].Text + "]的信息尚未定义");
+                            return;
+                        }
+                        if (IsLogicFormula == "true" && sUserFormula.indexOf(result[irow].Code) < 0) {
+                            Power.ui.info("对不起，第[" + result[irow].Text + "]的编号[" + result[irow].Code + "]不在 自定义逻辑公式[" + sUserFormula + "]中");
+                            return;
+                        }
+                        flag = true;
+                    }
+                    CloseWindow("ok");
+                }
+
+                var onLogicFormulaChanged = function (e) {
+
+                    mini.get("txtUserFormula").setEnabled(e.value == "true");
+                    mini.get("txtFormulaDescription").setEnabled(e.value == "true");
+
+                }
+                var getNodeName = function (value) {
+                    for (var icol = 0; icol < NodeList.length; icol++) {
+                        if (NodeList[icol].NodeCode != value) continue;
+                        return NodeList[icol].NodeName;
+                    }
+                    return null;
+                }
+                var getHumanItem = function (value) {
+                    for (var icol = 0; icol < HumanItem.length; icol++) {
+                        if (HumanItem[icol].Code != value) continue;
+                        return HumanItem[icol].Text;
+                    }
+                    return null;
+                }
+                //父节点禁止选中
+                var onBeforeNodeSelect = function (e) {
+                    var node = e.node;
+                    if (node.children && node.children.length > 0)
+                        e.cancel = true;
+                }
+                var onCellBeginEdit = function (e) {
+                    var row = e.row;
+                    if (e.field != "Operate") return;
+
+                    if (row.Selected != true) {
+                        e.cancel = true;
+                        return;
+                    }
+                    switch (row.Code) {
+                        case EUserMode.Position:  //1.指定岗位，动态获取人员
+                        case EUserMode.PositionAndUser:    //2.指定岗位中人员
+                        case EUserMode.Dept:   //3.指定部门，动态获取人员
+                        case EUserMode.DeptAndUser:    //4.指定部门中人员
+                        case EUserMode.DeptAndUser:    //4.指定部门中人员
+                        case EUserMode.SpecialDeptUser:    //5. 特殊用户部门提取模式定义
+                        case EUserMode.SpecialPositionUser:    //6. 特殊用户岗位提取模式定义
+                            e.cancel = true;
+                            return;
+                        case EUserMode.CurrentOperateOne:    //7.1
+                        case EUserMode.CurrentOperateTwo:    //7.2
+                        case EUserMode.CurrentOperateThree:    //7.2
+                        case EUserMode.CurrentOperateFour:    //7.2
+                            var list = mini.clone(HumanItem);
+                            e.editor.setData(list);
+                            return;
+                        case EUserMode.AssignNodeOne:    //8.1
+                        case EUserMode.AssignNodeTwo:    //8.2
+                        case EUserMode.AssignNodeThree:    //8.3
+                        case EUserMode.AssignNodeFour:    //8.4
+                        case EUserMode.AssignNodeFive:    //8.5
+
+                            var list = mini.clone(NodeList);
+                            var len = list.length;
+                            for (var irow = 0; irow < len; irow++) {
+                                list[irow].Alias = "Node";
+                                list[irow].Code = list[irow].NodeCode;
+                                list[irow].Text = list[irow].NodeName;
+                                var humans = mini.clone(HumanItem);
+                                for (var icol = 0; icol < humans.length; icol++) {
+                                    humans[icol].Alias = "HumanItem";
+                                    humans[icol].Code = list[irow].NodeCode + "." + humans[icol].Code;
+                                    humans[icol].ParentId = list[irow].NodeCode;
+                                    list.push(humans[icol]);
+                                }
+                            }
+                            e.editor.loadList(list, "Code", "ParentId");
+                            return;
+                    }
+                }
+
+                var onCellEndEdit = function (e) {
+
+                    var row = e.row;
+                    if (e.field != "Operate") return;
+
+                    switch (row.Code) {
+                        case EUserMode.Position:  //1.指定岗位，动态获取人员
+                        case EUserMode.PositionAndUser:    //2.指定岗位中人员
+                        case EUserMode.Dept:   //3.指定部门，动态获取人员
+                        case EUserMode.DeptAndUser:    //4.指定部门中人员
+                            e.cancel = true;
+                            return;
+                        case EUserMode.CurrentOperateOne:    //7.1
+                        case EUserMode.CurrentOperateTwo:    //7.2
+                        case EUserMode.CurrentOperateThree:    //7.2
+                        case EUserMode.CurrentOperateFour:    //7.2
+                            var tmpResult = {};
+                            tmpResult.HumanItem = row.Operate;
+                            gdUserConfigList.updateRow(row, { "ShowUserInfo": getHumanItem(row.Operate), "Status": true });
+                            ResultData[row.Code] = tmpResult;
+                            return;
+                        case EUserMode.AssignNodeOne:    //6.1
+                        case EUserMode.AssignNodeTwo:    //6.2
+                        case EUserMode.AssignNodeThree:    //6.3
+                        case EUserMode.AssignNodeFour:    //6.4
+                        case EUserMode.AssignNodeFive:    //6.5
+                            if (!row.Operate) return;
+                            var splits = row.Operate.split(".");
+                            var tmpResult = {};
+                            tmpResult.NodeCode = splits[0];
+                            tmpResult.HumanItem = splits[1];
+                            gdUserConfigList.updateRow(row, { "ShowUserInfo": getNodeName(tmpResult.NodeCode) + " --> " + getHumanItem(tmpResult.HumanItem), "Status": true });
+                            ResultData[row.Code] = tmpResult;
+                            return;
+                    }
+                }
+
+                var onNodeStatusRenderer = function (e) {
+                    var row = e.row;
+                    var s = '';
+                    if (row.Status == true) s = '√';
+                    return s;
+                }
+                var onDesignDeptPosition = function (sourceMode) {
+                    var row = gdUserConfigList.getSelected();
+                    if (!row) return;
+
+                    var userMode = row.Code;
+                    var selectedDP = ResultData[userMode];
+                    if (!selectedDP) selectedDP = [];
+
+                    mini.open({
+                        url: "/PowerPlat/WorkFlows/Commons/SelectDeptPosition.html",
+                        title: '岗位部门选择', width: "800px", height: "600px",
+                        allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                            var tmpNode = {};
+                            tmpNode.SourceMode = sourceMode;   //默认是选择岗位
+                            tmpNode.AllowMulitUser = true;
+                            tmpNode.AllowSwitchDP = false;    //是否允许切换岗位部门，设为false ,不允许切换
+                            iframe.contentWindow.SetData(tmpNode, selectedDP);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+
+                            var data = iframe.contentWindow.GetData();
+                            var dpList = mini.clone(data);
+                            if (dpList.length == 0) {
+                                Power.ui.error("未捕获到任何岗位/部门");
+                                return;
+                            }
+                            var textFieldName = row.TextFieldName;
+                            var showUserInfo = "";
+                            for (var irow = 0; irow < dpList.length; irow++)
+                                showUserInfo += dpList[irow][textFieldName] + ",";
+                            if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                            gdUserConfigList.updateRow(row, { "ShowUserInfo": showUserInfo, "Status": true });
+                            ResultData[row.Code] = dpList;
+                        }
+                    });
+                }
+
+                //定义人员
+                var onDesignUser = function (sourceMode) {
+                    var row = gdUserConfigList.getSelected();
+                    if (!row) return;
+
+                    var userMode = row.Code;
+                    var selectedUsers = ResultData[userMode];
+                    if (!selectedUsers) selectedUsers = [];
+
+                    mini.open({
+                        url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Commons/SelectUser.html",
+                        title: '人员选择', width: "800px", height: "600px",
+                        allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                            var tmpNode = {};
+                            tmpNode.SourceMode = sourceMode;   //默认是选择岗位
+                            tmpNode.AllowMulitUser = true;
+                            tmpNode.AllowSwitchDP = false;    //是否允许切换岗位部门，设为false ,不允许切换
+                            iframe.contentWindow.SetData(tmpNode, selectedUsers);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+
+                            var data = iframe.contentWindow.GetData();
+                            var userList = mini.clone(data);
+                            if (userList.length == 0) {
+                                Power.ui.error("未捕获到任何用户");
+                                return;
+                            }
+                            var textFieldName = row.TextFieldName;
+                            var showUserInfo = "";
+                            for (var irow = 0; irow < userList.length; irow++)
+                                showUserInfo += userList[irow][textFieldName] + ",";
+                            if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                            gdUserConfigList.updateRow(row, { "ShowUserInfo": showUserInfo, "Status": true });
+                            ResultData[row.Code] = userList;
+                        }
+                    });
+                }
+                var onSpecialDeptPositionUser = function (sourceMode) {
+                    var row = gdUserConfigList.getSelected();
+                    if (!row) return;
+
+                    var userMode = row.Code;
+                    var selectedUsers = ResultData[userMode];
+                    if (!selectedUsers) selectedUsers = [];
+
+                    mini.open({
+                        url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Commons/SelectSpecialUser.html",
+                        title: '特殊选择', width: "800px", height: "600px",
+                        allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                            var tmpNode = {};
+                            tmpNode.SourceMode = sourceMode;   //默认是选择岗位
+                            iframe.contentWindow.SetData(tmpNode, selectedUsers);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+
+                            var data = iframe.contentWindow.GetData();
+                            var userList = mini.clone(data);
+                            if (userList.length == 0) {
+                                Power.ui.error("未捕获到任何用户");
+                                return;
+                            }
+                            var showUserInfo = "";
+                            for (var irow = 0; irow < userList.length; irow++) {
+                                showUserInfo += "[";
+                                showUserInfo += userList[irow].BaseName + ",";
+                                if (userList[irow].ParentTypeName) showUserInfo += userList[irow].ParentTypeName + ",";
+                                if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                                showUserInfo += "]";
+                            }
+                            gdUserConfigList.updateRow(row, { "ShowUserInfo": showUserInfo, "Status": true });
+                            ResultData[row.Code] = userList;
+                        }
+                    });
+                }
+                var onDesignConfig = function () {
+                    var row = gdUserConfigList.getSelected();
+                    if (!row) return;
+
+                    switch (row.Code) {
+                        case EUserMode.Position:  //1.指定岗位，动态获取人员
+                            onDesignDeptPosition(ESourceMode.Position);
+                            break;
+                        case EUserMode.PositionAndUser:    //2.指定岗位中人员
+                            onDesignUser(ESourceMode.PositionAndUser);
+                            break;
+                        case EUserMode.Dept:   //3.指定部门，动态获取人员
+                            onDesignDeptPosition(ESourceMode.Dept);
+                            break;
+                        case EUserMode.DeptAndUser:    //4.指定部门中人员
+                            onDesignUser(ESourceMode.DeptAndUser);
+                            break;
+                        case EUserMode.SpecialDeptUser:    //5. 特殊用户部门提取模式定义
+                            onSpecialDeptPositionUser(ESourceMode.DeptAndUser);
+                            break;
+                        case EUserMode.SpecialPositionUser:    //6. 特殊用户岗位提取模式定义
+                            onSpecialDeptPositionUser(ESourceMode.PositionAndUser);
+                            break;
+                        default:
+                            alert("无法识别的取人模式[" + row.Code + "]");
+                            break;
+                    }
+                }
+
+                var onUserConfigRenderer = function (e) {
+                    var row = e.record;
+                    var s = '';
+
+                    if (row.Selected != true) return s;
+
+                    switch (row.Code) {
+                        case EUserMode.Position:  //1.指定岗位，动态获取人员
+                        case EUserMode.PositionAndUser:    //2.指定岗位中人员
+                        case EUserMode.Dept:   //3.指定部门，动态获取人员
+                        case EUserMode.DeptAndUser:    //4.指定部门中人员
+                        case EUserMode.SpecialDeptUser:    //5. 特殊用户部门提取模式定义
+                        case EUserMode.SpecialPositionUser:    //6. 特殊用户岗位提取模式定义
+                            s = '<a class="New_Button" href="javascript:onDesignConfig()">定义</a>';
+                            return s;
+                    }
+                    return s;
+                }
+
+                var SetData = function (userConfig, data, nodeList, curNode, WorkFlowMode) {
+
+                    //动态定义模式下， 来自模板的节点，不允许编辑里面内容
+                    if (WorkFlowMode == "WorkingDesign") {
+                      //  mini.get("btnSave").setEnabled((curNode.IsFromInstance == true && curNode.IsInstanced == false));   //动态定义模式下，只有 来自实例的，且未走实例的，才可编辑
+                    }
+
+                    if (userConfig && userConfig.IsLogicFormula) {
+                        mini.get("chkIsLogicFormula").setValue(userConfig.IsLogicFormula);
+                        if (userConfig.UserFormula) mini.get("txtUserFormula").setValue(userConfig.UserFormula);
+                        if (userConfig.FormulaDescription) mini.get("txtFormulaDescription").setValue(userConfig.FormulaDescription);
+                        mini.get("txtUserFormula").setEnabled(userConfig.IsLogicFormula == "true");
+                        mini.get("txtFormulaDescription").setEnabled(userConfig.IsLogicFormula == "true");
+                    }
+                    
+                    if (userConfig && userConfig.IsIgnoreUserEmpty) mini.get("chkIsIgnoreUserEmpty").setValue(userConfig.IsIgnoreUserEmpty);
+
+                    NodeList = nodeList;
+
+                    gdUserConfigList.setData(data);
+                    //过滤掉 None 选项
+                    gdUserConfigList.filter(function (row) {
+                        return row.Code != EUserMode.None;
+                    });
+                    if (!userConfig) return;
+
+                    for (var irow = 0; irow < userConfig.UserConfigs.length; irow++) {
+                        var config = userConfig.UserConfigs[irow];
+
+                        for (var itmp = 0; itmp < data.length; itmp++) {
+                            if (data[itmp].Code != config.UserMode) continue;
+
+                            var curContainerName = data[itmp].ContainerName;  //获得容器名称
+                            var textFieldName = data[itmp].TextFieldName;
+                            if (curContainerName && config[curContainerName])
+                                ResultData[config.UserMode] = config[curContainerName];
+                            else
+                                ResultData[config.UserMode] = config;
+
+                            switch (config.UserMode) {
+                                case EUserMode.Position:  //1.指定岗位，动态获取人员
+                                case EUserMode.PositionAndUser:    //2.指定岗位中人员
+                                case EUserMode.Dept:   //3.指定部门，动态获取人员
+                                case EUserMode.DeptAndUser:    //4.指定部门中人员
+                                    var userList = ResultData[config.UserMode];
+                                    var showUserInfo = "";
+                                    for (var icol = 0; icol < userList.length; icol++)
+                                        showUserInfo += userList[icol][textFieldName] + ",";
+                                    if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                                    var Status = ResultData[config.UserMode].length > 0;
+                                    gdUserConfigList.updateRow(data[itmp], { "Selected": true, "ShowUserInfo": showUserInfo, "Status": Status });
+                                    break;
+                                case EUserMode.SpecialDeptUser:    //5. 特殊用户部门提取模式定义
+                                case EUserMode.SpecialPositionUser:    //6. 特殊用户岗位提取模式定义
+                                    var userList = ResultData[config.UserMode];
+                                    var showUserInfo = "";
+                                    for (var itmpRow = 0; itmpRow < userList.length; itmpRow++) {
+                                        showUserInfo += "[";
+                                        showUserInfo += userList[itmpRow].BaseName + ",";
+                                        if (userList[itmpRow].ParentTypeName) showUserInfo += userList[itmpRow].ParentTypeName + ",";
+                                        if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                                        showUserInfo += "]";
+                                    }
+                                    var Status = ResultData[config.UserMode].length > 0;
+                                    gdUserConfigList.updateRow(data[itmp], { "Selected": true, "ShowUserInfo": showUserInfo, "Status": Status });
+                                    break;
+                                case EUserMode.CurrentOperateOne:    //7.1
+                                case EUserMode.CurrentOperateTwo:    //7.2
+                                case EUserMode.CurrentOperateThree:    //7.2
+                                case EUserMode.CurrentOperateFour:    //7.2
+                                    var tmpResult = ResultData[config.UserMode];
+                                    gdUserConfigList.updateRow(data[itmp], { "Selected": true, "ShowUserInfo": getHumanItem(tmpResult.HumanItem), "Status": true });
+                                    break;
+                                case EUserMode.AssignNodeOne:    //8.1
+                                case EUserMode.AssignNodeTwo:    //8.2
+                                case EUserMode.AssignNodeThree:    //8.3
+                                case EUserMode.AssignNodeFour:    //8.4
+                                case EUserMode.AssignNodeFive:    //8.5
+                                    var tmpResult = ResultData[config.UserMode];
+                                    gdUserConfigList.updateRow(data[itmp], { "Selected": true, "ShowUserInfo": getNodeName(tmpResult.NodeCode) + " --> " + getHumanItem(tmpResult.HumanItem), "Status": true });
+                                    break;
+                            }
+                        }
+                    }
+
+                }
+
+                var GetData = function () {
+                    var data = gdUserConfigList.getData();
+
+                    var result = {};
+                    result.IsLogicFormula = mini.get("chkIsLogicFormula").getValue();//是否开启逻辑公式
+                    result.IsIgnoreUserEmpty = mini.get("chkIsIgnoreUserEmpty").getValue();//驻留人员为空，是否忽略
+                    if (result.IsLogicFormula == "true") {
+                        result.UserFormula = mini.get("txtUserFormula").getValue();
+                        result.FormulaDescription = mini.get("txtFormulaDescription").getValue();
+                    }
+                    result.UserConfigs = [];
+                    for (var irow = 0; irow < data.length; irow++) {
+                        if (data[irow].Selected != "1") continue;
+
+                        var curCode = data[irow].Code;
+                        var curContainerName = data[irow].ContainerName;  //获得容器名称
+                        if (!ResultData[curCode]) {
+                            alert("严重异常，选项[" + curCode + "]内容为空"); return null;
+                        }
+
+                        var userInfo = {};
+                        userInfo.UserMode = curCode;
+                        if (curContainerName) {
+                            userInfo[curContainerName] = ResultData[curCode];
+                            result.UserConfigs.push(userInfo);
+                        }
+                        else {
+                            ResultData[curCode].UserMode = curCode;
+                            result.UserConfigs.push(ResultData[curCode]);
+                        }
+                    }
+                    return result;
+                }
+            </script>
+</body>
+</html>

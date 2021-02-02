@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = typeof ($Model) != "undefined" ? $Model.data.params : {};
+        var BizAreaId = '$Model.data.bizareaid';
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtname" class="mini-textbox" style="width: 240px;" emptytext="请输入编号或名称,回车开始查询" onenter="OnSearchClick" /><!--请输入名称-->
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div id="WBS" idfield="wbs_guid" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                         treecolumn="wbs_short_name" parentfield="parent_wbs_guid" resultastree="false"
+                         allowresize="true" expandonload="true" url="/Form/GridPageLoad" virtualscroll="true" multiSelect="true"
+                         showCheckBox="true" showFolderCheckBox="false" autoload="false"
+                         onpreload="OnPreLoad" onbeforeload="OnBeforeLoad" onload="OnAfterLoad" onnodedblclick="OnDbClick">
+                        <div property="columns">
+                            <div type="indexcolumn" width="20"></div>
+                            <div field="wbs_short_name" name="wbs_short_name" width="60">编号</div>
+                            <div field="wbs_name">名称</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var epsproj = mini.get("WBS");
+        $(function () {
+
+        })
+        function OnDbClick(e) {
+            ComToolsCloseWindow('ok');
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "WBS" && plan_guid) {
+                var p = e.params;
+                if (p.swhere && p.swhere.length != 0)
+                    p.swhere += " and ";
+                p.swhere += ("plan_guid='" + plan_guid + "'");
+            }
+        }
+
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            if (epsproj.showCheckBox)
+                return epsproj.getCheckedNodes(false);
+            else {
+                var rlt = [];
+                rlt.push(epsproj.getSelectedNode());
+                return rlt;
+            }
+        };
+        Select.LoadStepFirst = function () {
+            var bmulti = (WizardParams.multi == "1");
+            epsproj.showCheckBox = bmulti;
+            epsproj.reload();
+        };
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var params = e.params;  //参数对象
+            params.KeyWord = sender.id;
+            params.KeyWordType = "BO";
+            params.select = WizardParams.select || "";
+            params.swhere = " 1=1";
+            params.sort = "";
+            params.index = 0;
+            params.size = 0;
+            var node = e.node;      //当前节点
+            if (sender.lazyload)
+                params.parentid = node[sender.idField];
+            params.sort = "seq_num";
+            var node = e.record;
+            var tmpwhere = Select.GetWhere();
+            if (tmpwhere.length != 0)
+                params.swhere += (" and (" + tmpwhere + ")");
+            //拼与主表关联的where条件
+            var txtname = mini.get("txtname");
+            if (txtname.value.length > 0)
+                params.swhere = params.swhere + " and (wbs_short_name like '%" + txtname.value + "%' or wbs_name like '%" + txtname.value + "%')";
+
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+
+        //向导根据表单主表字段Plan_Guid过滤
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "PS_ProjectVisa_Cost.Add") {
+                e.where = " 1=1 and plan_guid='" + formconfig.config.joindata.currow["Plan_Guid"].getValue() + "'";
+            }
+        }
+
+
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            if (FormFuns.IsMiniTree(e.sender)) { //树必须使用树结构数据
+                //如果是懒加载，标记节点不展开，否则出现 - 号图标，实际应该是 + 号图标
+                if (e.sender.lazyload) {
+                    for (var i = 0; i < data.length; i++)
+                        data[i].expanded = false;
+                }
+                e.sender.resultAsTree = true;
+                data = mini.arrayToTree(data, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+            }
+            e.data = data;
+            if (e.sender.showPager)
+                e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+        function OnAfterLoad(e) {
+            //如果是tree懒加载，miniui会自动给节点打上新增标记，需要去掉
+            if (e.sender.lazyload) {
+                for (var i = 0; i < e.data.length; i++)
+                    delete e.data[i]._state;
+            }
+
+        }
+
+        function OnSearchClick(e) {
+            epsproj.reload();
+        }
+    </script>
+</body>
+
+</html>

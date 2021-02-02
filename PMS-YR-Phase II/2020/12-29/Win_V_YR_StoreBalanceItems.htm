@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!-- <span>物资分类名称:</span>
+                            <input id="QStorage" class="mini-textbox" width="120px"> -->
+                             <span>物资编码:</span>
+                            <input id="QMatCode" class="mini-textbox" width="120px">
+                            <span>物资名称:</span>
+                            <input id="Qpinming" class="mini-textbox" width="100px">
+                            <span>物资描述:</span>
+                            <input id="QMatLongName" class="mini-textbox" width="100px">
+                            <span>规格型号:</span>
+                            <input id="QSpecifi" class="mini-textbox" width="100px">
+                            
+                            <a class="mini-button yellow" onclick="mini.get('YR_StoreBalanceItems').reload();">查询</a>
+                            <div id="YR_StoreBalanceItems-Export" class="btn-group"></div>
+                        </div>
+                        <!-- <div class="tools">
+                            <input id="YR_StoreBalanceItems-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="ColseCombobox" onvaluechanged="GroupChanged(this)" style="width: 150px;" />
+                        </div> -->
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="YR_StoreBalanceItems" class="mini-datagrid"  style="width: 100%; height: 100%;"
+                              allowalternating="false"  idfield="Id" pagesize="20" ondrawgroup="DrawGroup">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30"></div>
+                                <!-- <div name="name" field="EpsName">项目</div> -->
+                                <div name="name" field="StorageName" width="100">仓库</div>
+                                <!-- <div field="daleiCode">物资分类编码</div>
+                                <div field="dalei">一级物资分类名称</div>
+                                <div field="zhonglei">二级物资分类名称</div>
+                                <div field="xiaolei">三级物资分类名称</div> -->
+                                <div field="MatCode" width="120">物资编码</div>
+                                <div field="MatShortName">物资名称</div>
+                                <div field="MatLongName">物资描述</div>
+                                <div field="Specifi">规格型号</div>
+                                <div field="Standard">制造标准</div>
+                                <div field="Texture">材质</div>
+                                <!-- <div field="Pattern">型式</div> -->
+                                <div field="MatUnit" width="50">单位</div>
+                                <div field="StoreNum" NumberFormat="n2" align="right">库存数量</div>
+				                <div field="ValidNum" NumberFormat="n2" align="right">可用数量<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="UnitPrice" NumberFormat="n2" align="right">单价</div>
+                                <div field="TotalAmount" NumberFormat="n2" align="right">金额</div>
+                                <!-- <div field="pinming">物资小类</div> -->
+
+                                <div field="InStoreNum" align="right" width="60">入库单</div>
+                                <div field="MatInStoreNum" NumberFormat="n2" align="right">入库数量</div>
+                                <div field="MatInStoreAmount" NumberFormat="n2" align="right">入库金额</div>
+                                <div field="InStoreJson" width="500">入库单详情</div>
+                                
+                                <div field="OutStoreNum" align="right" width="60">出库单</div>
+                                <div field="MatOutStoreNum" NumberFormat="n2" align="right">出库数量</div>
+                                <div field="MatOutStoreAmount" NumberFormat="n2" align="right">出库金额</div>
+                                <div field="OutStoreJson" width="500">出库单详情</div>
+
+                                <div field="ReturnNum" align="right" width="60">退库单</div>
+                                <div field="MatReturnNum" NumberFormat="n2" align="right">退库数量</div>
+                                <div field="MatReturnAmount" NumberFormat="n2" align="right">退库金额</div>
+                                <div field="ReturnJson" width="500">退库单详情</div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("YR_StoreBalanceItems").frozenColumns(0,2);
+
+            mini.get("QMatCode").on("valuechanged", function () {
+                mini.get("YR_StoreBalanceItems").reload();
+            })
+            mini.get("Qpinming").on("valuechanged", function () {
+                mini.get("YR_StoreBalanceItems").reload();
+            })
+            mini.get("QMatLongName").on("valuechanged", function () {
+                mini.get("YR_StoreBalanceItems").reload();
+            })
+            // mini.get("QStorage").on("valuechanged", function () {
+            //     mini.get("YR_StoreBalanceItems").reload();
+            // })
+            mini.get("QSpecifi").on("valuechanged", function () {
+                mini.get("YR_StoreBalanceItems").reload();
+            })
+        });
+        mini.parse();
+
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        mini.get("YR_StoreBalanceItems").on("drawcell", function (e) {
+            if (e.column.field) {
+                var field = e.column.field
+                if(field.indexOf("Json")>-1)
+                {
+                    if(!IsEmpty(e.cellHtml) && e.cellHtml != "[]")
+                    {
+                        var tem = mini.decode(e.cellHtml)
+                        e.cellHtml="";
+                        for(var i =0;i<tem.length;i++)
+                        {
+                            var dt = tem[i];
+                            //Code
+                            switch (field)
+                            {
+                                case "InStoreJson":
+                                    e.cellHtml += "编号:" + "<a href='javascript:;' onclick=\"ViewFormComn('7fb0df68-6adc-4b77-b8f9-3977f3291170','" + dt.Id + "')\">" + dt.Code + "</a>";
+                                    break;
+                                case "OutStoreJson":
+                                    e.cellHtml += "编号:" + "<a href='javascript:;' onclick=\"ViewFormComn('943e1066-f8d0-4227-b2e1-55329b237ef2','" + dt.Id + "')\">" + dt.Code + "</a>";
+                                    break;
+                                case "ReturnJson":
+                                    e.cellHtml += "编号:" + "<a href='javascript:;' onclick=\"ViewFormComn('7dd65822-3dbb-4715-9c48-f129905db743','" + dt.Id + "')\">" + dt.Code + "</a>";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            e.cellHtml += "&nbsp;&nbsp;";
+                            //Date
+                            if(IsEmpty(dt.ApprDate))
+                            {
+                                e.cellHtml += "日期未定义";
+                            }
+                            else
+                            {
+                                e.cellHtml += "日期:" + dt.ApprDate;
+                            }
+                            e.cellHtml += "&nbsp;&nbsp;";
+                            e.cellHtml += "数量:" + dt.Num;
+                            e.cellHtml += "&nbsp;&nbsp;";
+                            e.cellHtml += "金额:" + dt.Amount;
+                            e.cellHtml += "&nbsp;&nbsp;";
+                            e.cellHtml += "<br/>";
+                        }
+                    }
+                    else
+                    {
+                        e.cellHtml = "-";
+                    }
+                }                
+            }           
+        })
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            var ss = " EpsProjId='"+sessiondata.EpsProjId+"'";
+            value = mini.get("QMatCode").getFormValue();
+            if (value) ss += " and MatCode like'%" + value + "%'";
+
+            value = mini.get("Qpinming").getFormValue();
+            if (value) ss += " and MatShortName like'%" + value + "%'";
+
+            value = mini.get("QMatLongName").getFormValue();
+            if (value) ss += " and MatLongName like'%" + value + "%'";
+
+            value = mini.get("QSpecifi").getFormValue();
+            if (value) ss += " and Specifi like'%" + value + "%'";
+
+            // value = mini.get("QStorage").getFormValue();
+            // if (value) ss += " and dalei like'%" + value + "%'";
+
+            
+            //补充到查询条件中
+            if (e.params.swhere)
+                e.params.swhere += ss;
+            else
+                e.params.swhere = ss;
+            e.params.sort = "EpsProjId desc";
+        	var Nofilter=getParameter("Nofilter");
+			if (Nofilter){
+			var exp = {defaultright:false};
+			var str = mini.encode(exp);
+			str = base64encode(str);
+			e.params.extparams= str;
+			}
+        }
+        function GroupChanged (e) {
+            var field = mini.get(e.id).getValue();
+            var grid = mini.get(e.id.split('-')[0]);
+            grid.groupBy(field, "asc");
+        }
+        function ColseCombobox (e) {
+            var obj = e.sender;
+            obj.setText("");
+            obj.setValue("");
+            var grid = mini.get(e.sender.id.split('-')[0]);
+            grid.clearGroup();
+        }
+        function DrawGroup (e) {
+            var field = mini.get(e.sender.id + "-group-fields").getValue();
+            var text = mini.get(e.sender.id + "-group-fields").getText();
+            var data = comboboxdata[e.sender.id + "." + field];
+            if (data) {
+                e.cellHtml = text + ":" + FormFuns.GetGroupText(e, data);
+            }
+            else if (mini.formatDate(e.value, "yyyy-MM-dd") != "") {
+                e.cellHtml = text + ":" + mini.formatDate(e.value, "yyyy-MM-dd");
+            }
+            else if(text=="一级物资分类名称" || text=="二级物资分类名称"||text=="三级物资分类名称"){
+                e.cellHtml = text + ":" + e.value +"（金额合计:" + getGenderText(e.value, e.field) + ")";
+            }
+            else{
+                e.cellHtml = text + ":" + e.value;
+            }   
+        }
+        function getGenderText(id,Type)
+        {
+            var grid3 = mini.get("YR_StoreBalanceItems");
+            var TotalMoney=0;
+            var MinPrice=0;
+            var SupplieName="";
+            var ReturnValue="";
+
+            if(1==1)
+            {
+                for (var i = 0; i < grid3.data.length; i++)
+                {    
+                    if(id == grid3.data[i].dalei)
+                    {
+                        TotalMoney=TotalMoney+parseFloat(grid3.data[i].TotalAmount);
+                    }
+                    else if(id == grid3.data[i].zhonglei)
+                    {
+                        TotalMoney=TotalMoney+parseFloat(grid3.data[i].TotalAmount);
+                    }
+                    else  if(id == grid3.data[i].xiaolei){
+                        TotalMoney=TotalMoney+parseFloat(grid3.data[i].TotalAmount);
+                    }
+                }
+                ReturnValue = parseFloat(TotalMoney);
+            }
+            var n2 = ReturnValue.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');//使用正则替换，每隔三个数加一个',' 
+            return n2;
+        } 
+
+    </script>
+</body>
+</html>

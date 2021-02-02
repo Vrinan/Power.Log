@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%;">
+        <div class="col-md-12" style="height: 100%;">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <!--<a class="mini-button blue" id="PowerMessage.Refresh" onclick="grid.reload()"><i class="fa fa-refresh"></i> $Helper.GetResource("g_refresh")</a><!--刷新-->
+                        <a class="mini-button blue" id="PowerMessage.workflow_infos" onclick="openmore('infos', app_global['notify_infos'])">$Helper.GetResource("notify_infos")</a><!--我的待处理通知-->
+                        <a class="mini-button blue" id="PowerMessage.workflow_active" onclick="openmore('actived', app_global['notify_active'])"> $Helper.GetResource("notify_active")</a><!--我发起的通知-->
+                        <a class="mini-button blue" id="PowerMessage.workflow_joins" onclick="openmore('join', app_global['notify_joins'])"> $Helper.GetResource("notify_joins")</a><!--已处理的通知-->
+                        <a class="mini-button blue" id="PowerMessage_Active" onclick="SignRead()">标记为已读</a>--> 
+                    </div>
+
+                    <div class="tools">
+                        <!--$Helper.GetResource("g_project"):
+                        <input id="search_proj" class="mini-treeselect" textfield="project_name" valuefield="project_guid" parentfield="parent_guid" style="width: 180px;" />
+                        $Helper.GetResource("g_title"):
+                        <input id="search_title" class="mini-textbox" style="width: 150px;" />
+                        $Helper.GetResource("g_formhumanname"):
+                        <input id="search_human" class="mini-textbox" style="width: 150px;" />
+                        <a class="mini-button blue" id="btn-search" onclick="grid.reload()"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>-->
+                    </div>
+                </div>
+                <div class="mini-fit" style="background: #FFF;">
+                    <div class="portlet-body" style="height: 100%; padding: 8px">
+                        <div id="PowerMessage" class="mini-datagrid" style="width: 100%; height: 100%;"
+                             idfield="Id" allowresize="true" multiselect="true" pagesize="15" showpager="true" onbeforeload="OnBeforeLoad"
+                             onpreload="OnPreLoad" url="/Message/MyNotifyInfos" autoload="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div>
+                                <div type="checkcolumn"></div>
+                                <div field="EpsProjCode">$Helper.GetResource("hisdatatable_project_code")</div><!--项目编号-->
+                                <div field="EpsProjName">$Helper.GetResource("g_project_name")</div><!--项目名称-->
+                                <div field="Title" name="name">$Helper.GetResource("g_title")</div><!--标题-->
+                                <div field="FromHumanName" width="40">$Helper.GetResource("g_formhumanname")</div><!--发送人-->
+                                <div field="ToHumanName" width="40">$Helper.GetResource("g_receiver")</div><!--接收人-->
+                                <div field="wfDate" width="60" dateformat="yyyy-MM-dd HH:mm:ss">$Helper.GetResource("coderule_date")</div><!--日期-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title='$Helper.GetResource(" g_search_panel")' style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true">
+        <div style="height: 195px; overflow:auto;">
+            <!--查询面板-->
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px; ">
+            <tr>
+                <td align="center">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> $Helper.GetResource("g_search")</a><!--查询-->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var grid = mini.get("PowerMessage");
+        grid.on("drawcell", function (e) {
+            var r = e.record;
+            //action列，超连接操作按钮
+            if (e.column.name == "name") {
+                //e.cellStyle = "color :red";
+                e.cellHtml = '<a href="javascript:;" onclick="doAction()";>' + r.Title + '</a>   ';
+            }
+        });
+
+        function doAction(e) {
+            var r = grid.getSelected();
+            url = "/Message/Show/" + r.Id;
+            OpenWindow(url, 'div', 900, 550);
+        }
+
+        function OnBeforeLoad(e) {
+            var params = e.params;
+            params.index = params.pageIndex;
+            params.size = params.pageSize;
+            params.types = FormParams.types;
+            var swhere = "1=1";
+            var search_proj = mini.get("search_proj").getText();
+            var search_title = mini.get("search_title").getValue();
+            var search_human = mini.get("search_human").getValue();
+            if (search_proj != "")
+                swhere += " and EpsProjName='" + search_proj + "'";
+            if (search_title != "")
+                swhere += " and Title like '%" + search_title + "%'";
+            if (search_human != "")
+                swhere += " and FromHumanName like '%" + search_human + "%'";
+            params.swhere = swhere; 
+            if (params.types == "infos") {
+                $("#PowerMessage_Active").html("标记为已读");
+            }
+            else if (params.types == "join")
+                $("#PowerMessage_Active").html("标记为未读");
+            else
+                $("#PowerMessage_Active").html("");
+        }
+
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            if (tmpdata.data.infos != undefined) {
+                e.data = tmpdata.data.infos;
+                if (tmpdata.data.infostotalcount != undefined)
+                    e.sender.setTotalCount(tmpdata.data.infostotalcount);
+
+                
+            }
+            if (tmpdata.data.actived != undefined) {
+                e.data = tmpdata.data.actived;
+                if (tmpdata.data.activedtotalcount != undefined)
+                    e.sender.setTotalCount(tmpdata.data.activedtotalcount);
+
+            }
+            if (tmpdata.data.join != undefined) {
+                e.data = tmpdata.data.join;
+                if (tmpdata.data.jointotalcount != undefined)
+                    e.sender.setTotalCount(tmpdata.data.jointotalcount);
+
+            }
+        }
+        function SignRead() {
+            var st = "";
+            if (FormParams.types == "infos") {
+                st = "3";
+            }
+            else if (FormParams.types == "join")
+                st = "1";
+            else
+                return;
+            var messageid = "";
+            var grid = mini.get("PowerMessage");
+            var rows = grid.getSelecteds();
+            for (var i = 0; i < rows.length; i++) {
+                messageid += rows[i].Id + ",";
+            }
+            if (messageid.length > 0)
+                messageid = messageid.substring(0, messageid.length - 1);
+            else
+                return;
+            debugger;
+            $.ajax({
+                url: "/Message/UpdateStatus",
+                data: { messageid: messageid, status: st },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success)
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    grid.reload();
+                }
+            })
+        }
+        //var PowerForm = new SingleForm();
+        $(function () {
+
+            $.ajax({
+                url: "/Form/GetEPSList",
+                type: "POST",
+                cache: false,
+                success: function (text) {
+                    var tmpdata = mini.decode(text);
+                    var data = mini.decode(tmpdata.data.epslist);
+                    mini.get("search_proj").loadList(data, "project_guid", "parent_guid");
+                }
+            }); 
+        });
+
+        function openmore(id, text) {
+            var t = base64encode('{"types":"' + id + '"}');
+            var url = '/Form/EditForm/baed5ac2-1698-40d0-827c-cd9e68048cef/baed5ac2-1698-40d0-827c-cd9e68048cef/' + t;
+            id = 'my' + id + 'notify';
+            top.Power.menu.nav.addTabs(url, id, text, "single");
+        }
+    </script>
+</body>
+</html>

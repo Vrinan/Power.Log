@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>出库单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_MatOutStore.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="PS_MatOutStore.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="PS_MatOutStore.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_MatOutStore.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_MatOutStore.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_MatOutStore" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            出库单编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.Code" name="Code" class="mini-textbox" required="true" requirederrortext="出库单编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_MatOutStore.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            出库单名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_MatOutStore.Title" name="Title" class="mini-textbox" required="true" requirederrortext="出库单名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            领料单
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.RequisitionTitle" name="RequisitionTitle" textname="RequisitionTitle" class="mini-buttonedit" allowinput="false" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            保管员
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.StoreHuman" name="StoreHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            领料部门
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.UseDept" name="UseDept" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            领料人
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.OutStoreHuman" name="OutStoreHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            出库日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.OutStoreDate" name="OutStoreDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_MatOutStore.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='出库明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_MatOurStore_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_MatOurStore_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_MatOurStore_Dtl" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     oncellendedit="EidtApp"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="MatCode" headeralign="center">
+                                            物资编码
+                                        </div>
+                                        <div field="MatName" headeralign="center">
+                                            物资名称
+                                        </div>
+                                        <div field="MatDescription" headeralign="center">
+                                            物资描述
+                                        </div>
+										<div field="MatSpec" headeralign="center">
+                                            装置
+                                        </div>
+										<div field="TagNumber" headeralign="center">
+											位号
+											<input property="editor" class="mini-textarea" style="width: 100%;" readonly/>
+										</div>
+                                        <div field="MatUnit" headeralign="center">
+                                            单位
+                                        </div>
+                                        <div field="StorageName" headeralign="center">
+                                            仓库
+                                        </div>
+                                        <!--<div field="BatchCode" headeralign="center">批次</div>-->
+                                        <div field="UnitPrice" headeralign="center">
+                                            单价
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="RequisitionNum" headeralign="center" summarytype="sum">
+                                            领料数量
+                                        </div>
+                                        <div field="OutStoreNum" headeralign="center" summarytype="sum">
+                                            出库数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <!--金额-->
+                                        <div field="OutStoreAmount" headeralign="center" summarytype="sum">
+                                            出库金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                        </div>
+										<div field="Remarks" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "PS_MatOurStore_Dtl.Add") {
+                if (formconfig.FormState == "add") {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表.");
+                    return;
+                }
+                var contractid = formconfig.config.joindata.currow.Requisition_Guid;
+                if (!contractid) {
+                    e.canOpen = false;
+                    Power.ui.warning("请先选择领料单");
+                    return;
+                }
+                e.where = "MasterId='" + contractid + "' and ((RequestNum-OutStoreNum)>0)";
+            }
+        }
+
+        PowerForm.EventAfterFormLoad = function (f, data) {
+            if (formconfig.config.joindata.currow.RegHumId == null || formconfig.config.joindata.currow.RegHumId == "00000000-0000-0000-0000-000000000000") {
+                formconfig.config.joindata.currow.RegHumId = sessiondata.HumanId;
+                mini.get("PS_MatOutStore.RegHumName").setValue(sessiondata.HumanName)
+
+            }
+        }
+        function EidtApp(e) {
+            //获取子表节点
+            var record = e.record;
+            var grid = mini.get(PS_MatOurStore_Dtl);
+
+            var price = record.UnitPrice;
+
+            var OutStoreNum = record.OutStoreNum;
+            //判断、并进行计算
+            if (e.field == "UnitPrice" || e.field == "OutStoreNum") {
+                grid.updateRow(record, { OutStoreAmount: (price * OutStoreNum) });
+            }
+
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>客户编号</span>
+                            <input id="QCode" class="mini-textbox" width="150px" />
+                            <span>客户名称</span>
+                            <input id="QName" class="mini-textbox" shownullitem="true" width="150px"></input>
+                            <a class="mini-button yellow" onclick="mini.get('Organize').reload();">查询</a>
+                            &ensp;&ensp;&ensp;
+                            <a class="mini-button yellow" onclick="lookproj();">查看客户关联项目</a>
+                            <a class="mini-button yellow" onclick="lookcon();">查看客户关联合同</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="Organize" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                <div field="Name" name="Name" headeralign="center" width="200" guideid="" datatype="" allowsort="true" currencyunit="" header="全称" align="left"><input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="MainLinker" name="MainLinker" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="联系人" align="left"><input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                <div field="Phone" name="Phone" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="电话" align="left"><input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="Email" name="Email" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="Email" align="left"><input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="RegDate" name="RegDate" headeralign="center" width="80px" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+
+                                <div field="RegHumName" name="RegHumName" headeralign="center" width="80px" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("QCode").on("valuechanged", function () {
+                mini.get("Organize").reload();
+            })
+            mini.get("QName").on("valuechanged", function () {
+                mini.get("Organize").reload();
+            })
+            mini.get("Organize").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "Organize.ViewForm" }, OpenFormId);
+            });
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            var ss = "";
+            value = mini.get("QCode").getFormValue();
+            if (value) ss += " and Code like '%" + value + "%'";
+
+            value = mini.get("QName").getFormValue();
+            if (value) ss += " and Name like '%" + value + "%'";
+
+
+
+            //补充到查询条件中
+            if (e.params.swhere)
+                e.params.swhere += ss;
+            else
+                e.params.swhere = ss;
+            e.params.sort = "UpdDate desc";
+        }
+
+       function lookproj(e) {
+            var record = mini.get("Organize").getSelected();
+            if (record) {
+                var id = record.Id;
+                window.location = "/Form/ValidForm/a17c434e-ed29-45fc-ad54-228dc5f87501/" + "/view/" + id + "/?Client_Guid=" + id;
+            }
+            else {
+                Power.ui.alert("请选择一条记录查看");
+            }
+        }
+        
+       function lookcon(e) {
+            var record = mini.get("Organize").getSelected();
+            if (record) {
+                var id = record.Id;
+                window.location = "/Form/ValidForm/149e6b66-99ba-41d5-b008-cee8c5baf658/" + "/view/" + id + "/?PartyA_Guid=" + id;
+            }
+            else {
+                Power.ui.alert("请选择一条记录查看");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+函数：
+--增加有权限控制     
+CREATE function f_getchildid_jybasic(@id uniqueidentifier,@humanid uniqueidentifier )       
+/*      
+ --select *       
+ from dbo.f_getchildid_jybasic( '12B74121-2029-47E9-B66C-6C1A27B4A7CC','8E983361-4F22-49C6-87A5-863BCD284E1E' )        
+ select * from chy_Basicclassi    
+ select * from Chon_jy_basiclimit    
+ --select * from  #hum_dept_temp01       
+ --drop table  #hum_dept_temp01      
+ 根据树节点逐层查询子节点并插入临时表#hum_dept_temp01      
+*/      
+ returns @re table(id uniqueidentifier)      
+ as      
+ begin      
+  --插入本节点    
+  insert into @re     
+  select @id     
+     
+  insert into @re     
+  select id     
+  from (      
+        select Id as id ,ParentId as pid     
+        from chy_Basicclassi a      
+        )  tb     
+  where pid=@id      
+       
+      
+  while @@rowcount>0      
+       
+    insert into @re       
+    select a.id      
+    from (      
+          select Id as id,parentId as pid     
+          from  chy_Basicclassi a       
+          )  a inner join @re b on a.pid=b.id      
+    where a.id not in(select id from @re)      
+        
+  --根据权限判定       
+    delete from  @re    
+    where id  not in ( select id from  f_chon_getjybasicman ( @humanid )  )    
+        
+       
+        
+  -- delete from  @re where id=@id      
+  return      
+ end 
+
+
+
+js：
+ PowerForm.EventBeforeLoadData = beforeload;
+        function beforeload(e) {
+            var filter = ""
+            var code = mini.get("Chon_Documentclass-search-fields").getValue();
+            var codevalue = mini.get("Chon_Documentclass-search-value").getValue();
+            if (e.sender.id == "Chon_Documentclass") {
+
+                if (codevalue == "") {
+
+                    if (aa == "") {
+                        filter += " and 1=1";
+                    }
+                    else {
+                        //alert(HumanId);
+                        if (Id == null || Id == "") {
+                            Id = "25A88AC6-0E90-4215-BF4B-E8E39DD91D1A";
+                            filter += " or  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "' ,'" + HumanId + "' )  )  ";
+                        } else {
+                            filter += " or  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "' ,'" + HumanId + "' )  )  ";
+                        }
+
+                    }
+
+                    if (e.params.swhere == "") {
+                        e.params.swhere = "and 1=1 and " + filter;
+
+                    }
+
+                    else
+                        e.params.swhere += " and 1=1 " + filter;
+                }
+                else {
+                    e.params.swhere = "  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "','" + HumanId + "'  )  )  and " + code + " like '" + codevalue + "%'"
+                }
+
+            }
+
+            //分类树权限
+            if (e.sender.id == "chy_Basicclassi") {
+
+                e.params.swhere = "  Id in (  select b.id from  dbo.f_chon_getjybasicman(  '" + HumanId + "'  )  b )  "
+                //alert(e.params.swhere);
+
+            }
+        }

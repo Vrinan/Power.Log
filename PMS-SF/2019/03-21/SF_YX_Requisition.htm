@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+      
+        <div class="mini-fit">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-reorder"></i>领用请示
+                    </div>
+					  $!WorkFlowButtons
+                    <div class="actions">
+                        <a class="mini-button blue" id="SF_YX_Requisition.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_YX_Requisition.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="SF_YX_Requisition.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%;">
+                        <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title='基本信息'>
+                                <div id="SF_YX_Requisition" class="form">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>
+                                                编号
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.Code" name="Code" class="mini-textbox" required="true" requirederrortext="入库单编号不能为空" />
+                                            </td>
+                                            <td>
+                                                <label for="SF_YX_Requisition.Status">状态</label>
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.Status" name="Status" class="mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                名称
+                                            </td>
+                                            <td colspan="3">
+                                                <input id="SF_YX_Requisition.Title" name="Title" class="mini-textbox" required="true" requirederrortext="入库单名称不能为空" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                项目名称
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.EPSProjectName" name="EPSProjectName" textname="EPSProjectName" class="mini-buttonedit"
+                                                       emptytext="请选择项目名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                            </td>
+                                            <td >领用方式</td>
+                                            <td >
+                                                <input id="SF_YX_Requisition.RequisitionType" name="RequisitionType" class="mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                需求时间
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.RequisitionDate" name="RequisitionDate" class="mini-datepicker" allowInput="false"/>
+                                            </td>
+                                             <td>
+                                                收货地址
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.GetLocation" name="GetLocation" class="mini-textbox"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               联系人
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.GetPerson" name="GetPerson" class="mini-textbox"/>
+                                            </td>
+                                            <td>
+                                                联系电话
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.ContractNum" name="ContractNum" class="mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               备注
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.Memo" name="Memo" class="mini-textarea" height="100"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                录入人
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                            </td>
+                                            <td>
+                                                录入时间
+                                            </td>
+                                            <td>
+                                                <input id="SF_YX_Requisition.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div title='领用明细'>
+                                <div class="mini-toolbar">
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_Requisition_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                    <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_Requisition_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                    <a class="mini-button blue" iconcls="fa-refresh" id="SF_YX_Requisition_Dtl.Export" onclick="PowerForm.OnExportDataToXls('SF_YX_Requisition_Dtl', '领用请示')">导出</a>
+                                </div>
+                                <div class="mini-fit">
+                                    <div id="SF_YX_Requisition_Dtl" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                         idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" multiSelect="true" showPager="false" sortField="Sequ">
+                                        <div property="columns" >
+                                            <div type="checkcolumn"></div>
+                                            <div type="indexcolumn"></div>
+                                            <div field="Name" headeralign="center">
+                                                材料（设备）名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="Spec" headeralign="center" width="180">
+                                                规格型号
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="Unit" headeralign="center" width="180">
+                                                单位
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="Amount" headeralign="center" numberformat="n2">
+                                                数量
+                                                <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeOnMousewheel="false" format="n2"  style="width: 100%;" />
+                                            </div>
+                                            <div field="Memo" width="150" allowSort="true">
+                                                备注
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="附件" name="attachfile" url=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        var IsReload=false;
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

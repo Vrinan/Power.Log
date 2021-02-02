@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="Department.AddForm" onclick="PowerForm.OnBtnAddForm(this, OpenFormId)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                            <a class="mini-button blue" id="Department.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                            <a class="mini-button blue" id="Department.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                            <a class="mini-button blue" id="Department.EditForm" onclick="PowerForm.OnBtnEditForm(this, OpenFormId)"><i class="fa fa-pencil"></i>$Helper.GetResource("g_edit")</a><!--编辑-->
+                            <a class="mini-button blue" id="Department.ViewForm" onclick="PowerForm.OnBtnViewForm(this, OpenFormId)"><i class="fa fa-eye"></i>$Helper.GetResource("g_view")</a><!--查看-->
+                            <a class="mini-button blue" id="Department.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                            <a class="mini-button blue" id="Department.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i>$Helper.GetResource("g_up")</a><!--上移-->
+                            <a class="mini-button blue" id="Department.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i>$Helper.GetResource("g_down")</a><!--下移-->
+                            <a class="mini-button blue" id="Department.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i>$Helper.GetResource("g_left")</a><!--左移-->
+                            <a class="mini-button blue" id="Department.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i>$Helper.GetResource("g_right")</a><!--右移-->
+                        </div>
+                        <div class="actions">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="Department" class="mini-treegrid" style="width: 100%; height: 100%"
+                             showtreeicon="true" treecolumn="code" idfield="Id" parentfield="ParentId" resultastree="false" allowCellEdit="true" 
+                             allowresize="true" expandonload="true" virtualScroll="true"
+                             showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn"></div>
+                                <div name="code" field="Code" width="160">$Helper.GetResource("g_code")</div><!--编码-->
+                                <div field="Name" width="80">$Helper.GetResource("g_name")</div><!--名称-->
+                                <div field="OrgName" width="80" align="right">关联单位<input property="editor" id="Department.OrgShortName" class="mini-buttonedit" name="OrgShortName" textname="OrgShortName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" /></div>
+                                <div field="RegHumName" width="60" align="right">$Helper.GetResource("bizarea_reg_human")</div><!--录入人-->
+                                <div field="RegDate" width="80" dateformat="yyyy-MM-dd">$Helper.GetResource("basedata_reg_date")</div><!--录入日期-->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            //PowerForm.setQmenu("Department", "view,refresh,delete,edit,moveup,movedown,moveleft,moveright");
+        });
+    </script>
+</body>
+</html>
+

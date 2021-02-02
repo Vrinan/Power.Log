@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目实施启动书（集团内部项目）
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="SF_FK_ProjCarryOut.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_FK_ProjCarryOut.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_FK_ProjCarryOut.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_FK_ProjCarryOut" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.ContractCode" name="ContractCode" textname="ContractCode" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="flase" />
+                                        </td>
+                                        <td>
+                                           合同名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.ContractName" name="ContractName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同金额
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.ContractAmount" name="ContractAmount" class="mini-spinner" allowlimitvalue="false" readonly format="n2"/>
+                                        </td>
+                                        <td>
+                                            业主单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.PartyBName" name="PartyBName" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            成本控制价
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.CostControlAmount" name="CostControlAmount" class="mini-spinner" format="n2"  allowlimitvalue="false"/>
+                                        </td>
+                                        <td>
+                                            合同工期
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.ContractCycle" name="ContractCycle" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            启动会时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.StartMeetingDate" name="StartMeetingDate" dateformat="yyyy-MM-dd" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            参会人员及部门负责人
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_ProjCarryOut.PartyInHuman" name="PartyInHuman" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            一注意事项及要求
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_ProjCarryOut.AttentionRemark" name="AttentionRemark" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            其它决定
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_ProjCarryOut.OtherDecision" name="OtherDecision" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                                            
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_ProjCarryOut.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>    
+                                               
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_ProjCarryOut.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

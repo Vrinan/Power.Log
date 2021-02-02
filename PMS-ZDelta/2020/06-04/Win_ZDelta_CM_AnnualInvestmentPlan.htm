@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.Add0" onclick="PowerForm.OnBtnAddWizard(this,OpenFormId)">
+                                <i class="fa fa-plus"></i>新增(弹出向导)</a>
+                            <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.Del" onclick="PowerForm.OnBtnDel(this,'')">
+                                <i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)">
+                                <i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)">
+                                <i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.Search" onclick="PowerForm.OnBtnSearch(this)">
+                                <i class="fa fa-search"></i>查询</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="ZDelta_CM_AnnualInvestmentPlan" class="mini-datagrid"
+                            style="width: 100%; height: 100%;" idField="Id" multiSelect="true" allowAlternating="true"
+                            pageSize="50">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div type="indexcolumn" header="序号" width="40" headerAlign="center" align="center">
+                                </div>
+                                <div type="comboboxcolumn" field="Status" name="Status" header="状态" width="55"align="center" headerAlign="center" allowsort="true">
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <div field="Code" name="Code" header="编号" width="165" headerAlign="center" align="center" allowsort="true"></div>
+                                <div field="Title" name="Title" header="标题" width="165" headerAlign="center" align="center" allowsort="true"></div>
+                                <div field="Year" name="Year" header="年度" width="65" headerAlign="center" align="center" allowsort="true"></div>
+                                <div field="ContractCode" name="ContractCode" header="合同编号" width="230" headerAlign="center" align="left" allowsort="true"></div>
+                                <div field="ContractName" name="ContractName" header="合同名称" width="230" headerAlign="center" align="left" allowsort="true"></div>
+                                <div field="AnnualInvestmentAmount" name="AnnualInvestmentAmount" header="年度投资额" width="100" headerAlign="center" align="right" allowsort="true" numberFormat="n2"></div>
+                                <div field="YearPrepaymentAmount" name="YearPrepaymentAmount" header="年度预付款金额" width="100" headerAlign="center" align="right" allowsort="true" numberFormat="n2"></div>
+                                <div field="RegHumName" name="RegHumName" header="录入人" width="65" headerAlign="center" allowsort="true"></div>
+                                <div field="RegDate" name="RegDate" header="录入日期" width="80" headerAlign="center" align="center" allowsort="true" dateformat="yyyy-MM-dd"></div>
+                                <div field="ApprDate" name="ApprDate" header="批准日期" width="80" headeralign="center" align="center" allowsort="true" dateformat="yyyy-MM-dd"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')"
+        style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+        onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+
+

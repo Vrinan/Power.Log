@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <title> 4--0 - 我的消息 </title>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="../global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="../global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="../global/plugins/icon-font-alibaba/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../global/css/common.css?v=1" type="text/css">
+</head>
+
+<body>
+    <!--nav tab切换导航  -- 开始-->
+    <section class="review-nav">
+        <div class="container">
+            <ul class="clearFix" role="tablist">
+                <li role="presentation"  class="active">
+                    <a href="#unreadMessages" aria-controls="profile" role="tab" data-toggle="tab"> 
+                        <span>未读消息</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#meStart" aria-controls="messages" role="tab" data-toggle="tab"> 
+                        <span>我发起的</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#readnMessages" aria-controls="settings" role="tab" data-toggle="tab"> 
+                    <span>已读消息</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!--nav tab切换导航  -- 结束-->
+
+    <!-- Tab panes -->
+    <!--tab content主体内容  --开始-->
+    <section class="review-body-content">
+        <div class="container">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="unreadMessages">
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="meStart">
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="readnMessages">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--给下面的section 的class添加active属性，就会让其显示-->
+    <section class="no-message-show-box">
+        <img src="../global/img/noMessageShow.png" alt="">
+        <p>没有相关内容</p>
+    </section>
+    <!--tab content主体内容  --结束-->
+
+    <!--平台中的JS-->
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script src="/Apps/Common.js"></script>
+    <!--获取菜单数据 方法 _menulist -->
+    <script src="/WebCenter/MenuEpsJson/menu" type="text/javascript"></script>
+    <script src="/Apps/js/TouchSlide.1.1.js"></script>
+
+    <script type="text/javascript">
+        var Uitls = (function() {
+            //自定义时间格式 ：format
+            //比如：
+            //"yyyy-MM-dd HH:mm:ss";"yyyy-MM-dd-HH-mm-ss"
+            //"yyyy-MM-ddTHH:mm:ss" 
+
+            function formatDate(time, format) {
+                var t = new Date(time);
+                var tf = function(i) {
+                    return (i < 10 ? '0' : '') + i;
+                };
+                return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(type) {
+                    switch (type) {
+                        case 'yyyy':
+                            return tf(t.getFullYear());
+                        case 'MM':
+                            return tf(t.getMonth() + 1);
+                        case 'mm':
+                            return tf(t.getMinutes());
+                        case 'dd':
+                            return tf(t.getDate());
+                        case 'HH':
+                            return tf(t.getHours());
+                        case 'ss':
+                            return tf(t.getSeconds());
+                    }
+                })
+            }
+
+            return {
+                formatDate: formatDate
+            };
+        })();
+        $(function() {
+            var myMessage = {
+                init: function() {
+                    this.events();
+                },
+                OpenMessage: function(id) {
+                    var url = "/Message/Show/" + id;
+                    CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"true","showTabbar":"false","title":""}', url);
+                },
+
+                myMessageTemp: function(data, Id) {
+
+                    if (data) {
+                        var html = '',
+                            i = 0,
+                            list;
+                        for (; i < data.length; i++) {
+                            list = data[i];
+                            html += '<div class="review-unit-content" data-id="' + list.Id + '">' +
+                                '<div class="review-unit-detail review-unit-content-header">' +
+                                ' <p class="review-unit review-unit-header">' +
+                                '<i class="icon iconfont icon-form font-color-blue">  </i>' +
+                                '<span class="title-message"> ' + list.FromHumanName + ' </span>' +
+                                ' <span class="' + "review-unit-header-warn " + list.icon16 + '"> ' + "● " + list.fonts + ' </span>' +
+                                '</p>' +
+
+                                ' <p class="review-unit review-unit-name">' +
+                                list.Title +
+                                '</p>' +
+
+                                '<p class="review-unit review-unit-date">' +
+                                ' <span> 到达时间: </span>' +
+                                ' <span class="time">  ' + list.wfDate + ' </span>' +
+                                ' </p>' +
+                                '</div>' +
+                                '</div>';
+                        }
+
+                        $("#" + Id).html(html);
+                    }
+                },
+
+                getData: function() {
+                    var myMessageTemp = this.myMessageTemp;
+                    var OpenMessage = this.OpenMessage;
+
+                    $.ajax({
+                        url: "/Message/MyNotifyInfos",
+                        type: "POST",
+                        data: {
+                            types: "infos,actived,join",
+                            index: "0",
+                            size: "0",
+                            swhere: ""
+                        },
+                        cacha: false,
+                        success: function(text) {
+                            var o = jQuery.parseJSON(text);
+                            var getData = o.data;
+
+                            //我发起的
+                            if (getData.actived.length > 0) {
+                                for (var i = 0; i < getData.actived.length; i++) {
+                                    var act_list = getData.actived[i];
+                                    act_list.icon16 = "font-color-blue";
+                                    act_list.fonts = "我发起的";
+                                    act_list.wfDate = Uitls.formatDate(act_list.wfDate, "yyyy-MM-dd HH:mm:ss");
+                                }
+                            }
+
+                            //我参与的
+                            if (getData.join.length > 0) {
+                                for (var i = 0; i < getData.join.length; i++) {
+                                    var join_list = getData.join[i];
+                                    join_list.icon16 = "font-color-purple";
+                                    join_list.fonts = "已读消息";
+                                    join_list.wfDate = Uitls.formatDate(join_list.wfDate, "yyyy-MM-dd HH:mm:ss");
+                                }
+                            }
+
+                            //未读信息
+                            if (getData.infos.length > 0) {
+                                for (var i = 0; i < getData.infos.length; i++) {
+                                    var info_list = getData.infos[i];
+                                    info_list.icon16 = "font-color-red";
+                                    info_list.fonts = "未读信息";
+                                    info_list.wfDate = Uitls.formatDate(info_list.wfDate, "yyyy-MM-dd HH:mm:ss");
+                                }
+                            }
+
+                            myMessageTemp(getData.actived, "meStart");
+
+                            myMessageTemp(getData.join, "readnMessages");
+
+                            myMessageTemp(getData.infos, "unreadMessages");
+
+                            $("#meStart,#readnMessages,#unreadMessages,#allLists").on("click", ".review-unit-content", function() {
+                                var id = $(this).attr("data-id");
+                                OpenMessage(id);
+                            });
+
+
+                        }
+                    });
+                },
+                events: function() {
+
+                    this.getData();
+                }
+            };
+            myMessage.init();
+        });
+    </script>
+</body>
+
+</html>

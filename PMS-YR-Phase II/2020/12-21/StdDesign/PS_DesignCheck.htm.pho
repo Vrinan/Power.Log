@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Apps/style/webformstyle.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Apps/js/MobileWorkFlow.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+
+</head>
+
+<body>
+
+    <div class="listfile">
+        <!--此处为主表按钮-->
+        <!--命名规则为KeyWord_buttonlist-->
+        <div class="show buttonlist" id="PS_DesignCheck_buttonlist">
+            <div id="txtCurrentWorkInfoID" class="mini-textbox" enabled="false" style="display: none"></div>
+            <div id="txtCurrentSequeID" class="mini-textbox" enabled="false" style="display: none"></div>
+
+            <div class="button a"><a id="PS_DesignCheck.Save" href="#" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i><span>保存</span></a></div>
+            <div id="btnActive" class="button a" style="display:none" onclick="onExecute(this,'Update,Active');"><a href="#"><i class="fa fa-thumbs-up"></i><span>送审</span></a></div>
+            <div id="btnSend" class="button a" style="display:none" onclick="onExecute(this,'Update,Send');"><a href="#"><i class="fa fa-thumbs-up"></i><span>同意</span></a></div>
+            <div id="btnReturn" class="button a" style="display:none" onclick="onExecute(this,'Update,Return');"><a href="#"><i class="fa fa-mail-reply"></i><span>驳回</span></a></div>
+        </div>
+        <!--此处为子表按钮，多个子表将div复制多份，不要超过2个子表，否则手机显示不下-->
+        <!--命名规则为KeyWord_buttonlist-->
+        <!--<div class="hide buttonlist" id="PS_DesignCheck_Dtl_buttonlist">
+            <div class="button a"><a href="#" id="PS_DesignCheck_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i><span>新增</span></a></div>
+            <div class="button a"><a href="#" id="PS_DesignCheck_Dtl.Delete" class="delete" onclick="PowerForm.ShowDel(this)"><i class="fa fa-trash"></i><span>删除</span></a></div>
+        </div>-->
+        <!--此处为附件按钮，原样复制-->
+        <div class=" hide buttonlist" id="file_buttonlist">
+            <div id="btnUpload" class="button" style="border: 0px;  width: 30%"><a href="#" id="nav"><i class="fa fa-cloud-upload"></i><span>上传图片</span></a></div>
+            <div id="btnUploadMedia" class="button" style="border: 0px;  width: 30%"><a href="#" id="media"><i class="fa fa-cloud-upload"></i><span>上传视频</span></a></div>
+            <div id="btnUploadAudio" class="button" style="border: 0px;  width: 30%"><a href="#" id="audio"><i class="fa fa-cloud-upload"></i><span>上传音频</span></a></div>
+        </div>
+        <!--此处为子表1的删除时的确定删除按钮，多个子表将div复制多份-->
+        <!--命名规则为KeyWord_buttonlist1-->
+        <div class="buttonlist1" id="PS_DesignCheck_Dtl_buttonlist1">
+            <div class="button ok"><a href="#" onclick="PowerForm.OnBtnDel('PS_DesignCheck_Dtl','BO')"><i class="fa fa-check"></i><span>删除</span></a></div>
+            <div class="button cancel" style="border:0px;"><a href="#" onclick="PowerForm.CancelDel('PS_DesignCheck_Dtl')"><i class="fa fa-times"></i><span>取消</span></a></div>
+        </div>
+        <div id="tablist">
+            <!--此处为主表控件位置-->
+            <section id="PS_DesignCheck" class=" form show">
+                <table border="0" cellspacing="1">
+                    <tr>
+                        <td width="30%">
+                            编号
+                        </td>
+                        <td width="70%">
+                            <input id="PS_DesignCheck.Code" name="Code" class="mini-textbox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="PS_DesignCheck.Status">状态</label>
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            标题
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.Title" name="Title" class="mini-textbox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            类型
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.CheckType" name="CheckType" class="mini-combobox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设计阶段
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.DesignPhase" name="DesignPhase" class="mini-combobox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            审核日期
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.CheckDate" name="CheckDate" class="mini-datepicker" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            录入人
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            录入时间
+                        </td>
+                        <td>
+                            <input id="PS_DesignCheck.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                        </td>
+                    </tr>
+                </table>
+            </section>
+            <!--<section class="hide" id="PS_DesignCheck_Dtl" data-potions='{"idfield":"Id","title":{"value":"ContractName","format":""},"left":{"value":"ContractAmount","format":""},"center":{"value":"PaymentType","format":"combobox"},"right":{"value":"PaymentAmount","format":""}}'>
+                <ul class="datalist"></ul>
+            </section>-->
+            <!--此处为附件，原样复制-->
+            <section class="hide" id="file">
+                <ul id="FileAttach"></ul>
+            </section>
+            <!--此处为页签div，类似原表单中的tabs-->
+            <ul id="ul1">
+                <li class="active"><i class="fa fa-home"></i></br><span>基本信息</span></li>
+                <!--<li><i class="fa fa-cogs"></i></br><span>收款节点</span></li>-->
+                <li><i class="fa fa-file"></i></br><span id="filecount">附件(0)</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!--此处为附件按钮，原样复制-->
+    <div class="listdiv" id="listdiv">
+        <div class="navbg"></div>
+        <div class="navlist">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenCamera()">打开相机</a></li>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenGallery()">打开相册</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="listdiv" id="listmedia">
+        <div class="navbg"></div>
+        <div class="navlist" style="left:125px">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="PowerForm.RecordVideos()">录像</a></li>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenVideos()">打开视频</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="listdiv" id="listaudio">
+        <div class="navbg"></div>
+        <div class="navlist" style="left:245px">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenCamera()">录音</a></li>
+                <li><a href="javascript:void(0)" onclick="PowerForm.OpenGallery()">打开音频</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--此处为子表1的新增时弹出填写页面-->
+    <!--命名规则为KeyWord_AddTable-->
+    <div class="adddiv" id="PS_DesignCheck_Dtl_AddTable">
+        <p class="selectbutton">
+            <a href="#" class="ok" id="PS_DesignCheck_Dtl.Ok" onclick="PowerForm.OnBtnOk(this)">确定</a>
+            <a href="#" id="PS_DesignCheck_Dtl.Cancel" onclick="PowerForm.OnBtnCancel(this)">取消</a>
+        </p>
+        <!--命名规则为KeyWord_Form-->
+        <section id="PS_DesignCheck_Dtl_Form" class="form">
+            <table border="0" cellspacing="1">
+                <tr>
+                    <td width="30%">合同编号</td>
+                    <td width="70%"> <input id="PS_DesignCheck_Dtl.ContractCode" name="ContractCode" class="mini-textbox" /></td>
+                </tr>
+                <tr>
+                    <td><span>合同名称</span></td>
+                    <td><input id="PS_DesignCheck_Dtl.ContractName" name="ContractName" class="mini-textbox" /></td>
+                </tr>
+                <tr>
+                    <td>合同金额</td>
+                    <td> <input id="PS_DesignCheck_Dtl.ContractAmount" name="ContractAmount" class="mini-spinner" /></td>
+                </tr>
+                <tr>
+                    <td>分包商</td>
+                    <td> <input id="PS_DesignCheck_Dtl.PartyB" name="PartyB" class="mini-textbox" /></td>
+                </tr>
+                <tr>
+                    <td>付款方式</td>
+                    <td><input id="PS_DesignCheck_Dtl.PaymentType" name="PaymentType" class="mini-combobox" /></td>
+                </tr>
+                <tr>
+                    <td>付款金额</td>
+                    <td><input id="PS_DesignCheck_Dtl.PaymentAmount" name="PaymentAmount" class="mini-spinner" /></td>
+                </tr>
+                <tr>
+                    <td><span>事由</span></td>
+                    <td><input id="PS_DesignCheck_Dtl.PaymentReason" name="PaymentReason" class="mini-textbox" /></td>
+                </tr>
+            </table>
+        </section>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new MobileWebForm();
+
+        $(function () {
+		PowerForm.Init();
+
+        });
+        mini.parse();
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--<a class="mini-button blue" id="V_PS_PUR_ContractItemStoreBalance.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="V_PS_PUR_ContractItemStoreBalance.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>-->
+                            <span>仓库:</span>
+                            <input id="QStorage" class="mini-textbox" width="120px"></input>
+                             <span>物资编码:</span>
+                            <input id="QMatCode" class="mini-textbox" width="120px"></input>
+                            <span>物资名称:</span>
+                            <input id="Qpinming" class="mini-textbox" width="100px"></input>
+                            <span>物资描述:</span>
+                            <input id="QMatLongName" class="mini-textbox" width="100px"></input>
+                            
+                            <a class="mini-button yellow" onclick="mini.get('V_PS_PUR_ContractItemStoreBalance').reload();">查询</a>
+                            <div id="V_PS_PUR_ContractItemStoreBalance-Export" class="btn-group"></div>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_PUR_ContractItemStoreBalance" class="mini-datagrid"  style="width: 100%; height: 100%;"
+                              allowalternating="false"  idfield="Id" pagesize="20">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div name="name" field="StorageName">仓库</div>
+                                <div field="MatCode">物资编码</div>
+                                <div field="MatShortName">物资名称</div>
+                                <div field="MatLongName">物资描述</div>
+                                <div field="Specifi">规格型号</div>
+                                <div field="Standard">制造标准</div>
+                                <div field="Texture">材质</div>
+                                <div field="Pattern">型式</div>
+                                <div field="StoreNum">库存数量</div>
+				<div field="ValidNum" header="可用数量">可用数量<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="UnitPrice">单价</div>
+                                <div field="TotalAmount">金额</div>
+                                <div field="pinming">物资小类</div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+
+            mini.get("V_PS_PUR_ContractItemStoreBalance").on("rowdblclick", function () {
+                //PowerForm.OnBtnViewForm({ id: "V_PS_PUR_ContractItemStoreBalance.ViewForm" }, OpenFormId);
+            });
+            mini.get("QMatCode").on("valuechanged", function () {
+                mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            })
+            mini.get("Qpinming").on("valuechanged", function () {
+                mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            })
+            mini.get("QMatLongName").on("valuechanged", function () {
+                mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            })
+            mini.get("QStorage").on("valuechanged", function () {
+                mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            })
+            //mini.get("Qxiaolei").on("valuechanged", function () {
+            //    mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            //})
+            //mini.get("Qzhonglei").on("valuechanged", function () {
+            //   mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            //})
+
+            //mini.get("Qdalei").on("valuechanged", function () {
+             //   mini.get("V_PS_PUR_ContractItemStoreBalance").reload();
+            //})
+        });
+        mini.parse();
+
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            var ss = " and EpsProjId='"+sessiondata.EpsProjId+"'";
+            value = mini.get("QMatCode").getFormValue();
+            if (value) ss += " and MatCode like'%" + value + "%'";
+
+            value = mini.get("Qpinming").getFormValue();
+            if (value) ss += " and MatShortName like'%" + value + "%'";
+
+            value = mini.get("QMatLongName").getFormValue();
+            if (value) ss += " and MatLongName like'%" + value + "%'";
+
+            value = mini.get("QStorage").getFormValue();
+            if (value) ss += " and StorageName like'%" + value + "%'";
+
+            
+
+            //补充到查询条件中
+            if (e.params.swhere)
+                e.params.swhere += ss;
+            else
+                e.params.swhere = ss;
+            e.params.sort = "UpdDate desc";
+        	var Nofilter=getParameter("Nofilter");
+			if (Nofilter){
+			var exp = {defaultright:false};
+			var str = mini.encode(exp);
+			str = base64encode(str);
+			e.params.extparams= str;
+			}
+        }
+
+
+    </script>
+</body>
+</html>

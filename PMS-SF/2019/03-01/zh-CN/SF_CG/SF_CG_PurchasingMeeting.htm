@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <!--<script src="/Scripts/KindEditor/kindeditorboot.js?v=541" type="text/javascript"></script>-->
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>采购上会
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <!--<div id="btnPrint" class="btn-group"></div>-->
+                        <a class="mini-button blue" id="SF_CG_PurchasingMeeting.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存
+                        </a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_CG_PurchasingMeeting.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新
+                        </a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="SF_CG_PurchasingMeeting.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭
+                        </a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div style="height:40%;" showcollapsebutton="false">
+                                <div class="mini-fit">
+                                    <div id="SF_CG_PurchasingMeeting" class="form">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    编号
+                                                </td>
+                                                <td>
+                                                    <input id="SF_CG_PurchasingMeeting.Code" name="Code" class="mini-textbox" required="true" />
+                                                </td>
+                                                <td>
+                                                    状态
+                                                </td>
+                                                <td>
+                                                    <input id="SF_CG_PurchasingMeeting.Status" name="Status" class="mini-combobox" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    标题
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_CG_PurchasingMeeting.Title" name="Title" class="mini-textbox" required="true" />
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>
+                                                    备注
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_CG_PurchasingMeeting.Memo" name="Memo" class="mini-textarea" height="100" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    录入人
+                                                </td>
+                                                <td>
+                                                    <input id="SF_CG_PurchasingMeeting.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                                </td>
+                                                <td>
+                                                    录入时间
+                                                </td>
+                                                <td>
+                                                    <input id="SF_CG_PurchasingMeeting.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="height:50%;" showcollapsebutton="false" name="SF_CG_PurchasingMeeting_list">
+                                <div class="mini-toolbar">
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_PurchasingMeeting_list.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                    <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_PurchasingMeeting_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                </div>
+                                <div id="SF_CG_PurchasingMeeting_list" class="mini-datagrid" style="width: 100%; height: 100%;"multiselect="true" idfield="Id" 
+                                     allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="PurchaseCode" headeralign="center">
+                                            采购编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="PurchaseName" headeralign="center">
+                                            采购名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="SchemeCode" headeralign="center">
+                                            采购方案
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="RecommedCompany" headeralign="center">
+                                            采购单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="Price" headeralign="center" numberFormat="n2">
+                                            采购金额(元)
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="PlanType" headeralign="center" type="comboboxcolumn">
+                                            计划类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        mini.get("SF_CG_PurchasingMeeting_list").on("drawcell", function (e) {
+            e.cellStyle = "background:#D7F5D9";
+            var field = e.field;
+            if (field == "PurchaseCode") {
+                if (e.record.PurchaseType == "2") {//询比价
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('bbf4c358-fdb3-4cef-8dc3-93cab40f6e78', '" + e.record.PurchaseId + "');\">" + (e.record.PurchaseCode ? e.record.PurchaseCode : "") + "</a>";
+                }
+                if (e.record.PurchaseType == "3") {//定向采购
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('71f9e02c-5d28-40d6-bb9f-6f78fa7ff056', '" + e.record.PurchaseId + "');\">" + (e.record.PurchaseCode ? e.record.PurchaseCode : "") + "</a>";
+                }
+                
+            }
+        });
+
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+
+        //送审前,检查下子表,必须有一行
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_CG_PurchasingMeeting_list");
+            //只对新增单据做判断(考虑历史送审中数据很多未填)
+            if (mini.get("SF_CG_PurchasingMeeting_list.Status").getValue() == 0) {
+                if (grid.data.length == 0) {
+                    Power.ui.alert("请在本页下方,新增一条,并填写完整信息!");
+                    e.isValid = false;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

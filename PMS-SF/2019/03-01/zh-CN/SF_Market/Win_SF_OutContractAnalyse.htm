@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>合同签订日期</span>
+                            <input id="txtStart" class="mini-datepicker" shownullitem="true" width="120px" />
+                            ——
+                            <input id="txtFinish" class="mini-datepicker" shownullitem="true" width="120px" />
+                            <!--<span>显示状态</span>-->
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width:100%;height:100%;" vertical="true">
+                            <div size="60%" showCollapseButton="true">
+                                <div id="View_SF_OutContractAnalyse" class="mini-treegrid" style="width: 100%; height: 100%" showsummaryrow="true"
+                                     showtreeicon="true" treecolumn="name" idfield="project_guid" parentfield="parent_guid" resultastree="false"
+                                     allowresize="true" expandonload="false" virtualScroll="true"
+                                     showpager="false">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <!--<div name="name" field="project_shortname" width="160">编号</div>-->
+                                        <div field="project_name" width="180">项目名称</div>
+                                        <div field="OutCount" width="100" align="right" summarytype="sum">出项合同总数</div>
+                                        <div field="OutSum" width="100" align="right" summarytype="sum">出项合同总额</div>
+                                        <div header="技术服务类合同" width="200" headeralign="center">
+                                            <div property="columns">
+                                                <div field="E_Count" headeralign="center" align="right" summarytype="sum">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <div field="E_Sum" headeralign="center" align="right" numberformat="n2" summarytype="sum">
+                                                    金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="采购合同" width="200" headeralign="center">
+                                            <div property="columns">
+                                                <div field="P_Count" headeralign="center" align="right" summarytype="sum">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <div field="P_Sum" headeralign="center" align="right" numberformat="n2" summarytype="sum">
+                                                    金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="建安施工类合同" width="200" headeralign="center">
+                                            <div property="columns">
+                                                <div field="C_Count" headeralign="center" align="right" summarytype="sum">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <div field="C_Sum" headeralign="center" align="right" numberformat="n2" summarytype="sum">
+                                                    金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="其他合同" width="200" headeralign="center">
+                                            <div property="columns">
+                                                <div field="S_Count" headeralign="center" align="right" summarytype="sum">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <div field="S_Sum" headeralign="center" align="right" numberformat="n2" summarytype="sum">
+                                                    金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div showCollapseButton="true">
+                                <div id="charthere" style="width:100%;height:100%">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        var fieldmap = {
+            C_Count: "C", P_Count: "P",
+            S_Count: "S", E_Count: "E"
+        };
+        $(function () {
+            LoadData();
+            mini.get("View_SF_OutContractAnalyse").on("drawcell", function (e) {
+                e.cellStyle = "background:#D7F5D9";
+                var field = e.field;
+                if (field == "C_Count" || field == "P_Count" || field == "S_Count" || field == "E_Count") {
+                    e.cellHtml = "<a href='javascript:;' class='jumpto' uid='" + e.record._uid + "' field='" + e.field + "'>" + e.value + "</a>";
+                }
+            });
+            var $doc = $(document.body);
+            $doc.on("click", ".jumpto", function (e) {
+                var uid = $(this).attr("uid");
+                var field = $(this).attr("field");
+                var row = mini.get("View_SF_OutContractAnalyse").getRowByUID(uid);
+                var startDate = mini.get("txtStart").getFormValue();
+                var endDate = mini.get("txtFinish").getFormValue();
+                if (field == "C_Count" || field == "P_Count" || field == "S_Count" || field == "E_Count") {
+                    var url = "/Form/EditForm/6cd09cf8-a271-498f-bb09-0278ac1d1cea/?proj_id=" + row.project_guid + "&ptype=" + fieldmap[field] + "&startDate=" + startDate + "&endDate=" + endDate;
+                    mini.open({ url: url, width: "80%", heigth: "160%" })
+                }
+            });
+        });
+        mini.get("View_SF_OutContractAnalyse").on("drawsummarycell", function (e) {
+            if (e.field == "OutSum" || e.field == "E_Sum" || e.field == "P_Sum" || e.field == "C_Sum" || e.field == "S_Sum") {
+                e.cellStyle = "text-align:right;"
+                e.cellHtml = e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+            if (e.field == "E_Count" || e.field == "P_Count" || e.field == "C_Count" || e.field == "S_Count" || e.field == "OutCount") {
+                e.cellStyle = "text-align:right;"
+            }
+            if (e.field == "project_name") {
+                e.cellHtml = "合计";
+            }
+        })
+        function LoadData() {
+            Power.ui.loading("加载中..");
+            var startDate = "";
+            var endDate = "";
+            //当前年的1-1到当前天
+            startDate = new Date().getFullYear() + "-1-1";
+            endDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+            if (mini.get("txtStart").getValue() == "" && mini.get("txtFinish").getValue() == "") {
+                mini.get("txtStart").setValue(startDate);
+                mini.get("txtFinish").setValue(endDate);
+            }
+            
+            $.ajax({
+                url: "/Al/OutContractAnalyse",
+                data: {
+                    startDate: mini.get("txtStart").getValue().format("yyyy-MM-dd"),
+                    endDate: mini.get("txtFinish").getValue().format("yyyy-MM-dd")
+                },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("View_SF_OutContractAnalyse");
+                        ;
+                        grid.loadList(o.data.value, "project_guid", "parent_guid");
+                        LoadChart(o.data.chart);
+                        Power.ui.loading.close();
+                    }
+                }
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            var zsl = 0, zje = 0, czsl = 0, czje = 0, pzsl = 0, pzje = 0, szsl = 0, szje = 0, ezsl = 0, ezje = 0;
+            zsl = parseFloat(data.ContractCount);
+            czsl = parseFloat(data.C_Count);
+            pzsl = parseFloat(data.P_Count);
+            szsl = parseFloat(data.S_Count);
+            ezsl = parseFloat(data.E_Count);
+            zje = Math.round(parseFloat(data.ContractAmount) / 10000 * 100) / 100;
+            czje = Math.round(parseFloat(data.C_ContractAmount) / 10000 * 100) / 100;
+            pzje = Math.round(parseFloat(data.P_ContractAmount) / 10000 * 100) / 100;
+            szje = Math.round(parseFloat(data.S_ContractAmount) / 10000 * 100) / 100;
+            ezje = Math.round(parseFloat(data.E_ContractAmount) / 10000 * 100) / 100;
+            var opt = {};
+            opt.grid = { x: 150 };
+            opt.title = { text: "出项合同分析" };
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+            opt.legend = { data: ['累计金额', '累计数量'] },
+            opt.toolbox = { show: false };
+            opt.xAxis = [{ type: 'category', data: ["合同", "技术服务类合同", "采购合同", "建安施工类施工合同", "其他合同"] }];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', axisLabel: { formatter: '{value}' } }, { type: 'value', axisLabel: { formatter: '{value} 份' } }];
+            opt.series = [{
+                itemStyle: {
+                    normal: {
+                        label: {
+                            rotate: 30,
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}',
+                            textStyle: {
+                                fontSize: '12',
+                                fontFamily: '黑体'
+                            }
+                        }
+                    }
+                },
+                name: '累计金额', type: 'bar', data: [zje, ezje, pzje, czje, szje]
+            }, {
+
+                name: '累计数量', type: 'line', yAxisIndex: 1, data: [zsl, ezsl, pzsl, czsl, szsl]
+            }];
+            InitEChart("charthere", opt);
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

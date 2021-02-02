@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>收入确认表(调整)
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_FK_RevenueRecognition.Up" onclick="Up()"><i class="fa fa-upload"></i>升版</a>-->
+                    <a class="mini-button blue" id="SF_FK_RevenueRecognition.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_FK_RevenueRecognition.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="SF_FK_RevenueRecognition.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_FK_RevenueRecognition" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.Code" name="Code" class="mini-textbox" required="true" />
+                                            <input id="SF_FK_RevenueRecognition.IsNew" name="IsNew" class="mini-hidden"/>
+                                            <input id="SF_FK_RevenueRecognition.IsAdjust" name="IsAdjust" class="mini-hidden"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_FK_RevenueRecognition.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_RevenueRecognition.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称/EPS
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.EpsProjectName" name="EpsProjectName" textname="EpsProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择EPS..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                            <input id="SF_FK_RevenueRecognition.EpsProjectId" name="EpsProjectId" class="mini-textbox" visible="false" />
+                                        </td>
+                                        <td>
+                                            填报年月
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.YearMonth" name="YearMonth" class="mini-monthpicker" format="yyyy-MM" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_RevenueRecognition.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_RevenueRecognition.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='数据明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" id="doCalculate" iconcls="fa-calculator" onclick="doCalculate">执行计算</a>
+                                <a class="mini-button blue" id="SF_FK_RevenueRecognition_dtl.Print" onclick="PowerForm.OnExportDataToPDF('SF_FK_RevenueRecognition_dtl', '收入确认表', null, null, '66,139,202', '255,255,255')"><i class=" fa fa-print"></i>打印</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_FK_RevenueRecognition_dtl" class="mini-datagrid" style="height: 100%;" oncellbeginedit="beginedit" oncellendedit="endedit" showsummaryrow="true" ondrawcell="drawcell"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div field="YearMonth" headeralign="center" dateformat="yyyy-MM" visible="false">
+                                            年月
+                                            <input property="editor" class="mini-monthpicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="AmountType" headeralign="center" type="comboboxcolumn">
+                                            收入类别
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ContractMoney" headeralign="center" numberformat="n2">
+                                            合同金额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="ContractChangeMoney" headeralign="center" numberformat="n2">
+                                            合同变更金额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="FinalContractMoney" headeralign="center" numberformat="n2">
+                                            变更后合同金额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="ContractGetAmount" headeralign="center" numberformat="n2">
+                                            合同收入
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="AdjBudgetCost" headeralign="center" numberformat="n2" summarytype="sum">
+                                            原预算成本
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="AdjBudgetRate" headeralign="center" numberformat="p2">
+                                            原预算毛利率
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="BudgetCost" headeralign="center" numberformat="n2" summarytype="sum">
+                                            最新预算成本
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="BudgetRate" headeralign="center" numberformat="p2">
+                                            最新预算毛利率
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div header="原累计金额(按原预算毛利率)" headeralign="center" visible="true">
+                                            <div property="columns">
+                                                <div field="OldSchedule" headeralign="center" numberformat="p2" >
+                                                    合同进度
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" />
+                                                </div>
+                                                <div field="OldGetAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同收入
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="OldAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同成本
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="OldRate" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同毛利
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="最新累计金额(按最新预算毛利率)" headeralign="center">
+                                            <div property="columns">
+                                                <div field="AccumulativeSchedule" headeralign="center" numberformat="p2">
+                                                    合同进度
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" />
+                                                </div>
+                                                <div field="AccumulativeGetAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同收入
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="AccumulativeAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同成本
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="AccumulativeRate" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同毛利
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="调整金额" headeralign="center">
+                                            <div property="columns">
+                                                <div field="AdjGetAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同收入
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="AdjAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同成本
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="AdjRate" headeralign="center" numberformat="n2" summarytype="sum">
+                                                    合同毛利
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="-9999999999" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("SF_FK_RevenueRecognition_dtl").frozenColumns(1,1);
+        });
+        function beginedit(e) {
+            if (e.field == "AmountType" || e.field == "FinalContractMoney" || e.field == "BudgetRate" 
+                || e.field == "MonthSchedule" || e.field == "MonthGetAmount" || e.field == "MonthRate"
+                // || e.field == "AdjBudgetCost"|| e.field == "AdjBudgetRate"
+                // || e.field == "OldSchedule"|| e.field == "OldGetAmount"|| e.field == "OldAmount"|| e.field == "OldRate"
+                ) {
+                e.cancel = true;
+            }
+        }
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get("SF_FK_RevenueRecognition_dtl");
+            if (e.field == "BudgetCost"
+                ||e.field == "ContractMoney" || e.field == "ContractChangeMoney"||e.field == "ContractGetAmount"
+                ||e.field == "AdjBudgetCost"
+                ||e.field =="AccumulativeGetAmount"||e.field =="AccumulativeAmount"||e.field =="AccumulativeRate") {
+                
+            }
+            
+        }
+        function doCalculate(){
+            var grid = mini.get("SF_FK_RevenueRecognition_dtl");
+            if(grid.data.length==1){
+                Power.ui.alert("子表尚未任何数据,请先保存主表!");
+            }else{
+                for(var i=1;i<=4;i++){
+                    //依次更新各行
+                    var record=mini.get("SF_FK_RevenueRecognition_dtl").findRow(function(row){
+                        if(row.AmountType == ("0"+i)) return true;
+                    });
+                    //更变后合同金额(FinalContractMoney) 合同金额(ContractMoney)+合同变更金额(ContractChangeMoney)
+                    grid.updateRow(record, { "FinalContractMoney": (parseFloat(record.ContractMoney) + parseFloat(record.ContractChangeMoney)).toFixed(2) });
+                    //原算毛利率(AdjBudgetRate) (合同收入(ContractGetAmount)-(AdjBudgetCost))/(ContractGetAmount)
+                    grid.updateRow(record, { "AdjBudgetRate": (parseFloat(record.ContractGetAmount)-parseFloat(record.AdjBudgetCost))/(parseFloat(record.ContractGetAmount)==0?1:parseFloat(record.ContractGetAmount)).toFixed(4) }); 
+                    //最新预算毛利率(BudgetRate) 1-(  预算成本(BudgetCost)/合同收入(ContractGetAmount)  )
+                    grid.updateRow(record, { "BudgetRate": (parseFloat(record.ContractGetAmount)-parseFloat(record.BudgetCost))/(parseFloat(record.ContractGetAmount)==0?1:parseFloat(record.ContractGetAmount)).toFixed(4) }); 
+                    //最新合同进度(AccumulativeSchedule) OldAmount/BudgetCost
+                    grid.updateRow(record, { "AccumulativeSchedule": (parseFloat(record.OldAmount))/(parseFloat(record.BudgetCost)==0?1:parseFloat(record.BudgetCost)).toFixed(4) }); 
+                    //最新合同收入(AccumulativeGetAmount) ContractGetAmount*AccumulativeSchedule
+                    grid.updateRow(record, { "AccumulativeGetAmount": (parseFloat(record.ContractGetAmount)*(parseFloat(record.OldAmount))/(parseFloat(record.BudgetCost)==0?1:parseFloat(record.BudgetCost))).toFixed(2) }); 
+                    //最新合同毛利(AccumulativeRate) AccumulativeGetAmount-AccumulativeAmount==ContractGetAmount*AccumulativeSchedule-AccumulativeAmount
+                    grid.updateRow(record, { "AccumulativeRate": (parseFloat(record.ContractGetAmount)*parseFloat(parseFloat(record.OldAmount))/(parseFloat(record.BudgetCost)==0?1:parseFloat(record.BudgetCost))-parseFloat(record.AccumulativeAmount)).toFixed(2) }); 
+                    
+                    //调整金额 合同收入(AdjGetAmount) (AccumulativeGetAmount-OldGetAmount)
+                    grid.updateRow(record, { "AdjGetAmount": (parseFloat((parseFloat(record.ContractGetAmount)*(parseFloat(record.OldAmount))/(parseFloat(record.BudgetCost)==0?1:parseFloat(record.BudgetCost))))-parseFloat(record.OldGetAmount)).toFixed(2) }); 
+                    //调整金额 合同成本(AdjAmount) AccumulativeAmount-OldAmount  )
+                    grid.updateRow(record, { "AdjAmount": (parseFloat(record.AccumulativeAmount)-parseFloat(record.OldAmount)).toFixed(2) }); 
+                    //调整金额 合同毛利(AdjRate) AdjGetAmount-AdjAmount  )
+                    grid.updateRow(record, { "AdjRate": (parseFloat((parseFloat((parseFloat(record.ContractGetAmount)*(parseFloat(record.OldAmount))/(parseFloat(record.BudgetCost)==0?1:parseFloat(record.BudgetCost))))-parseFloat(record.OldGetAmount)))-parseFloat((parseFloat(record.AccumulativeAmount)-parseFloat(record.OldAmount)))).toFixed(2) }); 
+                }
+                //保存下
+                var btn = {id:"SF_FK_RevenueRecognition.Save"}
+                PowerForm.OnBtnSave(btn);
+            }
+        }
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            var date = new Date();
+            var YM = date.format("yyyy-MM");
+            var a = mini.get("SF_FK_RevenueRecognition.YearMonth").getValue();
+            if (IsEmpty(a)) {
+                mini.get("SF_FK_RevenueRecognition.YearMonth").setValue(YM);
+            }
+        }
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            //保存前,把合计那列给删除了,不然会存进数据库
+            debugger;
+            var row = mini.get("SF_FK_RevenueRecognition_dtl").findRow(function(row){
+                if(row.AmountType == "22") return true;
+            });
+            mini.get("SF_FK_RevenueRecognition_dtl").removeRow(row,false);
+            //如果是新增状态,默认不是最新(批准后再修改状态),并打上标记IsAdjust='1'
+            if(formconfig.FormState=="add"){
+                mini.get("SF_FK_RevenueRecognition.IsNew").setValue("0");
+                mini.get("SF_FK_RevenueRecognition.IsAdjust").setValue("1");
+            }
+        }
+        
+        PowerForm.EventAfterLoadData = function (e) {
+            debugger;
+            if (e.sender.id == "SF_FK_RevenueRecognition_dtl") {
+                var data = e.data;
+                var ContractMoney = new Number(0);
+                var ContractChangeMoney = 0;
+                var FinalContractMoney = 0;
+                var ContractGetAmount = 0;
+                var BudgetCost = 0;
+                var BudgetRate = 0;
+                var AdjBudgetCost = 0;
+                var AdjBudgetRate = 0;
+                var AccumulativeSchedule = 0;
+                var AccumulativeGetAmount = 0;
+                var AccumulativeAmount = 0;
+                var AccumulativeRate = 0;
+                var OldSchedule = 0;
+                var OldGetAmount = 0;
+                var OldAmount = 0;
+                var OldRate = 0;
+                var AdjGetAmount = new Number(0);
+                var AdjAmount = new Number(0);
+                var AdjRate = new Number(0);
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[i];
+                    ContractMoney += parseFloat(d.ContractMoney) || 0;
+                    ContractChangeMoney += parseFloat(d.ContractChangeMoney) || 0;
+                    FinalContractMoney += parseFloat(d.FinalContractMoney) || 0;
+                    ContractGetAmount += parseFloat(d.ContractGetAmount) || 0;
+                    BudgetCost += parseFloat(d.BudgetCost) || 0;
+                    BudgetRate += parseFloat(d.BudgetRate) || 0;
+                    AdjBudgetCost += parseFloat(d.AdjBudgetCost) || 0;
+                    AdjBudgetRate += parseFloat(d.AdjBudgetRate) || 0;
+                    AccumulativeSchedule += parseFloat(d.AccumulativeSchedule) || 0;
+                    AccumulativeGetAmount += parseFloat(d.AccumulativeGetAmount) || 0;
+                    AccumulativeAmount += parseFloat(d.AccumulativeAmount) || 0;
+                    AccumulativeRate += parseFloat(d.AccumulativeRate) || 0;
+                    OldSchedule += parseFloat(d.OldSchedule) || 0;
+                    OldGetAmount += parseFloat(d.OldGetAmount) || 0;
+                    OldAmount += parseFloat(d.OldAmount) || 0;
+                    OldRate += parseFloat(d.OldRate) || 0;
+                    AdjGetAmount += parseFloat(d.AdjGetAmount) || 0;
+                    AdjAmount += parseFloat(d.AdjAmount) || 0;
+                    AdjRate += parseFloat(d.AdjRate) || 0;
+                }
+                var len = data.length;
+                if (len == 0) {
+                    len = 1
+                }
+                var x = {};
+                x.AmountType = "22";
+                x.ContractMoney = parseFloat(ContractMoney).toFixed(2);
+                x.ContractChangeMoney = parseFloat(ContractChangeMoney).toFixed(2);
+                x.FinalContractMoney = parseFloat(FinalContractMoney).toFixed(2);
+                x.ContractGetAmount = parseFloat(ContractGetAmount).toFixed(2);
+                x.BudgetCost = parseFloat(BudgetCost).toFixed(2);
+                x.BudgetRate = (1 - (BudgetCost / (ContractGetAmount == 0?1:ContractGetAmount))).toFixed(4);
+                x.AdjBudgetCost = parseFloat(AdjBudgetCost).toFixed(2);
+                x.AdjBudgetRate = (1 - (AdjBudgetCost / (ContractGetAmount == 0?1:ContractGetAmount))).toFixed(4);
+
+                x.OldAmount = parseFloat(OldAmount).toFixed(2);
+                x.OldGetAmount = parseFloat(OldGetAmount).toFixed(2);
+                x.OldRate = parseFloat(OldRate).toFixed(2);
+                x.OldSchedule = parseFloat(OldRate / (OldGetAmount == 0?1:OldGetAmount)).toFixed(4);
+                
+                x.AccumulativeGetAmount = parseFloat(AccumulativeGetAmount).toFixed(2);
+                x.AccumulativeAmount = parseFloat(AccumulativeAmount).toFixed(2);
+                x.AccumulativeRate = parseFloat(AccumulativeRate).toFixed(2);
+                x.AccumulativeSchedule = parseFloat(AccumulativeRate / (AccumulativeGetAmount == 0?1:AccumulativeGetAmount)).toFixed(4);
+                
+                x.AdjGetAmount = parseFloat(AdjGetAmount).toFixed(2);
+                x.AdjAmount = parseFloat(AdjAmount).toFixed(2);
+                x.AdjRate = parseFloat(AdjRate).toFixed(2);
+
+                //新增一行合计
+                mini.get("SF_FK_RevenueRecognition_dtl").addRow(x,5);
+            }
+        }
+
+        function drawcell(e) {
+            if (e.field == "AmountType" && e.value == "22") {
+                e.rowStyle = "background:#66ccff;height:45px;";
+            }
+        }
+
+
+
+
+
+
+
+        /*Happy Coding!*/
+        function GodBlessYOU(){
+        /*
+                               _ooOoo_
+                              o8888888o
+                              88" . "88
+                              (| -_- |)
+                              O\  =  /O
+                           ____/`---'\____
+                         .'  \\|     |//  `.
+                        /  \\|||  :  |||//  \
+                       /  _||||| -:- |||||-  \
+                       |   | \\\  -  /// |   |
+                       | \_|  ''\---/''  |   |
+                       \  .-\__  `-`  ___/-. /
+                     ___`. .'  /--.--\  `. . __
+                  ."" '<  `.___\_<|>_/___.'  >'"".
+                 | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+                 \  \ `-.   \_ __\ /__ _/   .-` /  /
+            ======`-.____`-.___\_____/___.-`____.-'======
+                               `=---='
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       	佛祖保佑        永无BUG    
+        */
+        }
+    </script>
+</body>
+</html>

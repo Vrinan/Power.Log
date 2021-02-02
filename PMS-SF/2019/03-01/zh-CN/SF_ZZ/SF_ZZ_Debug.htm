@@ -1,0 +1,282 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>调试完工单
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <a class="mini-button blue" id="SF_ZZ_Debug.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存</a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Debug.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新</a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="SF_ZZ_Debug.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭</a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Debug" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            调试编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Debug.Title" name="Title" class="mini-textbox"   required/>
+                                        </td>
+                                    </tr>
+
+                                   <tr>
+                                    <td>
+                                        项目名称
+                                    </td>
+                                    <td   colspan="3">
+                                        <input id="SF_ZZ_Debug.ProjectInformation" name="ProjectInformation" textname="ProjectInformation" class="mini-buttonedit"
+                                          emptytext="项目名称..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                            allowinput="false" />
+                                    </td>
+
+                                    </tr>
+
+
+
+                                    <tr bgcolor="#F0F8FF">
+                                            <td class="cell td-label" colspan="4" rowspan="1">
+                                                <label class="超滤 mini-powerlabel">超滤</label>
+                                    
+
+                                    <!-- <tr>
+                                        <td colspan="4" align="center">
+                                            超滤
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>
+                                            设备规模（t/d）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.SizeA" name="SizeA" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            数量(套)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.AmountA" name="AmountA" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            压力等级（bar）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.BarA" name="BarA" class="mini-textbox" />
+                                        </td>
+
+
+                                        <td>
+                                            调试时间
+                                        </td>
+                                        <td>
+
+                                            <input id="SF_ZZ_Debug.DebuggingA" name="DebuggingA" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    
+
+                                    <tr bgcolor="#F0F8FF">
+                                            <td class="cell td-label" colspan="4" rowspan="1">
+                                                <label class="反渗透RO mini-powerlabel">反渗透RO</label>
+                                    <!-- <tr>
+                                        <td colspan="4" align="center">
+                                            反渗透RO
+                                        </td>
+                                    </tr> -->
+
+
+                                    <tr>
+                                        <td>
+                                            设备规模（t/d）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.SizeB" name="SizeB" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            数量(套)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.AmountB" name="AmountB" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            压力等级（bar）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.BarB" name="BarB" class="mini-textbox" />
+                                        </td>
+
+
+                                        <td>
+                                            调试时间
+                                        </td>
+                                        <td>
+
+                                            <input id="SF_ZZ_Debug.DebuggingA" name="DebuggingA" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr bgcolor="#F0F8FF">
+                                            <td class="cell td-label" colspan="4" rowspan="1">
+                                                <label class="STRO mini-powerlabel">STRO</label>
+                                            </td>
+                                        </tr>
+                                    <!-- <tr>
+                                        <tr>
+                                            <td colspan="4" align="center">
+                                                STRO
+                                            </td>
+                                        </tr> -->
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            设备规模（t/d）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.SizeC" name="SizeC" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            数量(套)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.AmountC" name="AmountC" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            压力等级（bar）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.BarC" name="BarC" class="mini-textbox" />
+                                        </td>
+
+
+                                        <td>
+                                            调试时间
+                                        </td>
+                                        <td>
+
+                                            <input id="SF_ZZ_Debug.DebuggingA" name="DebuggingA" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Debug.MemoC" name="MemoC" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+
+                                        <td>
+                                            结果
+                                        </td>
+                                        <td colspan="3">
+
+                                            <input id="SF_ZZ_Debug.resultsC" name="resultsC" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Debug.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_PaymentRequest.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        })
+
+
+
+    </script>
+</body>
+
+</html>

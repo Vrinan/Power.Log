@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var EpsProjName = "";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption lanentry">
+                    <i class="fa fa-reorder"></i>设计联络单</div>
+                <div class="actions">
+                    $!workflowbuttons
+                    <a class="mini-button blue lanentry" id="PS_DesignContactSheet.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue lanentry" id="PS_DesignContactSheet.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue lanentry" id="PS_DesignContactSheet.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_DesignContactSheet" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="lanentry">编号</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.Code" name="Code" class="mini-textbox" required="true">
+                                        </td>
+                                        <td class="lanentry">状态</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.Status" name="Status" class="mini-combobox" readonly="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">名称</td>
+                                        <td colspan="3">
+                                            <input id="PS_DesignContactSheet.Name" name="Name" class="mini-textbox" required="true">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">项目名称</td>
+                                        <td colspan="3">
+                                            <input id="PS_DesignContactSheet.ProjName" name="ProjName" class="mini-textbox" readonly/="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">工程部位</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.EngineerLoca" name="EngineerLoca" class="mini-textbox">
+                                        </td>
+                                        <td class="lanentry">专业</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.Major" name="Major" class="mini-combobox">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">涉及原图纸编号</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.InvolvTheOriginalDrawCode" name="InvolvTheOriginalDrawCode" class="mini-textbox">
+                                        </td>
+                                        <td class="lanentry">附图张数</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.NumberOfDrawings" name="NumberOfDrawings" class="mini-spinner" allowlimitvalue="false" changeonmousewheel="false">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">内容</td>
+                                        <td colspan="3">
+                                            <input id="PS_DesignContactSheet.Content" name="Content" class="mini-textarea" height="80px">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">录入人</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly">
+                                        </td>
+                                        <td class="lanentry">录入日期</td>
+                                        <td>
+                                            <input id="PS_DesignContactSheet.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (formconfig.FormState == "add") {
+                mini.get("PS_DesignContactSheet.ProjName").setValue(EpsProjName);
+            }
+        }
+
+    </script>
+</body>
+</html>

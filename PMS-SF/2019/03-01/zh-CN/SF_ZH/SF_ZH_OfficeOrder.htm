@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+        var NowDate = getdate();	//ComTools 获取当前日期 2013-01-02
+        var now = new Date();
+        var NYear = now.getFullYear();
+        var NMonth = now.getMonth() + 1;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>采买申请</span>
+                </div>
+                <div class="actions">
+                    $!WorkFlowButtons
+                    <a class="mini-button blue" id="SF_ZH_OfficeOrder.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_ZH_OfficeOrder.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_OfficeOrder.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="SF_ZH_OfficeOrder" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="SF_ZH_OfficeOrder.Code" name="Code" class="mini-textbox" required="true" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_ZH_OfficeOrder.Status" name="Status" class="mini-combobox" readonly="readonly" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3"><input id="SF_ZH_OfficeOrder.Title" name="Title" class="mini-textbox" required="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>申请人</td>
+                                        <td><input id="SF_ZH_OfficeOrder.Purchaser" name="Purchaser" textname="Purchaser" class="mini-buttonedit"  emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" /></td>
+                                        <td>申请部门</td>
+                                        <td><input id="SF_ZH_OfficeOrder.Department" name="Department" class="mini-textbox" readonly="readonly" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>总价</td>
+                                        <td><input id="SF_ZH_OfficeOrder.TotalMoney" name="TotalMoney" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" readonly="readonly"/></td>
+                                        <td>物资类型</td>
+                                        <td><input id="SF_ZH_OfficeOrder.BomType" name="BomType" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物料明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_OfficeOrder_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_OfficeOrder_list.Add1" onclick="PowerForm.OnBtnWizard(this)">从物资库选择</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_OfficeOrder_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_OfficeOrder_list-Print" class="btn-group"></div>
+                                <div id="SF_ZH_OfficeOrder_list-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_OfficeOrder_list" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}" oncellendedit="EditPrice">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="MatBSName" width="100" allowSort="true">物资大类<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatBSName1" width="120" allowSort="true">物资中类<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatCode" width="120" allowSort="true">物资编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="120" allowSort="true">物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatModle" width="120" allowSort="true">物资描述<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatUnit" width="120" allowSort="true">单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Amount" width="120" allowSort="true">数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2"style="width: 100%;" /></div>
+                                        <div field="BuyAmount" width="0" allowSort="true">数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" style="width: 0%;" /></div>
+                                        <div field="Price" width="60" allowSort="true" numberFormat="n2">单价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="TotalPrice" width="60" allowSort="true" numberFormat="n2">总价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" style="width: 100%;" readonly="readonly"/></div>
+                                        <div field="Remark" width="200" allowSort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        //自动求金额
+        function EditPrice(e) {
+            if(e.field=="Amount"||e.field=="Price"){
+                var record = e.record;
+                var sender = e.sender;
+                var Amount = record.Amount == null ? 0 : parseFloat(record.Amount);
+                var Price = record.Price == null ? 0 : parseFloat(record.Price);
+                var TotalPrice = Amount * Price;
+                sender.updateRow(record, { "TotalPrice": TotalPrice });
+                sender.updateRow(record, { "BuyAmount": Amount });
+            }
+            var grid = mini.get("SF_ZH_OfficeOrder_list");
+            var sum = new Number;
+            var row = grid.findRow(function (row) {
+                sum = sum + parseFloat(row.TotalPrice);
+            });
+            mini.get("SF_ZH_OfficeOrder.TotalMoney").setValue(sum);
+        }
+    </script>
+</body>
+</html>

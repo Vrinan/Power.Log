@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_YX_RunTechnology.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_YX_RunTechnology-Export" title="运行工艺参数统计表" class="btn-group"></div>
+
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+                            <span>运行站</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                    </div>
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_YX_RunTechnology" class="mini-datagrid" style="width: 100%; height: 100%;" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                    填报时间
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" format="yyyy-MM-dd" />
+                                </div>
+                                <div field="Department" headeralign="center" header="运行站">
+                                    运行站
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div header="调节池" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="CSLL" headeralign="center">
+                                                    出水流量(m3/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="CSLL2" headeralign="center">
+                                                    出水流量(m3/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="UASB池" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="UASB_JSL" headeralign="center">
+                                                    进水量(m³)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UASB_XHLL" headeralign="center">
+                                                    出水流量(m3/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="UASB_JSL2" headeralign="center">
+                                                    进水量(m³)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UASB_XHLL2" headeralign="center">
+                                                    出水流量(m3/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="反硝化池" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="FXHC_XHYHL" headeralign="center">
+                                                    硝化液回流(m³/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="FXHC_XHYHL2" headeralign="center">
+                                                    硝化液回流(m³/h)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="硝化池" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="XHC_JSL" headeralign="center">
+                                                    进水量(m³)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="XHC_FJPL" headeralign="center">
+                                                    风机频率（Hz）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="XHC_FW" headeralign="center">
+                                                    风温（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="XHC_JSL2" headeralign="center">
+                                                    进水量(m³)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="XHC_FJPL2" headeralign="center">
+                                                    风机频率（Hz）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="XHC_FW2" headeralign="center">
+                                                    风温（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="UF" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="UF_JSL" headeralign="center">
+                                                    进水量（m³/h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_YXSJ" headeralign="center">
+                                                    运行时间（h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_XHLL" headeralign="center">
+                                                    循环流量（m³/h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_MJKYL" headeralign="center">
+                                                    膜进口压力（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="UF_JSL2" headeralign="center">
+                                                    进水量（m³/h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_YXSJ2" headeralign="center">
+                                                    运行时间（h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_XHLL2" headeralign="center">
+                                                    循环流量（m³/h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="UF_MJKYL2" headeralign="center">
+                                                    膜进口压力（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>   
+                                    </div>
+                                </div>
+                                <div header="STRO" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="STRO_JSL" headeralign="center">
+                                                    进水量（m³）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXSJ" headeralign="center">
+                                                    运行时间（h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_XLYC" headeralign="center">
+                                                    芯滤压差（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXYL" headeralign="center">
+                                                    运行压力（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXWD" headeralign="center">
+                                                    运行温度（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="STRO_JSL2" headeralign="center">
+                                                    进水量（m³）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXSJ2" headeralign="center">
+                                                    运行时间（h）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_XLYC2" headeralign="center">
+                                                    芯滤压差（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXYL2" headeralign="center">
+                                                    运行压力（bar）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="STRO_YXWD2" headeralign="center">
+                                                    运行温度（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>                                      
+                                    </div>
+                                </div>
+                                <div header="DTRO" headeralign="center">
+                                    <div property="columns">
+                                        <div field="DTRO_JSL" headeralign="center" width="0">
+                                            进水量（m³）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="DTRO_YXSJ" headeralign="center" width="0">
+                                            运行时间（h）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="DTRO_XLYC" headeralign="center" width="0">
+                                            芯滤压差（bar）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="DTRO_YXYL" headeralign="center" width="0">
+                                            运行压力（bar）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="DTRO_YXWD" headeralign="center" width="0">
+                                            运行温度（℃）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            //firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(firstDate);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            //var grid = mini.get("View_SF_ZH_MatRequisitions");
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function search() {
+            mini.get('View_SF_YX_RunTechnology').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_YX_RunTechnology") {
+                var StartMonth = mini.get("QStartDate").getFormValue();
+                var EndMonth = mini.get("QEndDate").getFormValue();
+                var QDepartment = mini.get("QDepartment").getFormValue();
+                var month = new Date(StartMonth).getMonth() + 1;
+                var month2 = new Date(EndMonth).getMonth() + 1;
+                if (month == month2) {
+                    debugger;
+                    if (e.params.swhere == "") {
+                        e.params.swhere = " Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "'  and Department like '%" + QDepartment + "%' ";
+                    }
+                    else {
+                        e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' ";
+                    }
+                }
+                else {
+                    Power.ui.alert("不可跨月查询！");
+                }
+            }
+        }        PowerForm.EventAfterLoadData = function (e) {
+            var data = e.data;
+            var CSLL = 0;
+            var CSLL2 = 0;
+            var UASB_JSL = 0;
+            var UASB_XHLL = 0;
+            var UASB_JSL2 = 0;
+            var UASB_XHLL2 = 0;
+            var FXHC_XHYHL = 0;
+            var FXHC_XHYHL2 = 0;
+            var XHC_JSL = 0;
+            var XHC_FJPL = 0;
+            var XHC_FW = 0;
+            var XHC_JSL2 = 0;
+            var XHC_FJPL2 = 0;
+            var XHC_FW2 = 0;
+            var UF_JSL = 0;
+            var UF_YXSJ = 0;
+            var UF_XHLL = 0;
+            var UF_MJKYL = 0;
+            var UF_JSL2 = 0;
+            var UF_YXSJ2 = 0;
+            var UF_XHLL2 = 0;
+            var UF_MJKYL2 = 0;
+            var STRO_JSL = 0;
+            var STRO_YXSJ = 0;
+            var STRO_XLYC = 0;
+            var STRO_YXYL = 0;
+            var STRO_YXWD = 0;
+            var STRO_JSL2 = 0;
+            var STRO_YXSJ2 = 0;
+            var STRO_XLYC2 = 0;
+            var STRO_YXYL2 = 0;
+            var STRO_YXWD2 = 0;
+            var DTRO_JSL = 0;
+            var DTRO_YXSJ = 0;
+            var DTRO_XLYC = 0;
+            var DTRO_YXYL = 0;
+            var DTRO_YXWD = 0;
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                CSLL += d.CSLL || 0;
+                CSLL2 += d.CSLL2 || 0;
+                UASB_JSL += d.UASB_JSL || 0;
+                UASB_XHLL += d.UASB_XHLL || 0;
+                UASB_JSL2 += d.UASB_JSL2 || 0;
+                UASB_XHLL2 += d.UASB_XHLL2 || 0;
+                FXHC_XHYHL += d.FXHC_XHYHL || 0;
+                FXHC_XHYHL2 += d.FXHC_XHYHL2 || 0;
+                XHC_JSL += d.XHC_JSL || 0;
+                XHC_FJPL += d.XHC_FJPL || 0;
+                XHC_FW += d.XHC_FW || 0;
+                XHC_JSL2 += d.XHC_JSL2 || 0;
+                XHC_FJPL2 += d.XHC_FJPL2 || 0;
+                XHC_FW2 += d.XHC_FW2 || 0;
+                UF_JSL += d.UF_JSL || 0;
+                UF_YXSJ += d.UF_YXSJ || 0;
+                UF_XHLL += d.UF_XHLL || 0;
+                UF_MJKYL += d.UF_MJKYL || 0;
+                UF_JSL2 += d.UF_JSL2 || 0;
+                UF_YXSJ2 += d.UF_YXSJ2 || 0;
+                UF_XHLL2 += d.UF_XHLL2 || 0;
+                UF_MJKYL2 += d.UF_MJKYL2 || 0;
+                STRO_JSL += d.STRO_JSL || 0;
+                STRO_YXSJ += d.STRO_YXSJ || 0;
+                STRO_XLYC += d.STRO_XLYC || 0;
+                STRO_YXYL += d.STRO_YXYL || 0;
+                STRO_YXWD += d.STRO_YXWD || 0;
+                STRO_JSL2 += d.STRO_JSL2 || 0;
+                STRO_YXSJ2 += d.STRO_YXSJ2 || 0;
+                STRO_XLYC2 += d.STRO_XLYC2 || 0;
+                STRO_YXYL2 += d.STRO_YXYL2 || 0;
+                STRO_YXWD2 += d.STRO_YXWD2 || 0;
+                DTRO_JSL += d.DTRO_JSL || 0;
+                DTRO_YXSJ += d.DTRO_YXSJ || 0;
+                DTRO_XLYC += d.DTRO_XLYC || 0;
+                DTRO_YXYL += d.DTRO_YXYL || 0;
+                DTRO_YXWD += d.DTRO_YXWD || 0;
+            }
+            var len = data.length;
+            if (len == 0) {
+                len = 1
+            }
+            var x = {};
+            x.Date = "合计";
+            x.CSLL = CSLL ;
+            x.CSLL2 = CSLL2 ;
+            x.UASB_JSL = UASB_JSL ;
+            x.UASB_XHLL = UASB_XHLL ;
+            x.UASB_JSL2 = UASB_JSL2 ;
+            x.UASB_XHLL2 = UASB_XHLL2 ;
+            x.FXHC_XHYHL = FXHC_XHYHL ;
+            x.FXHC_XHYHL2 = FXHC_XHYHL2 ;
+            x.XHC_JSL = XHC_JSL ;
+            x.XHC_FJPL = XHC_FJPL ;
+            x.XHC_FW = XHC_FW ;
+            x.XHC_JSL2 = XHC_JSL2 ;
+            x.XHC_FJPL2 = XHC_FJPL2 ;
+            x.XHC_FW2 = XHC_FW2 ;
+            x.UF_JSL = UF_JSL ;
+            x.UF_YXSJ = UF_YXSJ ;
+            x.UF_XHLL = UF_XHLL ;
+            x.UF_MJKYL = UF_MJKYL ;
+            x.UF_JSL2 = UF_JSL2 ;
+            x.UF_YXSJ2 = UF_YXSJ2 ;
+            x.UF_XHLL2 = UF_XHLL2 ;
+            x.UF_MJKYL2 = UF_MJKYL2 ;
+            x.STRO_JSL = STRO_JSL ;
+            x.STRO_YXSJ = STRO_YXSJ ;
+            x.STRO_XLYC = STRO_XLYC ;
+            x.STRO_YXYL = STRO_YXYL ;
+            x.STRO_YXWD = STRO_YXWD ;
+            x.STRO_JSL2 = STRO_JSL2 ;
+            x.STRO_YXSJ2 = STRO_YXSJ2 ;
+            x.STRO_XLYC2 = STRO_XLYC2 ;
+            x.STRO_YXYL2 = STRO_YXYL2 ;
+            x.STRO_YXWD2 = STRO_YXWD2 ;
+            x.DTRO_JSL = DTRO_JSL ;
+            x.DTRO_YXSJ = DTRO_YXSJ ;
+            x.DTRO_XLYC = DTRO_XLYC ;
+            x.DTRO_YXYL = DTRO_YXYL ;
+            x.DTRO_YXWD = DTRO_YXWD ;
+            data.push(x);
+
+            if (len != 0) {
+                var y = {};
+                y.Date = "平均";
+                y.CSLL = (CSLL/ len).toFixed(2);
+                y.CSLL2 = (CSLL2/ len).toFixed(2);
+                y.UASB_JSL = (UASB_JSL/ len).toFixed(2);
+                y.UASB_XHLL = (UASB_XHLL/ len).toFixed(2);
+                y.UASB_JSL2 = (UASB_JSL2/ len).toFixed(2);
+                y.UASB_XHLL2 = (UASB_XHLL2/ len).toFixed(2);
+                y.FXHC_XHYHL = (FXHC_XHYHL/ len).toFixed(2);
+                y.FXHC_XHYHL2 = (FXHC_XHYHL2/ len).toFixed(2);
+                y.XHC_JSL = (XHC_JSL/ len).toFixed(2);
+                y.XHC_FJPL = (XHC_FJPL/ len).toFixed(2);
+                y.XHC_FW = (XHC_FW/ len).toFixed(2);
+                y.XHC_JSL2 = (XHC_JSL2/ len).toFixed(2);
+                y.XHC_FJPL2 = (XHC_FJPL2/ len).toFixed(2);
+                y.XHC_FW2 = (XHC_FW2/ len).toFixed(2);
+                y.UF_JSL = (UF_JSL/ len).toFixed(2);
+                y.UF_YXSJ = (UF_YXSJ/ len).toFixed(2);
+                y.UF_XHLL = (UF_XHLL/ len).toFixed(2);
+                y.UF_MJKYL = (UF_MJKYL/ len).toFixed(2);
+                y.UF_JSL2 = (UF_JSL2/ len).toFixed(2);
+                y.UF_YXSJ2 = (UF_YXSJ2/ len).toFixed(2);
+                y.UF_XHLL2 = (UF_XHLL2/ len).toFixed(2);
+                y.UF_MJKYL2 = (UF_MJKYL2 / len).toFixed(2);
+                y.STRO_JSL = (STRO_JSL/ len).toFixed(2);
+                y.STRO_YXSJ = (STRO_YXSJ/ len).toFixed(2);
+                y.STRO_XLYC = (STRO_XLYC/ len).toFixed(2);
+                y.STRO_YXYL = (STRO_YXYL/ len).toFixed(2);
+                y.STRO_YXWD = (STRO_YXWD/ len).toFixed(2);
+                y.STRO_JSL2 = (STRO_JSL2/ len).toFixed(2);
+                y.STRO_YXSJ2 = (STRO_YXSJ2/ len).toFixed(2);
+                y.STRO_XLYC2 = (STRO_XLYC2/ len).toFixed(2);
+                y.STRO_YXYL2 = (STRO_YXYL2/ len).toFixed(2);
+                y.STRO_YXWD2 = (STRO_YXWD2/ len).toFixed(2);
+                y.DTRO_JSL = (DTRO_JSL/ len).toFixed(2);
+                y.DTRO_YXSJ = (DTRO_YXSJ/ len).toFixed(2);
+                y.DTRO_XLYC = (DTRO_XLYC/ len).toFixed(2);
+                y.DTRO_YXYL = (DTRO_YXYL/ len).toFixed(2);
+                y.DTRO_YXWD = (DTRO_YXWD/ len).toFixed(2);
+                data.push(y);
+            }
+
+            mini.get("View_SF_YX_RunTechnology").setData(data);
+
+        }
+
+    </script>
+</body>
+</html>

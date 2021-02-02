@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_MDM_MatBS.AddForm" onclick="PowerForm.OnBtnAddForm(this, OpenFormId)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.EditForm" onclick="PowerForm.OnBtnEditForm(this, OpenFormId)"><i class="fa fa-pencil"></i>$Helper.GetResource("g_edit")</a><!--编辑-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.ViewForm" onclick="PowerForm.OnBtnViewForm(this, OpenFormId)"><i class="fa fa-eye"></i>$Helper.GetResource("g_view")</a><!--查看-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i>$Helper.GetResource("g_up")</a><!--上移-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i>$Helper.GetResource("g_down")</a><!--下移-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i>$Helper.GetResource("g_left")</a><!--左移-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i>$Helper.GetResource("g_right")</a><!--右移-->
+                            <a class="mini-button blue" id="PS_MDM_MatBS.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                        <div class="actions">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%; ">
+                        <div id="PS_MDM_MatBS" class="mini-treegrid" style="width: 100%; height: 100%"
+                             showtreeicon="true"
+                             treecolumn="MatBSCode" idfield="Id" parentfield="ParentId" resultastree="false"
+                             allowresize="true" expandonload="true" virtualscroll="true" data-options="{lazyload:true}"
+                             showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30"></div>
+                                <div name="MatBSCode" field="MatBSCode" width="100">$Helper.GetResource("g_code")</div><!--编码-->
+                                <div field="MatBSName" width="140">$Helper.GetResource("g_name")</div><!--名称-->
+                                <div field="LongCode" width="140">长代码</div><!--名称-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+           // PowerForm.setQmenu("PS_MDM_MatBS", "view,refresh,delete,edit,moveup,movedown,moveleft,moveright");
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+/**        
+        var tree = mini.get("PS_MDM_MatBS");
+        var tree_project_type = -1;
+        tree.on("nodeselect", function (e) {
+            tree_project_type = e.node.project_type;
+        });
+
+        PowerForm.EventBeforeAddForm = function (e) {
+            if (tree_project_type != 1) {
+                Power.form.warning("请选择项目节点进行新增");
+                e.canNext = false;
+            }
+            else {
+                e.canNext = true;
+            }
+        }
+*/
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计支付计划
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_CapitalPlan.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_CapitalPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_CapitalPlan.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_CapitalPlan" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_CapitalPlan.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_CapitalPlan.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_CapitalPlan.PlanYear">计划年度</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.PlanYear" name="PlanYear"  class="mini-combobox" style="width: 100%;" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_CapitalPlan.PlanMonth">计划月份</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.PlanMonth" name="PlanMonth" class="mini-combobox" style="width: 100%;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.TotalPlanAmount" name="TotalPlanAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_CapitalPlan.Memo" name="Memo" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_CapitalPlan.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='项目计划明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_CapitalPlan_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_CapitalPlan_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_CapitalPlan_Dtl" class="mini-treegrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="ContractCode" headeralign="center">
+                                            合同编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="ContractName" headeralign="center">
+                                            合同名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="ContractAmount" headeralign="center" align="center">
+                                            合同金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+										<div field="PartyB" headeralign="center">
+                                            分包商
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"/>
+                                        </div>
+                                        <div field="PaymentType" type="comboboxcolumn" headeralign="center" align="center">
+                                            付款方式
+                                            <input  id="PS_CapitalPlan_Dtl.PaymentType" name="PaymentType" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PaymentAmount" headeralign="center" align="center">
+                                            付款金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="PaymentReason" headeralign="center">
+                                            事由
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    debugger;
+        //    var record = e.record;
+        //    var grid = mini.get("PS_CapitalPlan_Dtl");
+
+        //    var sum = new Number(0);
+        //    var row = grid.findRow(function (row) {
+
+        //        sum = sum + parseInt(row.PaymentAmount);
+        //    });
+        //    //传值
+        //    mini.get("PS_CapitalPlan.TotalPlanAmount").setValue(sum);
+			
+        //}
+		
+		//给计划年月默认赋当前值
+		PowerForm.EventAfterFormLoad = function (e, data) {
+		    debugger;
+            if (formconfig.FormState == "add") {
+                var myDate = new Date();
+                var t1 = mini.get("PS_CapitalPlan.PlanYear");
+                t1.setValue(myDate.getFullYear());
+                var t2 = mini.get("PS_CapitalPlan.PlanMonth");
+                t2.setValue(myDate.getMonth() + 1);
+            }
+        }
+		PowerForm.EventAfterOnBtnSave = function (e) {
+		    debugger;
+		    Refresh();
+		}
+		function Refresh() {
+		    var exec = {};  //对象
+		    var guid = formconfig.KeyValue;
+		    exec.KeyWord = "PS_CapitalPlan";   //bo的KeyWord
+		    exec.MethodName = "countSum"; //方法名称
+		    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+		    exec.MethodParams = {}; //方法参数
+		    var params = exec.MethodParams;
+		    params.Id = guid;
+		    var txt = mini.encode(exec); //对象转换成字符串
+		    $.ajax({
+		        url: "/API/Exec",
+		        type: "POST",
+		        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+		        cache: false,
+		        success: function (text) {
+		            // var tmp = mini.decode(text);
+		            // var result = tmp.data.value;  
+		            //刷新
+		            var e = { id: "PS_CapitalPlan.Refresh" };
+		            PowerForm.OnBtnRefresh(e);
+		        }
+		    });
+
+		}
+	   
+    </script>
+</body>
+</html>

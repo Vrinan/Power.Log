@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="物资名称" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="30%" showcollapsebutton="true">
+                                    <div id="PS_MDM_MatBS" class="mini-treegrid" style="height: 100%;" showtreeicon="true"
+                                         treecolumn="MatBSName" idfield="Id" parentfield="ParentId" resultastree="true" allowresize="true"
+                                         allowcelledit="true" allowcellselect="true" expandOnLoad="2"
+                                         url="/Form/TreeLazyLoad" autoload="false" data-options="{lazyload:true}"
+                                         onbeforeload="OnTreeBeforeLoad" onbeforeexpand="Onbeforeexpand">
+                                        <div property="columns">
+                                            <div name="MatBSName" field="MatBSName" headeralign="center" allowsort="true">分类 </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div showcollapsebutton="true">
+                                    <div id="PS_MDM_Mat" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                         allowcelledit="false" multiselect="true" showpager="true" onlyCheckSelection="true" sortMode="client" 
+                                         idfield="Id" autoload="false" onbeforeload="OnGridBeforeLoad" pagesize="50" sizeList="[20,50,100,200]"
+                                         url="/Form/GridPageLoadEx">
+                                        <div property="columns">
+                                            <div type="checkcolumn" width="40"></div>
+                                            <div field="MatCode" allowSort="true" width="60">
+                                                物资编码
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="MatShortName" allowSort="true" width="60">
+                                                物资名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="MatLongName" allowSort="true" width="100">
+                                                规格型号/技术参数
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="MatUnit" width="60">
+                                                单位
+                                                <input id="PS_MDM_Mat.MatUnit" name="MatUnit" property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="MatCode">物资编码</div>
+                                    <div field="MatShortName">物资名称</div>
+                                    <div name="action" width="50px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var human = mini.get("PS_MDM_Mat");
+        var dept = mini.get("PS_MDM_MatBS");
+        var gridselected = mini.get("GridSelected");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        Select.LoadStepFirst = function () {
+            dept.reload();
+        }
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            human.multiSelect = bmulti;
+            human.onlyCheckSelection = bmulti;
+            if (bmulti)
+                human.showColumn("checkcolumn");
+            else {
+                human.hideColumn("checkcolumn");
+            }
+            dept.on("nodeselect", OnSelectNode);
+        });
+
+        human.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (!cRow) {
+                if (human.multiSelect)
+                    gridselected.addRow(row);
+                else {
+                    var data = [];
+                    data.push(row);
+                    gridselected.setData(data);
+                }
+            }
+        })
+        human.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+                + e.record.Id + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].Id == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+        function Onbeforeexpand(e) {
+            var node = e.node;
+            if (node.isLeaf) return;
+            if (node.children) return;
+            OnTreeBeforeLoad(e);
+        }
+
+        function OnTreeBeforeLoad(e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+
+            var p = { KeyWord: sender.id, KeyWordType: "BO", select: "Id,ParentId,MatBSName,LongCode", sort: "Sequ", parentid: "", swhere: "", level: "0", extparams: "" };
+            if (node)
+                p.parentid = node[sender.idField] || ""; //当前选中节点
+
+            if (sender.lazyload) {
+                var il = parseInt(sender.getExpandOnLoad());
+                if (il && il > 0 && !sender.firstloaded)
+                    p.level = il;
+                else
+                    p.level = "1";
+            }
+            $.ajax({
+                url: sender.url,
+                data: p, type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success) {
+                        return;
+                    }
+                    var data = mini.decode(o.data.value);
+
+                    data = mini.arrayToTree(data, sender.nodesField, sender.idField, sender.parentField);
+                    //如果是tree懒加载，miniui会自动给节点打上新增标记，需要去掉
+                    if (sender.lazyload) {
+                        var oldNodes = node[sender.nodesField];
+                        sender.removeNodes(oldNodes);
+                        sender.addNodes(data, node);
+                        for (var i = 0, l = data.length; i < l; i++) {
+                            delete data[i]._state;
+                        }
+                        sender.expandNode(node);
+                    }
+                    else
+                        sender.loadList(data, sender.idField, sender.parentField);
+                    if (sender.lazyload && !sender.firstloaded) {
+                        var il = parseInt(sender.getExpandOnLoad());
+                        if (il && il > 0) {
+                            sender.firstloaded = true;
+                            sender.expandAll();
+                        }
+                    }
+                }
+            })
+        }
+
+        function OnGridBeforeLoad(e) {
+            e.cancel = true;
+            var node = dept.getSelectedNode();
+            if (!node) return;
+            var sender = e.sender;//树控件
+            var swhere = Select.GetWhere() || "1=1";
+            if (WizardParams.filter) {
+                swhere += " and " + base64decode(WizardParams.filter);
+            }
+            swhere += " and A.EpsProjId='[@EpsProjId]' and exists(select x1.Id from PS_MDM_MatBS x1 where A.MatBS_Guid=x1.Id"
+                   + " and (x1.LongCode='" + node.LongCode + "' or x1.LongCode like '" + node.LongCode + ".%'))";
+            var txt = mini.get("txtName");
+            if (txt.value.length > 0)
+                swhere += " and (MatShortName like '%" + txt.value + "%')";
+            //var p = { KeyWord: sender.id, KeyWordType: "ViewEntity", index: e.params.pageIndex, size: e.params.pageSize, swhere: swhere };
+            var p = { KeyWord: sender.id, index: e.params.pageIndex, size: e.params.pageSize, swhere: swhere, sort:"" };
+            var pgindex = e.params.pageIndex;
+            var psize = e.params.pageSize;
+            debugger;
+            p.sort="MatCode";
+            sender.mask();
+            FormFuns.GridPageLoad(p, function (o) {
+                sender.unmask();
+                if (o.success) {
+                    var data = mini.decode(o.data.value);
+                    sender.setData(data);
+                    sender.setTotalCount(o.data.totalcount);
+                    sender.setPageIndex(pgindex);
+                    sender.setPageSize(psize);
+                    //e.sender.setTotalCount(tmpdata.data.totalcount);
+                }
+                //一种
+                //if (sender.showPager) {//使用自带的Pager
+                //    params.index = params.pageIndex;
+                //    params.size = params.pageSize;
+                //}
+                //else
+                //    Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+            })
+        }
+
+        function OnSearchClick(e) {
+            human.setPageIndex(0);
+            human.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            human.setPageIndex(0);
+            human.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+
+    </script>
+</body>
+</html>

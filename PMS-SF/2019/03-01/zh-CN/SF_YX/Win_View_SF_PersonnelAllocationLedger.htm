@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_PersonnelAllocationLedger.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_PersonnelAllocationLedger-Export" title="运行部人员调拨台账" class="btn-group"></div>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_PersonnelAllocationLedger-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_PersonnelAllocationLedger-search">
+                            <input id="View_SF_PersonnelAllocationLedger-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_PersonnelAllocationLedger-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_PersonnelAllocationLedger" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                             showpager="true" pagesize="50" sizelist="[50,100,200,500]" allowcellselect="true" ondrawcell="DrawCell" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <div type="indexcolumn" width="45">序号</div>
+                                <div field="Code" name="Code" width="100" allowsort="true">人员编号</div>
+                                <div field="Name" name="Name" width="100" allowsort="true">人员名称</div>
+                                <div header="现在" headeralign="center">
+                                    <div property="columns">
+                                        <div field="PosiName" headeralign="center" allowsort="true">岗位<input property="editor" class="mini-textbox" style="width: 100%;"/></div>
+                                        <div field="DeptName" headeralign="center" allowsort="true">部门<input property="editor" class="mini-textbox" style="width: 100%;"/></div>
+                                    </div>
+                                </div>
+                                <div header="调入前" headeralign="center">
+                                    <div property="columns">
+                                        <div field="OldPosition" headeralign="center" allowsort="true">岗位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="OldDepartment" headeralign="center" allowsort="true">部门<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                                <div field="AllocationDate" name="AllocationDate" headeralign="center" header="最后一次调拨时间" dateformat="yyyy-MM-dd" allowsort="true">
+                                    最后一次调拨时间<input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function DrawCell(e) {
+            if (e.field == "Name") {
+                e.cellHtml = '<a href="javascript:void(0)" onclick="OpenApply(\'' + e.record.Id + '\')">' + e.value + '</a>';
+            }
+        }
+
+        function OpenApply(Id) {
+            var url = "/Form/EditForm/7ba9a1d5-33aa-402b-aaaf-f3e109911031/?HumId=" + Id;
+            mini.open({ url: url, width: "80%", heigth: "160%" });
+        }
+    </script>
+</body>
+</html>

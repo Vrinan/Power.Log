@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>文献下载申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_DocumentDownloadApply.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_DocumentDownloadApply.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_DocumentDownloadApply.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_DocumentDownloadApply" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                              <input id="SF_DocumentDownloadApply.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_DocumentDownloadApply.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DocumentDownloadApply.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+									 <tr>
+                                        <td>
+                                            申请时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.ApplyTime" name="ApplyTime" class="mini-datepicker"/>
+                                        </td>
+                                        <td>
+                                            需要时间                                    
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.NeedTime" name="NeedTime" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DocumentDownloadApply.AccountBalance">账户余额</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.AccountBalance" name="AccountBalance" class="mini-textbox"/>
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DocumentDownloadApply.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='下载内容'>
+                            <div class="mini-toolbar">
+                                <div id="btnUpload"></div>
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_DocumentDownloadApply_List.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" id="SF_DocumentDownloadApply_List.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_DocumentDownloadApply_List.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->  
+                                <div id="SF_DocumentDownloadApply_List-Export" class="btn-group"></div><!--导出-->
+                                <a class="mini-button blue" iconcls="fa-ils" href="/Upload/文献下载申请.xlsx">导入模版下载</a>
+                            </div>
+                            <div class="mini-fit">
+                                 <div id="SF_DocumentDownloadApply_List" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>                           
+                                        <div field="ContentTitle" headeralign="center">
+                                            内容标题
+                                             <input property="editor" class="mini-textbox" style="width: 100%;"/>
+                                             <!--<input property="editor" id="SF_MeetingSummary_Par.Participant" class="mini-buttonedit" name="Participant" textname="Participant" 
+                                                    onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />-->
+                                        </div>
+                                        <!--<div field="KnowledgeSharing" headeralign="center">
+                                            知识共享是否存在 
+                                            <input property="editor" class="mini-textbox" style="width:  100%" readonly="readonly"/>
+                                        </div>-->
+										<div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					  
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_DocumentDownloadApply_List", CreateGUID());//此处修改关键词
+        });
+        mini.parse();
+        //PowerForm.EventAfterLoadData = function (e) {
+        //    getWorkFlowMessage();
+        //    showBtn();
+        //}
+        //审批完,只给录入人,显示生成调整按钮。
+        function showBtn() {
+            debugger;
+            var RegHumId = mini.get("RegHumId").value;
+            if ((mini.get("SF_DocumentDownloadApply.Status").value == 50) && (sessiondata.HumanId == RegHumId)) {
+                mini.get("SF_DocumentDownloadApply.CreateQGD").show();
+            }
+        }
+        //导入物料明细Excel
+        function FileUp(keyword, keyvalue) {
+            //mini.parse();
+            if (keyword == "")
+                keyword = "SF_DocumentDownloadApply_List";//此处修改关键词
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_DocumentDownloadApply_List");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                height: "30",
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入文献明细",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_DocumentDownloadApply";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DocumentDownloadApply";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DocumentDownloadApply";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>计划调整</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_CG_PurchasePlanAdjust.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_CG_PurchasePlanAdjust.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_CG_PurchasePlanAdjust.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="基本数据">
+                            <div id="SF_CG_PurchasePlanAdjust" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="SF_CG_PurchasePlanAdjust.Code" name="Code" class="mini-textbox" readonly="readonly" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_PurchasePlanAdjust.Status" name="Status" class="mini-combobox" readonly="readonly"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td><input id="SF_CG_PurchasePlanAdjust.Title" name="Title" class="mini-textbox" required="true" /></td>
+                                        <td>是否线下采买</td>
+                                        <td>
+                                            <input id="SF_CG_PurchasePlanAdjust.IsDirect" name="IsDirect" truevalue="1" falsevalue="0" class="mini-checkbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>原请购计划编号</td>
+                                        <td>
+                                            <input id="SF_CG_PurchasePlanAdjust.AdjustCode" name="AdjustCode" textname="AdjustCode" class="mini-buttonedit" emptytext="请选择原请购计划..." 
+                                                onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" required />
+                                            <input id="SF_CG_PurchasePlanAdjust.AdjustId" name="AdjustId" textname="AdjustId" class="mini-hidden" />
+                                        </td>
+                                        <td>原请购计划标题</td>
+                                        <td><input id="SF_CG_PurchasePlanAdjust.AdjustTitle" name="AdjustTitle" class="mini-textbox" readonly /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>项目简称</td>
+                                        <td><input id="SF_CG_PurchasePlanAdjust.ProjShortName" name="ProjShortName" textname="ProjShortName" class="mini-textbox" readonly></td>
+                                        <td>项目名称</td>
+                                        <td >
+                                            <input id="SF_CG_PurchasePlanAdjust.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit" readonly/>
+                                            <input id="SF_CG_PurchasePlanAdjust.ProjId" name="ProjId" textname="ProjId" class="mini-hidden"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>备注说明</td>
+                                        <td colspan="3"><input id="SF_CG_PurchasePlanAdjust.Memo" name="Memo" class="mini-textarea" height="200" /></td>       
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物资明细">
+                            <div class="mini-toolbar">
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_PurchasePlanListAdjust.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_PurchasePlanListAdjust.Add2" onclick="PowerForm.OnBtnWizard(this)">从物资库选择</a>
+                                    <a class="mini-button yellow" iconcls="fa-plus" id="SF_CG_PurchasePlanListAdjust.AddbySchedule" onclick="PowerForm.OnBtnWizard(this)">从目标选择</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_PurchasePlanListAdjust.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <div id="SF_CG_PurchasePlanListAdjust-Print" class="btn-group"></div>
+                                <div id="SF_CG_PurchasePlanListAdjust-Export" class="btn-group"></div>
+                                <label style="font-size:15px;color:	#66ccff;font-weight:bold">调整 </label>
+                                <label style="font-size:15px;color:	#FF7F50;font-weight:bold">作废 </label>
+                                <label style="font-size:15px;color:	#00FA9A;font-weight:bold">新增 </label>
+                                <label style="font-size:15px;color:	#FFD700;font-weight:bold">退回 </label>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_PurchasePlanListAdjust" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true" oncellendedit="Oncellendedit" ondrawcell="drawcell"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}"  oncellbeginedit="OnCellBeginEdit" showSummaryRow="true" summaryPosition="bottom" sortField="sequ">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div field="sequ" width="40" allowSort="true">序号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="IsOld" width="70" type="checkboxcolumn" truevalue="1" falsevalue="0" >原物资</div>
+                                        <div field="IsBack" width="70" type="checkboxcolumn" truevalue="1" falsevalue="0" >退回物资</div>
+                                        <div field="ReturnReasons" width="100">退回原因</div>
+                                        <div field="MatStatus" width="100" allowSort="true" type="comboboxcolumn">物资状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                        <!-- <div field="MatId" width="0" allowSort="true">物资库Id<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                        <div field="MatCode" width="100" allowSort="true">物资编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Code" width="130" allowSort="true">计划编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="100" allowSort="true">物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Specification" width="200" allowSort="true">规格型号/技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <!-- <div field="Model" width="200" allowSort="true">技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                        <div field="MatUnit" width="100" allowSort="true">单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="ApplyAmount" width="100" allowSort="true" summarytype="sum" numberformat="n2">申请数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="Amount" width="100" allowSort="true" summarytype="sum" numberformat="n2">审核数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="Price" width="100" allowSort="true">预估单价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="TotalPrice" width="100" allowSort="true" summarytype="sum">预估总价<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MPurchaseDate" width="100" allowSort="true" dateFormat="yyyy-MM-dd">计划采购日期<input property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false" dateFormat="yyyy-MM-dd" /></div>
+                                        <div field="ArrivalDate" width="100" allowSort="true" dateFormat="yyyy-MM-dd">到货日期<input property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false" dateFormat="yyyy-MM-dd" /></div>
+                                        <div field="ArrivalAddress" width="100" allowSort="true">到货地点<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Supplier" width="140" allowSort="true">厂家/品牌/供应商<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PID" width="100" allowSort="true">PID编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>   
+                                        <div field="Remark" width="150" allowSort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var oldValue=null;
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        //送审前判断下 物资是否为空,数量是否为0
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_CG_PurchasePlanListAdjust");
+            if (mini.get("SF_CG_PurchasePlanAdjust.Status").getValue() == "0") {
+                for (var i = 0 ; i < grid.data.length; i++) {
+                    if ((grid.data[i].Amount == 0||grid.data[i].ApplyAmount == 0) && (grid.data[i].MatStatus == 1)) {
+                        Power.ui.alert("第" + (i + 1) + "行,调整数量不得为零!</br>如不采买请下拉状态作废!");
+                        e.isValid = false;
+                        break;
+                    }
+                }
+            }
+            
+        }
+        PowerForm.EventWizardWhere = function (e) {
+            //过滤批准的请购计划,以及录入人
+            if (e.id == "SF_CG_PurchasePlanAdjust.AdjustCode") {
+                e.where = " Status=50 ";
+                e.where += " and (RegHumId='"+sessiondata.HumanId+"' or 'ad000000-0000-0000-0000-000000000000'='"+sessiondata.HumanId+"' )";
+            }
+            //设备成本计划表
+            if(e.id=="SF_CG_PurchasePlanListAdjust.AddbySchedule"){
+                if(mini.get("SF_CG_PurchasePlanAdjust.ProjId").getValue()&&mini.get("SF_CG_PurchasePlanAdjust.ProjId").getValue()!=""){
+                    e.where = " 1=1 "
+                          +" and MasterId=(select bb.Id from SF_FK_EquipmentCostSchedule bb where IsNew=1 "
+                          +" and EpsId='"+mini.get("SF_CG_PurchasePlanAdjust.ProjId").getValue()+"')";
+                }else{
+                    Power.ui.warning("未选择项目,无法关联目标计划!");
+                    e.canOpen = false;
+                }
+            }
+        }
+        PowerForm.EventWizardData = function (e, data) {
+            if (e.id == "SF_CG_PurchasePlanAdjust.AdjustCode") {
+                if(data[0]){
+                    //默认把原计划标题赋给调整表
+                    var _Title=mini.get("SF_CG_PurchasePlanAdjust.Title").getValue().length==0?data[0].Title:mini.get("SF_CG_PurchasePlanAdjust.Title").getValue();
+                    mini.get("SF_CG_PurchasePlanAdjust.Title").setValue(_Title);
+                }
+            }
+        }
+        function drawcell(e) {
+            if (e.field == "MatStatus") {
+                if(e.value == "1"){
+                    e.rowStyle = "background:#66ccff;";
+                }else if(e.value == "2"){
+                    e.rowStyle = "background:#FF7F50;";
+                }else if(e.value == "4"){
+                    e.rowStyle = "background:#00FA9A;";
+                }
+            }
+            //退回物资
+            if (e.field == "IsBack") {
+                if(e.value == 1){
+                    e.rowStyle = "background:#FFD700;";
+                }
+            }
+        }
+        function OnCellBeginEdit(e) {
+            //自动计算预估总价,不给编辑,同理，物资库LongCode，物资GUId,物资名称
+            if (   e.field == "TotalPrice" 
+                || e.field == "MatId" 
+                || e.field == "MatCode"
+                || e.field == "sequ"
+                || e.field == "IsOld"
+                || e.field == "IsBack") {
+                e.cancel = true;
+            }else if(e.field == "MatStatus" && e.value=="4" && (e.record.IsOld=="0"||e.record.IsOld==undefined)){
+                Power.ui.alert("新增物资不允许改状态!");
+                e.cancel = true;
+            }else{
+                oldValue=e.value;
+            }
+            //批准后申请数量不允许修改(留痕数据)
+            if(e.field == "ApplyAmount"){
+                if(mini.get("SF_CG_PurchasePlanAdjust.Status").getValue()!=="0"){
+                    e.cancel = true;
+                }
+            }
+            
+        }
+        function Oncellendedit(e) {
+            //自动求金额
+            if (e.field == "Amount" || e.field == "Price") {
+                var record = e.record;
+                var sender = e.sender;
+                var Amount = record.Amount == null ? 0 : parseFloat(record.Amount);
+                var Price = record.Price == null ? 0 : parseFloat(record.Price);
+                var TotalPrice = Amount * Price;
+                sender.updateRow(record, { "TotalPrice": TotalPrice });
+            }
+            if(e.field=="ApplyAmount"){
+                var record = e.record;
+                var sender = e.sender;
+                var ApplyAmount = record.ApplyAmount == null ? 0 : parseFloat(record.ApplyAmount);
+                var Price = record.Price == null ? 0 : parseFloat(record.Price);
+                var TotalPrice = ApplyAmount * Price;
+                sender.updateRow(record, { "Amount": ApplyAmount });
+                sender.updateRow(record, { "TotalPrice": TotalPrice });
+            }
+            //如果修改了本行的除物资状态(MatStatus)列外任何值,且不为原物资,将物资状态置为1-调整
+            if(e.field!="MatStatus"){
+                if(e.value!=oldValue && e.record.IsOld=="1"){
+                    mini.get("SF_CG_PurchasePlanListAdjust").updateRow(e.record,{"MatStatus":1});
+                    Power.ui.success("请填写调整备注(非必填)!");
+                }
+            }
+            //原有物资不允许改成新增,
+            if(e.field=="MatStatus"){
+                if(e.value!=oldValue && e.value=="4" && e.record.IsOld=="1" ){
+                    mini.get("SF_CG_PurchasePlanListAdjust").updateRow(e.record,{"MatStatus":4});
+                    mini.get("SF_CG_PurchasePlanListAdjust").reload();
+                    Power.ui.alert("原物资不允许改成新增!");
+                }
+            }
+        }
+        //新增物资的时候,序列号为当前最大序号+1
+        PowerForm.EventBeforeAddRow=function(e,data){
+            if(e.id=="SF_CG_PurchasePlanListAdjust"){
+                if(mini.get(e.id).data.length>0){
+                    data.sequ=parseInt(mini.get(e.id).data[mini.get(e.id).data.length-1].sequ)+1;
+                }else{
+                    data.sequ=1;
+                }
+                //赋编号
+                if(mini.get("SF_CG_PurchasePlanAdjust.Status").getValue()!="50"){
+                    var code=mini.get("SF_CG_PurchasePlanAdjust.AdjustCode").getValue();
+                    if(data.sequ < 10){
+                        data.Code = code + "-" + "0" + data.sequ;
+                    }else{
+                        data.Code = code + "-" + data.sequ;
+                    }
+                }
+                //物资状态 1-调整 2-作废 3-无 4-新增
+                data.MatStatus="4";
+                //默认值
+                data.ApplyAmount=0;
+                data.Amount=0;
+                data.Price=0;
+                data.TotalPrice=0;
+            }
+        }
+        PowerForm.EventAfterFormLoad = function (e) {
+            if(formconfig.FormState=="edit"&&mini.get("SF_CG_PurchasePlanAdjust.Status").getValue()=="50"){
+                mini.get("SF_CG_PurchasePlanListAdjust.AddbySchedule").setEnabled(false);
+            }
+        }
+    </script>
+</body>
+</html>

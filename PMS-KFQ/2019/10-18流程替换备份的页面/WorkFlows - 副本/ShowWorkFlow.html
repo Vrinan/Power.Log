@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="/PowerPlat/WorkFlow/css/flowPath.css?v=$AppVersion" type="text/css" rel="stylesheet" />
+    <style>
+        v\:* {
+            behavior: url(#default#VML);
+        }
+
+        .mindIcon {
+            background: url(/PowerPlat/WorkFlow/Images/add.gif) no-repeat 50% 50%;
+        }
+
+        .mini-tree-expand .mindIcon {
+            background: url(/PowerPlat/WorkFlow/Images/plus.gif) no-repeat 50% 50%;
+        }
+    </style>
+</head>
+
+<body id="body" onselectstart="return false">
+    <div style="height: 100%">
+        <div class="col-md-12" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div id="toolbar1" class="portlet-title">
+                    <div class="caption">
+                    <i class="fa fa-reorder"></i>$Helper.GetResource("workflow_chart")						
+                </div><!--流程图-->
+                    <div class="actions">
+                        <a class="mini-button blue" iconcls="fa-power-off" onclick="CloseWindow('cancel');">$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 100%;">
+                            <div region="center" title="$Helper.GetResource('workflow_plot')" id="contextBody" class="mapContext">
+                            </div><!--绘图区-->
+                        </div>
+                        <div id="smallMap" style="display: none"></div>
+                        <div id="historyMessage" class="historyMessage" style="display: none"></div>
+                        <div id="topCross" style="display: none"></div>
+                        <div id="leftCross" style="display: none"></div>
+
+                    </div>
+                    <!--portlet body-->
+                </div>
+            </div>
+            <!--portlet box-->
+        </div>
+    </div>
+
+    <script src="/scripts/boot.js" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/BaseTool.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/LineTool.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/ModeTool.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/Map.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/Entity.js" type="text/javascript" language="javascript"></script>
+
+
+    <script src="/PowerPlat/WorkFlow/js/KeyEvent.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/SmallMapTool.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/ControlTool.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/Global.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/BeanXml.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/Utils.js" type="text/javascript" language="javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js" type="text/javascript" language="javascript"></script>
+
+    <script src="/scripts/PlatForm/TreeManage.js" type="text/javascript"></script>
+
+    <script language="javascript">
+
+        mini.parse();
+
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+
+
+
+        function SetData(workFlowID,version) {
+
+            $.ajax({
+                type: "POST",
+                url: "/WorkFlow/ReadConfigXml",
+                data: { "workFlowID": workFlowID, "Version": version },
+                cache: false,
+                success: function (data) {
+                    var tmpData = mini.decode(data);
+                    //zhouke
+                    //2015-07-06
+                    //如果用户使用的是新流程图，则跳转到新流程图设计界面去
+                    if (tmpData.ConfigMode=="Json") {
+                        location.href = "/PowerPlat/WorkFlow/WorkflowDesigner.aspx?hidetoolbar=1&WorkFlowID=" + workFlowID + "&Version=" + version;
+                    }
+                    else
+                        graphUtils.loadTextXml(tmpData.XmlInfo);
+
+                },
+                error: function (e, r, h) {
+                    top.Power.ui.error(e.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+
+        jQuery(document).ready(function () {
+
+            var global = com.xjwgraph.Global;
+
+            var layMain = mini.get("LayoutMain");
+            var contextBodyDiv = layMain.getRegion("center")._body;
+
+
+            graphUtils = com.xjwgraph.Utils.create({
+                WorkFlowMode: 'ShowMonitor',      //工作模式  流程监控
+                ImageRootPath: '/PowerPlat/WorkFlow/Images/',      //图片的根目录
+                contextBody: contextBodyDiv,
+                historyMessage: 'historyMessage',
+                smallMap: 'smallMap',
+                width: 1600,
+                height: 1000
+            });
+
+            document.body.onclick = function () {
+
+                if (!stopEvent) {
+                    global.modeTool.clear();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

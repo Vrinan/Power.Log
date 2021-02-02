@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>现场签证审批单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="PS_ProjectInfo.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_VisaSiteApprovalSheet.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_VisaSiteApprovalSheet.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_VisaSiteApprovalSheet.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_VisaSiteApprovalSheet" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            签证编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3">
+                                            <input id="SF_VisaSiteApprovalSheet.Title" name="Title" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_VisaSiteApprovalSheet.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                            
+                                            <input id="SF_VisaSiteApprovalSheet.ProjectNameId" name="ProjectNameId" class="mini-textbox" visible="false" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.CompactCode" name="CompactCode" textname="CompactName" class="mini-buttonedit"
+                                                   emptytext="请选择合同编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.CompactName" name="CompactName" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                    </tr>                                 
+                                    <tr>
+                                        <td>
+                                           施工单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.ConstructionUnits" name="ConstructionUnits" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            提出方式
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.PresentWay" name="PresentWay" class="mini-combobox" />
+                                        </td>                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            图号
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.DrawingNumber" name="DrawingNumber" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            部位
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.Position" name="Position" class="mini-textbox" />
+                                        </td>                                      
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            是否有费用
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.IsThereAfee" name="IsThereAfee" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            估算费用
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.EstimatedCost" name="EstimatedCost" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            签证类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.VisaType" name="VisaType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            项目类别
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.ProjectType" name="ProjectType" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            签证原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_VisaSiteApprovalSheet.VisaReason" name="VisaReason" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            签证内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_VisaSiteApprovalSheet.VisaCategory" name="VisaCategory" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_VisaSiteApprovalSheet.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_VisaSiteApprovalSheet.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            
+        });
+        PowerForm.EventWizardWhere = function (e) {
+            if(e.id == "SF_VisaSiteApprovalSheet.ProjectName")
+            {
+                e.where = "project_guid in(select id from dbo.[returnEPSChildrenTreeIds]('82bef379-1d68-4681-baf0-42924ca6b2b7'))";
+            }
+            if(e.id == "SF_VisaSiteApprovalSheet.CompactCode")
+            {
+                e.canOpen=true;
+                var epsid = mini.get("SF_VisaSiteApprovalSheet.ProjectNameId").getValue();
+                if(IsEmpty(epsid))
+                {
+                    Power.ui.warning("请先选择项目");
+                    e.canOpen=false;
+                }
+                else
+                {
+                    e.where="EpsProjectId = '"+epsid+"'";
+                    e.canOpen=true;
+                }
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("zjb") > -1) {
+                mini.get("SF_VisaSiteApprovalSheet.EstimatedCost").setReadOnly(false);
+                mini.get("SF_VisaSiteApprovalSheet.Save").enable();
+            }
+        }
+
+    </script>
+</body>
+</html>

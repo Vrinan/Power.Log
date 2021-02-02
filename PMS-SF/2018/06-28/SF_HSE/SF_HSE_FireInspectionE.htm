@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>HSE及消防检查（专项）
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_HSE_FireInspectionE.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_FireInspectionE.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_FireInspectionE.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_HSE_FireInspectionE" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>   
+                                        <td>
+                                            受检单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.PartyBName" name="PartyBName" textname="PartyBName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择单位..." onbuttonclick="PowerForm.OnBtnWizard(this)"  />
+                                        </td>
+                                    
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检查内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_FireInspectionE.InspectContent" name="InspectContent" class="mini-textarea" height="100"/>
+                                        </td>                                      
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            检测人员
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.InspectHuman" name="InspectHuman" textname="InspectHuman" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            检查日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.InspectDate" name="InspectDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            存在问题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_FireInspectionE.ExistQuestion" name="ExistQuestion" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            纠正措施
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_FireInspectionE.CorrectiveAction" name="CorrectiveAction" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>         
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_FireInspectionE.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

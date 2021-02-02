@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power") < 0 ? {} : $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid';
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtname" class="mini-textbox" style="width: 240px;" emptytext="请输入编号或名称,回车开始查询" onenter="OnSearchClick" /><!--请输入名称-->
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div id="V_PlanStatus" idfield="proj_plan_guid" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                         treecolumn="plan_short_name" parentfield="parent_plan_guid" resultastree="false"
+                         allowresize="true" expandonload="true" virtualscroll="true"
+                         onbeforeload="OnBeforeLoad" onnodedblclick="OnDbClick">
+                        <div property="columns">
+                            <div type="indexcolumn" width="20"></div>
+                            <div field="plan_short_name" name="plan_short_name" width="80">编号</div>
+                            <div field="plan_name">计划名称 </div>
+                            <div field="plantype">计划类型 </div>
+                            <div field="apprstatus" width="60">计划审批状态 </div>
+                            <div field="feedbackstatus" width="60">反馈状态 </div>
+                            <div field="lastfeedbackdate" dateformat="yyyy-MM-dd" width="60">最新反馈日期 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // onload="OnAfterLoad" onpreload="OnPreLoad"
+        mini.parse();
+        var epsproj = mini.get("V_PlanStatus");
+        $(function () {
+
+        })
+        function OnDbClick(e) {
+            ComToolsCloseWindow('ok');
+        }
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            var d = []
+            d.push(epsproj.getSelectedNode());
+            return d;
+        };
+        Select.LoadStepFirst = function () {
+            epsproj.reload();
+        };
+
+        function OnBeforeLoad(e) {
+            var plantype = getParameter("plantype");
+            e.cancel = true;
+            var action = Select.action || "ReadOnly;CanEdit;CanUpdate;AllLimit;";
+            var plan_name = "";
+            if (getParameter("plan_guid"))
+                plan_name = getParameter("plan_guid");
+            $.ajax({
+                url: "/Plan/WizardPlanData",
+                data: { plan_name: plan_name, action: action, plantype: plantype },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        epsproj.loadList(o.data.value, "proj_plan_guid", "parent_plan_guid");
+                    }
+                    else
+                        Power.ui.error(o.message, { timeout: 0, position: "center center", closeable: true });
+                }
+            })
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            if (FormFuns.IsMiniTree(e.sender)) { //树必须使用树结构数据
+                //如果是懒加载，标记节点不展开，否则出现 - 号图标，实际应该是 + 号图标
+                if (e.sender.lazyload) {
+                    for (var i = 0; i < data.length; i++)
+                        data[i].expanded = false;
+                }
+                e.sender.resultAsTree = true;
+                data = mini.arrayToTree(data, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+            }
+            e.data = data;
+            if (e.sender.showPager)
+                e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+        function OnAfterLoad(e) {
+            //如果是tree懒加载，miniui会自动给节点打上新增标记，需要去掉
+            if (e.sender.lazyload) {
+                for (var i = 0; i < e.data.length; i++)
+                    delete e.data[i]._state;
+            }
+
+        }
+
+        function OnSearchClick(e) {
+            epsproj.reload();
+        }
+    </script>
+</body>
+
+</html>

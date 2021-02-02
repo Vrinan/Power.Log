@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=273" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=273" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>隐患排查
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_HSE_Investigation.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_Investigation.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_Investigation.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_HSE_Investigation" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            项目
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.InProjName" name="InProjName" textname="InProjName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>                                      
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检查类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.CheckType" name="CheckType" class="mini-combobox" required="true" />
+                                        </td>
+                                        <td>
+                                            检查日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.InspectDate" name="InspectDate" class="mini-datepicker" format="yyyy-MM-dd" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            隐患责任部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.InDeptName" name="InDeptName" textname="InDeptName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                            <input id="SF_HSE_Investigation.InDeptId" name="InDeptId" class="mini-textbox" visible="false" />
+                                        </td>
+                                        <td>
+                                            整改负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.SignHuman" name="SignHuman" textname="SignHuman" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择人员.." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                            <input id="SF_HSE_Investigation.SignHumanId" name="SignHumanId" class="mini-textbox" visible="false" />
+                                        </td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td>
+                                            检查人员
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.InspectHuman" name="InspectHuman" textname="InspectHuman" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                            <input id="SF_HSE_Investigation.InspectHumanId" name="InspectHumanId" class="mini-textbox" visible="false" />
+                                        </td>
+                                        <td>
+                                            检查部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.CheckDepart" name="CheckDepart" textname="CheckDepart" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                            <input id="SF_HSE_Investigation.CheckDepartId" name="CheckDepartId" class="mini-textbox" visible="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>                                       
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_Investigation.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Investigation.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细' name="SF_HSE_Investigation_dtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_HSE_Investigation_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_HSE_Investigation_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <div id="SF_HSE_Investigation_dtl.importxls"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/隐患排查导入模板.xlsx">导入模板下载</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_HSE_Investigation_dtl" class="mini-datagrid" style="height:100%;" showsummaryrow="true" multiselect="true" sortField="UpdDate"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="30"></div>
+                                        <div type="indexcolumn" width="30">序号</div>
+                                        <!--<div field="PartyBName" headeralign="center">
+                                            隐患单位
+                                            <input id="SF_HSE_Investigation_dtl.PartyBName" name="PartyBName" textname="PartyBName" class="mini-buttonedit" property="editor"
+                                                   emptytext="请选择单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </div>-->
+                                        <div field="TroubleType" headeralign="center" type="comboboxcolumn">
+                                            隐患类别
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Content" headeralign="center">
+                                            隐患内容
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="TroubleChange" headeralign="center">
+                                            整改意见或监护措施
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ChangeTime" headeralign="center">
+                                            整改期限
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            var a = mini.get("SF_HSE_Investigation.InspectHuman").getValue();
+            if (formconfig.FormState == "add" || a == "" || a == null || a == undefined) {
+                mini.get("SF_HSE_Investigation.InspectHuman").setValue(sessiondata.UserName);
+                mini.get("SF_HSE_Investigation.InspectHumanId").setValue(sessiondata.HumanId);
+            }
+            var b = mini.get("SF_HSE_Investigation.InProjName").getValue();
+            if (formconfig.FormState == "add" || b == "" || b == null || b == undefined) {
+                mini.get("SF_HSE_Investigation.InProjName").setValue(sessiondata.EpsProjName)
+            }
+            var c = mini.get("SF_HSE_Investigation.CheckDepart").getValue();
+            if (formconfig.FormState == "add" || c == "" || c == null || c == undefined) {
+                mini.get("SF_HSE_Investigation.CheckDepart").setValue(sessiondata.DeptName);
+                mini.get("SF_HSE_Investigation.CheckDepartId").setValue(sessiondata.DeptId);
+            }
+        }
+    </script>
+</body>
+</html>

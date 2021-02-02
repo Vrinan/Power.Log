@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var HumanId="$!CurrentSession.HumanId";
+		var HumanName="$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计变更
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue"  id="PS_DesignAlteration.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_DesignAlteration.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue"  id="PS_DesignAlteration.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs"  tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->  
+                            <div id="PS_DesignAlteration" class="form" >
+                                <table class="table table-bordered"> 
+                                    <tr>
+                                        <td>编号
+                                        </td>
+                                        <td>
+										<input id="PS_DesignAlteration.Code" name="Code" class="mini-textbox" required="true" />                                            
+                                        </td>
+                                        <td>
+                                            <label for="PS_DesignAlteration.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+									 <tr>
+                                        <td>标题
+                                        </td>
+                                        <td caption="3">
+										<input id="PS_DesignAlteration.Title" name="Title" class="mini-textbox" required="true" />                                            
+                                        </td>                               
+                                    </tr>
+									<tr>
+                                        <td>提出人
+                                        </td>
+                                        <td>
+										<input id="PS_DesignAlteration.Proposer" name="Proposer" textname="Proposer"  class="mini-buttonedit"  emptytext="请选择提出人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />                                            
+                                        </td>
+                                        <td>
+                                            <label for="PS_DesignAlteration.ProMajor">提出专业</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.ProMajor" name="ProMajor" textname="ProMajor" class="mini-buttonedit" emptytext="请选择工程专业..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+
+                                    </tr>
+									<tr>
+                                        <td>提出单位
+                                        </td>
+                                        <td>
+										<input id="PS_DesignAlteration.ProposerDept" name="ProposerDept" class="mini-combobox" required="true" />                                            
+                                        </td>
+                                        <td>
+                                            <label for="PS_DesignAlteration.ProjectPhase">阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.ProjectPhase" name="ProjectPhase" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>
+									<tr>
+                                        <td>提出日期
+                                        </td>
+                                        <td>
+										<input id="PS_DesignAlteration.ProposeDate" name="ProposeDate" class="mini-datepicker"  />                                            
+                                        </td>
+                                        <td>
+                                            <label for="PS_DesignAlteration.ProposeReason">提出原因</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.ProposeReason" name="ProposeReason" class="mini-textbox" />
+                                        </td>
+
+                                    </tr>
+									<tr>
+                                        <td>修改wbs
+                                        </td>
+                                        <td>
+										<input id="PS_DesignAlteration.AlterWbs" name="AlterWbs"  class="mini-buttonedit"  />                                            
+                                        </td>
+                                        <td>                                            
+                                        </td>
+                                        <td>                                            
+                                        </td>
+
+                                    </tr>
+									 <tr>
+                                        <td>
+                                            修改内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_DesignAlteration.AlterContent" name="AlterContent" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_DesignAlteration.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+		   PowerForm.EventAfterFormLoad  = function (e) { 
+		   if (formconfig.FormState == "add")
+		   {  
+		   formconfig.config.joindata.currow["Proposer"]=HumanName;
+		   formconfig.config.joindata.currow["ProposerId"]=HumanId;
+		
+		     var t = mini.get("PS_DesignAlteration.Proposer");
+            
+            t.setValue(HumanName);
+            t.setText(HumanName);
+		   }
+        }
+
+
+	
+    </script>
+</body>
+</html>
+

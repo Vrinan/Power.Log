@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>招投标启动会记录
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_BiddingStartMeetingRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_BiddingStartMeetingRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_BiddingStartMeetingRecord.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_BiddingStartMeetingRecord" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            会议时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.MeetingDate" name="MeetingDate" class="mini-datepicker" dateformat="yyyy-MM-dd"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            会议内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_BiddingStartMeetingRecord.MeetingContent" name="MeetingContent" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.ProjCode" name="ProjCode" textname="ProjCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.ProjName" name="ProjName" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_BiddingStartMeetingRecord.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        //PowerForm.EventWizardData = function (e, data) {
+        //    if (e.id == "SF_BiddingStartMeetingRecord.ProjCode") {
+        //        mini.get("SF_BiddingStartMeetingRecord.Save").doClick();
+                //mini.get("SF_BiddingStartMeetingRecord.projcode").setValue(data[0].projectid);
+                //e.Next = false;
+        	    ////console.log(data);
+        		//debugger
+        		// var grid= mini.get("SF_BiddingStartMeetingRecord_Dtl");
+        		//var row= grid.getSelected();
+        		//grid.updateRow(row, { PlanName:data.plan_name, Plan_Guid:data.proj_plan_guid });
+        	    ////var o = mini.decode(data);
+        		//mini.get("SF_BiddingStartMeetingRecord_Dtl.PlanName").setText(data[0].plan_name);
+        		//mini.get("SF_BiddingStartMeetingRecord_Dtl.PlanName").setValue(data[0].plan_name);
+        //    }
+        //}
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (btnid == "SF_BiddingStartMeetingRecord.ProjCode") {
+                mini.get("SF_BiddingStartMeetingRecord.Save").doClick();
+            }
+        }
+
+        //function onValueChanged() {
+        //    var ProjectStartDate = mini.get("SF_BiddingStartMeetingRecord.TenderBegin").value;//开始时间
+        //    var ProjectEndDate = mini.get("SF_BiddingStartMeetingRecord.TenderEnd").value;//结束时间
+        //    var startDate = new Date(ProjectStartDate);
+        //    var endDate = new Date(ProjectEndDate);
+        //    if(Date.parse(startDate) - Date.parse(endDate)>0)
+        //        {
+        //            Power.ui.alert("'开始时间'不能晚于'截止时间'!");
+        //            mini.get("SF_BiddingStartMeetingRecord.TenderBegin").setValue("");
+        //            mini.get("SF_BiddingStartMeetingRecord.TenderEnd").setValue("");
+        //            return;
+        //        }
+        //}
+    </script>
+</body>
+</html>

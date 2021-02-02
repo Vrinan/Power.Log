@@ -1,0 +1,440 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>客户登记
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <a class="mini-button blue" id="Organize.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="Organize.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="Organize.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    <!--<a class="mini-button blue" onclick="ShowNomalHTML"><i class="fa fa-power-off"></i>导入到经营线索</a>-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="Organize" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            公司编号
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Organize.Code" name="Code" class="mini-textbox"  requirederrortext="公司编号不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            公司名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Organize.Name" name="Name" class="mini-textbox" required="true" requirederrortext="公司名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            公司简称
+                                        </td>
+                                        <td>
+                                            <input id="Organize.ShortName" name="ShortName" class="mini-textbox" required="true" requirederrortext="公司简称不能为空" />
+                                        </td>
+                                        <td>
+                                            公司法人
+                                        </td>
+                                        <td>
+                                            <input id="Organize.LegalPerson" name="LegalPerson" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开户银行名称
+                                        </td>
+                                        <td>
+                                            <input id="Organize.BankName" name="BankName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            开户银行账号
+                                        </td>
+                                        <td>
+                                            <!--<input id="Organize.BankAccount" name="BankAccount" class="mini-spinner"allowlimitvalue="false" changeOnMousewheel="false" />-->
+                                            <input id="Organize.BankAccount" name="BankAccount" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开户银行地址
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Organize.BankAddress" name="BankAddress" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            主要联系人
+                                        </td>
+                                        <td>
+                                            <input id="Organize.MainLinker" name="MainLinker" textname="MainLinker" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            职位
+                                        </td>
+                                        <td>
+                                            <input id="Organize.duty" name="duty" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            电话
+                                        </td>
+                                        <td>
+                                            <input id="Organize.Phone" name="Phone" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            Email
+                                        </td>
+                                        <td>
+                                            <input id="Organize.Email" name="Email" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            地址
+                                        </td>
+                                        <td>
+                                            <input id="Organize.Address" name="Address" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            网址
+                                        </td>
+                                        <td>
+                                            <input id="Organize.WebSite" name="WebSite" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            税号
+                                        </td>
+                                        <td>
+                                            <input id="Organize.TaxCode" name="TaxCode" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            邮编
+                                        </td>
+                                        <td>
+                                            <input id="Organize.PostCode" name="PostCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="Organize.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="Organize.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Organize.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='客户联系人'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="Human.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="Human.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="Human" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+                                        <!--名称-->
+                                        <div field="Name" headeralign="center">
+                                            姓名
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PosiName" headeralign="center">
+                                            职务
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--其他信息-->
+                                        <div field="Phone" headeralign="center">
+                                            电话
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--其他信息-->
+                                        <!--<div field="Fax" headeralign="center">
+                                            传真
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="Email" headeralign="center">
+                                            邮箱
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='相关信息'>
+                            <div class="portlet box gray" style="height: 100%">
+                                <div class="mini-tabs" id="Div1" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                                    <div title='项目机会'>
+                                        <div class="mini-fit">
+                                            <div id="PS_ProjectInfo" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+
+                                                    <div field="ProjectId" headeralign="center" name="ProjectId" guideid="" datatype="" allowsort="true" currencyunit="" header="项目编号" align="left">项目编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="ProjectShortName" name="ProjectShortName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目简介" align="left">项目简介<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div type="comboboxcolumn" field="ProjectType" name="ProjectType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目类型" align="left">项目类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                                    <div field="ProjectLocation" name="ProjectLocation" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目地点" align="left">项目地点<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div type="comboboxcolumn" field="ProductType" name="ProductType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="产品类型" align="left">产品类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                                    <div field="ProjectInvestAmount" name="ProjectInvestAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="投资规模" align="left">投资规模<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div type="comboboxcolumn" field="FollowLevel" name="FollowLevel" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟踪级别" align="left">跟踪级别<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                                    <div field="FollowHuman" name="FollowHuman" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟踪人名称" align="center">跟踪人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="RegDate" name="RegDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title='进项合同'>
+                                        <div class="mini-fit">
+                                            <div id="V_PS_ContractInfo" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+
+                                                    <div type="comboboxcolumn" field="Status" name="V_PS_ContractInfo.Status" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同状态" align="center">合同状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                                    <div field="ContractCode" name="ContractCode" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同编号" align="left">合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="ContractName" name="ContractName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="ContractAmount" name="ContractAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同金额" align="center">合同金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+
+                                                    <div field="PartyA" name="PartyA" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="甲方" align="left">甲方<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="ApplyAmount" name="ApplyAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="请款金额" align="center">请款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+
+                                                    <div field="InvoiceAmount" name="InvoiceAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="开票金额" align="center">开票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+
+                                                    <div field="ReceiveAmount" name="ReceiveAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="到款金额" align="center">到款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+
+                                                    <div field="ReceiveAmountPercent" name="ReceiveAmountPercent" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="收款百分比" numberformat="n2" datatype="float" align="center">收款百分比%<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+
+                                                    <div field="SignedDate" name="SignedDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="签订日期" dateformat="yyyy-MM-dd" align="center">签订日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                                    <div field="RegDate" name="RegDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                                    <div field="RegHumName" name="RegHumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="center">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title='客户评价'>
+                                        <div class="mini-fit">
+                                            <div id="PS_ClientEvaluation" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                                    <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                                    <div field="RegHumName" name="RegHumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="center">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                                    <div field="RegDate" name="RegDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("PS_ProjectInfo").on("rowclick", function (e) {
+                OnViewForm("029d6895-3186-4565-adc3-61919e3ab1ed", e.record.Id);
+            })
+            mini.get("PS_ClientEvaluation").on("rowclick", function (e) {
+                OnViewForm("318cf2c5-048b-400a-b30e-09e9536279e8", e.record.Id);
+            })
+            mini.get("V_PS_ContractInfo").on("rowclick", function (e) {
+                OnViewForm("34399717-2ebe-40fe-9fd7-bca7b76f54e4", e.record.Id);
+            })
+        });
+
+
+        function ShowNomalHTML() {
+            //URL如果表单有的话，为/Form/EditForm(ViewForm)/表单id/主键值
+            mini.open({
+                url: "/Form/AddForm/5af26329-e2ba-4ac2-889f-5bf2c584d669/",
+                width: 900,//可用"100%"
+                height: 500,//可用"100%"
+                onload: function () {
+                    //打开的表单，加载完后，会触发此处代码
+                },
+                ondestroy: function (action) {
+                    //打开的表单关闭后，会触发此处打开
+                    if (action == "ok") {
+                        //当打开的表单是通过确定关闭的，会触发此处方法
+                    }
+                }
+            })
+        }
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "Organize.MainLinker") {
+                if (formconfig.FormState == "add") {
+                    Power.ui.alert("请先填写[客户联系人]");
+                    e.canOpen = false;
+                }
+                else {
+                    e.where = "RoleSourceId='" + formconfig.KeyValue + "'";
+                }
+            }
+        }
+        function Organize_Goods_BeginEdit(e) {
+            if (e.field == "Money") {
+                e.cancel = true;
+            }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            var ids = e.sender.id;
+            if (ids == "PS_ProjectInfo" || ids == "V_PS_ContractInfo" || ids == "PS_ClientEvaluation") {
+                var exp = { defaultright: false };
+                var str = mini.encode(exp);
+                str = base64encode(str);
+                e.params.extparams = str;
+            }
+
+
+        }
+
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/ViewForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 800,
+                height: 600
+            })
+        }
+        //权限加载后
+        PowerForm.EventAfterLoadRight = function (e) {
+            //如果处于流程中，且存在节点标签               且标签值等于定义的某个值
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "xmjl") {
+                mini.get("Organize.RegHumName").setReadOnly(false);//启用录入人字段
+                mini.get("Organize.RegHumName").setRequired(true);//录入人字段必填
+            }
+        }
+        //流程中，点击同意按钮是触发操作
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;//默认验证通过
+            //如果处于流程中，且存在节点标签               且标签值等于定义的某个值
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "xmjl") {
+                if (mini.get("Organize.RegHumName").getValue() == "") {//录入人值为空时
+                    Power.ui.alert("请填写录入人");
+                    e.isValid = false;//验证不通过
+                }
+            }
+        }
+
+
+        //PowerForm.EventBeforeLoadData = beforeload;
+        //function beforeload(e) {
+        //    var filter = ""
+        //    var code = mini.get("Chon_Documentclass-search-fields").getValue();
+        //    var codevalue = mini.get("Chon_Documentclass-search-value").getValue();
+        //    if (e.sender.id == "Chon_Documentclass") {
+        //        if (codevalue == "") {
+        //            if (aa == "") {
+        //                filter += " and 1=1";
+        //            }
+        //            else {
+        //                //alert(HumanId);
+        //                if (Id == null || Id == "") {
+        //                    Id = "25A88AC6-0E90-4215-BF4B-E8E39DD91D1A";
+        //                    filter += " or  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "' ,'" + HumanId + "' )  )  ";
+        //                } else {
+        //                    filter += " or  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "' ,'" + HumanId + "' )  )  ";
+        //                }
+        //            }
+        //            if (e.params.swhere == "") {
+        //                e.params.swhere = "and 1=1 and " + filter;
+        //            }
+        //            else
+        //                e.params.swhere += " and 1=1 " + filter;
+        //        }
+        //        else {
+        //            e.params.swhere = "  CodeId in (  select id from  dbo.f_getchildid_jybasic(   '" + Id + "','" + HumanId + "'  )  )  and " + code + " like '" + codevalue + "%'"
+        //        }
+        //    }
+        //    //分类树权限
+        //    if (e.sender.id == "chy_Basicclassi") {
+        //        e.params.swhere = "  Id in (  select b.id from  dbo.f_chon_getjybasicman(  '" + HumanId + "'  )  b )  "
+        //        //alert(e.params.swhere);
+        //    }
+        //}
+    </script>
+</body>
+</html>

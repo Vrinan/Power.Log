@@ -1,0 +1,243 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Apps/js/iscroll.js?v=$AppVersion"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+    <script src="/Apps/Common.js"></script>
+    <link href="/weixin/css/webformstyle.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/Apps/style/monitor.css" type="text/css">
+    <style>
+        #wrapper {
+            position: absolute;
+            z-index: 1000;
+            top: 20px;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        #scroller {
+            position: absolute;
+            z-index: 1000;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            width: 100%;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            -moz-text-size-adjust: none;
+            -ms-text-size-adjust: none;
+            -o-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--遮罩层-->
+    <div class="maskLayer"></div>
+    <!--弹出框-->
+    <div class="popUp">
+        <div class="pop-content">
+            <div class="pop">
+                <div id="wrapper">
+                    <div class="" id="scroller">
+                        <ul class="details-process-box" style="margin: 10px 10px">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function() {
+
+                if (!getParameter("WorkInfoID")) {
+                    return;
+                }
+
+                //获取流程意见
+                var CurrentInfo = {};
+                CurrentInfo.SubOperate = "ReadConfig"; //加载流程图指令
+                CurrentInfo.Current = {};
+                CurrentInfo.Current.WorkInfoID = getParameter("WorkInfoID");
+                var msg = {};
+                msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+                msg.data = CurrentInfo;
+                msg.data.FlowOperate = EFlowOperate.ShowMonitor; //流程监控
+
+                var dataArray = [];
+
+                $.ajax({
+                    url: "/API/APIMessage",
+                    type: "POST",
+                    data: {
+                        json: mini.encode(msg)
+                    },
+                    dataType: "text",
+                    cache: false,
+                    async: false,
+                    success: function(text) {
+                        var result = mini.decode(text);
+                        var data = mini.decode(result.data.ResultInfo);
+                        var histortMind = data.HistoryMind;
+
+                        var isEnd = true; //整个流程是否已结束时
+                        for (var iTmp = 0, len = histortMind.length; iTmp < len; iTmp++) {
+                            var node = histortMind[iTmp];
+                            if (node.InboxStatus == 20 || node.InboxStatus == 40) {
+                                isEnd = false;
+                                break;
+                            }
+                        }
+
+                        for (var i = 0; i < histortMind.length; i++) {
+                            var tmp = {};
+                            var item = histortMind[i];
+                            if (item.InboxStatus == EFlowInboxStatus.Hidden) continue; //隐藏的记录暂时不显示 
+                            if (isEnd == false && item.ActName == "结束") continue; //流程还未结束，发送到结束节点的不显示
+                            if (item.InboxStatus == EFlowInboxStatus.WorkStop) continue; //忽略自动跳过的意见
+                            if (item.ActName == "结束") { //如果当前是结束节点，但是前面还有非结束节点，忽略
+                                for (var j = 0; j < i; j++) {
+                                    if (histortMind[j].ActName != "结束")
+                                        break;
+
+                                }
+                                if (j != i)
+                                    continue;
+                            }
+
+                            if (typeof(item["FlowOperate"]) != "undefined" && item.FlowOperate ==
+                                EFlowOperate.EndFlow) continue; //如果是办结操作，则无视掉
+                            if (item.Alias != "MindRecord") continue;
+
+                            tmp.time = item.MindDate.replace("年", '/').replace("月", '/').replace("日", '/');
+                            tmp.role = item.DeptPositionName;
+                            tmp.name = item.UserName;
+
+                            for (var iTmp = 0, len = histortMind.length; iTmp < len; iTmp++) {
+                                if (histortMind[iTmp].BeforeSequeID == item.SequeID) {
+                                    tmp.opt = GetOperate(histortMind[iTmp]);
+                                    break;
+                                }
+                            }
+                            tmp.opt = tmp.opt == undefined ? "" : tmp.opt;
+                            if (tmp.opt == "驳回")
+                                tmp.static = "reject";
+                            else
+                                tmp.static = "agree";
+                            if (item.ActName == "结束" && tmp.opt == "")
+                                tmp.opt = "结束";
+                            else if (item.InboxStatus == EFlowInboxStatus.WorkEnd)
+                                tmp.text = '<span style="font-weight:bold;">意见: </span>' + (item.Content ==
+                                    "" ? "同意" : item.Content);
+                            else if (item.InboxStatus == EFlowInboxStatus.WaitingSign)
+                                tmp.text = "等候签收"
+                            else if (item.InboxStatus == EFlowInboxStatus.Normal)
+                                tmp.text = "正在办理";
+                            else
+                                tmp.text = '<span style="font-weight:bold;">意见: </span>' + (item.Content ==
+                                    "" ? "同意" : item.Content);
+                            dataArray.push(tmp);
+                        }
+
+                        $(".details-process-box").html(buildHTML(dataArray));
+
+                        var myScroll = new IScroll('#wrapper', {
+                            mouseWheel: true,
+                            click: true
+                        });
+                    }
+                });
+            })
+            //获取操作
+        function GetOperate(node) {
+            var flowString = "";
+
+            switch (node.FlowOperate) {
+                case EFlowOperate.Active:
+                    flowString = "送审";
+                    break;
+                case EFlowOperate.Send:
+                    flowString = "同意";
+                    break;
+                case EFlowOperate.Return:
+                    flowString = "驳回";
+                    break; //"退回"
+                case EFlowOperate.Stop:
+                    flowString = "终止";
+                    break; //终止
+                case EFlowOperate.CheckOut:
+                    flowString = "等候签收";
+                    break; //签收
+                case EFlowOperate.Delegate:
+                    if (node.IsReturnDelegateRoot == false)
+                        flowString = "委派";
+                    else
+                        flowString = "委派返回";
+                    break;
+                default:
+                    flowString = "";
+                    break;
+
+            }
+            return flowString;
+        }
+
+
+        //构建意见页面
+        function buildHTML(data) {
+            var html = '',
+                item;
+            for (var i = 0; i < data.length; i++) {
+                item = data[i];
+                var htmlStr = "";
+                if (item.text)
+                    htmlStr = '<p class="item-msg-text">' + item.text + '</p>';
+                html += '<li class="message-project-unit">' +
+                    ' <div class="unit-header">' +
+                    '<span class="warn-button ' + (item.static == "agree" ? "default" : "danger") + ' "></span>' +
+                    '<span class="time-content">' +
+                    '<span>' + item.time + '</span>' +
+                    '</span>' +
+                    '<span class="time-content">' +
+                    // '<span style="float: right;font-size: 14px;color: #232323;">' + item.opt + '</span>' +
+                    '</span>' +
+                    '</div>' +
+                    '<div class="unit-body">' +
+                    '<div class="unit-item-msg">' +
+                    '<div class="message-content">' +
+                    '<p class="item-msg-title">' +
+                    '<span class="name_related">' + item.role + ':' + item.name + '</span><span style="float: right;font-size: 14px;color: #232323;">' + item.opt + '</span>' +
+                    '</p>' + htmlStr +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            }
+            return html;
+        }
+    </script>
+</body>
+
+</html>

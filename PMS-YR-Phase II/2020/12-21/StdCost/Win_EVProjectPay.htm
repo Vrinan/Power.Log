@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换EPS</span>
+                            <input id="txtEPS" class="mini-treeselect"  textfield="project_name" valuefield="project_guid" 
+                                   parentfield="parent_guid" checkrecursive="true"
+                                   showfoldercheckbox="false" expandonload="true"
+                                   popupwidth="300" width="300px" onvaluechanged="EPSChange"/> 
+                            <span>选择年份</span>
+                            <input id="txtYear" class="mini-combobox" textfield="PLANYEAR" onvaluechanged="YearChange" valuefield="PLANYEAR" allowinput=" false" width="150px" />
+                            <a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                        <div id="WBSEVM" class="mini-datagrid" style="width: 100%; height: 260px;"
+                             idfield="id" allowresize="true" showpager="false">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse(); 
+
+        $(function () { 
+            $.ajax({
+                url: "/Form/GetEPSList",
+                data: { epsprojstate: "actived" },
+                cache: false,
+                success: function (text) {
+                    var data = mini.decode(mini.decode(text).data.epslist);
+                    mini.get("txtEPS").loadList(data, "project_guid", "parent_guid");
+                    mini.get("txtEPS").setValue(sessiondata.EpsProjId); 
+                    LoadYear();
+                }
+            })
+        });
+        function YearChange() {
+            LoadData();
+        }
+        function LoadYear() { 
+            var eps = mini.get("txtEPS").getValue() == "" ? sessiondata.EpsProjId : mini.get("txtEPS").getValue();
+            $.ajax({
+                url: "/Cost/GetYearCombobox",
+                data: { EpsProjId: eps },
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    if (!tmp.success) {
+                        Power.ui.alert(tmp.message);
+                        return;
+                    }
+                    var data = tmp.data.value;
+                    mini.get("txtYear").setData(data);
+                    mini.get("txtYear").setValue(new Date().getFullYear());
+                    LoadData();
+                }
+            })
+
+        }
+        function EPSChange(e) {
+            LoadYear();
+        } 
+         
+          
+        mini.get("btnSearch").on("click", function (e) { 
+                LoadData(); 
+        })
+         
+
+        function LoadData() {
+            var eps = mini.get("txtEPS").getValue();
+            var year = mini.get("txtYear").getValue();
+            if (eps==""||year=="") {
+                Power.ui.warning("请先选择EPS和年份");
+                return;
+            }
+            $.ajax({
+                url: "/Cost/ProjectPayMoney",
+                data: { EpsProjId: eps, PlanYear: year },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var cols = [ { field: "title", header: "月份", width: "60px" }];
+                        var plncur = { "title": "当月计划" }, plnsum = { "title": "累计计划" };
+                        var actcur = { "title": "当月实际" }, actsum = { "title": "累计实际" };
+                        var rows = [plncur, actcur, plnsum, actsum, ];
+                        var grpcol;
+                        $.each(o.list, function () {
+                            var md = this.YearMonth;
+                             
+                            cols.push({ field: md, headerAlign: "center", header: md, align: "right", width: "80px" });
+                            // 四舍五入保留2位小数，折算万元
+                            this.PlanMoney = Math.round(this.PlanMoney * 100) / 100;
+                            this.PlanMoneySum = Math.round(this.PlanMoneySum * 100) / 100;
+                            this.ActMoney = Math.round(this.ActMoney * 100) / 100;
+                            this.ActMoneySum = Math.round(this.ActMoneySum * 100) / 100;
+
+                            plncur[md] = this.PlanMoney;
+                            plnsum[md] = this.PlanMoneySum;
+                            actcur[md] = this.ActMoney;
+                            actsum[md] = this.ActMoneySum;
+                        })
+                        var grid = mini.get("WBSEVM");
+                        grid.set({ columns: cols });
+                        grid.setData(rows); 
+                        LoadChart(o.list);
+                    }
+                    else
+                        Power.ui.alert(o.message);
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            
+            var xaxis = { type: 'category', data: [] };
+            var plncur = { "name": "当月计划", type: 'bar', yAxisIndex: 1, data: [] };
+            var plnsum = { "name": "累计计划", type: 'line', data: [] };
+            var actcur = { "name": "当月实际", type: 'bar', yAxisIndex: 1, data: [] };
+            var actsum = { "name": "累计实际", type: 'line', data: [] };
+            var curmax = 0, summax = 0;
+            $.each(data, function () {
+                var md = this.YearMonth;
+                // 四舍五入保留2位小数，折算万元
+                this.PlanMoney = Math.round(this.PlanMoney * 100) / 100;
+                this.PlanMoneySum = Math.round(this.PlanMoneySum * 100) / 100;
+                this.ActMoney = Math.round(this.ActMoney * 100) / 100;
+                this.ActMoneySum = Math.round(this.ActMoneySum * 100) / 100;
+                xaxis.data.push(md);
+                plncur.data.push(this.PlanMoney);
+                plnsum.data.push(this.PlanMoneySum);
+                actcur.data.push(this.ActMoney);
+                actsum.data.push(this.ActMoneySum);
+                if (this.PlanMoney > curmax) curmax = this.PlanMoney;
+                if (this.ActMoney > curmax) curmax = this.ActMoney;
+                if (this.PlanMoneySum > summax) summax = this.PlanMoneySum;
+                if (this.ActMoneySum > summax) summax = this.ActMoneySum;
+            })
+            curmax = Math.ceil(curmax * 1.1);
+            var opt = {};
+            //opt.calculable = true;
+            //opt.title = { text: charttitle };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["当月计划", "当月实际", "累计计划", "累计实际"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '累计(万元)', min: 0, max: summax }, { type: 'value', name: '当期(万元)', min: 0, max: curmax }];
+            opt.series = [plncur, actcur, plnsum, actsum];
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

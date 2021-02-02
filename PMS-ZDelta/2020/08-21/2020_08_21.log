@@ -1,0 +1,25 @@
+﻿12:15:38.500 23 W - Select * From PB_Widget a Where a.Id='a0ca926e-55d7-4748-8ae9-ec6ce8758921'
+12:15:38.609 35 W - Select * From PB_Widget a Where a.Id='a0ca926e-55d7-4748-8ae9-ec6ce8758921'
+12:15:38.609 35 W - select x1.*, x2.project_name as EpsProjName from PB_ConfigRunTime x1 left outer join PLN_Project x2 on x1.EpsProjId=x2.project_guid
+12:15:38.609 35 W - select x1.*, x2.project_name as EpsProjName from PB_ConfigRunTime x1 left outer join PLN_Project x2 on x1.EpsProjId=x2.project_guid
+12:15:38.609 35 W - Select * From PB_ConfigRunTime a Where a.Id='6f9e1ddd-05e4-43c5-954a-54c787202716'
+12:15:38.609 35 W - Select * From PLN_project a Where a.project_guid='00000000-0000-0000-0000-0000000000a4'
+12:15:38.890 5 W - Select A.wbs_short_name,A.wbs_name,
+C.Id,C.TITLE,
+isnull(C.ContractAmount,0) as ContractAmount,
+isnull(C.BidBudgetAmount,0) as BidBudgetAmount,
+IsNull(D.PayAmount,0) as PayAmount,
+IsNull(E.SetAmount,0) as SetAmount,
+isnull(F.bsws,0) as PlanInvestAmount,
+isnull(F.bswp,0) as FinishInvestAmount From PLN_PROJWBS A
+left join (select CONTRACTID,BIMGISCODE from ZDelta_Cfg_OrgRight where BIMGISCODE is not null) B on B.BIMGISCODE = A.WBS_SHORT_NAME
+left join ZDelta_CM_Contract C on C.ID = B.CONTRACTID
+left join (select sum(PayAmount) as PayAmount,ContractId from ZDelta_CM_Payment group by ContractId) D on C.Id = D.ContractId
+left join (select sum(SettlementAmount) as SetAmount,ContractId from ZDelta_CM_Settlement where Status=50 group by ContractId) E on E.ContractId = C.Id
+left join V_PS_PlN_PlanOverallProgress F on F.PLAN_SHORT_NAME = A.wbs_short_name Where  A.parent_wbs_guid = '3b8c2430-c0b0-43fc-a44d-599001491fc2' and A.wbs_short_name is not null and A.wbs_name is not null and A.WBS_NAME !='试验段标' Order By  A.wbs_short_name
+12:15:41.781 5 W - Select Count(*) From PLN_PROJWBS A
+left join (select CONTRACTID,BIMGISCODE from ZDelta_Cfg_OrgRight where BIMGISCODE is not null) B on B.BIMGISCODE = A.WBS_SHORT_NAME
+left join ZDelta_CM_Contract C on C.ID = B.CONTRACTID
+left join (select sum(PayAmount) as PayAmount,ContractId from ZDelta_CM_Payment group by ContractId) D on C.Id = D.ContractId
+left join (select sum(SettlementAmount) as SetAmount,ContractId from ZDelta_CM_Settlement where Status=50 group by ContractId) E on E.ContractId = C.Id
+left join V_PS_PlN_PlanOverallProgress F on F.PLAN_SHORT_NAME = A.wbs_short_name Where  A.parent_wbs_guid = '3b8c2430-c0b0-43fc-a44d-599001491fc2' and A.wbs_short_name is not null and A.wbs_name is not null and A.WBS_NAME !='试验段标'

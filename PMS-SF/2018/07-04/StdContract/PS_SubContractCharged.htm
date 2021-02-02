@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同扣款记录
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_ContractCharged.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_ContractCharged.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_ContractCharged.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_ContractCharged" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.Code" name="Code" class="mini-textbox" required="true" requirederrortext="扣款单编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractCharged.Status" >审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractCharged.Title" name="Title" class="mini-textbox" required="true" requirederrortext="扣款单标题不能为空" />
+                                        </td>
+                                       
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                      <!--      <input id="PS_ContractCharged.OwnProjName" name="OwnProjName" textname="OwnProjName" class="mini-buttonedit"
+                                                   emptytext="请选择项目名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" />
+                                          
+                                            <input id="PS_ContractCharged.OwnProjName" name="OwnProjName" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>-->
+                                     <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                          <input id="PS_ContractCharged.Contract_Guid" name="Contract_Guid" class="mini-textbox" style="display:none"/>
+                                          <input id="PS_ContractCharged.ContractName" name="ContractName" textname="ContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractCharged.ChargedCompany">被扣款单位</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractCharged.ChargedCompany" name="ChargedCompany" class="mini-textbox" />
+                                            
+                                            <!--<input id="PS_ContractCharged.ChargedCompany" name="ChargedCompany" textname="ChargedCompany" class="mini-buttonedit"
+                                                   emptytext="请选择单位名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        
+                                        <td>
+                                            扣款金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.ChargedAmount" name="ChargedAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                         <td>
+                                            扣款日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.ChargedDate" name="ChargedDate" class="mini-datepicker"  />
+                                        </td>
+                                       <!-- <td>
+                                            <label for="PS_ContractCharged.ChargedType">扣款类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.ChargedType" name="ChargedType" class="mini-combobox" />
+                                        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            扣款原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractCharged.ChargedReason" name="ChargedReason" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractCharged.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_ContractCharged.ContractName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/5c89e719-843a-4ac4-a542-129e9b4cfa0f/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }        //PowerForm.EventBeforeLoadData = function (e) {
+        //    mini.get("PS_ContractCharged.ChargedCompany").setValue("重庆三峰科技有限公司");
+        //}
+    </script>
+</body>
+</html>

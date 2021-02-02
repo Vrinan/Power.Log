@@ -1,0 +1,525 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+    <style type="text/css">
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: blue;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="row-wrap">
+    <div class="row  row-hd row-hd-responsive" style="height: 100%">
+        <!--工时填报 -->
+        <div class="col-md-12 col-hd-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <span style="margin-right:20px">用户：<label id="HumanName"></label>(<label id="HumanCode"></label>)</span>
+                        <span style="margin-right:20px">工作岗位：<label id="DeptName"></label></span>
+                        <span>日期：</span>
+                        <span><input property="editor" id="startDate" class="mini-datepicker" style="width: 120px;" readonly="readonly" /></span>
+                        <span>&nbsp;至&nbsp;</span>
+                        <span><input property="editor" id="endDate" class="mini-datepicker" style="width: 120px;" readonly="readonly" /> </span>
+                        <a class="mini-button blue" id="PreWeek" onclick="addWeek('-')"><i class="fa fa-undo"></i>上周</a>
+                        <a class="mini-button blue" id="NowWeek" onclick="addWeek()"><i class="fa fa-compass"></i>本周</a>
+                        <a class="mini-button blue" id="PS_HumanHoursFill.SaveData" onclick="SaveData(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="PS_HumanHoursFill.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                        <a class="mini-button blue" id="PS_HumanHoursFill.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 100%">
+                    <div id="PS_HumanHoursFill" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" showpager="true" pagesize="100" width="900" allowcelledit="true"
+                         allowcellselect="true" allowresize="true"  idfield="Id" showsummaryrow="true">
+                        <div property="columns">
+                            <div field="ProjectCode" name="ProjectCode" header="项目编码" width="70px">
+                                项目编码
+                            </div>
+                            <div field="ProjectName" name="ProjectName" header="项目名称">
+                                项目名称
+                            </div>
+							<!--<div field="PhaseName" header="阶段" width="70px">
+                                阶段 frozenstartcolumn="0" frozenendcolumn="6"
+                            </div>
+                            <div field="DeviceName" header="装置" width="70px">
+                                装置
+                            </div>
+                            <div field="UnitName" header="单元" width="70px">
+                                单元
+                            </div>-->
+                            <div field="ProfName" name="ProfName" header="专业名称" allowsort="true" width="70px">
+                                专业名称
+                            </div>
+                            <div field="HuamnRole" name="HuamnRole" header="角色" allowsort="true" width="85px">
+                                角色
+                            </div>
+                            <!--div field="ProjectGroupCode" header="工程号" width="70px">
+                            工程号
+                            </div-->
+                            <div field="complete_pct" header="填报进度" allowsort="true" width="80px">
+                                填报进度
+                            </div>
+                            <div name="Monday" header="周一" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Monday_WorkHour" headeralign="center" align="center" width="50" name="Monday_WorkHour" summarytype="sum">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Monday_ExtraHour" headeralign="center" align="center" width="50" name="Monday_ExtraHour" summarytype="sum">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Tuesday" header="周二" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Tuesday_WorkHour" headeralign="center" align="center" width="50" name="Tuesday_WorkHour" summarytype="sum">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Tuesday_ExtraHour" headeralign="center" align="center" width="50" name="Tuesday_ExtraHour" summarytype="sum">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Wednesday" header="周三" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Wednesday_WorkHour" headeralign="center" align="center" width="50" name="Wednesday_WorkHour" summarytype="sum">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Wednesday_ExtraHour" headeralign="center" align="center" width="50" name="Wednesday_ExtraHour" summarytype="sum">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Thursday" header="周四" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Thursday_WorkHour" headeralign="center" align="center" width="50" name="Thursday_WorkHour" summarytype="sum">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Thursday_ExtraHour" headeralign="center" align="center" width="50" name="Thursday_ExtraHour" summarytype="sum">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Friday" header="周五" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Friday_WorkHour" headeralign="center" align="center" width="50" name="Thursday_ExtraHour" summarytype="sum">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Friday_ExtraHour" headeralign="center" align="center" width="50" name="Friday_ExtraHour" summarytype="sum">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Saturday" header="周六" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Saturday_WorkHour" headeralign="center" align="center" width="50" summarytype="sum" name="Saturday_WorkHour">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Saturday_ExtraHour" headeralign="center" align="center" width="50" summarytype="sum" name="Saturday_ExtraHour">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="Sunday" header="周日" headeralign="center">
+                                <div property="columns" align="center">
+                                    <div field="Sunday_WorkHour" headeralign="center" align="center" width="50" summarytype="sum" name="Sunday_WorkHour">
+                                        正常<input property="editor" class="mini-spinner" maxvalue="8" style="width: 100%;" />
+                                    </div>
+                                    <div field="Sunday_ExtraHour" headeralign="center" align="center" width="50" summarytype="sum" name="Sunday_ExtraHour">
+                                        加班
+                                        <input property="editor" class="mini-spinner" maxvalue="4" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+</div>
+<div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+    <div style="height: 195px; overflow: auto;">
+        <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+    </div>
+    <table style="width: 363px; height: 30px; margin-top: 8px;">
+        <tr>
+            <td align="center">
+                <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+mini.parse();
+var HumanCode = sessiondata.HumanCode;
+var HumanName = sessiondata.HumanName;
+var HumanId = sessiondata.HumanId;
+var DeptName = sessiondata.PosiName;
+$("#HumanCode").html(HumanCode);
+$("#HumanName").html(HumanName);
+$("#DeptName").html(DeptName == "" ? "无" : DeptName);
+
+var PowerForm = new SingleForm();
+var workArr = ["Sunday_WorkHour", "Monday_WorkHour", "Tuesday_WorkHour", "Wednesday_WorkHour", "Thursday_WorkHour", "Friday_WorkHour", "Saturday_WorkHour"]
+var extraArr = ["Sunday_ExtraHour", "Monday_ExtraHour", "Tuesday_ExtraHour", "Wednesday_ExtraHour", "Thursday_ExtraHour", "Friday_ExtraHour", "Saturday_ExtraHour"]
+
+var enNameArr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var zhNameArr = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+var SumHoursArr = [];
+
+var curDateArr = [];//存储当前星期日至六的日期
+var currDT;
+$(function () {
+    PowerForm.Init();
+    /// this.sidebar.find("ul.sub-menu:first").parent().addClass("open");
+    currDT = new Date();
+    showDate();
+});
+//保存前处理数据
+function SaveData(e, funback) {
+    var data = {};
+    var objArr = [];
+    FormFuns.GetSaveDataPack(data, "PS_HumanHoursFill", true);
+    if (data && data["PS_HumanHoursFill"]) {
+        $.each(data["PS_HumanHoursFill"].data, function (i, j) {
+            for (var n = 0; n < 7; n++) {
+                var RegDate = getdate();
+                var obj = {
+                    "ProjectName": j["ProjectName"], "ProfName": j["ProfName"],"WorkStartDate": j["target_start_date"], "WorkEndDate": j["target_end_date"], "RegDate": RegDate, "HumanId": HumanId,
+                    "HumanCode": HumanCode, "HumanName": HumanName, "WorkHour": "", "ExtraHour": "", "DataDate": "", "Id": "", "ProjectCode": j["ProjectCode"],
+                    "ProfId": j["ProfId"],"DeptId":j["DeptId"],"HuamnRole":j["HuamnRole"],"ProjectId":j["ProjectId"]
+                }
+                var workDt = j[enNameArr[n] + "_WorkHour"];
+                var extraDt = j[enNameArr[n] + "_ExtraHour"];
+                var curDt = curDateArr[n];
+                if (workDt || extraDt || workDt == 0 || extraDt == 0) {
+                    obj.ExtraHour = extraDt == null ? 0 : extraDt;
+                    obj.WorkHour = workDt == null ? 0 : workDt;
+                    obj.DataDate = curDt;
+                    objArr.push(obj);
+                }
+            }
+        });
+        funsself.APIExec("PS_HumanHoursFill", "", "SaveData", { "list": mini.encode(objArr) }, function (text) {
+            Power.ui.success("保存成功!");
+            if (typeof (funback) == "function")
+                funback();
+            else
+                PowerForm.OnBtnRefresh(e);
+        });
+    } else if (typeof (funback) == "function") {
+        funback();
+    }
+}
+//加载数据
+PowerForm.EventBeforeLoadData = function (e) {
+  e.cancel = true;
+   Power.ui.loading("正在加载数据...");
+   var grid = mini.get("PS_HumanHoursFill");
+  for (var n = 0; n < 7; n++) {
+  grid.updateColumn(enNameArr[n], { header: zhNameArr[n] + "(" + mini.formatDate(new Date(curDateArr[n]), "MM-dd") + ")" });
+    }
+   var params = grid.getLoadParams();
+    var startDate = mini.formatDate(mini.get("startDate").getValue(), "yyyy-MM-dd");
+   var endDate = mini.formatDate(mini.get("endDate").getValue(), "yyyy-MM-dd");
+    params["HumanId"] = HumanId;
+    params["startDate"] = startDate;
+   params["endDate"] = endDate;
+  
+    funsself.APIExec("PS_HumanHoursFill", "", "GetDt", params, function (text) {
+        var tmp = mini.decode(text);
+       var json = mini.decode(tmp.data.value);
+        SumHoursArr = json.condtion;
+       LoadData(json.content, params);
+        Power.ui.loading.close();
+    });
+}
+mini.get("PS_HumanHoursFill").on("drawcell", function (e) {
+    if (e.field == "complete_pct") {
+        var v = e.value;
+        v = v == null ? 0 : v;
+        e.cellHtml = '<div class="progressbar">'
+                + '<div class="progressbar-percent" style="width:' + v + '%;"></div>'
+                + '<div class="progressbar-label">' + v + '%</div>'
+                + '</div>';
+    }
+}).on("cellbeginedit", function (e) {
+    e.cancel = new Date(curDateArr[enNameArr.indexOf(e.column.field.split("_")[0])]) > new Date();
+}).on("cellcommitedit", function (cell) {
+    var IsWorkHour = cell.field.indexOf("WorkHour") > 0;
+    var currT = curDateArr[enNameArr.indexOf(cell.field.split("_")[0])];
+    var currDtHour = 0;
+    var HourName = IsWorkHour ? "SumWorkHour" : "SumExtraHour";
+    var t = 0;
+    SumHoursArr.forEach(function (i, j) {
+        if (currT == i["DataDate"]) {
+            t = j;
+            currDtHour = DealNumb(i[HourName], 2) + cell.value - DealNumb(cell.oldValue, 2);
+            return;
+        }
+    });
+    if (IsWorkHour && currDtHour > 8) {
+        cell.cancel = true;
+        Power.ui.warning(currT + "填报的正常工时超出8个小时!已填正常工时" + SumHoursArr[t][HourName] + "小时");
+        return;
+    } else if (!IsWorkHour && currDtHour > 4) {
+        cell.cancel = true;
+        Power.ui.warning(currT + "填报的加班工时超出4个小时!已填加班工时" + SumHoursArr[t][HourName] + "小时");
+        return;
+    } else {
+        SumHoursArr[t][HourName] = currDtHour;
+    }
+});
+//处理加载Json数据
+function LoadData(text, params) {
+    var data = [];
+    var arr;
+    var json = mini.decode(text);
+	if(json.length== 0){
+	   Power.ui.alert(HumanName+"没有配分专业!");
+	   return ;
+	}
+    arr = mini.decode(json);
+    if (!data) {
+        return;
+    }
+    data.clear();
+    var existsRow = {};
+    var rowSpans = {};
+    var rowSpan = {};
+    $.each(arr, function (i, j) {
+        var newArr;
+        //统计到专业下角色
+        if (j["DataDate"]) {
+            var dw = j["DataDate"].getDay();
+            j[enNameArr[dw] + "_WorkHour"] = DealNumb(j["WorkHour"], 0);
+            j[enNameArr[dw] + "_ExtraHour"] = DealNumb(j["ExtraHour"], 0);
+        }
+        data.push(j);
+
+    });
+    //计算合并的行及单元格
+    debugger;
+    $.each(data, function (i, j) {
+        var keyProj = j["ProjectCode"] + "_" + j["ProjectCode"];
+        var keyProf = j["ProjectCode"] + "_" + j["ProjectName"];
+        var keyProjN = j["ProjectName"] + "_" + j["ProjectName"];
+        if (rowSpans[keyProj]) {
+            rowSpans[keyProj]["rowSpan"]++;
+            rowSpans[keyProjN]["rowSpan"]++;
+        } else {
+            rowSpans[keyProj] = { rowIndex: i, columnIndex: 0, rowSpan: 1, colSpan: 0 };
+            rowSpans[keyProjN] = { rowIndex: i, columnIndex: 1, rowSpan: 1, colSpan: 0 };
+        }
+        if (rowSpans[keyProf]) {
+            rowSpans[keyProf]["rowSpan"]++;
+        } else {
+            rowSpans[keyProf] = { rowIndex: i, columnIndex: 2, rowSpan: 1, colSpan: 0 };
+        }
+    })
+    //分页-合并单元格
+    var grid = mini.get("PS_HumanHoursFill");
+    if (grid.data) {
+        grid.clearRows();
+        var pageIndex = params["index"], pageSize = params["size"];
+        grid.setTotalCount(json["count"]);
+        grid.setPageIndex(pageIndex);
+        grid.setPageSize(pageSize);
+        grid.setData(data);
+    }
+    var marges = [];
+    for (var kk in rowSpans) {
+        marges.push(rowSpans[kk]);
+    }
+    grid.mergeCells(marges);
+}
+function DealNumb(d, n) {
+    if (d && d != "NaN " && d != undefined) {
+        return mini.parseFloat(mini.parseFloat(d).toFixed(n));
+    } else {
+        return 0;
+    }
+}
+//上下周
+function addWeek(ope) {
+    SaveData({ id: "PS_HumanHoursFill.SaveData" }, function () {
+        var num = 0;
+        if (ope == "-") {
+            num = -7;
+        } else if (ope == "+") {
+            num = 7;
+        } else {
+            currDT = new Date();
+        }
+        currDT = addDate(currDT, num);
+        var towDT = addDate(new Date(), -14);
+        if (towDT >= currDT) {
+            Power.ui.warning("只能查看两周之内的工时填报记录!");
+            return;
+        }
+        curDateArr.clear();
+        showDate();
+    });
+}
+function showDate() {
+    //确定周一是那天
+    var dw = currDT.getDay();
+    var monDt;
+    var sunDt;
+    if (dw == 0) {
+        sunDt = currDT;
+        monDt = addDate(currDT, -6);
+    } else {
+        monDt = addDate(currDT, (1 - dw));
+        sunDt = addDate(currDT, (7 - dw));
+    }
+    var arrDt = monDt;
+    for (var i = 0; i < 7; i++) {
+        if (i == 0) {
+            curDateArr[i] = mini.formatDate(sunDt, "yyyy-MM-dd");
+        } else {
+            curDateArr[i] = mini.formatDate(addDate(arrDt, i - 1), "yyyy-MM-dd");
+        }
+    }
+    mini.get("startDate").setValue(monDt);
+    mini.get("endDate").setValue(sunDt);
+    mini.get("PS_HumanHoursFill").reload();
+}
+//增加或减少若干天，由 num 的正负决定，正为加，负为减
+function addDate(dt, num) {
+    var ope = "+";
+    if (num < 0) {
+        ope = "-";
+    }
+    var reDT = dt;
+    for (var i = 0; i < Math.abs(num) ; i++) {
+        reDT = addOneDay(reDT, ope);
+    }
+    return reDT;
+}
+//增加或减少一天，由ope决定, + 为加，- 为减，否则不动
+function addOneDay(dt, ope) {
+    var num = 0;
+    if (ope == "-") {
+        num = -1;
+    } else if (ope == "+") {
+        num = 1;
+    }
+
+    var y = dt.getFullYear();
+    var m = dt.getMonth();
+    var lastDay = getLastDay(y, m);
+
+    var d = dt.getDate();
+    d += num;
+    if (d < 1) {
+        m--;
+        if (m < 0) {
+            y--;
+            m = 11;
+        }
+        d = getLastDay(y, m);
+    } else if (d > lastDay) {
+        m++;
+        if (m > 11) {
+            y++;
+            m = 0;
+        }
+        d = 1;
+    }
+    var reDT = new Date("2000-0-1");
+    reDT.setYear(y);
+    reDT.setMonth(m);
+    reDT.setDate(d);
+
+    return reDT;
+}
+//是否为闰年
+function isLeapYear(y) {
+    var isLeap = false;
+    if (y % 4 == 0 && y % 100 != 0 || y % 400 == 0) {
+        isLeap = true;
+    }
+    return isLeap;
+}
+//每月最后一天
+function getLastDay(y, m) {
+    var lastDay = 28;
+    m++;
+    if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
+        lastDay = 31;
+    } else if (m == 4 || m == 6 || m == 9 || m == 11) {
+        lastDay = 30;
+    } else if (isLeapYear(y) == true) {
+        lastDay = 29;
+    }
+    return lastDay;
+}
+function onbuttonclick(e) {
+    if (e.name == "close") {
+        var win = mini.get("win_search");
+        win.hide();
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+
+

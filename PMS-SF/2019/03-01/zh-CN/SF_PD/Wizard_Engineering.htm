@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power")<0 ? {}:$Model.data.params;
+    </script>
+</head>
+<body>
+    <div class="row-wrap" style="height: 100%">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <label>名称：</label><!--名称-->
+                        <input id="txtname" class="mini-textbox" style="width: 150px;" onenter="OnSearchClick" />
+                        <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>确定</a><!--确定-->
+                        <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>取消</a><!--取消-->
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 85%; ">
+                    <div id="SF_PD_EngineeringClassification_list" class="mini-treegrid" style="width: 100%; height: 100%;" allowresize="true"
+                         idfield="guid" parentfield="parentId" resultastree="true"  autoload="false" treecolumn="Name" onpreload="OnPreLoad"
+                         onbeforeload="OnBeforeLoad" url="/Form/TreeLazyLoad" showcheckbox="false" virtualScroll="true">
+                        <div property="columns">
+                            <div type="indexcolumn" width="20"></div>
+                            <div name="Name" field="Name">名称</div><!--名称-->
+                            <div field="Code">编号</div><!--编号-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var gridright = mini.get("SF_PD_EngineeringClassification_list");
+        //重定向Select的GetData方法
+        Select.GetData = GetData;
+
+        Select.LoadStepFirst = function(){
+            gridright.reload();
+        }
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            gridright.multiSelect = bmulti;
+            if (bmulti)
+                gridright.showCheckBox = true;
+        });
+
+        function GetData() {
+            if (gridright.multiSelect) {
+                return gridright.getCheckedNodes(false);
+            }
+            else {
+                var result = new Array();
+                var node = gridright.getSelected();
+                result.push(node);
+                return result;
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            params.KeyWord = "SF_PD_EngineeringClassification_list";
+            params.KeyWordType = "BO";
+            params.select = WizardParams.select || "";
+            params.swhere = " 1=1";
+            params.sort = "Sequ";
+            params.index = 0;
+            params.size = 0;
+            params.level = 0;
+
+            //拼与主表关联的where条件
+            var txtname = mini.get("txtname");
+            if (txtname.value.length > 0)
+                params.swhere = params.swhere + " and Name like '%" + txtname.value + "%'";
+            
+        
+            //外部过滤条件
+            if (WizardParams.filter && WizardParams.filter.length > 0)
+                params.swhere = params.swhere + " and (" + base64decode(WizardParams.filter) + ")";
+            if (Select.GetWhere() && Select.GetWhere() != "")
+                params.swhere += " and " + Select.GetWhere();
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                alert(tmpdata.message);
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            data = mini.arrayToTree(data, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+            e.data = data;
+         
+         
+        }
+
+        function OnSearchClick(e) {
+            gridright.reload();
+        }
+
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+
+</html>
+

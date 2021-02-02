@@ -1,0 +1,197 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link rel="stylesheet" href="/Scripts/calendar/jquery-ui-1.10.3.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/jquery.webui-popover.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="/Scripts/calendar/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/jquery.webui-popover.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/moment.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/fullcalendar.min.js"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=58" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var html =""
+        //global parameter用于点上下周
+        var datelist=[];
+    </script>
+    <style>
+    </style>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12" style="padding-left: 5px; padding-right: 5px;">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" onclick="addWeekReport()">
+                                <i class="fa fa-plus"></i>新增会议</a>
+                            <a class="mini-button blue" id="Prev" onclick="Prev()">
+                                <i class="fa fa-arrow-left"></i>
+                                上周
+                            </a>
+                            <a class="mini-button blue" id="Today" onclick="Today()">
+                                <i class="fa fa-align-justify">
+                                </i>本周
+                            </a>
+                            <a class="mini-button blue" id="Next" onclick="Next()">
+                                <i class="fa fa-arrow-right">
+                                </i>下周
+                            </a>
+                            <a class="mini-button blue" onclick="weeksum()">
+                                </i>会议统计
+                            </a>
+                            <span id="CalendarStr" style="font-size: 20px; font-weight: bold; margin-left: 230px;
+                                    vertical-align: bottom;"></span>
+                        </div>
+                    </div>
+                    <div class="mini-fit">
+                        <div class="content" style="height: 100%">
+                            <div class="container" style="width: 100%">
+                                <div class="row" style="height: 100%">
+                                    <div class="col-md-12">
+                                        <div class="portlet-body" style="height: 500px" id="RoomList">
+                                            <table id="tb" class="table table-bordered" style="margin-top:50px;text-align: center;">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        $(function () {
+            RenderData(); 
+        });
+        //加载会议
+        function RenderData(){
+            $.ajax({
+                url: "/ALLZ/GetMeetingRoomState",
+                data: {},
+                type: "get",
+                async: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    html = o.data.html;
+                    datelist = o.data.Dates;
+                }
+            });                          
+            $("#tb").html(html);
+        }
+
+        //删除会议
+        function deleteMeeting(id)
+        {
+            var a = confirm("是否删除该会议");
+            if(a == false)
+                return;
+            $.ajax({
+                url: "/ALLZ/DeleteMeeting",
+                data: {id:id},
+                type: "post",
+                async: false,
+                success: function (text) {
+                    if(text == "0")
+                    {
+                        alert("只有新增的单据才可以删除");
+                    }
+                    RenderData();
+                }
+            });
+        }
+        
+        //新增会议
+        function addWeekReport() {
+            var win = mini.open({
+                url: "/Form/AddForm/55c8f0e7-3ad9-4a73-9c45-c3d10b934bb6/",
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                ondestroy: function () {
+                    $('#calendar').fullCalendar('removeEvents');
+                    RenderData();
+                }
+            });
+        }
+
+        //查看
+        function OnViewForm(keyvalue) {
+            mini.open({
+                url: '/Form/EditForm/55c8f0e7-3ad9-4a73-9c45-c3d10b934bb6/' + keyvalue,
+                showMaxButton: true,
+                width: 950,
+                height: 630
+            })
+        }
+
+        //本周
+        function Today() {
+            RenderData();
+        }
+
+        //上周
+        function Prev() {
+            $.ajax({
+                url: "/ALLZ/GetMeetingRoomStatePrev",
+                data: {datelist:datelist.toString(),addOrsubtract:"0"},
+                type: "get",
+                async: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    html = o.data.html;
+                    datelist = o.data.Dates;
+                }
+            });  
+            $("#tb").html(html);
+        }
+        //下周
+        function Next() {
+            $.ajax({
+                url: "/ALLZ/GetMeetingRoomStatePrev",
+                data: {datelist:datelist.toString(),addOrsubtract:"1"},
+                type: "get",
+                async: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    html = o.data.html;
+                    datelist = o.data.Dates;
+                }
+            });  
+            $("#tb").html(html);
+        }
+
+        //总览
+        function weeksum(){
+            window.open('/Form/EditForm/17ae9db7-6724-4cf6-b5bc-66e5791d995d/','_blank')
+        }
+        
+    </script>
+</body>
+
+</html>

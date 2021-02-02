@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power") < 0 ? {} : $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid'; 
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row-wrap" style="height: 100%">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <input id="txtname" class="mini-textbox" style="width: 150px;" emptytext="$Helper.GetResource('g_input_name')" onenter="OnSearchClick" /><!--请输入名称-->
+                        <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                        <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 85%; ">
+                    <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="40%" showcollapsebutton="true">
+                            
+					  <div id="V_PS_DM_WBSDesigner" idfield="wbs_guid" class="mini-treegrid" style="width: 100%; height: 100%;" name="TreeColumn" showtreeicon="true"
+                         treecolumn="wbs_short_name" parentfield="parent_wbs_guid" resultastree="false"  showPager="false" showTreeIcon="true"
+                         allowresize="true" expandonload="true"  url="/Form/GridPageLoadEx"
+                         onbeforeload="OnBeforeLoad" onpreload="OnPreLoad" >
+                                <div property="columns">                                     
+									<div name="wbs_short_name" field="wbs_short_name" >WBS编号</div>
+									<div field="wbs_name" >WBS名称</div>
+									<div field="obs_name">
+                                    设计人
+                                   
+                                </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="true">
+                            <div id="PS_UnitDesignerAppoint_DrawingList" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 allowcelledit="true" multiselect="true" showpager="true"
+                                 idfield="id" autoload="false" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad"
+                                 url="/Form/GridPageLoadEx">
+									<div property="columns">
+                                     <div type="indexcolumn" width="20"></div>
+                                            <div type="checkcolumn" name="checkcolumn"></div>
+                                            <!--<div field="code">$Helper.GetResource("g_code")</div>编号-->
+                                            <!--<div field="name">$Helper.GetResource("g_name")</div>名称-->
+                                            <div field="DrawingCode" >图纸编号</div>
+											<div field="DrawingName" >图纸名称</div>                            
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var pm_cont_purchasecontdtl = mini.get("PS_UnitDesignerAppoint_DrawingList");//子表 id
+        var V_PS_DM_WBSDesigner = mini.get("V_PS_DM_WBSDesigner");//主表 id
+        //重定向Select的GetData方法
+        Select.GetData = GetData;
+      $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            pm_cont_purchasecontdtl.multiSelect = bmulti;
+            if (bmulti)
+                pm_cont_purchasecontdtl.showColumn("checkcolumn");
+            else
+                pm_cont_purchasecontdtl.hideColumn("checkcolumn");
+            V_PS_DM_WBSDesigner.on("select", OnSelectNode);
+         
+         });
+
+        function GetData() {
+			 var nodes = V_PS_DM_WBSDesigner.getSelected();
+			 var obs_guid=nodes.obs_guid;
+			 var obs_name=nodes.obs_name;
+            if (pm_cont_purchasecontdtl.multiSelect) {
+				 var result = new Array();             
+				var se = pm_cont_purchasecontdtl.getSelecteds();
+				for(var i=0;i<se.length;i++){
+				  var selected = se[i];
+				  selected.obs_guid=obs_guid;
+				  selected.obs_name=obs_name;
+				  result.push(selected);               
+				}
+				 return result;
+            }
+            else {
+                var result = new Array();
+                var node = pm_cont_purchasecontdtl.getSelected();
+				node.obs_guid=obs_guid;
+				 node.obs_name=obs_name;
+                result.push(node);
+                return result;
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var params = e.params;  //参数对象
+            params.KeyWord = sender.id;
+			params.swhere="1=1";
+            if (sender.id == 'PS_UnitDesignerAppoint_DrawingList') {//子表id
+                var node = V_PS_DM_WBSDesigner.getSelected();
+				 //右侧属性
+                params.swhere = params.swhere + " and MasterId='" + node .wbs_guid+ "'";//子表的父键
+				params.KeyWordType = "BO";              
+               
+                //拼与主表关联的where条件
+                var txtname = mini.get("txtname");
+                if (txtname.value.length > 0)
+                    params.swhere = params.swhere + " and mattitle like '%" + txtname.value + "%'";//主表字段
+                    
+                //外部过滤条件
+                if (WizardParams.filter && WizardParams.filter.length > 0)
+                    params.swhere = params.swhere + " and (" + base64decode(WizardParams.filter) + ")";
+               
+                params.select = WizardParams.select || "";
+            }
+            else{
+				params.KeyWordType = "ViewEntity";
+				
+                params.select = "wbs_guid,parent_wbs_guid,wbs_short_name,obs_name";//主表主键 和字段
+                params.swhere += " and proj_guid='" + currentEpsProjId + "'  ";
+              
+            }
+             params.sort = "";
+            params.index = 0;
+            params.size = 0;
+
+            if (sender.showPager) {//使用自带的Pager
+                params.index = params.pageIndex;
+                params.size = params.pageSize;
+            }
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value); 
+			if(e.sender.id== 'V_PS_DM_WBSDesigner')
+			{
+			//loadList(data,"wbs_guid","parent_wbs_guid");
+			 data = mini.arrayToTree(data, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+			}				
+			
+			e.data = data;
+			
+				
+			
+
+            if (e.sender.showPager)
+                e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+        function OnAfterLoad(e) {  
+            var sender = e.sender;
+            sender.select(0);
+            pm_cont_purchasecontdtl.reload();
+
+        }
+         
+        function OnSearchClick(e) {
+            mini.get("PS_UnitDesignerAppoint_DrawingList").setPageIndex(0);//子表id
+            pm_cont_purchasecontdtl.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            mini.get("PS_UnitDesignerAppoint_DrawingList").setPageIndex(0);//子表id
+            pm_cont_purchasecontdtl.reload();
+        }
+    </script>
+</body>
+
+</html>

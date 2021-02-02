@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>招标委托</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_CG_BidEntrust.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_CG_BidEntrust.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_CG_BidEntrust.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="基本数据">
+                            <div id="SF_CG_BidEntrust" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>招标编号</td>
+                                        <td><input id="SF_CG_BidEntrust.Code" name="Code" class="mini-textbox" required="false" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_BidEntrust.Status" name="Status" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td><input id="SF_CG_BidEntrust.Title" name="Title" class="mini-textbox" required="false" /></td>
+                                        <td>采购方案</td>
+                                        <td><input id="SF_CG_BidEntrust.SchemeCode" name="SchemeCode" textname="SchemeCode" class="mini-buttonedit" emptytext="请选择采购方案..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" /></td>
+                                        <input id="SF_CG_BidEntrust.SchemeId" name="SchemeId" textname="SchemeId" class="mini-hidden" allowInput="false" />
+                                    </tr>
+                                    <tr>  
+                                        <td>项目名称</td>
+                                        <td>
+                                            <!-- <input id="SF_CG_BidEntrust.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit" emptytext="请选择项目..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" /> -->
+                                            <input id="SF_CG_BidEntrust.ProjName" name="ProjName" textname="ProjName" class="mini-textbox" required="false" readonly="readonly" />
+                                            <input id="SF_CG_BidEntrust.ProjId" name="ProjId" textname="ProjId" class="mini-hidden" allowInput="false" />
+                                        </td>
+                                        <td>项目地点</td>
+                                        <td><input id="SF_CG_BidEntrust.ProjAddress" name="ProjAddress" class="mini-textbox" /></td>
+                                      </tr>
+                                    <tr>
+                                    <tr>  
+                                        <td>预估金额</td>
+                                        <td><input id="SF_CG_BidEntrust.Price" name="Price" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2"style="width: 100%;" /></td>
+                                        <td>委托日期</td>
+                                        <td><input id="SF_CG_BidEntrust.EntrustDate" name="EntrustDate" class="mini-datepicker" allowInput="false" /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>招标范围</td>
+                                        <td><input id="SF_CG_BidEntrust.BidEntrustRange" name="BidEntrustRange" class="mini-textbox" /></td>
+                                        <td>交货时间</td>
+                                        <td><input id="SF_CG_BidEntrust.DeliveryDate" name="DeliveryDate" class="mini-textbox" /></td>
+                                    </tr>
+                                    <tr>  
+                                        <td>质量保证时间</td>
+                                        <td><input id="SF_CG_BidEntrust.QualityDate" name="QualityDate" class="mini-textbox" /></td>
+                                        <td>采购员</td>
+                                        <td><input id="SF_CG_BidEntrust.PurchaserName" name="PurchaserName" textname="PurchaserName" class="mini-buttonedit" emptytext="请选择采购员..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" /></td>
+                                        <input id="SF_CG_BidEntrust.PurchaserId" name="PurchaserId" textname="PurchaserId" class="mini-hidden" allowInput="false" />
+                                    </tr>
+                                    <tr>
+                                        <td>备注说明</td>
+                                        <td colspan="3"><input id="SF_CG_BidEntrust.Remark" name="Remark" class="mini-textarea" height="60" /></td>       
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物资明细">
+                            <div class="mini-toolbar">
+                                <div id="SF_CG_BidEntrustList-Print" class="btn-group"></div>
+                                <div id="SF_CG_BidEntrustList-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_BidEntrustList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true" 
+                                     editNextOnEnterKey="true" data-options="{canImport:true}" oncellbeginedit="OnCellBeginEdit" >
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35">序号</div><!--序号-->
+                                        <div field="Code" width="100" allowSort="true" >物资编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanId" width="0" allowSort="true"  >物资计划Id<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanCode" width="130" allowSort="true"  >计划编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatId" width="0" allowSort="true"  >物资库编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="100" allowSort="true" >物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Specification" width="100" allowSort="true" >规格型号/技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <!-- <div field="Model" width="100" allowSort="true" >技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                        <div field="PID" width="100" allowSort="true" >PID编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatUnit" width="100" allowSort="true" >单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Amount" width="100" allowSort="true" >请购数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="Remark" width="150" allowSort="true" >备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        //重选向导,明细就删
+        var IsReloadSchemeList = false;
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function OnCellBeginEdit(e) {
+            //不给编辑的列
+            if(e.field=="Code"||e.field=="MatId"||e.field=="MatName"||e.field=="PlanCode"
+               ||e.field=="PlanId"||e.field=="Amount"||e.field=="Remark"||e.field=="Model"||e.field=="Specification"
+               ||e.field=="PID"||e.field=="MatUnit"){
+                e.cancel = true;
+            }
+        }
+        PowerForm.EventWizardData = function(e, data) {
+            IsReloadSchemeList=true;
+            debugger;
+        }
+        //保存前,把之前选择的采购方案状态字段(IsChosen)改成未选择(0)
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var D=mini.get("SF_CG_BidEntrust.SchemeId").value;
+            debugger;
+            var par = { "SchemeId": D ,"KeyValue":formconfig.KeyValue,"KeyWord":"SF_CG_BidEntrust","Type":"Before"};
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                debugger;
+            });
+        }
+        //保存后,选择的采购方案状态字段(IsChosen)改成已选择(1)
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            var D=mini.get("SF_CG_BidEntrust.SchemeId").value;
+            debugger;
+            var par = { "SchemeId": D ,"KeyValue":formconfig.KeyValue,"KeyWord":"SF_CG_BidEntrust","Type":"After","IsReloadSchemeList":IsReloadSchemeList};
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                IsReloadSchemeList=false;
+                debugger;
+            });
+        }
+    </script>
+</body>
+</html>

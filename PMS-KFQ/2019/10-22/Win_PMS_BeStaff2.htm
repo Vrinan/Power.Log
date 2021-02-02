@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!-- <a class="mini-button blue" id="PMS_BeStaff.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a> -->
+                            <a class="mini-button blue" id="PMS_BeStaff.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="PMS_BeStaff.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="PMS_BeStaff.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="PMS_BeStaff.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                            <input id="PMS_BeStaff-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="PMS_BeStaff-search">
+                                <input id="PMS_BeStaff-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="PMS_BeStaff-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div id="SearchBar" style="width: 100%; height: 40px; top: 40px; position: absolute;">
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PMS_BeStaff" class="mini-datagrid" height="512" visible="true" width="917" allowcelledit="false" allowcellselect="true" allowalternating="false" style="width: 100%; height: 100%;" pagesize="50" idfield="Id">
+                            <div property="columns">
+                                <div type="indexcolumn">序号</div>
+                                <div type="comboboxcolumn"  field="Status" name="Status"  headerAlign="Center"  dallowSort="true"  header="状态"  align="Center" >状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="Code" name="Code" headeralign="Center" allowsort="true" readonly="true" header="编号" align="center">编号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                <div field="Title" name="Title" headeralign="Center" allowsort="true" readonly="true" header="标题" align="center">标题<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                <div field="RegHumName" name="RegHumName" allowSort="true" header="录入人"  align="Center"  headeralign="Center" readonly="true">录入人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="RegDate" name="RegDate" allowSort="true" header="录入日期"  dateformat="yyyy-MM-dd"  align="Center"  headeralign="Center" readonly="true">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+    </div>
+        
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            if (sessiondata.DeptName == "人力资源部" || sessiondata.PosiName == "董事长" ||
+                sessiondata.PosiName == "总经理" || sessiondata.PosiName == "分管副总" ||
+                sessiondata.PosiName == "集团部门负责人" || (sessiondata.PosiName).indexOf("部长") > -1) {
+                formconfig.config.joindata.swhere = " 1=1 ";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+    </script>
+</body>
+</html>

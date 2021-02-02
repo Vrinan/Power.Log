@@ -1,0 +1,919 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script type="text/javascript" src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=560" type="text/javascript"></script>
+
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "4b5d4678-5f00-4eb6-b14d-61e6bfc01674";
+    </script>
+    <script type="text/javascript">
+    </script>
+    <style type="text/css">
+        @media only screen and (min-width:300px) and (max-width: 800px) {
+            .slide {
+                -webkit-transform: translate3d(0,0,0);
+                -o-transform: translate3d(0,0,0);
+                transform: translate3d(0,0,0);
+            }
+        }
+
+        .hover {
+            cursor: pointer;
+        }
+
+        /*grid进度条*/
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #0f88ed;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        .slide {
+            opacity: 1;
+        }
+
+        .item > ul {
+            text-align: center;
+        }
+
+        .COLP {
+            text-align: center;
+        }
+
+        .panel-green {
+            border-color: #5cb85c;
+        }
+
+        .panel-yellow {
+            border-color: #f0ad4e;
+        }
+
+        .panel-red {
+            border-color: #d9534f;
+        }
+
+        .panel-green > .panel-heading {
+            border-color: #5cb85c;
+            color: white;
+            background-color: #5cb85c;
+        }
+
+        .panel-red > .panel-heading {
+            border-color: #d9534f;
+            color: white;
+            background-color: #d9534f;
+        }
+
+        .panel-yellow > .panel-heading {
+            border-color: #f0ad4e;
+            color: white;
+            background-color: #f0ad4e;
+        }
+
+        .panel-red > a {
+            color: #d9534f;
+        }
+
+        .panel-yellow > a {
+            color: #f0ad4e;
+        }
+
+        .panel-green > a {
+            color: #5cb85c;
+        }
+
+        .huge {
+            font-size: 30px;
+            opacity: 0.8;
+            padding-bottom: 10px;
+        }
+
+        .mini-grid-table > tbody > tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .mini-grid-headerCell {
+            background-color: #fff;
+            padding: 7px 0px;
+        }
+
+        .caption {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .mini-button.blue {
+            color: White !important;
+            /*border: 1px solid #ddd !important;
+            border-radius: 0px 5px 5px 0px;*/
+        }
+
+            .mini-button.blue:hover {
+                color: #0f88ed !important;
+                background-color: #fff !important;
+                border: 1px solid #0f88ed !important;
+            }
+
+        .mini-grid-headerCell {
+            border-color: #ddd;
+            border-bottom-style: solid;
+            background: #ccc;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .portlet-title {
+            background-color: red;
+        }
+
+        /*.mini-panel-border
+        {
+            border:solid;
+        }*/
+    </style>
+</head>
+
+<body>
+    <div class="row-wrap" style="margin: 0; padding: 0; overflow-x: hidden; background-gray;">
+        <div class="row row-hd row-hd-responsive">
+
+            <div class="portlet-title" style="margin-left:10px;background-color:#0667D6;">
+                <div class="captiontools">
+                    &nbsp;&nbsp;
+                    <span style="color:white;">切换项目</span>
+                    <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" />
+                    <a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                    <!--<span>计划类型</span>-->
+                    <input property="editor" class="mini-combobox" id="CostType" onvaluechanged="CostChanged" style="width:140px;" textfield="text" valuefield="Id"
+                           data="[{Id:'1',text:'设备执行情况'},{Id:'2',text:'建筑执行情况'},{Id:'3',text:'安装执行情况'},{Id:'4',text:'管理执行情况'},{Id:'5',text:'其他执行情况'}]" />
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-11" id="SB" style="display:none;height: 50%">
+                <div class="portlet box blue">
+                    <div class="portlet-title" style="background-color:white;font-size:14px;">
+                        <span align="center">设备执行情况</span>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_EquipmentCost" class="mini-treegrid" style="width: 100%; height: 100%;" allowalternating="false" ondrawcell="drawcell"
+                             idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="true" expandonload="false">
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-12" id="JZ" style="display:none;height: 50%">
+                <div class="portlet box blue">
+                    <div class="portlet-title" style="background-color:white;font-size:14px;">
+                        建筑执行情况
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_EstablishCost" class="mini-treegrid" style="width: 100%; height: 93%;" allowalternating="false" ondrawcell="drawcell"
+                             idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="true" expandonload="false">
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-12" id="AZ" style="display:none;height: 50%">
+                <div class="portlet box blue">
+                    <div class="portlet-title" style="background-color:white;font-size:14px;">
+                        安装执行情况
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_InstallCost" class="mini-treegrid" style="width: 100%; height: 93%;" allowalternating="false" ondrawcell="drawcell"
+                             idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="true" expandonload="false">
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-11" id="GL" style="display:none;height: 50%">
+                <div class="portlet box blue">
+                    <div class="portlet-title" style="background-color:white;font-size:14px;">
+                        管理执行情况
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_ManageCost" class="mini-treegrid" style="width: 100%; height: 93%;" allowalternating="false" ondrawcell="drawcell"
+                             idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="true" expandonload="false">
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-11" id="QT" style="display:none;height: 50%">
+                <div class="portlet box blue">
+                    <div class="portlet-title" style="background-color:white;font-size:14px;">
+                        其他执行情况
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_OtherCost" class="mini-treegrid" style="width: 100%; height: 93%;" allowalternating="false" ondrawcell="drawcell"
+                             idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="true" expandonload="false">
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chart" style="width:50%;height:50%;">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var txtLongCode, txtGuid;
+        $(function () {
+            txtGuid = '4b5d4678-5f00-4eb6-b14d-61e6bfc01674';
+            SetBtnEditValue("txtPlanName", "公司项目");
+            mini.get("CostType").setValue("1");
+            mini.get("CostType").setText("设备执行情况");
+            LoadData();
+            //PowerForm.Init();
+            document.getElementById("SB").style.display = "";
+            //document.getElementById("JZ").style.display = "none";
+            //document.getElementById("AZ").style.display = "none";
+            //document.getElementById("GL").style.display = "none";
+            //document.getElementById("QT").style.display = "none";
+            //$("#SB").show();
+            //$("#JZ").show();
+            //$("#AZ").show();
+            //$("#GL").show();
+            //$("#QT").show();
+        });
+        mini.parse();
+
+        function drawcell(e){
+            //把0转成空,为了显示好看点
+            if(e.cellHtml=="0"||e.cellHtml=="0.0"||e.cellHtml=="0.00"){
+                e.cellHtml="";
+            }
+            if(e.field == "Diff" && parseFloat(e.value)<0){
+                e.cellStyle = "color:red;font-weight:bold;";
+            }
+        }
+        function CostChanged() {
+            if (mini.get("CostType").getValue() == 1) {
+                document.getElementById("SB").style.display = "";
+                document.getElementById("JZ").style.display = "none";
+                document.getElementById("AZ").style.display = "none";
+                document.getElementById("GL").style.display = "none";
+                document.getElementById("QT").style.display = "none";
+                LoadData();
+            }
+            if (mini.get("CostType").getValue() == 2) {
+                document.getElementById("SB").style.display = "none";
+                document.getElementById("JZ").style.display = "";
+                document.getElementById("AZ").style.display = "none";
+                document.getElementById("GL").style.display = "none";
+                document.getElementById("QT").style.display = "none";
+                LoadData();
+            }
+            if (mini.get("CostType").getValue() == 3) {
+                document.getElementById("SB").style.display = "none";
+                document.getElementById("JZ").style.display = "none";
+                document.getElementById("AZ").style.display = "";
+                document.getElementById("GL").style.display = "none";
+                document.getElementById("QT").style.display = "none";
+                LoadData();
+            }
+            if (mini.get("CostType").getValue() == 4) {
+                document.getElementById("SB").style.display = "none";
+                document.getElementById("JZ").style.display = "none";
+                document.getElementById("AZ").style.display = "none";
+                document.getElementById("GL").style.display = "";
+                document.getElementById("QT").style.display = "none";
+                LoadData();
+            }
+            if (mini.get("CostType").getValue() == 5) {
+                document.getElementById("SB").style.display = "none";
+                document.getElementById("JZ").style.display = "none";
+                document.getElementById("AZ").style.display = "none";
+                document.getElementById("GL").style.display = "none";
+                document.getElementById("QT").style.display = "";
+                LoadData();
+            }
+        }
+
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+
+        mini.get("btnSearch").on("click", function (e) {
+            LoadData();
+        })
+
+        //合计行
+        //mini.get("View_SF_InContractAnalyse").on("drawsummarycell", function (e) {
+        //    if (e.field == "InContractAmount" || e.field == "InvoiceAmount" || e.field == "InApplyAmount" || e.field == "InReceiveAmount") {
+        //        e.cellStyle = "text-align:right;"
+        //        e.cellHtml = e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        //    }
+        //    if (e.field == "Incount" || e.field == "InvoiceCount" || e.field == "InApplyCount" || e.field == "InReceiveCount")
+        //    {
+        //        e.cellStyle = "text-align:right;"
+        //    }
+        //    if(e.field =="project_name")
+        //    {
+        //        e.cellHtml = "合计";
+        //    }
+        //})
+
+        function LoadData() {
+            Power.ui.loading("加载中");
+            $.ajax({
+                url: "/Al/CostCompared",
+                data: {
+                    EpsProjId: txtGuid
+                },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        //设备
+                        var gridSB = mini.get("View_SF_EquipmentCost");
+                        gridSB.loadList(o.data.valueSB, "Id", "ParentId");
+                        var dataSBS = o.data.valueSB;
+
+                        var da = mini.get("View_SF_EquipmentCost").data;
+                        dataSB = fnmax(da);
+                        if (dataSB) {
+                            var columns = [];
+                            //固定列
+                            columns.push({ field: "Code", name: "Code", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "编号" });
+                            columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "名称" });
+                            columns.push({ field: "Specifications", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "规格型号" });
+                            columns.push({ field: "unit", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单位" });
+                            columns.push({ field: "Quantity", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2" });
+                            columns.push({ field: "UnitPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2" });
+                            columns.push({ field: "CostPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标成本价", numberFormat: "n2" });
+                            //columns.push({ field: "FeedBackAmount", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealPrice", width: 120, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealDiff", width: 120, headerAlign: "center", Align: "center", allowSort: false, header: "差额（实际-目标）", numberFormat: "n2" });
+                            
+                            //动态增加列
+                            for (var i = 0; i < dataSBS.length; i++) {
+                                if (!dataSBS[i].FeedBackReport) {
+                                    continue;
+                                }
+                                var tmp = mini.decode(dataSBS[i].FeedBackReport);
+                                for (var j = 0; j < tmp.length; j++) {
+                                    //赋值
+                                    dataSBS[i]["Quantity" + j] = tmp[j].Quantity;
+                                    dataSBS[i]["UnitPrice" + j] = tmp[j].UnitPrice;
+                                    dataSBS[i]["Price" + j] = tmp[j].Price;
+                                    //如果是第一行，则还需要创建表头
+                                    if (i == 0) {
+                                        var columnss = [];
+                                        columnss.push({ field: "Quantity" + j, name: "Quantity" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "UnitPrice" + j, name: "UnitPrice" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "Price" + j, name: "Price" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "合价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: "第" + tmp[j].SeasonReport + "季度" });
+                                    }
+                                }
+                            }
+                            mini.get("View_SF_EquipmentCost").set({
+                                columns: columns
+                            });
+
+                        }
+
+                        //建筑
+                        var gridJZ = mini.get("View_SF_EstablishCost");
+                        gridJZ.loadList(o.data.valueJZ, "Id", "ParentId");
+                        var dataJZS = o.data.valueJZ;
+                        var da = mini.get("View_SF_EstablishCost").data;
+                        dataJZ = fnmaxDW(da);
+                        if (dataJZ) {
+                            var columns = [];
+                            //固定列
+                            columns.push({ field: "Code", name: "Code", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "编号" });
+                            columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "名称" });
+                            columns.push({ field: "Specifications", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "规格型号" });
+                            columns.push({ field: "unit", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单位" });
+                            columns.push({ field: "Quantity", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2" });
+                            columns.push({ field: "UnitPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2" });
+                            columns.push({ field: "CostPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "DrawPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "施工预算成本", numberFormat: "n2" });
+                            columns.push({ field: "Diff1", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "差额（目标-预算）", numberFormat: "n2" });
+                            columns.push({ field: "Diff2", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "差额（预算-实际）", numberFormat: "n2" });
+                            columns.push({ field: "predictionPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "成本剩余预估", numberFormat: "n2" });
+                            //2018-12-10勇哥说又不需要了:)
+                            // for (var i = 0; i < dataJZS.length; i++) {
+                            //     if (!dataJZS[i].FeedBackReport) {
+                            //         continue;
+                            //     }
+                            //     var tmp = mini.decode(dataJZS[i].FeedBackReport);
+                            //     for (var j = 0; j < tmp.length; j++) {
+                            //         //赋值
+                            //         dataJZS[i]["Quantity" + j] = tmp[j].Quantity;
+                            //         dataJZS[i]["UnitPrice" + j] = tmp[j].UnitPrice;
+                            //         dataJZS[i]["Price" + j] = tmp[j].Price;
+                            //         //如果是第一行，则还需要创建表头
+                            //         if (i == 0) {
+                            //             var columnss = [];
+                            //             columnss.push({ field: "Quantity" + j, name: "Quantity" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2", editor: { type: "textbox" } });
+                            //             columnss.push({ field: "UnitPrice" + j, name: "UnitPrice" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2", editor: { type: "textbox" } });
+                            //             columnss.push({ field: "Price" + j, name: "Price" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "合价", numberFormat: "n2", editor: { type: "textbox" } });
+                            //             columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: "第" + tmp[j].SeasonReport + "季度" });
+                            //         }
+                            //     }
+                            // }
+                            mini.get("View_SF_EstablishCost").set({
+                                columns: columns
+                            });
+                        }
+
+                        //安装
+                        var gridAZ = mini.get("View_SF_InstallCost");
+                        gridAZ.loadList(o.data.valueAZ, "Id", "ParentId");
+                        var dataAZS = o.data.valueAZ;
+                        var da = mini.get("View_SF_InstallCost").data;
+                        dataAZ = fnmax(da);
+                        if (dataAZ) {
+                            var columns = [];
+                            //固定列
+                            columns.push({ field: "Code", name: "Code", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "编号" });
+                            columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "名称" });
+                            columns.push({ field: "Specifications", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "规格型号" });
+                            columns.push({ field: "unit", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单位" });
+                            columns.push({ field: "Quantity", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2" });
+                            columns.push({ field: "UnitPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2" });
+                            columns.push({ field: "CostPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealDiff", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "差额（实际-目标）", numberFormat: "n2" });
+                            //动态增加列
+                            for (var i = 0; i < dataAZS.length; i++) {
+                                if (!dataAZS[i].FeedBackReport) {
+                                    continue;
+                                }
+                                var tmp = mini.decode(dataAZS[i].FeedBackReport);
+                                for (var j = 0; j < tmp.length; j++) {
+                                    //赋值
+                                    dataAZS[i]["Quantity" + j] = tmp[j].Quantity;
+                                    dataAZS[i]["UnitPrice" + j] = tmp[j].UnitPrice;
+                                    dataAZS[i]["Price" + j] = tmp[j].Price;
+                                    //如果是第一行，则还需要创建表头
+                                    if (i == 0) {
+                                        var columnss = [];
+                                        columnss.push({ field: "Quantity" + j, name: "Quantity" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "UnitPrice" + j, name: "UnitPrice" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "Price" + j, name: "Price" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "合价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: "第" + tmp[j].SeasonReport + "季度" });
+                                    }
+                                }
+                            }
+                            mini.get("View_SF_InstallCost").set({
+                                columns: columns
+                            });
+
+
+                        }
+
+                        //管理
+                        var gridGL = mini.get("View_SF_ManageCost");
+                        gridGL.loadList(o.data.valueGL, "Id", "ParentId");
+                        var dataGLS = o.data.valueGL;
+                        var da = mini.get("View_SF_ManageCost").data;
+                        dataGL = fnmax(da);
+                        if (dataGL) {
+                            var columns = [];
+                            //固定列
+                            columns.push({ field: "Code", name: "Code", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "编号" });
+                            columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "名称" });
+                            columns.push({ field: "CostPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealDiff", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "差额（实际-目标）", numberFormat: "n2" });
+                            //动态增加列
+                            for (var i = 0; i < dataGLS.length; i++) {
+                                if (!dataGLS[i].FeedBackReport) {
+                                    continue;
+                                }
+                                var tmp = mini.decode(dataGLS[i].FeedBackReport);
+                                for (var j = 0; j < tmp.length; j++) {
+                                    //赋值
+                                    dataGLS[i]["Price" + j] = tmp[j].Price;
+                                    //如果是第一行，则还需要创建表头
+                                    if (i == 0) {
+                                        var columnss = [];
+                                        columnss.push({ field: "Price" + j, name: "Price" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "合价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: "第" + tmp[j].SeasonReport + "季度" });
+                                    }
+                                }
+                            }
+                            mini.get("View_SF_ManageCost").set({
+                                columns: columns
+                            });
+
+
+                        }
+
+                        //其他
+                        var gridQT = mini.get("View_SF_OtherCost");
+                        gridQT.loadList(o.data.valueQT, "Id", "ParentId");
+                        var dataQTS = o.data.valueQT;
+                        var da = mini.get("View_SF_OtherCost").data;
+                        dataQT = fnmax(da);
+                        if (dataQT) {
+                            var columns = [];
+                            //固定列
+                            columns.push({ field: "Code", name: "Code", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "编号" });
+                            columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "名称" });
+                            columns.push({ field: "unit", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单位" });
+                            columns.push({ field: "Quantity", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2" });
+                            columns.push({ field: "UnitPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2" });
+                            columns.push({ field: "CostPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealPrice", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际成本价", numberFormat: "n2" });
+                            columns.push({ field: "RealDiff", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "差额（实际-目标）", numberFormat: "n2" });
+                            //动态增加列
+                            for (var i = 0; i < dataQTS.length; i++) {
+                                if (!dataQTS[i].FeedBackReport) {
+                                    continue;
+                                }
+                                var tmp = mini.decode(dataQTS[i].FeedBackReport);
+                                for (var j = 0; j < tmp.length; j++) {
+                                    //赋值
+                                    dataQTS[i]["Quantity" + j] = tmp[j].Quantity;
+                                    dataQTS[i]["UnitPrice" + j] = tmp[j].UnitPrice;
+                                    dataQTS[i]["Price" + j] = tmp[j].Price;
+                                    //如果是第一行，则还需要创建表头
+                                    if (i == 0) {
+                                        var columnss = [];
+                                        columnss.push({ field: "Quantity" + j, name: "Quantity" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "数量", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "UnitPrice" + j, name: "UnitPrice" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "单价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columnss.push({ field: "Price" + j, name: "Price" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "合价", numberFormat: "n2", editor: { type: "textbox" } });
+                                        columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: "第" + tmp[j].SeasonReport + "季度" });
+                                    }
+                                }
+                            }
+                            mini.get("View_SF_OtherCost").set({
+                                columns: columns
+                            });
+
+
+                        }
+                        Power.ui.loading.close();
+                    }
+                    else {
+                        Power.ui.loading.close();
+                    }
+                }
+            });
+
+            //加载图表
+            //先找到现在显示的是哪个表
+            var checktype = mini.get("CostType").getValue();
+            switch (checktype)
+            {
+            case "1":
+                //Power.ui.success("设备执行情况");
+                var equGrid = mini.get("View_SF_EquipmentCost");
+                confirmLoad(equGrid);
+            break;
+            case "2":
+                //Power.ui.success("建筑执行情况");
+                var estGrid = mini.get("View_SF_EstablishCost");
+                confirmLoads(estGrid);
+            break;
+            case "3":
+                //Power.ui.success("安装执行情况");
+                var insGrid = mini.get("View_SF_InstallCost");
+                confirmLoad(insGrid);
+            break;
+            case "4":
+                //Power.ui.success("管理执行情况");
+                var manGrid = mini.get("View_SF_ManageCost");
+                confirmLoad(manGrid);
+            break;
+            case "5":
+                //Power.ui.success("其他执行情况");
+                var othGrid = mini.get("View_SF_OtherCost");
+                confirmLoad(othGrid);
+            break;
+            }
+        }
+
+        function confirmLoad(grid)
+        {
+            var sumcost = Number(0);
+            var sumreal = Number(0);
+            //获取图表需要的数据
+            for(var al = 0;al<grid.data.length;al++)
+            {
+                sumcost+=grid.data[al].CostPrice;
+                sumreal+=grid.data[al].RealPrice;
+            }
+            loadChart(sumcost,sumreal);
+        }
+
+        function confirmLoads(grid)
+        {
+            var sumcost = Number(0);
+            var sumreal = Number(0);
+            var sumdraw = Number(0);
+            var diff = Number(0);
+            var sy = Number(0);
+            //获取图表需要的数据
+            for(var al = 0;al<grid.data.length;al++)
+            {
+                sumcost+=grid.data[al].CostPrice;
+                sumreal+=grid.data[al].RealPrice;
+                sumdraw+=grid.data[al].DrawPrice;
+                sy+=grid.data[al].predictionPrice;
+            }
+            diff = sumcost-sumreal;
+            loadCharts(sumcost,sumreal,sumdraw,diff,sy);
+        }
+
+         //加载图表1
+        function loadChart(cost,real) {
+            cost = (cost/10000).toFixed(2);
+            real = (real/10000).toFixed(2);
+            var opt = {};
+            opt.grid = { x: 150 };
+            opt.title = { text: "执行情况" };
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+            opt.legend = { data: ['累计金额'] },
+            opt.toolbox = { show: false };
+            opt.xAxis = [{ type: 'category', data: ["目标成本价", "实际成本价" ] }];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', axisLabel: { formatter: '{value}' } }];
+            opt.series = [{
+                itemStyle: {
+                    normal: {
+                        label: {
+                            rotate: 30,
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}',
+                            textStyle: {
+                                fontSize: '12',
+                                fontFamily: '黑体'
+                            }
+                        }
+                    }
+                },
+                name: '累计金额', type: 'bar', data: [cost, real]
+            }];
+            InitEChart("chart", opt);
+        }
+
+        //加载图表2
+        function loadCharts(cost,real,draw,diff,sy) {
+            cost = (cost/10000).toFixed(2);
+            real = (real/10000).toFixed(2);
+            draw = (draw/10000).toFixed(2);
+            diff = (diff/10000).toFixed(2);
+            sy = (sy/10000).toFixed(2);
+            var opt = {};
+            opt.grid = { x: 150 };
+            opt.title = { text: "执行情况" };
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+            opt.legend = { data: ['累计金额'] },
+            opt.toolbox = { show: false };
+            opt.xAxis = [{ type: 'category', data: ["目标成本价","实际成本价","差额","施工预算成本","成本剩余预估" ] }];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', axisLabel: { formatter: '{value}' } }];
+            opt.series = [{
+                itemStyle: {
+                    normal: {
+                        label: {
+                            rotate: 30,
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}',
+                            textStyle: {
+                                fontSize: '12',
+                                fontFamily: '黑体'
+                            }
+                        }
+                    }
+                },
+                name: '累计金额', type: 'bar', data: [cost,real,diff,draw,sy]
+            }];
+            InitEChart("chart", opt);
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+
+
+        var fnmax = function (node) {
+            var obj = node;
+            if(obj.children)
+            {
+                for (var i = 0; i < node.children.length; i++) {
+                    var temp = fnmax(node.children[i]);
+                    obj["CostPrice"] += temp["CostPrice"] == null ? 0 : parseFloat(temp["CostPrice"]);
+                    obj["RealPrice"] += temp["RealPrice"] == null ? 0 : parseFloat(temp["RealPrice"]);
+                }
+            }
+            else
+            {
+                for(var s = 0;s<obj.length;s++)
+                {
+                    if(obj[s].children)
+                    {
+                        var son = obj[s].children;
+                        var sum1 = Number(0);
+                        var sum2 = Number(0);
+                        if(son.length)
+                        {
+                            for (var i = 0; i < son.length; i++) {
+                                var temp = fnmax(son[i]);
+                                sum1+=son[i].CostPrice==null?0:parseFloat(temp["CostPrice"]);
+                                sum2+=son[i].RealPrice==null?0:parseFloat(temp["RealPrice"]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var sum1 = Number(0);
+                    }
+                    obj[s]["CostPrice"]+=sum1;
+                    obj[s]["RealPrice"]+=sum2;
+                }
+            }
+            return obj;
+        }
+
+        var fnmaxDW = function (node) {
+            var obj = node;
+            if(obj.children)
+            {
+                for (var i = 0; i < node.children.length; i++) {
+                    var temp = fnmax(node.children[i]);
+                    obj["CostPrice"] += temp["CostPrice"] == null ? 0 : parseFloat(temp["CostPrice"]);
+                    obj["RealPrice"] += temp["RealPrice"] == null ? 0 : parseFloat(temp["RealPrice"]);
+                    obj["DrawPrice"] += temp["DrawPrice"] == null ? 0 : parseFloat(temp["DrawPrice"]);
+                    obj["Diff1"] += temp["Diff1"] == null ? 0 : parseFloat(temp["Diff1"]);
+                    obj["Diff2"] += temp["Diff2"] == null ? 0 : parseFloat(temp["Diff2"]);
+                    obj["predictionPrice"] += temp["predictionPrice"] == null ? 0 : parseFloat(temp["predictionPrice"]);
+                }
+            }
+            else
+            {
+                for(var s = 0;s<obj.length;s++)
+                {
+                    if(obj[s].children)
+                    {
+                        var son = obj[s].children;
+                        var sum1 = Number(0);
+                        var sum2 = Number(0);
+                        var sum3 = Number(0);
+                        var sum4 = Number(0);
+                        var sum5 = Number(0);
+                        var sum6 = Number(0);
+                        if(son.length)
+                        {
+                            for (var i = 0; i < son.length; i++) {
+                                var temp = fnmax(son[i]);
+                                sum1+=son[i].CostPrice==null?0:parseFloat(temp["CostPrice"]);
+                                sum2+=son[i].RealPrice==null?0:parseFloat(temp["RealPrice"]);
+                                sum3+=son[i].DrawPrice==null?0:parseFloat(temp["DrawPrice"]);
+                                sum4+=son[i].Diff1==null?0:parseFloat(temp["Diff1"]);
+                                sum5+=son[i].Diff2==null?0:parseFloat(temp["Diff2"]);
+                                sum6+=son[i].predictionPrice==null?0:parseFloat(temp["predictionPrice"]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var sum1 = Number(0);
+                        var sum2 = Number(0);
+                        var sum3 = Number(0);
+                        var sum4 = Number(0);
+                        var sum5 = Number(0);
+                        var sum6 = Number(0);
+                    }
+                    obj[s]["CostPrice"]+=sum1;
+                    obj[s]["RealPrice"]+=sum2;
+                    obj[s]["DrawPrice"]+=sum3;
+                    obj[s]["Diff1"]+=sum4;
+                    obj[s]["Diff2"]+=sum5;
+                    obj[s]["predictionPrice"]+=sum6;
+                }
+            }
+            return obj;
+        }
+
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = "A.project_guid in (select id from dbo.returnEPSChildrenTreeIds('82bef379-1d68-4681-baf0-42924ca6b2b7')) "
+            p.select = " project_guid,parent_guid,project_shortname,project_name,LongCode ";
+            OpenWizard(p, function (data) {
+                txtGuid = data[0].project_guid;
+                txtLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+                LoadData();
+            })
+
+        }
+
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html>

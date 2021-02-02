@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计负责人变更
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_SJ_DesignPrincipalChange.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_SJ_DesignPrincipalChange.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_SJ_DesignPrincipalChange.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_SJ_DesignPrincipalChange" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.Code" name="Code" required="true" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_SJ_DesignPrincipalChange.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            关联团队组建
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SJ_DesignPrincipalChange.TeamBuild" name="TeamBuild" textname="TeamBuild" class="mini-buttonedit"
+                                                   emptytext="关联团队组建..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            原设计负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.OriginalPrincipal" name="OriginalPrincipal" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            现设计负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.PresentPrincipal" name="PresentPrincipal" textname="PresentPrincipal" class="mini-buttonedit"
+                                                   emptytext="请选择设计负责人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_SJ_DesignPrincipalChange.Memo">备注说明</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SJ_DesignPrincipalChange.Memo" name="Memo" class="mini-textarea" height="130"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_SJ_DesignPrincipalChange.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='负责人明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_SJ_DesignPrincipalChange_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" id="SF_SJ_DesignPrincipalChange_list.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_SJ_DesignPrincipalChange_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_SJ_DesignPrincipalChange_list" class="mini-treegrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" multiselect="false" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+
+                                        <div field="DesignMajor" headeralign="center">
+                                            设计专业
+                                            <input property="editor" id="SF_SJ_DesignPrincipalChange_list.DesignMajor" class="mini-buttonedit" name="DesignMajor" textname="DesignMajor"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Leader" headeralign="center">
+                                            专业负责人
+                                            <input property="editor" id="SF_SJ_DesignPrincipalChange_list.Leader" class="mini-buttonedit" name="Leader" textname="Leader"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+
+                                        <!--<div field="Job" headeralign="center">
+                                            职务
+                                            <input property="editor" class="mini-textbox" allowinput="false" style="width: 100%;" />
+
+                                        </div>-->
+
+                                        <div field="Proofreader" headeralign="center">
+                                            校对人
+                                            <input property="editor" id="SF_SJ_DesignPrincipalChange_list.Proofreader" class="mini-buttonedit" name="Proofreader" textname="Proofreader"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="Auditor" headeralign="center">
+                                            审核人
+                                            <input property="editor" id="SF_SJ_DesignPrincipalChange_list.Auditor" class="mini-buttonedit" name="Auditor" textname="Auditor"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+
+                                        </div>
+
+                                        <div field="DesignDrawing" headeralign="center">
+                                            设计/绘图
+                                            <input property="editor" id="SF_SJ_DesignPrincipalChange_list.DesignDrawing" class="mini-buttonedit" name="DesignDrawing" textname="DesignDrawing"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="ChildCode" headeralign="center">
+                                            子项号
+                                            <input property="editor" class="mini-textbox" name="ChildCode" textname="ChildCode" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        
+    </script>
+</body>
+</html>

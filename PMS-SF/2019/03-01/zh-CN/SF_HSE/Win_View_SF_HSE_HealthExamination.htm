@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_HSE_HealthExamination.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_YX_EquYearCheck-Export" title="职业健康体检统计" class="btn-group"></div>
+                            &nbsp;&nbsp;&nbsp;
+                            <span>开始日期</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>结束日期</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_HSE_HealthExamination" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" visible="true" width="917" height="601" allowalternating="false" 
+                             pagesize="50" sizelist="[50,100,200,500]" summarycolumns="" fitcolumns="" showtreeicon="true"  treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell" >
+                            <div property="columns">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            var firstDate = new Date();
+            //今年第一天
+            firstDate.setDate(1);
+            firstDate.setMonth(0);
+            //今年最后一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(11);
+            endDate.setDate(31);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            var grid = mini.get("View_SF_HSE_HealthExamination");
+
+            PowerForm.Init();
+
+        });
+
+        mini.parse();
+        function onLoad(e) {
+            //mini.get("View_SF_EquipmentCost").mergeColumns(["MainCode","EpsCode","EpsName"]);
+            mini.get("View_SF_HSE_HealthExamination").frozenColumns(0, 6);
+        }
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            if (e.sender.id == "View_SF_HSE_HealthExamination") {
+                if(data){
+                    var columns = [];
+                    //固定列
+                    columns.push({ field: "HumanDept", name: "HumanDept", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "部门名称" });
+                    columns.push({ field: "HumanName", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "姓名" });
+                    columns.push({ field: "HumanGender", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "性别" });
+                    columns.push({ field: "HumanIdentity", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "身份证号" });
+                    columns.push({ field: "JoinStart1", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "入职时间", numberFormat: "n2" });
+                    columns.push({ field: "HumanType", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "工种", numberFormat: "n2" });
+                    columns.push({ field: "DangerReason", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "接触职业病危害因素", numberFormat: "n2" });
+                    columns.push({ field: "PreJobResult", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "岗前体检结果" });
+
+                    
+                    //动态增加列
+                    for (var i = 0; i < data.length; i++) {
+                        if (!data[i].CheckResult) {
+                            continue;
+                        }
+                        var tmp = mini.decode(data[i].CheckResult);
+                        for (var j = 0; j < tmp.length; j++) {
+                            //赋值
+                            data[i]["ACheck" + j] = tmp[j].ACheck;
+                            data[i]["Recheck" + j] = tmp[j].Recheck;
+                            //如果是第一行，则还需要创建表头
+                            if (i == 1) {
+                                var columnss=[];
+                                columnss.push({ field: "ACheck" + j, name: "ACheck" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "一检结果", editor: { type: "textbox" } });
+                                columnss.push({ field: "Recheck" + j, name: "Recheck" + j, width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "复检结果", editor: { type: "textbox" } });
+                                columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center", allowSort: false, header: tmp[j].YearCheckResult });
+                            }
+                        }
+                    }
+                    columns.push({ field: "PostJobResult", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "离职体检结果" });
+                    columns.push({ field: "Memo", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "备注" });
+
+                    mini.get("View_SF_HSE_HealthExamination").set({
+                        columns: columns
+                    });
+                }
+            }
+            return data;
+        }
+
+
+        function drawcell(e){
+            //把0转成空,为了显示好看点
+            if(e.cellHtml=="0"||e.cellHtml=="0.0"||e.cellHtml=="0.00"){
+                e.cellHtml="";
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_HSE_HealthExamination').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_HSE_HealthExamination") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " b.RegDate between'" + mini.get("QStartDate").getFormValue() + "' and'" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+                else {
+                    e.params.swhere += "and b.StartTime between '" + mini.get("QStartDate").getFormValue() + "' and ='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

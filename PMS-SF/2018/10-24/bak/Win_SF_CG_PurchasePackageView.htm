@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_CG_PurchasePackageList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i
+                                    class="fa fa-refresh"></i>刷新</a>
+                            <div class="btn-group customfilter" gridid="View_SF_CG_PurchasePackageList"></div>
+                            <label style="font-size:14px">请购类型：</label>
+                            <input property="editor" class="mini-combobox" id="QPlanType" onvaluechanged="Finished"
+                                style="width:140px;" textfield="text" valuefield="Id" data="[{Id:'1',text:'物资类'},{Id:'2',text:'服务类'},{Id:'3',text:'年度采购计划'}]" />
+                            <a class="mini-button blue" id="Send" iconcls="fa fa-plus" onclick="PMS_Send()">组包</a>
+                            <a class="mini-button blue" id="ReturnWrong" iconcls="fa fa-close (alias)" onclick="ReturnWrong()">退回错发物资</a>
+                            <a class="mini-button blue" id="View_SF_CG_PurchasePackageList.Export" iconcls="fa fa-sign-out" onclick="PowerForm.OnExportDataToXls('View_SF_CG_PurchasePackageList', '待组包物资明细')">导出</a>
+                        </div>
+                        <div class="tools">
+                            <input id="View_SF_CG_PurchasePackageList-search-fields" class="mini-combobox"
+                                onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_SF_CG_PurchasePackageList-search">
+                                <input id="View_SF_CG_PurchasePackageList-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_SF_CG_PurchasePackageList-btn-search" onclick="PowerForm.OnPageChanged(this)"><i
+                                    class="fa fa-search"></i> 搜索</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_CG_PurchasePackageList" class="mini-datagrid" style="width: 100%; height: 100%;"
+                            visible="true" width="917" height="601" allowSortColumn="true" sortField="PlanCode"
+                            showSummaryRow="true" allowalternating="false" pagesize="50" sizeList="[10,20,50,100,200,400,500]"
+                            pageSizeWidth="100" idfield="Id" multiSelect="true" ondrawcell="DrawCell">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div type="indexcolumn" width="37">序号</div>
+                                <div field="Title" width="100" allowSort="true">标题<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                                <div field="DepartmentName" width="130" allowSort="true">请购部门<input property="editor"
+                                        class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Code" width="100" allowSort="true">物资编码<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                                <div field="PlanCode" width="200" allowSort="true">计划编号<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                                <div field="MatName" width="120" allowSort="true">物资名称<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                                <div field="Supplier" width="140" allowSort="true">厂家/品牌/供应商<input property="editor"
+                                        class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Specification" width="200" allowSort="true">规格型号/技术参数<input property="editor"
+                                        class="mini-textbox" style="width: 100%;" /></div>
+                                <!-- <div field="Model" width="130" allowSort="true"  >技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                <div field="PID" width="100" allowSort="true">PID编号<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                                <div field="MatUnit" width="100" allowSort="true" allowSort="true">单位<input property="editor"
+                                        class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Amount" width="100" summarytype="sum" numberformat="n2" allowSort="true">请购数量<input
+                                        property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                        maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                <div field="Price" width="100" align="right" numberformat="n2" allowSort="true">预估单价<input
+                                        property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                        maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                <div field="TotalPrice" width="100" align="right" summarytype="sum" numberformat="n2"
+                                    allowSort="true">预估总价<input property="editor" class="mini-textbox" format="n2"
+                                        style="width: 100%;" /></div>
+                                <div field="ArrivalDate" width="100" dateFormat="yyyy-MM-dd" allowSort="true">到货日期<input
+                                        property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false"
+                                        dateFormat="yyyy-MM-dd" /></div>
+                                <div field="ArrivalAddress" width="140" allowSort="true">到货地点<input property="editor"
+                                        class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Remark" width="150" allowSort="true">备注<input property="editor" class="mini-textbox"
+                                        style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editWindow" class="mini-window" title="采购方案-组包" style="width:400px;" showmodal="true" allowresize="true"
+        allowdrag="true">
+        <div id="editform" class="form">
+            <table class="table table-bordered">
+                <tr>
+                    <td>
+                        采购类型
+                    </td>
+                    <td>
+                        <input property="editor" id="PurchaseType" class="mini-combobox" textfield="text" valuefield="id"
+                            data="[{id:'1',text:'招标'},{id:'2',text:'询比价'},{id:'3',text:'定向采购'},{id:'4',text:'直接采购'}]"
+                            style="width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <a class="mini-button blue" id="SendOK" onclick="PMS_SendOK()"><i class="fa fa-save"></i>组包</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        var PlanType = "1";
+        $(function () {
+            formconfig.config.joindata.swhere = " list.PlanType='1' and list.IsChosen=0 and list.Status=50  ";
+            if (sessiondata.HumanId == "ad000000-0000-0000-0000-000000000000") {
+                //管理员可以看见所有明细,其他按采购员过滤
+            } else {
+                formconfig.config.joindata.swhere += " and (PurchaserId='" + sessiondata.HumanId + "' ) ";
+            }
+            PowerForm.Init();
+            mini.get("QPlanType").setValue(PlanType);
+        });
+        mini.parse();
+        mini.get("View_SF_CG_PurchasePackageList").on("load", function (e) {
+            //mini.get("View_SF_CG_PurchasePackageList").frozenColumns(0,6);
+        });
+        function Finished() {
+            PlanType = mini.get("QPlanType").getValue();
+            formconfig.config.joindata.swhere = " list.PlanType='" + PlanType + "' and list.IsChosen=0 and list.Status=50  ";
+            if (sessiondata.HumanId == "ad000000-0000-0000-0000-000000000000") {
+                //管理员可以看见所有明细,其他按采购员过滤
+            } else {
+                formconfig.config.joindata.swhere += " and (PurchaserId='" + sessiondata.HumanId + "' ) ";
+            }
+            var sender = mini.get("View_SF_CG_PurchasePackageList");
+            if (sender.showPager)
+                sender.gotoPage(0);
+            else
+                FormFuns.ReLoadData(sender);
+        }
+
+        function PMS_Send() {
+            var grid = mini.get("View_SF_CG_PurchasePackageList");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            if (Rows.length > 0) {
+                var editWindow = mini.get("editWindow");
+                editWindow.show();
+            }
+            else {
+                Power.ui.alert("请先勾选需要组包的采购明细");
+            }
+
+        }
+
+        function PMS_SendOK() {
+            var PurchaseType = mini.get("PurchaseType").getValue();
+            var ListIds = "";
+            if (PurchaseType == "") {
+                Power.ui.alert("请下拉选择 采购类型！");
+                return;
+            }
+            var grid = mini.get("View_SF_CG_PurchasePackageList");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            for (var i = 0; i < Rows.length; i++) {
+                ListIds = ListIds + Rows[i].Id + ",";
+            }
+            //把最后的,去掉
+            ListIds = ListIds.substr(0, ListIds.length - 1);
+
+            var par = {
+                "matsIdLists": ListIds, "purchaseType": PurchaseType, "planType": PlanType,
+                "senderId": sessiondata.HumanId, "senderName": sessiondata.HumanName
+            };
+
+            Power.ui.loading("组包中……");
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "CreateScheme", par, function (text) {
+                Power.ui.loading.close();
+                var tmp = mini.decode(text);
+                if (!tmp.success) {
+                    Power.ui.error(tmp.message);
+                }
+                else {
+                    mini.get("View_SF_CG_PurchasePackageList").reload();
+                }
+                var SchemeKeyvalue = mini.decode(mini.decode(text).data.value).data.zz;
+                if (SchemeKeyvalue != null && SchemeKeyvalue != undefined && SchemeKeyvalue != "") {
+                    var p = { formid: "77bc4c06-3988-4ee8-8cc4-a1c8c4a1fcdf", keyvalue: SchemeKeyvalue, action: "edit" };
+                    Power.ui.alert("组包成功!");
+                    FormFuns.OnOpenForm(p);
+                }
+                mini.get("editWindow").hide();
+            });
+        }
+
+        function ReturnWrong() {
+            Power.ui.confirm("已选中的物资将退回给部长重新下发，确定执行吗?", function (action) {
+                if (action) {
+                    var ListIds = "";
+                    var grid = mini.get("View_SF_CG_PurchasePackageList");
+                    var Rows = grid.getSelecteds();	//取得选中的行
+
+                    if (Rows.length == 0) {
+                        Power.ui.alert("请先勾选需要退回的采购明细!");
+                        return;
+                    }
+
+                    for (var i = 0; i < Rows.length; i++) {
+                        ListIds = ListIds + Rows[i].Id + ",";
+                    }
+                    //把最后的,去掉
+                    ListIds = ListIds.substr(0, ListIds.length - 1);
+
+                    var par = { "matsIdLists": ListIds };
+
+                    Power.ui.loading("退回中……");
+                    FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "ReturnWrongPackageDtl", par, function (text) {
+                        Power.ui.loading.close();
+                        var tmp = mini.decode(text);
+                        if (!tmp.success) {
+                            Power.ui.error(tmp.message);
+                        }
+                        else {
+                            mini.get("View_SF_CG_PurchasePackageList").reload();
+                        }
+                        var zyx = mini.decode(mini.decode(text).data.value).data.zyx;
+                        if (zyx != null && zyx != undefined && zyx != "") {
+                            Power.ui.alert(zyx);
+                        }
+                    });
+                }
+            });
+
+        }
+        function DrawCell(e) {
+            if (e.field == "PlanCode") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('12c19b2a-8faf-4018-98e7-5f28cf8713dd','" + e.record.ppId + "');\">" + e.record.PlanCode + "</a>";
+            }
+            //把.00去掉 为了好看点
+            if (e.field == "Amount" || e.field == "Price" || e.field == "TotalPrice") {
+                e.cellHtml = e.cellHtml.replace(".00", "");;
+            }
+        }
+        //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+    </script>
+</body>
+
+</html>

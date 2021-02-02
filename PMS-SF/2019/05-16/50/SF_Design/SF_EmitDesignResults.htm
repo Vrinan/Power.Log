@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>发出设计成果
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="TEXT.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>-->
+                    <a class="mini-button blue" id="SF_EmitDesignResults.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_EmitDesignResults.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_EmitDesignResults.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_EmitDesignResults" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            单据编号
+                                        </td>
+                                        <td>
+                                              <input id="SF_EmitDesignResults.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_EmitDesignResults.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_EmitDesignResults.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            单据标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_EmitDesignResults.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            设计文件校审
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_EmitDesignResults.DesignTaskNotice" name="DesignTaskNotice" textname="DesignTaskNotice" class="mini-buttonedit"
+                                                   emptytext="选择设计文件校审..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_EmitDesignResults.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit"
+                                                   emptytext="请选择项目编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                            <!--<input id="SF_EmitDesignResults.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-textbox" readonly="readonly" />-->
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_EmitDesignResults.ProjectName" name="ProjectName" textname="ProjectName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            设计项目负责人
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_EmitDesignResults.ProjectPrincipal" name="ProjectPrincipal" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td width="150">
+                                            规划/方案设计/可研报告(套)
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_TechServiceRegister.Planning" name="Planning" class="mini-textbox" />-->
+                                            <input id="SF_TechServiceRegister.Planning" name="Planning" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            初步设计(套)                                     
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_TechServiceRegister.PrimaryDesign" name="PrimaryDesign" class="mini-textbox" />-->
+                                            <input id="SF_TechServiceRegister.PrimaryDesign" name="PrimaryDesign" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+									 <tr>
+                                        <td>
+                                            其他文件(套)
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_TechServiceRegister.OtherFiles" name="OtherFiles" class="mini-textbox"/>-->
+                                            <input id="SF_TechServiceRegister.OtherFiles" name="OtherFiles" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            施工图纸(套)                                     
+                                        </td>
+                                        <td>
+										    <input id="SF_TechServiceRegister.ConstructionDrawings" name="ConstructionDrawings" class="mini-textbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_EmitDesignResults.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_EmitDesignResults.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='图纸明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_EmitDesignResults_List.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_EmitDesignResults_List.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                 <div id="SF_EmitDesignResults_List" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>                           
+                                        <div field="Specialty" headeralign="center">
+                                            分号/专业
+                                             <!--<input property="editor" id="SF_TechServiceRegisterList.ForProfessional" class="mini-textbox"  name="ForProfessional"  style="width: 100%;"/>-->
+                                             <input property="editor" id="SF_EmitDesignResults_List.Specialty" class="mini-buttonedit" name="Specialty" textname="Specialty" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Quantity" headeralign="center">
+                                            数量 
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+										<div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title='文件校审' name="SF_SJ_FileProofreading">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_SJ_FileProofreading.Add"
+                                   onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_SJ_FileProofreading.Delete"
+                                   onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_SJ_FileProofreading" class="mini-datagrid" style="height: 100%;"
+                                     multiselect="true" oncellbeginedit="beginedit" idfield="Id" allowresize="true"
+                                     allowcelledit="true" allowcellselect="true" ondrawcell="DrawCell">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="FileCode" headeralign="center" width="100">
+                                            编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                            <!--<input property="editor" id="SF_EmitDesignResults_List.Specialty" class="mini-buttonedit" name="Specialty" textname="Specialty" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />-->
+                                        </div>
+                                        <div field="FileName" headeralign="center" width="150">
+                                            名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="Profession" headeralign="center" width="50">
+                                            专业
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="ProjectCode" headeralign="center" width="150">
+                                            项目号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="ProjectName" headeralign="center" width="180">
+                                            项目名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="ProjectManager" headeralign="center" width="100">
+                                            项目负责人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="Phase" headeralign="center" type="comboboxcolumn" width="80">
+                                            设计阶段
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="Memo" headeralign="center" width="80">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        function DrawCell(e) {
+            if (e.field == "FileCode") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('14433179-9495-4e82-ac44-4e3975c11572', '" + e.record.FileId + "');\">" + (e.record.FileCode ? e.record.FileCode : "") + "</a>";
+            }
+        }
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+        function beginedit(e) {
+            if (e.field != "Memo") {
+                e.cancel = true;
+            }
+        }
+
+        //送审前,检查下子表,必须有一行        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_SJ_FileProofreading");
+            //只对新增单据做判断(考虑历史送审中数据很多未填)
+            if (mini.get("SF_EmitDesignResults.Status").getValue() == 0) {
+                if (grid.data.length == 0) {
+                    Power.ui.alert("文件校审为空,请新增一条明细!");
+                    e.isValid = false;
+                }
+            }
+        }        //此处用于，打开向导时第一步带查询条件
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "SF_SJ_FileProofreading.Add") {
+                var ProjectNameId = formconfig.config.joindata.currow["ProjectNameId"];
+                e.where = "1=1 and ProjectMessageId='" + ProjectNameId + "'";
+            }
+        }
+    </script>
+</body>
+</html>

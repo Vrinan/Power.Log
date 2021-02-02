@@ -1,0 +1,181 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>回复记录
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="DeptContact.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看部门联系单</a>
+                    <a class="mini-button blue" id="SF_ZH_DeptContact.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_ZH_DeptContact.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ZH_DeptContact.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_ZH_DeptContact" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_DeptContact.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_DeptContact.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            发件人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.Sender" name="Sender" textname="Sender" class="mini-buttonedit"
+                                                   emptytext="请选择发件人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                            <input id="SF_ZH_DeptContact.SenderId" name="SenderId" class="mini-textbox" readonly="readonly" visible="fasle" />
+                                        </td>
+                                        <td>
+                                            发件部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.FromDept" name="FromDept" class="mini-textbox" readonly="readonly" required />
+                                            <input id="SF_ZH_DeptContact.FromDeptId" name="FromDeptId" class="mini-textbox" readonly="readonly" visible="fasle" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="1">
+                                            收件人
+                                        </td>
+                                        <td class="1">
+                                            <input id="SF_ZH_DeptContact.Receiver" name="Receiver" textname="Receiver" class="mini-buttonedit"
+                                                   emptytext="请选择收件人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                        </td>
+                                        <td>
+                                            收件部门
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_ZH_DeptContact.ToDept" name="ToDept" class="mini-textbox" readonly="readonly" required/>-->
+                                            <input id="SF_ZH_DeptContact.ToDept" name="ToDept" textname="ToDept" class="mini-buttonedit"
+                                                   emptytext="请选择收件部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                        </td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            回复内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_DeptContact.Memo" name="Memo" class="mini-textarea" height="200" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_DeptContact.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function ViewForm() {            var id = formconfig.config.joindata.currow["ReplyContactId"];
+            var url = "/Form/ValidForm/7f0faf8c-b74b-43ab-990d-d523b68cc4ff/view/" + id;
+            mini.open({
+                url: url,
+                height: 550,
+                width: 900
+            })
+        }
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_ZH_DeptContact";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_ZH_DeptContact";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

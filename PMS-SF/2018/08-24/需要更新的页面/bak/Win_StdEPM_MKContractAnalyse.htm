@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>合同签订开始</span>
+                            <input id="txtStart" class="mini-datepicker" shownullitem="true" width="120px" />
+                            <span>合同签订结束</span>
+                            <input id="txtFinish" class="mini-datepicker" shownullitem="true" width="120px" />
+							<span>显示状态</span>
+									<input id="LoadType" name="LoadType" value="1"class="mini-combobox"  width="120px" data='[{"id": "1","text": "显示所有"},
+									{"id": "2","text": "仅显示进行中"},
+									{"id": "3","text": "仅显示已关闭"}]'/>
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width:100%;height:100%;" vertical="true">
+                            <div size="60%" showCollapseButton="true">
+                                <div id="MKContract" class="mini-treegrid" style="width: 100%; height: 100%"
+                                     showtreeicon="true" treecolumn="name" idfield="project_guid" parentfield="parent_guid" resultastree="false"
+                                     allowresize="true" expandonload="true" virtualScroll="true"
+                                     showpager="false">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div name="name" field="project_shortname" width="160">编号</div>
+                                        <div field="project_name" width="80">$Helper.GetResource("g_name")</div>
+                                        <div field="ContractAmount" width="60" align="right">原合同额</div>
+                                        <div field="abc" width="60" align="right">待批变更</div>
+                                        <div field="abc" width="60" align="right">已批变更</div>
+                                        <div field="InvoiceAmount" width="60" align="right">累计应收</div>
+                                        <div field="ReceiveAmount" width="60" align="right">累计实收</div>
+                                        <div field="SettlementAmount" width="60" align="right">结算金额</div>
+                                        <div field="CompletePer" width="60" align="right">完成百分比</div>
+                                        <div field="PartyA" width="60">甲方名称</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div showCollapseButton="true">
+                                <div id="charthere" style="width:100%;height:100%">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var fieldmap = {
+            ContractAmount: "34399717-2ebe-40fe-9fd7-bca7b76f54e4", 
+            InvoiceAmount: "0b47c4c7-38a1-4440-b77e-af35841450d2",
+            ReceiveAmount: "802a81b7-dcd1-4c73-8f5a-482fad51bd35", 
+            SettlementAmount: "05bee0be-5dd3-4c11-9f7c-24990456052b"
+        };
+        $(function () {
+            LoadData();
+            mini.get("MKContract").on("drawcell", function (e) {
+                if (!e.record.EpsProjType) {
+                    e.cellStyle = "background:#D7F5D9";
+                    if (fieldmap[e.field] && e.value) {
+                        e.cellHtml = "<a href='javascript:;' class='jumpto' uid='" + e.record._uid + "' field='" + e.field + "'>" + e.value + "</a>";
+                    }
+                }
+            });
+
+            var $doc = $(document.body);
+            $doc.on("click", ".jumpto", function (e) {
+                var uid = $(this).attr("uid");
+                var field = $(this).attr("field");
+                var row = mini.get("MKContract").getRowByUID(uid);
+                if (field == "ContractAmount") {
+                    var url = "/Form/EditForm/" + fieldmap[field] + "/" + row.project_guid;
+                    FormFuns.OnOpenForm({ formid: fieldmap[field], action: "edit", keyvalue: row.project_guid });
+                }
+                else {
+                    var url = "/Form/EditForm/" + fieldmap[field] + "/";
+                    mini.open({ url: url, width: "100%", heigth: "100%" })
+                }
+            });
+        });
+
+        function OpenForm(foromid, keyvalue) {
+
+        }
+		mini.get("LoadType").on("valuechanged",function(e){
+			LoadData();
+		})
+        function LoadData() {
+            var p = {};
+            var value = mini.get("txtStart").value;
+            if (value) p.startdate = value;
+            var value = mini.get("txtFinish").value;
+            var strdata = mini.encode(p);
+			
+            $.ajax({
+                url: "/Contract/EPMMKContractAnalyse",
+                data: { strdata: strdata ,
+				Showtype:mini.get("LoadType").getValue()
+				},
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("MKContract");
+                        debugger;
+                        grid.loadList(o.data.value, "project_guid", "parent_guid");
+                        LoadChart(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            var c = 0, i = 0, r = 0, s = 0;
+            $.each(data, function () {
+                if (this.ContractAmount) c += parseFloat(this.ContractAmount);
+                if (this.InvoiceAmount) i += parseFloat(this.InvoiceAmount);
+                if (this.ReceiveAmount) r += parseFloat(this.ReceiveAmount);
+                if (this.SettlementAmount) s += parseFloat(this.SettlementAmount);
+            })
+			c=Math.round(c / 10000 * 100) / 100;
+			i=Math.round(i / 10000 * 100) / 100;
+			r=Math.round(r / 10000 * 100) / 100;
+			s=Math.round(s / 10000 * 100) / 100;
+            var opt = {};
+            opt.title = { text: "进项合同分析" };
+			opt.grid= {x: 150};
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.xAxis = [{ type: 'category', data: ["合同总额", "开票金额", "已回款", "结算金额"] }];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', min: 0 }];
+            opt.series = [{ type: 'bar', data: [c, i, r, s] }];
+            InitEChart("charthere", opt);
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

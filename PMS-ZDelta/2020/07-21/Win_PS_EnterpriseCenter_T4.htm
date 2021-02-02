@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>投资管理首页</title>
+	<script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/plugins/echarts/source/echarts.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="/Projects/Power.ZDelta/css/demo.css">
+	<style type="text/css">
+		*::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+			background-color: #fff;
+		}
+
+		*::-webkit-scrollbar-thumb {
+			background-color: #ddd;
+			border-radius: 8px;
+			-webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, .3);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="row" style="margin-bottom:10px;">
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>本月合同预算</span><a herf="#" class="link">明细<i
+							class="fa fa-angle-right"></i></a></div>
+				<div class="body">3456万</div>
+				<div class="footer">
+					<p>本月已支付2456万，完成78%</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>本月费用预算</span><a herf="#" class="link">明细<i
+							class="fa fa-angle-right"></i></a></div>
+				<div class="body">1200万</div>
+				<div class="footer">
+					<p>本月已支付600万，完成50%</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box">
+				<div class="title"><span>完成投资</span></div>
+				<p class="chart-title">累计完成投资<span class="fc-blue">75,680元</span>，本年累计完成<span
+						class="fc-blue">55,180元</span></p>
+				<div class="flex">
+					<div id="chart1" style="width: 33%; height: 200px;"></div>
+					<div id="chart2" style="width: 33%; height: 200px;"></div>
+					<div id="chart3" style="width: 33%; height: 200px;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>累计变更费用</span><a herf="#" class="link">明细<i
+							class="fa fa-angle-right"></i></a></div>
+				<div class="body">235万</div>
+				<div class="footer">
+					<p>本月变更25万</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>本月送稿统计</span><a herf="#" class="link">明细<i
+							class="fa fa-angle-right"></i></a></div>
+				<div class="body">56万</div>
+				<div class="footer">
+					<p>占合同比例1.5%，本月20万</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="box" style="margin-bottom:10px;">
+				<div class="title"><span>项目概算构成</span><a href="#" class="link">详情<i
+							class="fa fa-angle-right"></i></a></div>
+				<div id="chart4" style="width:100%;height:250px;"></div>
+			</div>
+			<div class="box">
+				<div class="title"><span>项目费用对比</span><a href="#" class="link">详情<i
+							class="fa fa-angle-right"></i></a></div>
+				<div id="chart5" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box" style="height:585px">
+				<div class="title"><span>各标段完成产值</span></div>
+				<div class="box-pad" style="width: 100%;height: 543px;">
+					<div id="datagrid1" class="mini-datagrid" showLoading="false" style="width: 100%;height: 100%;"
+						url="/html/demo/data/data9.txt" multiSelect="true" showEmptyText="false"
+						showfooter="false" showPager="false">
+						<div property="columns">
+							<div field="data1" name="data1" width="50" headerAlign="center" align="center">
+								红绿灯
+							</div>
+							<div field="data2" name="data2" width="100" headeralign="center" align="center">
+								标段
+							</div>
+							<div field="data3" name="data3" width="70" headeralign="center" align="center">
+								合同额
+							</div>
+							<div field="data4" name="data4" width="70" headeralign="center" align="center">
+								完成产值
+							</div>
+							<div field="data5" name="data5" width="100" headeralign="center" align="center">
+								完成百分比
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box" style="margin-bottom:10px;">
+				<div class="title"><span>投资完成曲线</span><a href="#" class="link">详情<i
+							class="fa fa-angle-right"></i></a></div>
+				<div id="chart6" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>变更费用占比</span></div>
+				<div id="chart7" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>现场签证费用排名</span></div>
+				<div id="chart8" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+	</div>
+	<script>
+		mini.parse();
+		var grid1 = mini.get("datagrid1");
+		grid1.load();
+		grid1.on("drawcell", function (e) {
+			var record = e.record,
+				column = e.column,
+				field = e.field,
+				value = e.value;
+			if (field == "data2") {
+				e.cellHtml = "<a href='/html/demo/Win_PS_EnterpriseCenter_T5.html'>" + e.value + "</i>"
+			}
+			if (field == "data1") {
+				if (e.value == "red") {
+					e.cellHtml = "<span style='color:#f00;'><i class='fa fa-bell'></i></span>"
+				} else if (e.value == "green") {
+					e.cellHtml = "<span style='color:#00cc00;'><i class='fa fa-bell'></i></span>"
+				} else if (e.value == "yellow") {
+					e.cellHtml = "<span style='color:#ffcc00;'><i class='fa fa-bell'></i></span>"
+				}
+			}
+			if (field == "data3" || field == "data4") {
+				e.cellHtml = "<span>" + e.value / 100 + "亿</span>"
+			}
+
+			if (field == "data5") {
+				e.cellHtml = '<div class="progress"><div class="progress-bar blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:' + e.value + '%;"></div></p></div>'
+			}
+
+		});
+
+
+		var option1 = {
+			title: {
+				text: '本月',
+				x: 'center',
+				y: 150,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			},
+			color: ['#26C6DA', '#f0f1f6'],
+			series: [
+				{
+					name: '本月',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 700,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 300, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart1", option1);
+
+		var option2 = {
+			title: {
+				text: '本年',
+				x: 'center',
+				y: 150,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			},
+			color: ['#1E88E5', '#f0f1f6'],
+			series: [
+				{
+					name: '本年',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 30,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 70, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart2", option2);
+
+		var option3 = {
+			title: {
+				text: '自开工累计',
+				x: 'center',
+				y: 150,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			},
+			color: ['#51CF86', '#f0f1f6'],
+			series: [
+				{
+					name: '自开工累计',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 10,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 90, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart3", option3);
+
+		var option4 = {
+			//color: ['#FC8D52','#48CfAE'],
+			legend: {
+				orient: 'vertical',
+				x: 'right',
+				y: 20,
+				data: ['建筑工程费', '安装工程费', '设备购置费', '其他']
+			},
+			color: ['#26C6DA', '#1E88E5', '#51CF86', '#5BAFE9'],
+			series: [
+				{
+					name: '自开工累计',
+					type: 'pie',
+					center: ['50%', '50%'],
+					radius: '60%',
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 12, name: '建筑工程费',
+						},
+						{ value: 5, name: '安装工程费' },
+						{ value: 8, name: '设备购置费' },
+						{ value: 15, name: '其他' }
+					]
+				}
+			]
+		}
+		InitEChart("chart4", option4);
+
+		var option5 = {
+			tooltip: {
+				trigger: 'axis'
+			},
+			grid: {
+				borderWidth: 0,
+				x: 60,
+				x2: 40,
+				y: 30,
+				y2: 40
+			},
+			xAxis: {
+				type: 'category',
+				splitLine: {
+					show: false,
+				},
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+				data: ['概算', '招标', '合同', '支付']
+			},
+			yAxis: [{
+				type: 'value',
+				splitLine: {
+					show: true,
+				},
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+			}],
+			series: [
+				{
+					name: '计划',
+					type: 'bar',
+					barMaxWidth: 15,//柱子最大宽度
+					yAxisIndex: '0',
+					data: [
+						{
+							value: 12,
+							name: '概算',
+							itemStyle: {
+								normal: {
+									color: '#26C6DA'
+								}
+							}
+						},
+						{
+							value: 16,
+							name: '招标',
+							itemStyle: {
+								normal: {
+									color: '#1E88E5'
+								}
+							}
+						},
+						{
+							value: 25,
+							name: '合同',
+							itemStyle: {
+								normal: {
+									color: '#51CF86'
+								}
+							}
+						},
+						{
+							value: 15,
+							name: '支付',
+							itemStyle: {
+								normal: {
+									color: '#5BAFE9'
+								}
+							}
+						}
+					]
+				}
+			]
+		};
+		InitEChart("chart5", option5);
+
+		var option6 = {
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data: ['计划', '实际', '累计计划', '累计实际'],
+				y: 'top',
+				padding: 15
+			},
+			grid: {
+				borderWidth: 0,
+				x: 60,
+				x2: 60,
+				y: 50,
+				y2: 40
+			},
+
+			xAxis: {
+				type: 'category',
+				splitLine: {
+					show: false,
+				},
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+				data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+			},
+			yAxis: [{
+				type: 'value',
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+				splitLine: {
+					show: false,
+				},
+			}, {
+				type: 'value',
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+				splitLine: {
+					show: true,
+				},
+			},
+			],
+			series: [
+				{
+					name: '计划',
+					type: 'bar',
+					barMaxWidth: 8,//柱子最大宽度
+					itemStyle: {
+						normal: {
+							color: '#1E88E5'
+						}
+					},
+					yAxisIndex: '0',
+					data: [5, 12, 10, 13, 9, 23, 10, 15, 24, 9, 5, 6]
+				},
+				{
+					name: '实际',
+					type: 'bar',
+					itemStyle: {
+						normal: {
+							color: '#51CF86'
+							// color: '#1E88E5'
+						}
+					},
+					barMaxWidth: 8,//柱子最大宽度
+					yAxisIndex: '0',
+					data: [2, 6, 11, 14, 29, 23, 10, 12, 13, 15, 18, 2]
+				},
+				{
+					name: '累计计划',
+					type: 'line',
+					itemStyle: {
+						normal: {
+							color: '#1E88E5'
+						}
+					},
+					barMaxWidth: 8,//柱子最大宽度
+					yAxisIndex: '1',
+					data: [5, 17, 27, 40, 49, 72, 82, 97, 121, 130, 139, 144, 150]
+				},
+				{
+					name: '累计实际',
+					type: 'line',
+					itemStyle: {
+						normal: { 
+							color: '#51CF86'
+						}
+					},
+					barMaxWidth: 8,//柱子最大宽度
+					yAxisIndex: '1',
+					data: [2, 8, 19, 33, 62, 85, 95, 107, 120, 135, 153, 155]
+				}
+			]
+		};
+		InitEChart("chart6", option6);
+
+		var option7 = {
+			//color: ['#FC8D52','#48CfAE'],
+			color: ['#26C6DA', '#1E88E5'],
+			series: [
+				{
+					name: '自开工累计',
+					type: 'pie',
+					center: ['50%', '50%'],
+					radius: '60%',
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 97.44, name: '合同金额',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'inside',
+										formatter: '{b}',
+										textStyle: {
+											fontSize: '14',
+											color: '#fff',
+										}
+									},
+								}
+							}
+						},
+						{
+							value: 2.56, name: '变更',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'inside',
+										formatter: '{b}:{d}%',
+										textStyle: {
+											fontSize: '14',
+											color: '#fff',
+										}
+									},
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+		InitEChart("chart7", option7);
+
+		var option8 = {
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'shadow'
+				}
+			},
+			grid: {
+				borderWidth: 0,
+				x: 60,
+				x2: 40,
+				y: 30,
+				y2: 30
+			},
+			xAxis: {
+				type: 'value',
+				boundaryGap: [0, 0.01],
+				show: false,
+			},
+			yAxis: {
+				type: 'category',
+				axisLine: {
+					lineStyle: {
+						color: '#666',
+						width: 1,//这里是为了突出显示加上的
+					}
+				},
+				data: ['C2标', 'D1标', 'A6标', 'A2标']
+			},
+			series: [
+				{
+					name: '2020年',
+					type: 'bar',
+					barMaxWidth: 15,//柱子最大宽度
+					itemStyle: {
+						normal: {
+							label: {
+								show: true,
+								position: 'right',
+								formatter: '{c}万',
+								textStyle: {
+									fontSize: '14',
+									color: '#333',
+								}
+							},
+						}
+					},
+					data: [
+						{
+							value: 60,
+							itemStyle: {
+								normal: {
+									color: '#26C6DA'
+								}
+							}
+						},
+						{
+							value: 70,
+							itemStyle: {
+								normal: {
+									color: '#1E88E5'
+								}
+							}
+						},
+						{
+							value: 85,
+							itemStyle: {
+								normal: {
+									color: '#51CF86'
+								}
+							}
+						},
+						{
+							value: 90,
+							itemStyle: {
+								normal: {
+									color: '#5BAFE9'
+								}
+							}
+						}
+					]
+				}
+			]
+		};
+		InitEChart("chart8", option8);
+
+		function InitEChart(chartid, option) {
+			require.config({
+				paths: {
+					echarts: '/Scripts/plugins/echarts/'
+				}
+			});
+			require([
+				'echarts',
+				'echarts/theme/default',
+				'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+				'echarts/chart/bar',
+				'echarts/chart/pie',
+				'echarts/chart/gauge'
+			], function (ec, theme) {
+				var myChart = ec.init(document.getElementById(chartid), theme);
+
+				// 图自动适应大小
+				$(window).resize(function () {
+					myChart.resize();
+				});
+
+				myChart.setOption(option);
+			})
+		}
+
+	</script>
+</body>
+
+</html>

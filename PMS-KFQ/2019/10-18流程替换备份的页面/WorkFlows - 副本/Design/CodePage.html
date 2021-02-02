@@ -1,0 +1,598 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <title>业务对象定义</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <script src="/scripts/boot.js" type="text/javascript"></script> 
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script> 
+    <script src="/scripts/PlatForm/FormManage.js" type="text/javascript"></script>         
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/GridManage.js"></script>
+
+    <style>
+        .CodeIcon {
+            background: url(/PowerPlat/WorkFlows/Images/CodeIco.png) no-repeat 50% 50%;
+        }
+       .NodeIcon {
+            background: url(/PowerPlat/WorkFlows/Images/NodeIco.png) no-repeat 50% 50%;
+        }
+        .LineIcon {
+            background: url(/PowerPlat/WorkFlows/Images/LineIco.png) no-repeat 50% 50%;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="codepage" class="mini-splitter" style="width:100%;height:100%;" borderstyle="border:0;">
+        <div size="200" showcollapsebutton="true" style="border-width:1px; margin-top:5px;">
+            <div class="mini-splitter" vertical="true" style="width:100%;height:100%">
+                <div size="30px" style="height:30px" allowresize="false" handlersize="0">
+                </div>
+                <div allowresize="false" handlersize="0">
+                    <ul id="treeOperator" class="mini-tree" style="width:100%;height:100%;" showtreeicon="true" textfield="Text" idfield="Code" onnodeclick="onOperatorNodeClick"></ul>
+                </div>
+            </div>
+        </div>
+        <div style="border:0;">
+            <div id="Div1" class="mini-toolbar" style="padding:2px; margin-top:5px;">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:100%;">
+                            <a class="mini-button" iconcls="icon-save" plain="true" onclick="onSaveCode" id="btnSaveCode" tooltip="保存" enabled="false">保存</a>
+                            <a class="mini-button" iconcls="icon-delete" plain="true" onclick="onDeleteCode" id="btnDeleteCode" tooltip="清除代码" enabled="false">清除代码</a>
+                            <li class="separator"></li>
+                           
+                            <a class="mini-button" iconcls="icon-refresh" plain="true" onclick="onShowCode" tooltip="显示生成的代码，请先执行保存">代码查阅</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-splitter mini-splitter-extra" vertical="true" style="width:100%;height:100%; border:0;">
+                <div size="100%" allowresize="true" handlersize="0">
+                    <div id="tabCode" class="mini-tabs" activeindex="0" ontabload="onCodeLoad" oncloseclick="onCodeCloseClick" onactivechanged="onCodeTabActiveChanged" ontabdestroy="onCodeDestroy" style="width:100%;height:100%">
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mini.parse();
+        
+        var CodeType = getParameter("CodeType");
+        var MainKeyValue = getParameter("MainKeyValue");
+        var MainKeyWord = getParameter("MainKeyWord");
+        var blnDisabledSave = getParameter("DisabledSave") == "true";
+        var treeOperator = mini.get("treeOperator");
+
+        var gridManage = new GridManage();
+        var codeManage = new FormManage();
+       
+        var CodeList = [];
+        var Params = {};  //外部传入的信息，包含 ActionCode/ActionName/ActionType,KeyValue 等基本信息 
+        //外部传入参数，决定当前代码为什么区域服务（比如流程、节点、连线）的名词
+        //外部传入参数， 决定信息类型（WorkFlow/Node/Line)
+
+        //左侧树原型
+        var CodeGroup = [
+            {
+                Code: "Using", Text: "引用域",
+                children: [
+                   { Code: "UsingCode", Text: "引用定义代码", MethodName: "", IsSingle: "true", "Alias": "Code", "ActionType": "UsingCode" }
+                ]
+            },
+            {
+                Code: "Custom", Text: "自定义域", expanded: true,
+                children: [
+                   { Code: "CustomCode", Text: "自定义代码", MethodName: "", IsSingle: "true", "Alias": "Code", "ActionType": "CustomCode" }
+                ]
+            },
+            {
+                Code: "WorkFlowEvent", Text: "流程级事件", expanded: true,
+                children: [
+
+                ]
+            }
+        ];
+
+        treeOperator.on("drawcell", function (e) {
+            var row = e.record;
+            if (!row.ActionID)
+                e.nodeStyle = 'font-weight:normal;';
+            else
+                e.nodeStyle = 'font-weight:bold;';   //有代码的项，标记为粗体
+
+           
+            switch(row.Alias )
+            {
+                case "Code":  //代码级
+                    e.iconCls = "CodeIcon";
+                    break;
+                case EBookMarkType.Node:  //节点
+                    e.iconCls = "NodeIcon";
+                    break;
+                case EBookMarkType.Line:  //连线
+                    e.iconCls = "LineIcon";
+                    break;
+            } 
+        }
+        );
+
+        var EndLoadCode = function (data) {
+             
+            CodeList = data.DataList;
+            var nodes = treeOperator.getList();
+            var len = nodes.length;
+            var codelen = CodeList.length;
+            
+            for (var iCol = 0; iCol < len; iCol++) {
+                for (var iRow = 0; iRow < codelen; iRow++) {
+                    if (nodes[iCol].ActionType != CodeList[iRow].ActionType) continue;
+                    if (CodeList[iRow].MethodName == null) CodeList[iRow].MethodName = "";
+                    if (nodes[iCol].MethodName == null) nodes[iCol].MethodName = "";
+                    if (nodes[iCol].MethodName != CodeList[iRow].MethodName) continue;
+                    switch (nodes[iCol].ActionType) {
+                        case EEventType.NodeEvent:
+                        case EEventType.LineEvent:
+                            if (nodes[iCol].BookMarkID != CodeList[iRow].BookMarkID) continue;
+                            break;
+                        default:    //非节点、连线代码，则直接赋值
+                            break;
+                    } 
+                    nodes[iCol].ActionID = CodeList[iRow].ActionID;
+                    treeOperator.updateNode(nodes[iCol], { "ActionID": CodeList[iRow].ActionID, "MethodString": CodeList[iRow].MethodString, "Description": CodeList[iRow].Description});
+                    break;
+                }
+            }
+        }
+        var BindOperator = function () {
+             
+            gridManage.setKeyWord("WorkActions");
+            var data = {};
+            data.KeyWord = "WorkActions";
+            data.KeyWordType = "Business";
+            data.Conditions = {};
+            data.Conditions.Where = " KeyValue='" + MainKeyValue + "'  ";
+            gridManage.LoadGridList(data, EndLoadCode); 
+        }
+
+        var tabCode = mini.get("tabCode");
+        //选择了代码创建节点
+        var onOperatorNodeClick = function (e) {
+            var node = e.node;
+            var isLeaf = e.isLeaf;
+
+            if (isLeaf) {
+                showTab(node);
+            }
+        }
+        function showTab(node) {
+
+            var id = "tab$" + node.Code + "_" + node.MethodName;
+            var tab = tabCode.getTab(id);
+            if (tab) {
+                tabCode.activeTab(tab);
+                return;
+            }
+            if (!node.ActionType) {
+                alert("当前节点没有ActionType ,无法绑定代码");
+                return;
+            }
+
+            tab = {};
+            tab.name = id;
+            tab.title = node.Text;
+            tab.showCloseButton = true; 
+            var WindowKey = null;
+            if (!node.ActionID) {
+                WindowKey = CreateGUID();  //创建个唯一KEY
+                tab.CodeKey = WindowKey;
+                tab.Operator = "AddRecord";  //标记为新增状态 
+                tab.MethodName = node.MethodName;
+                tab.EventName = node.EventName;
+                tab.node = node;
+                tab.ActionType = node.ActionType; 
+                tab.IsChanged = true;
+                node.ActionID = WindowKey;
+            }
+            else {
+                WindowKey = node.ActionID;
+                tab.CodeKey = WindowKey;
+                tab.Operator = "OpenRecord";  //标记为新增状态
+                tab.node = node; 
+                tab.MethodName = node.MethodName;
+                tab.EventName = node.EventName;
+                tab.IsChanged = false;
+                mini.get("btnDeleteCode").setEnabled(true);
+                
+            }
+            if (node.BookMarkID) {
+                tab.BookMarkID = node.BookMarkID;
+                tab.BookMarkCode = node.BookMarkCode;
+                tab.BookMarkName = node.BookMarkName;
+            }
+            tab.url = "/PowerPlat/WorkFlows/Design/codejs/CShapeCodePanel.html?WindowKey=" + WindowKey;
+
+            tabCode.addTab(tab);
+            tabCode.activeTab(tab);
+        }
+        var SetCodeChanged = function (codeKey) {
+
+            if (!top[codeKey]) return;
+            var tabs = tabCode.getTabs();
+            for (var iTmp = 0; iTmp < tabs.length; iTmp++) {
+                if (tabs[iTmp].CodeKey != codeKey) continue;
+
+                tabs[iTmp].IsChanged = true;
+
+                //自己业务域下，可以保持
+                if (blnDisabledSave == false) {
+                    mini.get("btnSaveCode").setEnabled(true);
+                }
+
+                onChangeCodeTitle(tabs[iTmp], 1);
+                break;
+            }
+        }
+        //关闭某个tab 页时触发
+        var onCodeCloseClick = function (e) {
+        }
+        //销毁某个tab页时触发
+        var onCodeDestroy = function (e) {
+            var tab = e.tab;
+            var CodeKey = tab.CodeKey;
+            if (tab.Operator != "AddRecord") return;
+
+            var nodes = treeOperator.getList();
+            var len = nodes.length;
+            //如果代码是新增模式，且未触发过保存，则需要将对应左侧树信息重置
+            for (var iCol = 0; iCol < len; iCol++) {
+                if (nodes[iCol].ActionID != CodeKey) continue;
+                nodes[iCol].ActionID = null;
+                break;
+            }
+        }
+        var onChangeCodeTitle = function (tab, flag) {
+            var sTitle = ""
+            var tmp = $("#tabCode .mini-tab.mini-tab-active");
+            if (tmp && tmp.length == 1) sTitle = tmp[0].innerText;
+            if (!sTitle || sTitle == null) return;
+            var codeKey = tab.CodeKey;
+            var rows = treeOperator.findNodes(function (node) {
+                if (node.ActionID == codeKey)
+                    return true;
+            });
+            switch (flag) {
+                case 1:    //键盘敲击触发
+                    if (sTitle.substr(sTitle.length - 1, 1) == "*") return;
+                    sTitle = sTitle + "*";
+                    //  tabCode.updateTab(tab, { title: sTitle });
+                    break;
+                case 2:    //修改保存触发
+                    if (rows.length == 1) treeOperator.updateNode(rows[0], { "ActionID": codeKey });
+                    if (sTitle.substr(sTitle.length - 1, 1) != "*") return;
+                    sTitle = sTitle.substr(0, sTitle.length - 1);
+                    //   tabCode.updateTab(tab, { title: sTitle });
+                    break;
+                case 3:   //删除触发
+                    if (rows.length == 1) treeOperator.updateNode(rows[0], { "ActionID": null });
+                    break;
+                default:
+                    alert("无法识别的标记");
+            }
+
+            var tmp = $("#tabCode .mini-tab.mini-tab-active");
+            if (tmp && tmp.length == 1) tmp[0].innerText = sTitle;
+
+        }
+        //代码加载
+        var onCodeLoad = function (e) {             
+            var tab = e.tab;
+             
+            top[tab.CodeKey].CallBack = SetCodeChanged;
+            
+            //如果是新建代码 ，则放入默认代码
+            if (tab.Operator == "AddRecord") {
+                if (!tab.node) return; 
+                
+                var obj = {};
+                obj.MethodString = "";
+                obj.CodeString = "";
+                obj.Description = tab.node.Description;
+                 
+                var node = tab.node;
+              
+                switch (node.ActionType) {
+                    case EEventType.NodeEvent:
+                    case EEventType.LineEvent:
+                    case EEventType.WorkFlowEvent:
+                    case EEventType.WorkInstanceEvent:
+                        var methodString = " private ";
+                        if (!node.ReturnType)
+                            methodString += " void ";
+                        else
+                            methodString += " " + node.ReturnType + " ";
+                        methodString += node.Code;
+                        methodString += "(";
+                        for (var irow = 0; irow < node.Params.length; irow++) {
+                            var par = node.Params[irow];
+                            if (irow != 0) methodString += ", ";
+                            methodString += par.ParamType + " " + par.ParamName;
+                        }
+                        methodString += ") ";
+                        obj.MethodString = methodString;
+                        break;
+                    default:
+                        obj.MethodString = node.MethodName; 
+                        break;
+                }
+                 
+                top[tab.CodeKey].setData(obj);
+                return;
+            }
+
+            codeManage.setKeyWord("WorkActionCode");
+            codeManage.setKeyValue(tab.CodeKey);
+
+            codeManage.SimpleReadData(false, EndReadAction);  //触发简单保存
+            function EndReadAction(data) {
+                
+                var obj = {};
+                obj.CodeString = data.ResultFormData.CodeString;
+                obj.Description = "";
+                obj.MethodString = "";
+                if (tab.node && tab.node.Description) obj.Description = tab.node.Description;
+                if (tab.node && tab.node.MethodString) obj.MethodString = tab.node.MethodString;
+                top[tab.CodeKey].setData(obj);
+            }
+        }
+        //代码清除
+        var onDeleteCode = function (e) {
+
+            var tab = tabCode.getActiveTab();
+            if (!tab) return;
+            var WindowKey = tab.CodeKey;
+            if (confirm("您是否确认要清除这行代码？") == false) return;
+             
+            codeManage.setKeyWord("WorkActions");
+            codeManage.setOperatorType(tab.Operator);
+            codeManage.setKeyValue(WindowKey);
+            codeManage.DeleteData(EndDeleteAction);  //触发简单保存
+            function EndDeleteAction() {
+                //如果tab记录是新增，则到endsave后，则tab 状态需改为open(修改模式), 但代码还未保存，顾代码依旧是addrecord模式
+                codeManage.setOperatorType("AddRecord");
+                tab.Operator = "AddRecord";
+                tab.IsChanged = false;
+
+                mini.get("btnSaveCode").setEnabled(false);
+                mini.get("btnDeleteCode").setEnabled(false);
+
+                onChangeCodeTitle(tab, 3);
+
+                ShowMessage("删除成功");
+
+                tabCode.removeTab(tab);
+            }
+        }
+        //代码保存
+        var onSaveCode = function (e) {
+            var tab = tabCode.getActiveTab();
+            if (!tab) return;
+            var WindowKey = tab.CodeKey;
+            if (!top[WindowKey]) {
+                ShowMessage("未捕获到对应代码界面"); return;
+            }
+
+            codeManage.setKeyWord("WorkActions");
+            codeManage.setOperatorType(tab.Operator);
+            codeManage.setKeyValue(WindowKey);
+            var submitData = {};
+            submitData.ResultFormData = new Object();
+            submitData.KeyValue = WindowKey;
+            submitData.KeyFieldName = "ActionID";
+            submitData.ResultFormData.KeyValue = MainKeyValue;   //获取业务表单ID
+            submitData.ResultFormData.KeyWord = MainKeyWord;    //业务表单关键词
+            submitData.ResultFormData.ActionID = tab.CodeKey;  
+            submitData.ResultFormData.MethodName = tab.MethodName;
+            submitData.ResultFormData.EventName = tab.EventName;
+            submitData.ResultFormData.ActionType = tab.ActionType;
+            if (tab.BookMarkID) {
+                submitData.ResultFormData.BookMarkID = tab.BookMarkID;
+                submitData.ResultFormData.BookMarkCode = tab.BookMarkCode;
+                submitData.ResultFormData.BookMarkName = tab.BookMarkName;
+            }
+            var codeResult = top[WindowKey].getData();
+            if (!codeResult) {
+                alert("未获取到代码信息"); return;
+            }
+            submitData.ResultFormData.CodeString = Base64.encode(codeResult.CodeString);
+            submitData.ResultFormData.Description =  codeResult.Description;
+            submitData.ResultFormData.MethodString =  codeResult.MethodString;
+
+            codeManage.SimpleSaveData(submitData, EndSaveAction);  //触发简单保存
+            function EndSaveAction() {
+
+                //如果tab记录是新增，则到endsave后，则tab 状态需改为open(修改模式), 但代码还未保存，顾代码依旧是addrecord模式
+                codeManage.setOperatorType("OpenRecord");
+                tab.Operator = "OpenRecord";
+                tab.IsChanged = false;
+
+                mini.get("btnSaveCode").setEnabled(false);
+                mini.get("btnDeleteCode").setEnabled(true);
+                onChangeCodeTitle(tab, 2);
+
+                ShowMessage("保存成功");
+            }
+        }
+      
+        
+
+        var onCodeTabActiveChanged = function (e) {
+            var tab = e.tab;
+            if (!tab) return;
+
+            //如果不是在当前业务域下，直接返回
+            if (blnDisabledSave == true) return;
+
+            mini.get("btnSaveCode").setEnabled(tab.IsChanged);
+
+        }
+
+        var onShowCode = function (e) {
+            var sUrl = "";
+            switch (CodeType) {
+                case "WorkNodes"://bo代码
+                    sUrl = "../Business/CreateCode.html?ActiveTab=Custom&KeyWord=Business&KeyValue=" + MainKeyValue;
+                    break; 
+                default:
+                    alert("无法识别的类型[" + CodeType + "]");
+                    break;
+            }
+            mini.open({
+                url: sUrl,
+                title: "业务对象管理", width: 980, height: 600,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                }
+            });
+        }
+
+        //绑定流程级事件
+        var setGroupCode = function (data, codeGroup, eventType) {
+             
+            for (var icol = 0; icol < data.EventsList.length; icol++) {
+                var events = data.EventsList[icol];
+                 
+                if (events.EventType != eventType) continue;
+               
+                var evt = {};
+                evt.Code = data.WorkFlowCode + "_" + events.EventName;
+                evt.EventName = events.EventName;
+                evt.MethodName = evt.Code;
+                evt.ReturnType = events.ReturnType;
+                evt.Text = events.Text;
+                evt.Description = events.Description;
+                evt.FullName = events.FullName;
+                evt.Params = events.Params;
+                evt.ActionType = eventType;
+                evt.Alias = "Code";
+                codeGroup.push(evt);
+            }
+
+        }
+        //绑定节点、连线级事件
+        var setGroupBookMark = function (data, codeGroup, bookMarkType,eventType) {
+
+            for (var irow = 0; irow < data.BookMarkList.length; irow++) {
+                var bookmark = data.BookMarkList[irow];
+                if (bookmark.BookMarkType != bookMarkType) continue;
+
+                var group = {};
+                group.Code = bookmark.BookMarkCode;
+                group.Text = bookmark.BookMarkName;
+                group.Title =  bookmark.BookMarkCode;
+                group.Type = bookmark.BookMarkType;
+                group.Alias = bookMarkType;
+                group.children = [];
+                codeGroup.push(group);
+                 
+                for (var icol = 0; icol < data.EventsList.length; icol++) {
+                    var events = data.EventsList[icol];
+                    if (events.EventType != eventType) continue;
+                    var evt = {};
+                    evt.Code = group.Code + "_" + events.EventName;
+                    evt.EventName = events.EventName;
+                    evt.MethodName = evt.Code;
+                    evt.ReturnType = events.ReturnType;
+                    evt.Text = events.Text;
+                    evt.Description = events.Description;
+                    evt.FullName = events.FullName;
+                    evt.Params = events.Params;
+                    evt.ActionType = eventType;
+                    evt.BookMarkID = bookmark.BookMarkID;
+                    evt.BookMarkCode = bookmark.BookMarkCode;
+                    evt.BookMarkName = bookmark.BookMarkName;
+                    evt.Alias = "Code";
+                    group.children.push(evt); 
+                }
+
+            }
+        }
+        //加载所有事件
+        var onLoadEvents = function () {
+             
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "LoadWorkFlowInfo";        //加载某个流程相关信息
+            CurrentInfo.WorkFlowID = MainKeyValue; 
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Events;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    
+                    var flowGroup = null;
+                    for (var irow = 0; irow < CodeGroup.length; irow++) {
+                        if (CodeGroup[irow].Code != "WorkFlowEvent") continue;
+                        flowGroup = CodeGroup[irow].children;
+                    }
+
+                    setGroupCode(result.data, flowGroup, EEventType.WorkFlowEvent);   //加载流程级事件
+                    setGroupCode(result.data, flowGroup, EEventType.WorkInstanceEvent);   //加载流程实例级事件
+                    setGroupBookMark(result.data, CodeGroup, EBookMarkType.Node,EEventType.NodeEvent);   //加载节点信息
+                    setGroupBookMark(result.data, CodeGroup, EBookMarkType.Line,EEventType.LineEvent);   //加载连线信息
+
+                    treeOperator.setData(CodeGroup);
+                    treeOperator.expandAll();
+
+                    BindOperator();   //标粗
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        
+        $(function () {
+            //动态设置高度，否则chrome无法显示 xuzhimin 2016.02.17
+            //页面大小改变时重新设置高度
+            $(window).resize(function () {
+                var h = parseInt(window.parent.document.getElementsByClassName("mini-tabs-bodys")[0].style.height.replace(/px/g, ""));
+                $("#codepage").css("height", h - 20);
+            }); 
+          
+
+            if (blnDisabledSave == true) {
+                if (mini.get("btnSaveCode")) mini.get("btnSaveCode").setEnabled(false);
+                if (mini.get("btnDeleteCode")) mini.get("btnDeleteCode").setEnabled(false); 
+            }
+
+            onLoadEvents();  //加载所有事件信息           
+        });
+    </script>
+   
+</body>
+</html>

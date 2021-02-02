@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid';
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    合同编号：<input id="txtname1" class="mini-textbox" style="width: 120px;" emptytext="请输入合同编号,回车开始查询" onenter="OnSearchClick" />
+                    合同名称：<input id="txtname" class="mini-textbox" style="width: 120px;" emptytext="请输入合同名称,回车开始查询" onenter="OnSearchClick" /><!--请输入名称-->
+                    <!--项目名称：<input id="txtname2" class="mini-textbox" style="width: 120px;" emptytext="请输入项目名称,回车开始查询" onenter="OnSearchClick" />-->
+                    乙方：<input id="txtname3" class="mini-textbox" style="width: 120px;" emptytext="请输入乙方,回车开始查询" onenter="OnSearchClick" />
+                    合同金额：<input id="txtname4" class="mini-textbox" style="width: 120px;" emptytext="请输入合同金额,回车开始查询" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div id="gridright" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" 
+                    allowcelledit="false" multiselect="true" showpager="true"  allowcellwrap="true"
+                         idfield="Id" autoload="true" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad" 
+                         url="/Form/GridPageLoadEx" >
+                        <div property="columns">
+                            <div type="indexcolumn" width="20"></div>
+                            <div type="checkcolumn" name="checkcolumn"></div>
+                            <div field="SubContractCode"  >合同编号</div>
+                            <div field="SubContractName" >合同名称 </div>
+                            <!--<div field="EPSProjectName">项目名称</div>-->
+                            <div field="PartyB" visible="true">乙方 </div>
+                            <div field="SubContractAmount" visible="true">合同金额 </div>
+                            <div field="PaymentWay" visible="false">支付方式 </div>
+                            <div field="Status" visible="false">合同状态 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var gridright = mini.get("gridright");
+        //重定向Select的GetData方法visible
+        Select.GetData = GetData;
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            gridright.setMultiSelect(bmulti);
+            if (bmulti)
+                gridright.showColumn("checkcolumn");
+            else
+                gridright.hideColumn("checkcolumn");
+        });
+
+        function GetData() {
+            if (gridright.multiSelect) {
+                return gridright.getSelecteds();
+            }
+            else {
+                var result = new Array();
+                var node = gridright.getSelected();
+                result.push(node);
+                return result;
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            params.KeyWord = "V_SF_CM_SubContract";
+            params.KeyWordType = "ViewEntity";
+            params.select = WizardParams.select || "";
+            if (WizardParams.filter && WizardParams.filter.length > 0)
+                params.swhere = base64decode(WizardParams.filter);
+            else
+                params.swhere = " 1=1";
+            params.swhere += " and EpsProjId='" + currentEpsProjId + "'";
+            params.sort = "RegDate desc";
+            params.index = 0;
+            params.size = 0;
+            //拼与主表关联的where条件
+            var txtname = mini.get("txtname");
+            var txtname1 = mini.get("txtname1");
+            //var txtname2 = mini.get("txtname2");
+            var txtname3 = mini.get("txtname3");
+            var txtname4 = mini.get("txtname4");
+            if (txtname4.value.length > 0) {
+                params.swhere = params.swhere + " and SubContractName like '%" + txtname.value + "%' and SubContractCode like '%" + txtname1.value + "%' and PartyB like'%" + txtname3.value + "%' and SubContractAmount = '" + txtname4.value + "'";
+            }
+            if (txtname.value.length > 0 || txtname1.value.length > 0 || txtname3.value.length > 0)
+                params.swhere = params.swhere + " and SubContractName like '%" + txtname.value + "%' and SubContractCode like '%" + txtname1.value + "%' and PartyB like'%" + txtname3.value + "%' ";
+            if (sender.showPager) {//使用自带的Pager
+                params.index = params.pageIndex;
+                params.size = params.pageSize;
+            }
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            e.data = data;
+            e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+
+        function OnSearchClick(e) {
+            gridright.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+
+</html>

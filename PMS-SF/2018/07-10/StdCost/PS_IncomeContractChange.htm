@@ -1,0 +1,719 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+        var WizardParams = "$Model.data.params";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>变更登记
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_IncomeContractChange.Views" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_IncomeContractChange.share" onclick="Share()"><i class="fa fa-share-alt"></i>分摊</a>
+                    <!--<a class="mini-button blue" id="PS_IncomeContractChange.Effect" onclick="PowerForm.OnBtnEffect(this);"><i class="fa fa-save"></i>生效</a>-->
+                    <a class="mini-button blue" id="PS_IncomeContractChange.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_IncomeContractChange.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_IncomeContractChange.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_IncomeContractChange" class="form">
+                                <table class="table table-bordered">
+
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.Code" name="Code" class="mini-textbox" requirederrortext="编号不能为空" />
+                                        </td>
+
+                                        <td>
+                                            <label for="PS_IncomeContractChange.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_IncomeContractChange.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_IncomeContractChange.ContractCode">合同编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.ContractCode" name="ContractCode" textname="ContractCode" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            合同金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.ContractAmount" name="ContractAmount" class="mini-spinner" format="n2" decimalPlaces="4" allowlimitvalue="false" changeonmousewhere="false" readonly="true" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_IncomeContractChange.Contract_Guid" name="Contract_Guid" class="mini-textbox" style="display:none" />
+                                            <input id="PS_IncomeContractChange.ContractName" name="ContractName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+
+
+                                    <tr>
+
+                                        <td>
+                                            变更金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.ChangAmount" name="ChangAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                   maxvalue="999999999" changeonmousewhere="false" format="n2" />
+
+                                        </td>
+                                        <td>
+                                            变更批复日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.ChangeApprDate" name="ChangeApprDate" class="mini-datepicker" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>备注</td>
+                                        <td colspan="3">
+                                            <input id="PS_IncomeContractChange.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_IncomeContractChange.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='合同内变更清单项' name="PS_ContractChange_Dtl_1" visible="false">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_ContractChange_Dtl_1.Add" onclick="AddConPi()">选择清单</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ContractChange_Dtl_1.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractChange_Dtl_1" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" oncellendedit="EidtApp">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+                                        <div field="ChangeType" headeralign="center" type="comboboxcolumn">
+                                            变更类型
+                                            <input property="editor" id="PS_ContractChange_Dtl_1.ChangeType" textfield="text" valuefield="id" readonly="readonly" name="ChangeType" class="mini-combobox" required="true" style="width: 100%;" />
+                                        </div>
+                                        <div field="PiCode" headeralign="center">
+                                            清单编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="PiName" headeralign="center">
+                                            清单名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="PiUnit" headeralign="center">
+                                            单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="UnitPrice" headeralign="center" numberformat="n2">
+                                            单价
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="PiAmount" headeralign="center">
+                                            数量
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="PiPrice" headeralign="center" numberformat="n2">
+                                            金额
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="AfterChangeAmount" headeralign="center">
+                                            变更后数量
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="AfterChangePrice" headeralign="center" numberformat="n2">
+                                            变更后单价
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="AfterChangeMoney" headeralign="center" numberformat="n2">
+                                            变更后金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+
+                                        </div>
+                                        <div field="ChangeMoney" headeralign="center" numberformat="n2">
+                                            变更金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title='合同外变更清单项' visible="false">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="25%" showcollapsebutton="true">
+                                    <div class="mini-fit">
+                                        <div class="portlet blue box" style="height: 100%">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-cogs"></i>清单分类
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body" style="height: 100%">
+                                                <div id="PS_PI_Class" class="mini-tree" style="width: 100%; height: 100%" showtreeicon="true" textfield="PiClassName" onbeforeload="OnBeforeLoad"
+                                                     idfield="Id" parentfield="ParentId" expandonload="true" data-options="{lazyload:false}" onbeforenodeselect="onBeforeNodeSelect"
+                                                     expandOnLoad="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="75%" showcollapsebutton="true">
+                                    <!--数据明细-->
+                                    <div class="mini-toolbar">
+
+                                        <a class="mini-button blue" iconcls="fa-plus" id="PS_ContractChange_Dtl_2.Add" onclick="AddPI()">选择清单库</a><!--新增-->
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ContractChange_Dtl_2.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="PS_ContractChange_Dtl_2" class="mini-datagrid" style="height: 100%;" showsummaryrow="true" oncellendedit="EidtAppA"
+                                             idfield="Id" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true">
+                                            <div property="columns">
+                                                <div type="checkcolumn" name="checkcolumn"></div>
+                                                <div type="indexcolumn"></div>
+                                                <!--编号-->
+                                                <div field="ChangeType" headeralign="center" type="comboboxcolumn">
+                                                    变更类型
+                                                    <input property="editor" id="PS_ContractChange_Dtl_2.ChangeType" textfield="text" valuefield="id"
+                                                           name="ChangeType" class="mini-combobox" required="true" value="合同外" readonly="readonly" style="width: 100%;" />
+                                                </div>
+                                                <div field="PiCode" headeralign="center">
+                                                    清单编号
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                                </div>
+                                                <div field="PiName" headeralign="center">
+                                                    清单名称
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                                </div>
+                                                <div field="PiUnit" headeralign="center">
+                                                    单位
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                                </div>
+                                                <div field="UnitPrice" headeralign="center" numberformat="n2">
+                                                    单价
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+
+                                                </div>
+                                                <div field="PiAmount" headeralign="center">
+                                                    数量
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                                </div>
+                                                <!--<div field="AfterChangeAmount" headeralign="center">
+                                                    变更后数量
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                 <div field="AfterChangePrice" headeralign="center">
+                                                    变更后单价
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                <div field="AfterChangeMoney" headeralign="center">
+                                                    变更后金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+
+                                                </div>-->
+                                                <div field="ChangeMoney" headeralign="center" numberformat="n2">
+                                                    变更金额
+                                                    <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='变更条款' name="PS_ContractChange_Item">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_ContractChange_Item.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ContractChange_Item.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractChange_Item" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="ChangeItemCode" headeralign="center">
+                                            条款编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ChangeItemName" headeralign="center">
+                                            条款名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="ChangeAmount" headeralign="center" numberformat="n2">
+                                            涉及金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title='金额明细' name="SF_Contract_AmountList">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_Contract_AmountList.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_Contract_AmountList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_Contract_AmountList" class="mini-datagrid" style="height: 100%;" oncellendedit="endedit" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="AmountType" headeralign="center" type="comboboxcolumn">
+                                            费用类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="NoTaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            不含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="TaxRate" headeralign="center">
+                                            税率（%）
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="TaxAmount" headeralign="center" numberformat="n2"  summarytype="sum">
+                                            税费
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalAmount" headeralign="center" numberformat="n2"  summarytype="sum">
+                                            合计
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+
+        PowerForm.EventBeforeOnBtnSave = function (e, data) {
+            var grid = mini.get(PS_ContractChange_Item);
+            var sum = Number(0);
+            var row = grid.findRow(function (row) {
+                if (row.ChangeAmount != "" && row.ChangeAmount != undefined && row.ChangeAmount != null) {
+                    sum += parseFloat(row.ChangeAmount);
+                }
+            })
+
+            //提示
+            var contractAmount = sum;
+            var gd = mini.get(SF_Contract_AmountList);
+            var sumlist = Number(0);
+            var row = gd.findRow(function (row) {
+                if (row.TotalAmount != "" && row.TotalAmount != undefined && row.TotalAmount != null) {
+                    sumlist += parseFloat(row.TotalAmount);
+                }
+            })
+            var listAmount = sumlist;
+            if (listAmount > contractAmount) {
+                //Power.ui.warning("分摊总额大于变更金额");
+            }
+            if (listAmount < contractAmount) {
+                //Power.ui.warning("变更金额剩余" + (parseFloat(contractAmount) - parseFloat(listAmount)) + "未分摊");
+            }
+        }        PowerForm.EventBeforeAddRow = function (e, data) {
+            if (e.Id = "SF_Contract_AmountList") {
+                data.NoTaxAmount = "0";
+                data.TaxAmount = "0";
+                data.TotalAmount = "0";
+            }
+        }
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get(SF_Contract_AmountList);
+            //判断、并进行计算
+            if (e.field == "NoTaxAmount" || e.field == "TaxAmount") {
+                grid.updateRow(record, { "TotalAmount": parseFloat(record.NoTaxAmount) + parseFloat(record.TaxAmount) });
+            }
+        }
+
+
+        function AddConPi() {
+            var Grid = mini.get("PS_ContractChange_Dtl_1");
+            var ContactId = mini.get("PS_IncomeContractChange.Contract_Guid").getValue();
+            var AllayId = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardWin_PS_ContractChange_Dtl.htm&multi=1&ContactId=" + ContactId + "&AllayId=" + AllayId,
+                showMaxButton: true,
+                width: 800,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.Conpi_Guid = data[i].Id;
+                        row.Pi_Guid = data[i].Pi_Guid;
+                        row.PiClass_Guid = data[i].PiClass_Guid;
+                        row.PiCode = data[i].PiCode;
+                        row.PiName = data[i].PiName;
+                        row.PiUnit = data[i].PiUnit;
+                        row.UnitPrice = data[i].PiPrice;
+                        row.PiAmount = data[i].PiQuantity;
+                        row.PiPrice = data[i].PiAmount;
+                        row.ChangeType = "in";
+
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_IncomeContractChange.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+
+        function OnBeforeLoad(e) {
+            debugger;
+
+            var sender = e.sender;    //树控件
+            var params = e.params;  //参数对象
+            params.KeyWord = sender.id;
+
+
+            if (sender.id == "PS_PI_Class") {
+                params.KeyWordType = "BO";
+                //params.select = WizardParams.select || "";
+                params.swhere = " EpsProjId='" + currentEpsProjId + "' and PiClassType='p1'";
+                params.sort = "Sequ";
+            }
+            params.index = 0;
+            params.size = 0;
+
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+
+
+        var selectId = "";
+        function onBeforeNodeSelect(e) {
+            var tree = e.sender;
+            var node = e.node;
+            debugger;
+            selectId = node.Id;
+            //alert(node.pi_code_Lid);
+            FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("PS_ContractChange_Dtl_2"));
+
+        }
+        PowerForm.EventBeforeLoadData = beforeload;
+        function beforeload(e) {
+
+            if (e.sender.id == "PS_PI_Class") {
+                if (e.params.swhere != "") {
+                    e.params.swhere = " and PiClassType='p1' and EpsProjId='" + currentEpsProjId + "'";
+                }
+                else {
+                    e.params.swhere += "  PiClassType='p1' and EpsProjId='" + currentEpsProjId + "'";
+                }
+            }
+            var filter = "1=1"
+            if (e.sender.id == "PS_ContractChange_Dtl_2") {
+                if (selectId == "") {
+                    filter = " 1=1";
+                }
+                else {
+                    filter += "and PiClass_Guid= '" + selectId + ".%' ";
+                }
+                // alert(filter);
+                if (e.params.swhere == "")
+                    e.params.swhere = "1 =1 and " + filter;
+                else
+                    e.params.swhere += "and 1=1 and " + filter;
+
+            }
+
+        }
+
+        function EidtApp(e) {
+            //获取子表节点
+            var record = e.record;
+            var grid = mini.get(PS_ContractChange_Dtl_1);
+            var price = record.AfterChangePrice;
+            var PiQuantity = record.AfterChangeAmount;
+            var AfterChangeMoney = (price * PiQuantity);
+            var PiPrice = record.PiPrice;
+            var ChangeMoney = AfterChangeMoney - PiPrice;
+            //判断、并进行计算
+            if (e.field == "AfterChangePrice" || e.field == "AfterChangeAmount") {
+                grid.updateRow(record, { AfterChangeMoney: AfterChangeMoney, ChangeMoney: ChangeMoney });
+            }
+
+        }
+        function EidtAppA(e) {
+            //获取子表节点
+            var record = e.record;
+            var grid = mini.get(PS_ContractChange_Dtl_2);
+            var price = record.UnitPrice;
+            var PiQuantity = record.PiAmount;
+            var PiPrice = (price * PiQuantity);
+            //判断、并进行计算
+            if (e.field == "UnitPrice" || e.field == "PiAmount") {
+                grid.updateRow(record, { PiPrice: PiPrice, AfterChangeMoney: PiPrice, ChangeMoney: PiPrice });
+            }
+
+        }
+        function AddPI() {
+            var Grid = mini.get("PS_ContractChange_Dtl_2");
+            var conId = formconfig.KeyValue;
+            var ContactId = mini.get("PS_IncomeContractChange.Contract_Guid").getValue();
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardWin_PS_ContractChange_DtlOut.htm&multi=1&ContactId=" + ContactId + "&conId=" + conId + "&ctype=p1",
+                showMaxButton: true,
+                width: 800,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.Conpi_Guid = data[i].Id;
+                        row.Pi_Guid = data[i].Pi_Guid;
+                        row.PiClass_Guid = data[i].MasterId;
+                        row.PiCode = data[i].PiCode;
+                        row.PiName = data[i].PiName;
+                        row.PiUnit = data[i].PiUnit;
+                        row.UnitPrice = data[i].UnitPrice;
+                        row.PiAmount = data[i].PiAmount;
+                        row.PiPrice = data[i].PiMoney;
+                        row.AfterChangePrice = data[i].UnitPrice;
+                        row.AfterChangeAmount = data[i].PiAmount;
+                        row.AfterChangeMoney = data[i].PiMoney;
+                        row.ChangeType = "out";
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_IncomeContractChange.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_IncomeContractChange.ContractCode").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/34399717-2ebe-40fe-9fd7-bca7b76f54e4/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+        function Share() {
+            var ShareAmount = mini.get("PS_IncomeContractChange.ChangAmount").getValue();
+            $.ajax({
+                url: "/Cost/CheckShareId",
+                data: { KeyValue: KeyValue, ShareAmount: ShareAmount },
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.detail != "") {
+                            var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 600,
+                                showMaxButton: true,
+                                onload: function () {
+                                },
+                                ondestroy: function () {
+                                }
+                            });
+                        } else {
+                            NewShare();
+                        }
+                    }
+                    else {
+                        Power.ui.loading.close();
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                }
+            });
+
+        }
+        function NewShare() {
+            Power.ui.confirm("确定分摊？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("分摊中。。")
+                    var Code = mini.get("PS_IncomeContractChange.Code").getValue();
+                    var Title = mini.get("PS_IncomeContractChange.Title").getValue();
+                    var ShareAmount = mini.get("PS_IncomeContractChange.ChangAmount").getValue();
+                    var Plan_Guid = "";
+                    var guid = formconfig.KeyValue;
+                    $.ajax({
+                        url: "/Cost/AutoShare",
+                        data: {
+                            guid: guid,
+                            KeyWord: KeyWord,
+                            KeyValue: KeyValue,
+                            KeyWordFilter: "",
+                            Plan_Guid: Plan_Guid,
+                            Code: Code,
+                            Title: Title,
+                            type: "InChange",
+                            ShareAmount: ShareAmount,
+                            strEpsProjId: strEpsProjId
+                        },
+                        async: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (text) {
+                            debugger
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                debugger;
+                                Power.ui.loading.close();
+                                var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                                //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 600,
+                                    showMaxButton: true,
+                                    onload: function () {
+                                    },
+                                    ondestroy: function () {
+                                    }
+                                });
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="mini-splitter" vertical="true" style="width: 100%; height: 100%">
+                <div size="50%" showcollapsebutton="true">
+                    <div class="portlet blue box" style="height: 100%">
+                        <div class="portlet-title">
+                            <div class="captiontools">
+                                <a class="mini-button blue" id="SF_KM_DocFolder.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                                <!--<a class="mini-button blue" id="SF_KM_DocFolder.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>-->
+                                <a class="mini-button blue" id="SF_KM_DocFolder.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                                <a class="mini-button blue" id="SF_KM_DocFolder.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="mini-fit">
+                            <div class="portlet-body" style="height:100%">
+                                <div id="SF_KM_DocFolder" idfield="Id" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                                     treecolumn="text" parentfield="ParentId" resultastree="false" multiselect="true"
+                                     allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div name="text" field="Code" header="编号" allowsort="true">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="Name" header="名称" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div showcollapsebutton="true">
+                    <div class="portlet box gray" style="height: 100%">
+                        <div class="mini-tabs" id="maintabs" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+
+                            <div title="人员" name='SF_KM_DocFolderLimit'>
+                                <div class="design mini-toolbar" id="toolbar_SF_KM_DocFolderLimit">
+                                    <a class="design mini-button blue" iconcls="fa fa fa-plus" id="SF_KM_DocFolderLimit.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-trash-o" id="SF_KM_DocFolderLimit.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                    <a class="design mini-button blue selected" iconcls="fa fa fa-save" id="SF_KM_DocFolderLimit.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-refresh" id="SF_KM_DocFolderLimit.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                </div>
+                                <div class="design mini-fit">
+                                    <div id="SF_KM_DocFolderLimit" class="design mini-datagrid" visible="true" showpager="false"
+                                         idfield="Id" allowcelledit="true" allowcellselect="true"
+                                          style="width:100%;height:100%;" masterfield="Id" detailfield="ParentId"><!--oncellendedit="SF_KM_DocFolderLimit_EndEdit"-->
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="30">序号</div>
+                                            <!--<div name="Position" class="design mini-datagridcolumn" field="Position" width="120" headeralign="center" type="textboxcolumn" id="SF_KM_DocFolderLimit.Position">
+                                                岗位
+                                                <input property="editor" id="SF_KM_DocFolderLimit.Position" name="Position" textname="Position" class="mini-buttonedit"
+                                                       onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                            </div>-->
+                                            <div name="HumanName" class="design mini-datagridcolumn" field="HumanName" width="80" headeralign="center" type="textboxcolumn" id="ServiceLoan_1.HumanName">
+                                                姓名
+                                                <input property="editor" id="SF_KM_DocFolderLimit.HumanName" name="HumanName" textname="HumanName" class="mini-buttonedit"
+                                                       onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                            </div>
+                                            <!--<div header="权限" headeralign="center">
+                                                <div property="columns">
+                                                    <div type="checkboxcolumn" field="ReadOnly" truevalue="1" falsevalue="0" headeralign="center">仅查看</div>
+                                                    <div type="checkboxcolumn" field="CanEdit" truevalue="1" falsevalue="0" headeralign="center">可编辑</div>
+                                                    <div type="checkboxcolumn" field="CanUpdate" truevalue="1" falsevalue="0" headeralign="center">可反馈</div>
+                                                    <div type="checkboxcolumn" field="AllLimit" truevalue="1" falsevalue="0" headeralign="center">所有权限</div>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+
+    </script>
+</body>
+</html>

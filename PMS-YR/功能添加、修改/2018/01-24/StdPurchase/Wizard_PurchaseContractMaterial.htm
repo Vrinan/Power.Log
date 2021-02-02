@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="请输查询内容" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="PS_SubContract_MatItem" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 allowcelledit="false" multiselect="true" showpager="true" onlyCheckSelection="true" pagesize="100"
+                                 idfield="Id" autoload="false" onbeforeload="OnGridBeforeLoad"
+                                 url="/Form/GridPageLoad">
+                                <div property="columns">
+                                    <div type="indexcolumn" width="23"></div>
+                                    <div type="checkcolumn" name="checkcolumn"></div>
+                                    <!--<div field="MatBsName" width="50">类型</div>-->
+                                    <div field="MatCode" width="100">编号</div>
+                                    <div field="MatName" width="100">名称</div>
+                                    <!--<div field="MatDescription" width="150">描述</div>-->
+									<div field="MatModel" width="110">描述</div>
+                                    <div field="Specifi"  width="110">规格型号</div>
+                                    <div field="Standard" width="110">制造标准</div>
+                                    <div field="Texture"  width="110">材质</div>
+                                    <div field="Pattern"  width="110">型式</div>
+                                    <div field="MatUnit" width="40">单位</div>
+									<div field="MatSpec" width="110">装置</div>
+                                    <div field="MatAmount" width="60">合同数量</div>
+                                    <div field="ChangeNumber" width="60">变更后合同数量</div>
+                                    <div field="ArrivalNum" width="60">累计到货数量</div> 
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="MatName">已选中合同</div>
+                                    <div name="action" width="30px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var grid = mini.get("PS_SubContract_MatItem");
+        grid.frozenColumns(0, 4);
+        var human = mini.get("PS_SubContract_MatItem");
+        var gridselected = mini.get("GridSelected");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        Select.LoadStepFirst = function () {
+            human.reload();
+        }
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            human.multiSelect = bmulti;
+            human.onlyCheckSelection = bmulti;
+            if (bmulti)
+                human.showColumn("checkcolumn");
+            else {
+                human.hideColumn("checkcolumn");
+            }
+        });
+
+        human.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (!cRow) {
+                if (human.multiSelect)
+                    gridselected.addRow(row);
+                else {
+                    var data = [];
+                    data.push(row);
+                    gridselected.setData(data);
+                }
+            }
+        })
+        human.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+                + e.record.Id + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].Id == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+        //function OnGridBeforeLoad(e) {
+        //    e.cancel = true;
+        //    var sender = e.sender;    //树控件
+        //    var swhere = Select.GetWhere() || "1=1";
+        //    if (WizardParams.filter) {
+        //        swhere += " and " + base64decode(WizardParams.filter);
+        //    }
+        //    var txt = mini.get("txtName");
+        //    if (txt.value.length > 0) {
+        //        swhere += " and (MatCode like '%" + txt.value + "%' or MatName like '%" + txt.value + "%' or MatDescription like '%" + txt.value + "%')";
+        //    }
+        //    var p = { KeyWord: sender.id, index: e.params.pageIndex, size: e.params.pageSize, sort: "Id", swhere: swhere };
+        //    FormFuns.GridPageLoad(p, function (o) {
+        //        if (o.success) {
+        //            var data = mini.decode(o.data.value);
+        //            sender.setData(data);
+        //            sender.setTotalCount(o.data.totalcount);
+        //        }
+        //    })
+        //}
+
+        function OnGridBeforeLoad(e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var swhere = Select.GetWhere() || "1=1";
+            if (WizardParams.filter) {
+                swhere += " and " + base64decode(WizardParams.filter);
+            }
+            var txt = mini.get("txtName");
+            var p = { KeyWord: sender.id, index: e.params.pageIndex, size: e.params.pageSize, sort: "MatModel desc", swhere: swhere };
+            if (txt.value.length > 0)
+                swhere += " and (MatCode like '%" + txt.value + "%' or MatName like '%" + txt.value + "%' or MatModel like '%" + txt.value + "%')";
+            p.swhere = swhere;
+            var pgindex = e.params.pageIndex;
+            sender.mask();
+            FormFuns.GridPageLoad(p, function (o) {
+                sender.unmask();
+                if (o.success) {
+                    var data = mini.decode(o.data.value);
+                    sender.setData(data);
+                    sender.setTotalCount(o.data.totalcount);
+                    sender.setPageIndex(pgindex);
+                }
+            })
+        }
+
+
+        function OnSearchClick(e) {
+            human.setPageIndex(0);
+            human.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+
+</html>

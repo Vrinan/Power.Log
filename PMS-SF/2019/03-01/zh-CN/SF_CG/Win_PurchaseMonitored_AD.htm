@@ -1,0 +1,537 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>请购状态统计</title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/lib/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="/Scripts/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/PlatForm/Date.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script src="../../../../Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var EpsProjId = "$!CurrentSession.EpsProjId";
+        var ProjName = "$!CurrentSession.EpsProjName";
+        var longcode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+    <style type="text/css">
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #4F94CD;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 70%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <div class="btn-group customfilter" gridid="SF_CG_AllView"></div>
+                            <span>项目名称:</span>
+                            <input id="QPlanProjName" class="mini-textbox" width="100px" onvaluechanged="mini.get('SF_CG_AllView').reload()"/>
+                            <span>接收计划时间:</span>
+                            <input id="QPlanApprDateStart" class="mini-datepicker" width="100px" onvaluechanged="mini.get('SF_CG_AllView').reload()" />
+                            -
+                            <input id="QPlanApprDateEnd" class="mini-datepicker" width="100px" onvaluechanged="mini.get('SF_CG_AllView').reload()" />
+                            <span>请购类型:</span>
+                            <input id="QPurchaseMajor" class="mini-combobox" shownullitem="true" width="110px" onvaluechanged="mini.get('SF_CG_AllView').reload()" />
+                            <span>计划类型:</span>
+                            <input id="QPlanType" class="mini-combobox" shownullitem="true" width="120px" onvaluechanged="mini.get('SF_CG_AllView').reload()" />
+                            <span>物资类型:</span>
+                            <input id="QMatType" class="mini-combobox" shownullitem="true" width="120px" onvaluechanged="mini.get('SF_CG_AllView').reload()" />
+                            <!-- <a class="mini-button blue" iconcls="fa fa-reply" id="clear" onclick="clear()">清除</a> -->
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="SF_CG_AllView" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;  " allowresize="true" 
+                            allowcelledit="false" multiselect="true" allowSortColumn="true" showpager="true" allowcellselect="true" showSummaryRow="true" 
+                            ondrawcell="DrawCell" sizeList="[10,20,50,100,200]" pageSize="50" pageSizeWidth="70"
+                            url="/zyx/GetGridData" >
+                            <div property="columns">
+                                <div type="indexcolumn" style="width: 100%;"></div>
+                                <div type="comboboxcolumn" field="MatStatus" name="MatStatus" allowsort="true"  width="80" align="center">物资状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="PlanProjName" allowsort="true" style="width: 100%;">项目名称</div>
+                                <div field="MainPlanCode" allowsort="true" style="width: 100%;">计划单编号</div>
+                                <div field="PlanApprDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">接收计划时间</div>
+                                <div field="Code" allowsort="true" width="150">计划编号</div>
+                                <div field="MatName" allowsort="true" style="width: 100%;">物资名称</div>
+                                <div field="Specification" allowsort="true" width="200">规格型号/技术参数</div>
+                                <!-- <div field="Model" allowsort="true" style="width: 100%;">技术参数</div> -->
+                                <div field="Amount" allowsort="true" style="width: 100%;" numberFormat="0">数量</div>
+                                <div field="MatUnit" allowsort="true" style="width: 100%;">单位</div>
+                                <div field="ArrivalDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">计划到货时间</div>
+                                <div field="ActArrivalDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">实际到货时间</div>
+                                <div field="PurchaserName" allowsort="true" style="width: 100%;">业务主办</div>
+                                <div field="SchemeCode" allowsort="true" width="130">采购方案编号</div>
+                                <div type="comboboxcolumn" field="SchemePurchaseType" name="SchemePurchaseType" allowsort="true" style="width: 100%;">采购类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <!-- <div field="SignDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd" >订货时间</div> -->
+                                <div field="MatAmount" allowsort="true" style="width: 100%;" numberFormat="n">实际数量</div>
+                                <div field="MatPrice" allowsort="true" style="width: 100%;" numberFormat="n">合同单价(元)</div>
+                                <div field="MatMoney" allowsort="true" style="width: 100%;" numberFormat="n" summarytype="sum">合同总价(元)</div>
+                                <div field="SubContractCode" allowsort="true" style="width: 100%;">合同编号</div>
+                                <div field="PartyB" allowsort="true" style="width: 100%;">确定单位</div>
+                                <div field="SignDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd"> 合同签订时间</div>
+                                <div field="RequireDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">合同要求到货时间</div>
+                                <!-- <div field="PlanArrivalDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">计划到货时间</div> -->
+                                <!-- <div field="ActArrivalDate" allowsort="true" style="width: 100%;" dateformat="yyyy-MM-dd">实际到货时间</div> -->
+                                <!-- <div field="----" allowsort="true" style="width: 100%;" >付款情况</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portlet box gray" style="height: 30%">
+                    <div class="col-lg-6 col-md-6 col-sm-6" style="height:100%;">
+                        <div id="chart1" style="height:100%;width:100%">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6" style="height:100%;">
+                        <div id="chart2" style="height:100%;width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var grid = mini.get("SF_CG_AllView");
+        var CustomFilter = "";//高级搜索的查询条件
+        $(function () {
+            //日期取半年
+            mini.get("QPlanApprDateStart").setValue(new Date().DateAdd('m',-6).format("yyyy-MM-dd"));
+            mini.get("QPlanApprDateEnd").setValue(new Date().format("yyyy-MM-dd"));
+            LoadGridData(0,50,"MasterId,sequ",'ASC');
+            LoadEChartsData();
+            InitComboboxData();
+            LoadCustomFilter('高级搜索','649e81f8-e81a-4d7d-ad23-18e5e477fedc',sessiondata.HumanId);
+        });
+        
+        function LoadGridData(pageIndex,pageSize,sortField,sortOrder){
+            var _swhere = getswhere();
+            var p = { select: '*',
+                      tableName:"SF_CG_AllView_Save",
+                      swhere: _swhere?_swhere:'1=1', 
+                      orderby: sortField?sortField:"MasterId,sequ", 
+                      type: sortOrder?sortOrder:'ASC',
+                      index: pageIndex,
+                      size: pageSize 
+                    };
+            Power.ui.loading("加载中...");
+            $.ajax({
+                url: "/zyx/GetGridData",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("SF_CG_AllView");
+                        grid.setTotalCount(o.data.TotalCount);
+                        grid.setPageIndex(parseInt(o.data.Index));
+                        grid.setPageSize(parseInt(o.data.Size));
+                        grid.setData(o.data.value);
+                        Power.ui.loading.close();
+                    }
+                }
+            });
+        }
+
+        grid.on("beforeload",function(e){
+            e.cancel=true;
+            LoadGridData(e.params.pageIndex,e.params.pageSize,e.params.sortField,e.params.sortOrder);
+        })
+
+        function DrawCell(e) {
+            //物资状态
+            if (e.field == "MatStatus") {
+                if(e.value == "1"){
+                    e.rowStyle = "background:#66ccff;";
+                }else if(e.value == "2"){
+                    e.rowStyle = "background:#FF7F50;";
+                }else if(e.value == "4"){
+                    e.rowStyle = "background:#00FA9A;";
+                }
+            }
+            //计划单编号
+            if (e.field == "MainPlanCode") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('12c19b2a-8faf-4018-98e7-5f28cf8713dd', '"
+                    + e.record.PlanId + "');\">" + (e.record.MainPlanCode ? e.record.MainPlanCode : "") + "</a>";
+            }
+            //采购方案
+            if (e.field == "SchemeCode") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('77bc4c06-3988-4ee8-8cc4-a1c8c4a1fcdf', '"
+                    + e.record.SchemeId + "');\">" + (e.record.SchemeCode ? e.record.SchemeCode : "") + "</a>";
+            }
+            //合同号
+            if (e.field == "SubContractCode") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('689f81fa-3adb-4f1f-ac32-20f99cd76266', '"
+                    + e.record.SubContractId + "');\">" + (e.record.SubContractCode ? e.record.SubContractCode : "") + "</a>";
+            }
+            //计划到货时间 != 实际到货时间 标红
+            if(e.field== "ActArrivalDate" && e.value){
+                if(e.record.ArrivalDate && e.record.ArrivalDate < e.value){
+                    e.cellStyle += "background:#FF1493;"
+                }
+            }
+        }
+        //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+        
+        function clear() {
+            mini.get("QPlanProjName").setValue(null);
+            mini.get("QPlanApprDateStart").setValue(null);
+            mini.get("QPlanApprDateEnd").setValue(null);
+            mini.get("QPurchaseMajor").setValue(null);
+            mini.get("QPlanProjName").setText(null);
+            mini.get("QPlanType").setValue(null);
+            mini.get("QMatType").setValue(null);
+            LoadGridData();
+        }
+        
+        function getswhere() {
+            var swhere = "";
+            var QPlanProjName = mini.get("QPlanProjName").getValue();
+            var QPlanApprDateStart = mini.get("QPlanApprDateStart").getValue();
+            var QPlanApprDateEnd = mini.get("QPlanApprDateEnd").getValue();
+            var QPurchaseMajor = mini.get("QPurchaseMajor").getValue();
+            var QPlanType = mini.get("QPlanType").getValue();
+            var QMatType = mini.get("QMatType").getValue();
+
+            if (QPlanProjName) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " PlanProjName like'%" + QPlanProjName + "%' ";
+            }
+            if (QPlanApprDateStart) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " PlanApprDate>='" + new Date(QPlanApprDateStart).format('yyyy-MM-dd 0:0:0.000') + "' ";
+            }
+            if (QPlanApprDateEnd) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " PlanApprDate<='" + new Date(QPlanApprDateEnd).format('yyyy-MM-dd 23:59:59.000') + "' ";
+            }
+            if (QPurchaseMajor) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " PurchaseMajor='" + QPurchaseMajor + "' ";
+            }
+            if (QPlanType) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " PlanType='" + QPlanType + "' ";
+            }
+            if (QMatType) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " MatType='" + QMatType + "' ";
+            }
+            //补上高级搜索的查询
+            if(CustomFilter){
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += CustomFilter;
+            }
+            return swhere;
+        }
+        //html初始化时，设置combobox的下拉内容
+        function InitComboboxData() {
+            //form/init中获取 comboboxdata
+            if (typeof (comboboxdata) == "undefined" || comboboxdata == undefined) return;
+            for (var item in comboboxdata) {
+                if (typeof (item) == "function") continue;
+                var cmbdata = comboboxdata[item];
+                var cmb = mini.get(item);
+                if (cmb) {
+                    switch (cmb.type) {
+                        case "combobox":
+                        case "checkboxlist":
+                        case "radiobuttonlist":
+                            cmb.setValueField(cmbdata.ValueField);
+                            cmb.setTextField(cmbdata.TextField);
+                            if (cmbdata.SourceType != "url")
+                                cmb.setData(mini.encode(cmbdata.Data));
+                            else
+                                cmb.load(cmbdata.Data);
+                            break;
+                        case "treeselect":
+                            cmb.setValueField(cmbdata.ValueField);
+                            cmb.setParentField(cmbdata.ParentField);
+                            cmb.setTextField(cmbdata.TextField);
+                            if (cmbdata.SourceType != "url")
+                                cmb.loadList(cmbdata.Data, cmbdata.ValueField, cmbdata.ParentField);
+                            else
+                                cmb.load(cmbdata.Data);
+                            break
+                        default:
+                            //不能通过id直接找到对应的列
+                            var senderid = funsself.GetGridTreeName(item);
+                            if (!senderid) continue;
+                            var sender = funsself.GetMiniFormGrid(senderid);
+                            if (!sender || !funsself.IsMiniGridTree(sender)) continue;
+                            //遍历找到对应的列
+                            var fdname = funsself.GetControlName(item);
+                            if (!fdname) continue;
+                            for (var i = 0; i < sender.columns.length; i++) {
+                                var col = sender.columns[i];
+                                if ((col.type == "comboboxcolumn" || col.type == "displayfield") && col.editor && col.field == fdname) {
+                                    col.editor.valueField = cmbdata.ValueField;
+                                    col.editor.textField = cmbdata.TextField;
+                                    if (cmbdata.SourceType != "url")
+                                        col.editor.data = cmbdata.Data;
+                                    else
+                                        col.editor.load(cmbdata.Data);
+                                    continue;
+                                }
+                            }
+                            break;
+                    }
+                }
+                else { //不能通过id直接找到对应的列
+                    var senderid = funsself.GetGridTreeName(item);
+                    if (!senderid) continue;
+                    var sender = funsself.GetMiniFormGrid(senderid);
+                    if (!sender || !funsself.IsMiniGridTree(sender)) continue;
+                    //遍历找到对应的列
+                    var fdname = funsself.GetControlName(item);
+                    if (!fdname) continue;
+                    funsself.GridTreeBindCombobox(sender.columns, fdname, cmbdata);
+                }
+            }
+        }
+        //自定义过滤条件
+        function LoadCustomFilter(title, formid, humanid) {
+            if (!formid && typeof (formconfig) != "undefined")
+                formid = formconfig.FormId;
+            if (!formid) return;
+            if (!humanid && typeof (sessiondata) != "undefined")
+                humanid = sessiondata.HumanId;
+            if (!humanid) return;
+            if (!title) title = "高级搜索";
+
+            var btns = $(".customfilter");
+            if (btns.length == 0) return;
+
+            var builderhtml = function (btn, grdid) {
+                var html = "<a href='#' onclick='SetCustomFilter(\"" + formid + "\", \"" + humanid + "\", \"" + grdid + "\")' class='btn blue' data-toggle='dropdown'><i class='fa fa-filter'></i>" + title + "</a>";
+                $(btn).html(html);
+            }
+
+            for (var i = 0; i < btns.length; i++) {
+                var btn = btns[i];
+                var gridid = $(btn).attr("gridid");
+                if (!gridid || gridid.length == 0) continue;
+                var grid = mini.get(gridid);
+                if (!grid || grid.type == "tree") continue;
+                if (!grid._customfilterid) grid._customfilterid = "default"; //标记第一次使用缺省过滤器
+                builderhtml(btn, gridid);
+            }
+        }
+        //定义过滤条件
+        function SetCustomFilter(formid, humanid, gridid) {
+            if (!formid && typeof (formconfig) != "undefined")
+                formid = formconfig.FormId;
+            if (!formid) return;
+            if (!humanid && typeof (sessiondata) != "undefined")
+                humanid = sessiondata.HumanId;
+            if (!humanid) return;
+            if (!grid) return;
+            mini.open({
+                url: "/Form/OpenURL?url=/Projects/PowerOn.EPC/html/PowerPlat/FormXml/zh-CN/SF_CG/getWizardCustomFilter.htm",
+                height: 600, width: 900,
+                showMaxButton: true,
+                onload: function () {
+                    var data = { formid: formid, humanid: humanid, gridid: gridid, fields: {} };
+                    var cols = [];
+                    funsself.GetTreeGridAllHeaders(grid.columns, cols);
+                    for (var i = 0; i < cols.length; i++) {
+                        var col = cols[i];
+                        if (!col.field) continue;
+                        var p = { header: col.header, editorcls: "mini-textbox" };
+                        if (col.editor && col.editor.cls)
+                            p.editorcls = col.editor.cls;
+                        if (col.editor && col.editor.data)
+                            p.editordata = col.editor.data;
+                        p.isdate = p.editorcls == "mini-datepicker";
+                        p.iscombox = p.editorcls == "mini-combobox";
+                        data.fields[col.field] = p;
+                    }
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.LoadData(data);
+                },
+                ondestroy: function (data) {
+                    //这个data封装了右侧的查询条件gridcolumn
+                    var action = data.action;
+                    var gridcolumn = data.gridcolumn;
+                    if (action != null && action != "" && action != "close") {
+                        if (action == "clear") {
+                            CustomFilter="";
+                        }
+                        else{
+                            //解析下gridcolumn,把他拼成sql的where条件.
+                            setCustomFilterWhere(gridcolumn);
+                        }
+                        grid.reload();
+                    }
+                }
+            })
+        }
+        function setCustomFilterWhere(gridcolumn){
+            CustomFilter = "1=1";
+            $.each(gridcolumn.data,function(index,value,array){
+                if(value.operate=="like" ||value.operate=="not like"){
+                    CustomFilter += " and " 
+                                 + value.field + " " 
+                                 + value.operate + " "
+                                 + "'%" + value.value + "%' ";
+                }else{
+                    CustomFilter += " and " 
+                                 + value.field + " " 
+                                 + value.operate + " "
+                                 + "'" + value.value + "' ";
+                }
+ 　         })
+        }
+        //获取当前日期
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+        function LoadEChartsData() {
+            $.ajax({
+                url: "/zyx/GetPurchaseChart",
+                data: "",
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart("chart1","请购类型",o.data.PurchaseMajor);
+                        LoadChart("chart2","计划类型",o.data.PlanType);
+                    }
+                }
+            });
+        }
+        //传参复用性更强.
+        function LoadChart(chartName,title,data) {
+            var datas = [];
+            var legends = [];
+            var list = mini.decode(data);
+            for (var i = 0; i < list.length; i++) {
+                legends.push(list[i].Name);
+                datas.push({ "value": list[i].cnt, "name": list[i].Name });
+            }
+            var option = {
+                title: {
+                    text: title,
+                    subtext: '',
+                    x: 'left'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'horizontal',
+                    show: true,
+		            left: 10,
+		            top: 50,
+                    data: legends
+                },
+                series: [
+                    {
+                        name: title,
+                        type: 'pie',
+                        radius: '60%',
+                        center: ['50%', '60%'],
+                        data: datas,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            InitEChart(chartName, option);
+        }
+        
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+                'echarts/chart/bar',
+                'echarts/chart/pie',
+                'echarts/chart/gauge'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+
+    </script>
+</body>
+
+</html>

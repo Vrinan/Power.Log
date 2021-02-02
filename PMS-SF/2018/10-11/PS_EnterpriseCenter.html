@@ -1,0 +1,2005 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>项目</title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <!-- <link href="/App_Themes/Default/assets/css/iconfont.css?v=$AppVersion" rel="stylesheet" type="text/css" /> -->
+    <link href="/App_Themes/Default/assets/css/index.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <!--<link href="/App_Themes/Default/assets/css/font-awesome.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />-->
+
+    <script src="/Scripts/lib/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="/Scripts/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="../../../../Scripts/plugins/echarts/echarts.js"></script>
+    <!-- <script type="text/javascript" src="/Scripts/plugins/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/Scripts/plugins/highcharts/highcharts-more.js"></script>
+    <script type="text/javascript" src="/Scripts/plugins/highcharts/funnel.js"></script>
+    <script type="text/javascript" src="/Scripts/plugins/highcharts/themes/grid-light.js"></script> -->
+    <script src="/Scripts/PlatForm/Date.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+        var EpsProjId = "$!CurrentSession.EpsProjId";
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+    <style type="text/css">
+        .portlet > .portlet-title > .caption.right {
+            float: right;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        @media only screen and (min-width:300px) and (max-width: 800px) {
+            .slide {
+                -webkit-transform: translate3d(0,0,0);
+                -o-transform: translate3d(0,0,0);
+                transform: translate3d(0,0,0);
+            }
+        }
+
+        .hover {
+            cursor: pointer;
+        }
+
+        /*grid进度条*/
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #0f88ed;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        .slide {
+            opacity: 1;
+        }
+
+        .item > ul {
+            text-align: center;
+        }
+
+        .COLP {
+            text-align: center;
+        }
+
+        .panel-green {
+            border-color: #5cb85c;
+        }
+
+        .panel-yellow {
+            border-color: #f0ad4e;
+        }
+
+        .panel-red {
+            border-color: #d9534f;
+        }
+
+        .panel-green > .panel-heading {
+            border-color: #5cb85c;
+            color: white;
+            background-color: #5cb85c;
+        }
+
+        .panel-red > .panel-heading {
+            border-color: #d9534f;
+            color: white;
+            background-color: #d9534f;
+        }
+
+        .panel-yellow > .panel-heading {
+            border-color: #f0ad4e;
+            color: white;
+            background-color: #f0ad4e;
+        }
+
+        .panel-red > a {
+            color: #d9534f;
+        }
+
+        .panel-yellow > a {
+            color: #f0ad4e;
+        }
+
+        .panel-green > a {
+            color: #5cb85c;
+        }
+
+        .huge {
+            font-size: 30px;
+            opacity: 0.8;
+            padding-bottom: 10px;
+        }
+
+        .mini-grid-table > tbody > tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .mini-grid-headerCell {
+            background-color: #fff;
+            padding: 7px 0px;
+        }
+
+        /****************************修改*************************************/
+        .panel-primary {
+            border-color: #fff;
+            border-radius: 5px !important;
+            margin-left: 5px;
+            margin-right: 5px;
+            border: 1px solid #d7dfe3;
+            box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1) !important;
+        }
+
+            .panel-primary > .panel-heading {
+                background-color: #fff;
+                border-color: #fff;
+                color: #666;
+                border-radius: 5px;
+            }
+
+        .panel-footer {
+            background-color: #fff;
+            border-top: 0;
+        }
+
+        .panel-footer {
+            border-radius: 0 0px 5px 5px;
+        }
+
+        .icon-box {
+            border: 1px solid #0f88ed;
+            border-radius: 50px;
+            background: #0f88ed;
+        }
+
+        .icon-box-1 {
+            border: 1px solid #ffb22b;
+            border-radius: 50px;
+            background: #ffb22b;
+        }
+
+        .icon-box-2 {
+            border: 1px solid #7460ee;
+            border-radius: 50px;
+            background: #7460ee;
+        }
+
+        .icon-box-3 {
+            border: 1px solid #fc4b6c;
+            border-radius: 50px;
+            background: #fc4b6c;
+        }
+
+        .new-icon-box i {
+            font-size: 48px;
+            padding: 5px;
+            color: #fff;
+        }
+
+        .panel-footer {
+            font-size: 14px;
+            color: #666;
+        }
+
+            .panel-footer:hover {
+                color: #0f88eb;
+            }
+
+        .portlet.blue > .portlet-title > .caption {
+            color: #666;
+            padding: 10px 10px 5px 9px;
+            font-size: 18px;
+        }
+
+        .portlet.box.blue > .portlet-title {
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .portlet > .portlet-title {
+            border-bottom: 0;
+        }
+
+        .portlet.box.blue {
+            border: 1px solid #d7dfe3;
+            /*height:400px;*/
+            border-radius: 5px;
+            box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1) !important;
+        }
+
+        .portlet-title-left-box {
+            margin-right: 5px;
+            ;
+        }
+
+        .portlet-title-right-box {
+            margin-left: 5px;
+        }
+
+        @media (min-width: 768px) {
+
+            .row-hd > [class*=col-hd] > .portlet.box > .portlet-body {
+                padding-top: 50px;
+            }
+        }
+
+        .row-wrap {
+            /*margin-top: 20px;*/
+        }
+
+        .portlet.box.blue {
+            /*margin-top: 20px;*/
+        }
+
+        .project-schedule-box {
+            margin-top: 12px;
+        }
+
+        .annual-income-statement {
+            margin-top: 15px;
+        }
+
+        .tools {
+            margin-top: 14px;
+        }
+
+        .mini-button.blue {
+            color: #ddd !important;
+            border: 1px solid #ddd !important;
+            border-radius: 0px 5px 5px 0px;
+            background-color: #fff !important;
+        }
+
+            .mini-button.blue:hover {
+                color: #0f88ed !important;
+                background-color: #fff !important;
+                border: 1px solid #0f88ed !important;
+            }
+
+        .mini-textbox-border {
+            padding: 3px !important;
+            margin-top: 0 !important;
+            border-radius: 5px 0 0 5px;
+        }
+
+        #Qproject_name .mini-textbox-border {
+            top: 0;
+        }
+
+        .portlet-title > .tools > .mini-button {
+            padding-bottom: 2px;
+        }
+
+        .portlet > .portlet-title > .tools > a {
+            margin-left: -5px;
+        }
+
+        body .mini-textbox-focus .mini-textbox-border, .mini-textbox-border:hover {
+            border-color: #0f88eb;
+        }
+
+        .mini-grid-headerCell {
+            font-size: 14px;
+        }
+
+        .mini-grid-pager {
+            background-color: #fff !important;
+            border: 0 !important;
+        }
+
+        .mini-button, a.mini-button {
+            color: #888;
+            /*border: 1px solid #0f88ed !important;*/
+            /*border-radius: 2px;*/
+        }
+
+            a.mini-button:hover {
+                color: #fff;
+            }
+
+        .mini-panel {
+            padding-top: 0 !important;
+        }
+
+        .mini-pager .mini-buttonedit-border {
+            height: 18px;
+            border-radius: 2px;
+        }
+
+        .mini-pager-size .mini-buttonedit .mini-buttonedit-border {
+            background-color: #fff !important;
+        }
+
+        .icon-box {
+            width: 74px;
+            padding: 10px 13px 7px 13px;
+        }
+
+        .icon-box-1 {
+            width: 74px;
+            padding: 10px 13px 7px 13px;
+        }
+
+        .icon-box-2 {
+            width: 74px;
+            padding: 10px 13px 7px 13px;
+        }
+
+        .icon-box-3 {
+            width: 74px;
+            padding: 10px 13px 7px 13px;
+        }
+
+        .new-icon-box i {
+            font-size: 36px;
+        }
+
+        @media (max-width: 991px) {
+            .icon-box {
+                width: 73px;
+            }
+
+            .icon-box-1 {
+                width: 73px;
+            }
+
+            .icon-box-2 {
+                width: 73px;
+            }
+
+            .icon-box-3 {
+                width: 73px;
+            }
+
+            .new-icon-box i {
+                font-size: 36px;
+            }
+        }
+
+        @media (min-width: 1288px) {
+            .icon-box {
+                width: 80px;
+            }
+
+            .icon-box-1 {
+                width: 80px;
+            }
+
+            .icon-box-2 {
+                width: 80px;
+            }
+
+            .icon-box-3 {
+                width: 80px;
+            }
+
+            .new-icon-box i {
+                font-size: 40px;
+            }
+        }
+
+        .mini-pager-num {
+            padding: 1px 0;
+            border-radius: 2px;
+        }
+
+        .mini-pager-right {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .mini-grid-rows {
+            color: #888;
+        }
+
+        .portlet-title .caption .switch-project {
+            margin-left: 398px;
+        }
+
+        input[type='text'][readonly] {
+            padding: 1px 0;
+        }
+
+        .mini-grid-rowstable tbody {
+            color: #666;
+        }
+
+
+
+        .modal-dialog {
+            width: 1000px;
+        }
+
+        body::-webkit-scrollbar {
+            width: 8px;
+            background-color: #fff;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 8px;
+            -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,.3);
+        }
+
+        .row {
+            margin: 10px 5px;
+        }
+
+        .zyx {
+            width: 99.5%;
+            height: 2000px;
+            margin-top: 15px;
+            margin-right: 2px;
+            padding: 0px;
+            /* background-color: #eeeeee; */
+            /* border-radius: 4px;
+            box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1) !important; */
+        }
+
+            .zyx > div > div {
+                width: 100%;
+                margin-top: 25px;
+                margin-left: 2px;
+                padding: 0px;
+                background-color: #fff;
+                border-radius: 4px;
+                box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1) !important;
+            }
+
+                .zyx > div > div > h5 {
+                    height: 48px;
+                    padding: 10px;
+                    padding-left: 15px;
+                    margin: 0px;
+                    background-color: #66ccff;
+                    color: #fff;
+                    border-top-left-radius: 4px;
+                    border-top-right-radius: 4px;
+                    box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.1) !important;
+                }
+
+        /*****************************************************************/
+    </style>
+</head>
+
+<body style="margin: 0; padding: 0; overflow-x: hidden; background-gray">
+
+    <div id="maindiv" class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height:100%">
+            <div class="row">
+                <div class="col-md-3 col-sm-3">
+                    <a href="/Form/EditForm/07606f58-bfcd-4348-aa60-dc1ce19d1140/" target="_blank">
+                        <div class="portlet box l-project">
+                            <div class="portlet-title" style="background:#ff9a00">
+                                <div class="caption">
+                                    <i class="fa fa-th-list"></i>跟进项目
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <h5 Id="Amount1" class="title"></h5>
+                                <br />
+                                <div class="detail"><span><span id="Number1" class="detail-number"></span></span></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 col-sm-3">
+                    <a href="/Form/EditForm/b16239b8-bfa1-43d7-8058-7bd16fcb694c/" target="_blank">
+                        <div class="portlet box l-project">
+                            <div class="portlet-title" style="background:#66ccff">
+                                <div class="caption">
+                                    <i class="fa fa-krw"></i>在建项目
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <h5 Id="Amount2" class="title"></h5>
+                                <br />
+                                <div class="detail"><span><span id="Number2" class="detail-number"></span></span></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 col-sm-3">
+                    <a href="/Form/EditForm/3fdda882-58d9-457c-9c2e-25be21af7b0b/" target="_blank">
+                        <div class="portlet box l-project">
+                            <div class="portlet-title" style="background:#0f88eb">
+                                <div class="caption">
+                                    <i class="fa fa-yen"></i>本年新签进项合同
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <h5 Id="Amount3" class="title"></h5>
+                                <br />
+                                <div class="detail"><span><span id="Number3" class="detail-number"></span></span></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 col-sm-3">
+                    <a href="/Form/EditForm/6f4a02c7-1706-4b0e-82ba-40e3a9780e1c/" target="_blank">
+                        <div class="portlet box l-project">
+                            <div class="portlet-title" style="background:rgb(47, 200, 202)">
+                                <div class="caption">
+                                    <i class="fa fa-yen"></i>本年产值
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <h5 Id="Amount4" class="title"></h5>
+                                <br />
+                                <div class="detail"><span><span id="Number4" class="detail-number"></span></span></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+
+            <!--<div class="col-md-6 col-hd-9" >
+                <div class="portlet box blue portlet-title-left-box">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            市场开发
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="">
+                            <div id="charthere1" style="width:100%;height:250px">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--<div class="col-md-6  col-hd-9">
+                <div class="portlet box blue portlet-title-right-box">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            新签合同
+                        </div>
+
+                    </div>
+                    <div class="portlet-body">
+                        <div class="">
+                            <div id="charthere2" style="width:100%;height:310px">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--<div class="col-md-12">
+                <div class="portlet box blue project-schedule-box">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            项目进度
+                        </div>
+                        <div class="tools">
+                                <span style="color:white;">
+                                    项目名称
+                                </span>
+                                <span>
+                                    <input id="Qproject_name" class="mini-textbox" style="width: 150px;" />
+                                </span>
+                            <a class="mini-button blue" id="PS_SubContract-btn-search" onclick="search"><i class="fa fa-search"></i> 搜索</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="V_PS_EPM_ProjectList" idfield="project_guid" class="mini-datagrid" style="width: 100%; height: 300px;" ondrawcell="onDrawCell"
+                             allowSortColumn="false" allowalternating="false" pagesize="10">
+                            <div property="columns">
+                                <div field="project_shortname" width="80">编号</div>
+                                <div field="project_name">名称</div>
+                                <div field="plan_complete_pct" width="60">计划完成</div>
+                                <div field="act_complete_pct" width="60">实际完成</div>
+                                <div field="ContractAmount">合同额</div>
+                                <div field="YsAmount">累计应收</div>
+                                <div field="ReceiveAmount">累计实收</div>
+                                <div field="YSPercent">批复比例</div>
+                                <div field="SSPercent">到账比例</div>
+                                <div field="PV">计划值(PV)</div>
+                                <div field="EV">赢得值(EV)</div>
+                                <div field="AC">实际值(AC)</div>
+                                <div field="SV">进度偏差(SV)</div>
+                                <div field="SPI">进度绩效(SPI)</div>
+                                <div field="CV">费用偏差(CV)</div>
+                                <div field="CPI">费用绩效(CPI)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--<div class="col-md-12 ">
+                <div class="portlet box blue annual-income-statement">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            年度收支表
+                        </div>
+                        <div class="caption right">
+
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="mini-fit">
+                            <div id="charthere3" style="width:100%;height:250px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="col-md-12 col-hd-8" style="height:100">
+                <div class="portlet box blue annual-income-statement">
+                    <div class="portlet-title">
+                        <div class="caption" visible="false">
+                            项目经营动态
+                            <!--<span class="switch-project">切换项目组</span>-->
+                            <input visible="false" id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="400px" />
+                            <!--<a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>-->
+                        </div>
+                        <div class="caption right">
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!-- <div class="mini-fit"> -->
+                        <div id="View_SF_EpsContract" idfield="project_guid" class="mini-datagrid" style="width: 100%; height:2%;" sortField="InSum" sortOrder="desc" visible="false"
+                             allowSortColumn="false" allowalternating="false" pagesize="10">
+                            <div property="columns">
+                                <div field="project_name">名称</div>
+                                <div field="InSum" numberformat="n2" align="right">进项合同额</div>
+                                <div field="OutSum" numberformat="n2" align="right">出项合同总额</div>
+                                <div field="P_Sum" numberformat="n2" align="right">采购合同总额</div>
+                                <div field="E_Sum" numberformat="n2" align="right">技术服务类合同总额</div>
+                                <div field="C_Sum" numberformat="n2" align="right">建安工程类合同总额</div>
+                                <div field="S_Sum" numberformat="n2" align="right">其他合同总额</div>
+                                <div field="InvoiceAmount" numberformat="n2" align="right">累计开票</div>
+                                <div field="OutvoiceAmount" numberformat="n2" align="right">累计收票</div>
+                                <div field="ReceiveAmount" numberformat="n2" align="right">累计收款</div>
+                                <div field="PaymentAmount" numberformat="n2" align="right">累计付款</div>
+                                <div field="Indifference" numberformat="n2" align="right">开票差值</div>
+                                <div field="Outdifference" numberformat="n2" align="right">付款差值</div>
+                            </div>
+                        </div>
+                        <div id="chart1" style="width:100%;height:95%;">
+
+                        </div>
+                        <!--<div id="chartInContract" style="width:45%;height:45%;"></div>
+                        <div id="chartOutContract" style="width:45%;height:45%;"></div>-->
+
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--<div class="portlet box gray" style="height: 30%">
+        <div class="col-lg-6 col-md-6 col-sm-6" style="height:100%;">
+            <div id="chartInContract" style="height:100%;width:100%">
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6" style="height:100%;">
+            <div id="chartOutContract" style="height:100%;width:100%">
+            </div>
+        </div>
+    </div>-->
+
+    <div class="mini-tabs" activeIndex="0"  style="width:100%;height:100%;">
+        <div title="进项合同">
+            <div class="col-md-12 col-hd-12 zyx">
+                <div id="AutoCharts">
+        
+                </div>
+            </div>
+        </div>
+        <div title="出项合同">
+            <div class="col-md-12 col-hd-12 zyx">
+                <div id="AutoCharts2">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script type="text/javascript">
+        var currentplan, currenttask, ProjectteamId;
+        var contractType = [
+                { title: "膜系统销售", value: "('05')" },
+                { title: "运营类", value: "('03','04')" },
+                { title: "销售类", value: "('06','07','08')" },
+                { title: "工程类", value: "('01','10','11')" },
+                { title: "其他类", value: "('09')" }
+        ];
+        var OutcontractType = [
+                { title: "工程类", value: "'01'" },
+                { title: "膜制造类", value: "'03'" },
+                { title: "运营类", value: "'04'" },
+                { title: "药剂、吨袋、备件类", value: "'05'" },
+                { title: "技术服务类合同", value: "'06'" },
+                { title: "其他类", value: "'07'" }
+        ];
+        mini.parse();
+        $(function () {
+            mini.parse();
+
+            if (sessiondata.EpsIsProject == 1) {
+                $("#maindiv").html("当前节点非EPS分类节点，无汇总数据，请切换到您要查看的EPS分类节点！");
+                return;
+            }
+
+            //mini.get("V_PS_EPM_ProjectList").setUrl("/Form/GridPageLoad");
+            //mini.get("V_PS_EPM_ProjectList").load();
+            LoadText();
+
+            LoadData2();
+            LoadData1();
+            LoadData3();
+            LoadGrid();
+            LoadContractCharts();
+
+            $.each(contractType, function (index, value, array) {
+                CreateIncomeChart(index, value.title);
+                LoadIncomeData(index,(new Date()).getFullYear() + "-1", (new Date()).getFullYear() + "-" + ((new Date()).getMonth()+1), value.title, value.value);
+            });
+
+            $.each(OutcontractType, function (index, value, array) {
+                CreateOutcomeChart(index, value.title);
+                LoadOutcomeData(index,(new Date()).getFullYear() + "-1", (new Date()).getFullYear() + "-" + ((new Date()).getMonth()+1), value.title, value.value);
+            });
+
+            mini.parse();
+            /*----------------------进项-------------------------*/
+            $.each(contractType, function (index, value, array) {
+                mini.get("QStartDate" + index).setValue((new Date()).getFullYear() + "-" + ((new Date()).getMonth()+1));
+                mini.get("QStartDate" + index).on("valuechanged", function () {
+                    if(mini.get("QEndDate"+ index).getValue()>mini.get("QStartDate"+ index).getValue()){
+                        Power.ui.warning("起始日期不得大于截至日期!");
+                        return;
+                    }
+                    var eyearMonth = mini.get("QEndDate"+ index).getValue().getFullYear() + "-" + (mini.get("QEndDate"+ index).getValue().getMonth() + 1);
+                    var syearMonth = mini.get("QStartDate"+ index).getValue().getFullYear() + "-" + (mini.get("QStartDate"+ index).getValue().getMonth() + 1);
+                    LoadIncomeData(index, eyearMonth, syearMonth, value.title, value.value);
+                });
+            });
+            $.each(contractType, function (index, value, array) {
+                mini.get("QEndDate" + index).setValue((new Date()).getFullYear() + "-1");
+                mini.get("QEndDate" + index).on("valuechanged", function () {
+                    if(mini.get("QEndDate"+ index).getValue()>mini.get("QStartDate"+ index).getValue()){
+                        Power.ui.warning("起始日期不得大于截至日期!");
+                        return;
+                    }
+                    var eyearMonth = mini.get("QEndDate"+ index).getValue().getFullYear() + "-" + (mini.get("QEndDate"+ index).getValue().getMonth() + 1);
+                    var syearMonth = mini.get("QStartDate"+ index).getValue().getFullYear() + "-" + (mini.get("QStartDate"+ index).getValue().getMonth() + 1);
+                    LoadIncomeData(index, eyearMonth, syearMonth, value.title, value.value);
+                });
+            });
+            /*----------------------出项-------------------------*/
+            $.each(OutcontractType, function (index, value, array) {
+                mini.get("OutQStartDate" + index).setValue((new Date()).getFullYear() + "-" + ((new Date()).getMonth()+1));
+                mini.get("OutQStartDate" + index).on("valuechanged", function () {
+                    if(mini.get("OutQEndDate"+ index).getValue()>mini.get("OutQStartDate"+ index).getValue()){
+                        Power.ui.warning("起始日期不得大于截至日期!");
+                        return;
+                    }
+                    var eyearMonth = mini.get("OutQEndDate"+ index).getValue().getFullYear() + "-" + (mini.get("OutQEndDate"+ index).getValue().getMonth() + 1);
+                    var syearMonth = mini.get("OutQStartDate"+ index).getValue().getFullYear() + "-" + (mini.get("OutQStartDate"+ index).getValue().getMonth() + 1);
+                    LoadOutcomeData(index, eyearMonth, syearMonth, value.title, value.value);
+                });
+            });
+            $.each(OutcontractType, function (index, value, array) {
+                mini.get("OutQEndDate" + index).setValue((new Date()).getFullYear() + "-1");
+                mini.get("OutQEndDate" + index).on("valuechanged", function () {
+                    if(mini.get("OutQEndDate"+ index).getValue()>mini.get("OutQStartDate"+ index).getValue()){
+                        Power.ui.warning("起始日期不得大于截至日期!");
+                        return;
+                    }
+                    var eyearMonth = mini.get("OutQEndDate"+ index).getValue().getFullYear() + "-" + (mini.get("OutQEndDate"+ index).getValue().getMonth() + 1);
+                    var syearMonth = mini.get("OutQStartDate"+ index).getValue().getFullYear() + "-" + (mini.get("OutQStartDate"+ index).getValue().getMonth() + 1);
+                    LoadOutcomeData(index, eyearMonth, syearMonth, value.title, value.value);
+                });
+            });
+
+        });
+        mini.parse();
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+        //mini.get("btnSearch").on("click", function (e) {
+        //    if (!ProjectteamId) {
+        //        Power.ui.alert("请选择项目组!"); return false;
+        //    }
+        //    LoadGrid();
+        //})
+        function search() {
+            var grid = mini.get("V_PS_EPM_ProjectList");
+            if (grid.showPager)
+                grid.gotoPage(0);
+            grid.reload();
+        }
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdMasterData/WizardPS_MDM_ProtofolioDefine.htm";
+            OpenWizard(p, function (data) {
+                ProjectteamId = data[0].Id;
+                SetBtnEditValue("txtPlanName", data[0].Title);
+                LoadGrid();
+            })
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        function LoadGrid() {
+            mini.get("View_SF_EpsContract").setUrl("/Form/GridPageLoad");
+            mini.get("View_SF_EpsContract").load();
+        }
+        //function Get() {
+        //    var p = { KeyWord: 'View_SF_EpsContract', KeyWordType: 'VIEWENTITY', select: '*', swhere: '', sort: 'Code', index: '0', size: '' };
+        //    if ($session.HumanId == "ad000000-0000-0000-0000-000000000000") {
+        //        p.swhere = "";
+        //    }
+        //    else {
+        //        var deptId = $session.DeptId == "" ? "00000000-0000-0000-0000-000000000000" : $session.DeptId;
+        //        p.swhere = "DaptId='" + deptId + "'";
+        //    }
+        //    $.ajax({
+        //        url: "/Form/GridPageLoad",
+        //        data: p,
+        //        type: 'post',
+        //        success: function (text) {
+        //            var o = mini.decode(text);
+        //            if (o.success) {
+        //                var data = mini.decode(o.data.value);
+        //                mini.get("View_SF_EpsContract").setData(data);
+        //            }
+        //            else
+        //                mini.get("View_SF_EpsContract").setData("");
+        //        }
+        //    })
+        //}
+
+        mini.get("View_SF_EpsContract").on("beforeload", function (e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var params = e.params;  //参数对象
+            var p = {};
+            p.index = params.pageIndex;
+            p.size = params.pageSize;
+            var sort = params.sortField + " " + params.sortOrder;
+            if (!params.sortField) {
+                p.sort = "";
+            } else {
+                p.sort = sort;
+            }
+            p.ProjectteamId = ProjectteamId || "";
+            $.ajax({
+                url: "/Al/GetContractMianStatistics",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var datas = mini.decode(o.data.value);
+                        sender.setData(datas);
+                        sender.setTotalCount(o.data.Cout);
+                        sender.setPageIndex(p.index);
+                        LoadGridChart(o.data.Chart)
+                    }
+                }
+            });
+
+            //var p = { KeyWord: 'View_SF_EpsContract', KeyWordType: 'VIEWENTITY', select: '*', swhere: '', sort: 'LongCode', index: params.pageIndex, size: params.pageSize };
+            //$.ajax({
+            //    url: "/Form/GridPageLoad",
+            //    data: p,
+            //    type: 'POST',
+            //    success: function (text) {
+            //        var o = mini.decode(text);
+            //        if (o.success) {
+            //            var datas = mini.decode(o.data.value);
+            //            sender.setData(datas);
+            //            sender.setTotalCount(o.data.Cout);
+            //            sender.setPageIndex(p.index);
+            //            LoadGridChart(o.data);
+            //        }
+            //    }
+            //})
+
+        })
+
+        function LoadGridChart(datas) {
+            var InSum = (Math.round(datas.Insum / 10000 * 100) / 100).toFixed(0);
+            var OutSum = (Math.round(datas.OutSum / 10000 * 100) / 100).toFixed(0);
+            var P_Sum = (Math.round(datas.P_Sum / 10000 * 100) / 100).toFixed(0);
+            var E_Sum = (Math.round(datas.E_Sum / 10000 * 100) / 100).toFixed(0);
+            var S_Sum = (Math.round(datas.S_Sum / 10000 * 100) / 100).toFixed(0);
+            var C_Sum = (Math.round(datas.C_Sum / 10000 * 100) / 100).toFixed(0);
+            var InvoiceAmount = (Math.round(datas.InvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var OutvoiceAmount = (Math.round(datas.OutvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var ReceiveAmount = (Math.round(datas.ReceiveAmount / 10000 * 100) / 100).toFixed(0);
+            var PaymentAmount = (Math.round(datas.PaymentAmount / 10000 * 100) / 100).toFixed(0);
+            var E_OutvoiceAmount = (Math.round(datas.E_OutvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var P_OutvoiceAmount = (Math.round(datas.P_OutvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var C_OutvoiceAmount = (Math.round(datas.C_OutvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var S_OutvoiceAmount = (Math.round(datas.S_OutvoiceAmount / 10000 * 100) / 100).toFixed(0);
+            var E_PaymentAmount = (Math.round(datas.E_PaymentAmount / 10000 * 100) / 100).toFixed(0);
+            var P_PaymentAmount = (Math.round(datas.P_PaymentAmount / 10000 * 100) / 100).toFixed(0);
+            var C_PaymentAmount = (Math.round(datas.C_PaymentAmount / 10000 * 100) / 100).toFixed(0);
+            var S_PaymentAmount = (Math.round(datas.S_PaymentAmount / 10000 * 100) / 100).toFixed(0);
+            var opt = {
+                title: {
+                    text: '',
+                    subtext: ''
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    x: 'right',
+                    data: ['进项合同', '出项合同', '采购合同', '技术服务类合同', '建安工程类合同', '其他合同']
+                },
+
+                calculable: false,
+                grid: {
+                    y: 80,
+                    y2: 40,
+                    x2: 40
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['合同额', '累计开票', '累计收票', '累计收款', '累计付款']
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '金额(万元)',
+                        min: 0
+                    }
+                ],
+                series: [
+                    {
+                        name: '进项合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [InSum, InvoiceAmount, '', ReceiveAmount, '']
+                    },
+                    {
+                        name: '出项合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [OutSum, '', OutvoiceAmount, '', PaymentAmount]
+                    },
+                    {
+                        name: '采购合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [P_Sum, '', P_OutvoiceAmount, '', P_PaymentAmount]
+                    },
+                    {
+                        name: '技术服务类合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [E_Sum, '', E_OutvoiceAmount, '', E_PaymentAmount]
+                    },
+                    {
+                        name: '建安工程类合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [C_Sum, '', C_OutvoiceAmount, '', C_PaymentAmount]
+                    },
+                    {
+                        name: '其他合同',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    rotate: 30,
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{c}',
+                                    textStyle: {
+                                        fontSize: '12',
+                                        fontFamily: '黑体'
+                                    }
+                                }
+                            }
+                        },
+                        data: [S_Sum, '', S_OutvoiceAmount, '', S_PaymentAmount]
+                    }
+                ]
+            };
+            InitEChart("chart1", opt);
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+        function onDrawCell(e) {
+            var column = e.column,
+                    field = e.field;
+            var value;
+
+            if (!e.value) {
+                value = 0;
+            } else {
+                value = Math.round(e.value * 100) / 100;
+            }
+            var record = e.record;
+
+            if (field == "project_name") {
+                e.cellHtml = ' <a  href="/Form/EditForm/6d1f1f62-4e5f-44fa-a93f-66b761e10dd8/?Pid=' + record.project_guid + '">' + e.value + '</a>';
+
+            }
+
+
+            //进度
+            if (field == "plan_complete_pct") {
+                e.cellHtml = '<div class="progressbar">'
+                        + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                        + '<div class="progressbar-label">' + value + '%</div>'
+                        + '</div>';
+            }
+
+            if (field == "act_complete_pct") {
+                e.cellHtml = '<div class="progressbar">'
+                        + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                        + '<div class="progressbar-label">' + value + '%</div>'
+                        + '</div>';
+            }
+            if (field == "YSPercent") {
+                e.cellHtml = '<div class="progressbar">'
+                        + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                        + '<div class="progressbar-label">' + value + '%</div>'
+                        + '</div>';
+            }
+            if (field == "SSPercent") {
+                e.cellHtml = '<div class="progressbar">'
+                        + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                        + '<div class="progressbar-label">' + value + '%</div>'
+                        + '</div>';
+            }
+
+        }
+        function LoadData1() {
+            var p = {};
+            p.LongCode = LongCode;
+            p.where = " and 1=1";
+            $.ajax({
+                url: "/Market/GetProjectInfoChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart1(o.list, o.detail);
+                    }
+                }
+
+            });
+        }
+        function LoadChart1(list, detail) {
+
+            //标题
+            var legendData = [];
+            var data1 = [];
+            var data2 = [];
+            var Max1 = 0;
+            var Max2 = 0;
+            var datas = mini.decode(detail);
+            $.each(datas, function () {
+                legendData.push(this.text);
+                var Ids = this.id;
+                var IdsNum = Ids + "Num";
+                var Texts = this.text;
+                if (Texts == "输单") {
+                    return false;
+                }
+                $.each(list, function () {
+                    for (var key in this) {
+                        if (key == IdsNum) {
+                            var Num = Math.round(this[key] / 10000 * 100) / 100;
+                            if (Num > Max2) {
+                                Max2 = Num;
+                            }
+                            var item = [Texts, Num];
+                            data2.push(item);
+                        }
+                    }
+                })
+            })
+
+            //市场开发
+            //$('#charthere1').highcharts({
+            //    chart: {
+            //        type: 'funnel',
+            //        marginRight: 100
+            //    },
+            //    title: {
+            //        text: '',
+            //        x: -50
+            //    },
+            //    plotOptions: {
+            //        series: {
+            //            dataLabels: {
+            //                enabled: true,
+            //                format: '<b>{point.name}</b> ({point.y:,.0f} 万元)',
+            //                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+            //                softConnector: true
+            //            },
+            //            neckWidth: '30%',
+            //            neckHeight: '25%',
+            //            point: {
+            //                events: {
+            //                    click: function () {
+            //                        var Name = this.name;
+            //                        $.each(datas, function () {
+            //                            if (this.text == Name) {
+            //                                var url = '/Form/EditForm/c869aac0-31ac-4260-817b-b61308022705/?FollowStatus=' + this.id + '&Nofilter=true&Lcd=' + LongCode;
+            //                                //window.open(url);
+            //                                mini.open({ url: url, width: "80%", heigth: "160%" });
+
+            //                                return false;
+            //                            }
+
+            //                        })
+
+
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    },
+            //    legend: {
+            //        enabled: false
+            //    },
+            //    series: [{
+            //        name: '市场开发',
+            //        data: data2
+            //    }]
+            //});
+
+        }
+        function LoadText() {
+            $.ajax({
+                url: "/Al/GetProjectNumMoney",
+                data: { EpsProjId: EpsProjId },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = o.data;
+                        //var N1 = 0;
+                        //var N2 = 0;
+                        //var N3 = 0;
+                        //var N4 = 0;
+                        //var M1 = 0;
+                        //var M2 = 0;
+                        //var M3 = 0;
+                        //var M4 = 0;
+                        //if (data.Num1)
+                        //    N1 = data.Num1;
+                        //if (data.Num2)
+                        //    N2 = data.Num2;
+                        //if (data.Num3)
+                        //    N3 = data.Num3;
+                        //if (data.Num4)
+                        //    N4 = data.Num4;
+                        //if (data.Money1)
+                        //    M1 = data.Money1;
+                        //var M1 = M1 > 9999 ? M1 / 10000 + "万" : M1;
+                        //if (data.Money2)
+                        //    M2 = data.Money2;
+                        //var M2 = M2 > 9999 ? M2 / 10000 + "万" : M2;
+                        //if (data.Money3)
+                        //    M3 = data.Money3;
+                        //var M3 = M3 > 9999 ? M3 / 10000 + "万" : M3;
+                        //if (data.Money4)
+                        //    M4 = data.Money4;
+                        //var M4 = M4 > 9999 ? M4 / 10000 + "万" : M4;
+                        //var Html1 = ' <div class="huge">' + N1 + '</div><div>￥' + M1 + '</div>';
+                        //var Html2 = ' <div class="huge">' + N2 + '</div><div>￥' + M2 + '</div>';
+                        //var Html3 = ' <div class="huge">' + N3 + '</div><div>￥' + M3 + '</div>';
+                        //var Html4 = ' <div class="huge">' + N4 + '</div><div>￥' + M4 + '</div>';
+                        //debugger;
+                        //var Html1 = ' <div class="huge">' + toThousands(data.N1) + '</div><div></div>';
+                        var Amount1 = ' <div class="huge">' + toThousands(data.N1) + '个</div><div></div>';
+                        var Number1 = ' <div >已投标' + toThousands(data.M1) + '个,中标' + toThousands(data.M11) + '个</div>';
+                        //var Html2 = ' <div class="huge">' + toThousands(data.N2) + '</div><div NumberFormat="n2">￥' + toThousands(parseFloat(data.M2).toFixed(0)) + '</div>';
+                        //var Amount2 = ' <div class="huge">' + toThousands(data.N2) + '个</div>';
+                        var Amount2 = ' <div class="huge">￥' + toThousands((parseFloat(data.M2) / 10000).toFixed(0)) + '万元</div>';
+                        var Number2 = ' <div >合计' + toThousands(data.N2) + '个,付款比例' + (parseFloat(data.M22) * 100).toFixed(2) + '%</div>';
+                        //var Html3 = ' <div class="huge">' + toThousands(data.N3) + '</div><div>￥' + toThousands(parseFloat(data.M3).toFixed(0)) + '</div>';
+                        //var Amount3 = ' <div class="huge">' + toThousands(data.N3) + '份</div>';
+                        var Amount3 = ' <div class="huge">￥' + toThousands((parseFloat(data.M3) / 10000).toFixed(0)) + '万元</div>';
+                        var Number3 = ' <div >共' + toThousands(data.N3) + '份</div>';
+                        //var Html4 = ' <div class="huge">' + toThousands(data.N4) + '</div><div>￥' + toThousands(parseFloat(data.M4).toFixed(0)) + '</div>';
+                        //var Amount4 = ' <div class="huge">' + toThousands(data.N4) + '份</div>';
+                        var Amount4 = ' <div class="huge">￥' + toThousands((parseFloat(data.M4) / 10000).toFixed(0)) + '万元</div>';
+                        var Number4 = ' <div >共' + toThousands(data.N4) + '份</div>';
+                        //$("#Text1").append(Html1);
+                        $("#Amount1").append(Amount1);
+                        $("#Number1").append(Number1);
+                        //$("#Text2").append(Html2);
+                        $("#Amount2").append(Amount2);
+                        $("#Number2").append(Number2);
+                        //$("#Text3").append(Html3);
+                        $("#Amount3").append(Amount3);
+                        $("#Number3").append(Number3);
+                        //$("#Text4").append(Html4);
+                        $("#Amount4").append(Amount4);
+                        $("#Number4").append(Number4);
+                    }
+                }
+
+            });
+        }
+
+        function timeStamp2String(time) {
+            var datetime = new Date();
+            datetime.setTime(time);
+            var year = datetime.getFullYear();
+            var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+            var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+            var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+            var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+            var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+            return year + "-" + month + "-" + date;
+        }
+        function LoadData2() {
+            $.ajax({
+                url: "/Market/GetContractCompare",
+                data: { EpsProjId: EpsProjId },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart2(o.list);
+                    }
+                }
+
+            });
+        }
+        function LoadChart2(list) {
+            var xaxis = { type: 'category', data: [] };
+            var itme1 = { "name": "今年", type: 'bar', data: [] };
+            var itme2 = { "name": "去年", type: 'bar', data: [] };
+            var itme1Sum = { "name": "今年累计", yAxisIndex: 1, type: 'line', data: [] };
+            var itme2Sum = { "name": "去年累计", yAxisIndex: 1, type: 'line', data: [] };
+            var SumIn = 0;
+            var SumOut = 0;
+            $.each(list, function () {
+                var Tims = this.smonth + '月';
+                xaxis.data.push(Tims);
+                var itme1s = Math.round(this.ThisYearAmount / 10000 * 100) / 100;
+                var itme2s = Math.round(this.LastYearAmount / 10000 * 100) / 100;
+                itme1.data.push(itme1s);
+                itme2.data.push(itme2s);
+                SumIn += this.ThisYearAmount;
+                SumOut += this.LastYearAmount;
+                SumOut = Math.round(SumOut / 10000 * 100) / 100;
+                SumIn = Math.round(SumIn / 10000 * 100) / 100;
+                itme1Sum.data.push(SumIn);
+                itme2Sum.data.push(SumOut);
+            })
+            var opt = {};
+            opt.title = { text: "" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ['今年', '去年', '今年累计', '去年累计'] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', min: 0 }, { type: 'value', name: '金额(万元)', min: 0 }];
+            opt.series = [itme1, itme2, itme1Sum, itme2Sum];
+            //新签合同
+            //InitEChart("charthere2", opt);
+        }
+        
+        function LoadData3() {
+            $.ajax({
+                url: "/Market/GetContractInOutComeByYearChars",
+                data: { EpsProjId: EpsProjId },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart3(o.list);
+                    }
+                }
+
+            });
+        }
+        function LoadChart3(list) {
+            var xaxis = { type: 'category', boundaryGap: false, data: [] };
+            var itme1 = {
+                "name": "收人",
+                type: 'line',
+                smooth: true,
+                itemStyle: { normal: { areaStyle: { type: 'default' } } },
+                data: []
+            };
+            var itme2 = {
+                "name": "支出",
+                type: 'line',
+                smooth: true,
+                itemStyle: { normal: { areaStyle: { type: 'default' } } },
+                data: []
+            };
+            $.each(list, function () {
+
+                xaxis.data.push(this.Times);
+                var itme1s = Math.round(this.ReceiveAmount / 10000 * 100) / 100;
+                var itme2s = Math.round(this.PaymentAmount / 10000 * 100) / 100;
+                itme1.data.push(itme1s);
+                itme2.data.push(itme2s);
+
+            })
+            var opt = {};
+            opt.title = { text: "" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ['收人', '支出'] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '金额(万元)', min: 0 }];
+            opt.series = [itme1, itme2];
+            //InitEChart("charthere3", opt);
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+                'echarts/chart/bar',
+                'echarts/chart/pie',
+                'echarts/chart/gauge'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+                myChart.on('click', function (param) {
+                    if (chartid == "charthere2") {
+                        var url = "/Form/EditForm/149e6b66-99ba-41d5-b008-cee8c5baf658/"
+                        var tesxt = param.seriesName;
+                        var Datad = param.name;
+                        var year;
+                        var d = new Date();
+                        var nowYear = d.getFullYear();
+                        var dv = nowYear - 1;
+                        if (tesxt.indexOf("去年") >= 0) {
+                            year = dv;
+                        } else {
+                            year = nowYear;
+                        }
+                        var yue;
+                        switch (Datad) {
+                            case "1月":
+                                yue = "01";
+                                break;
+                            case "2月":
+                                yue = "02";
+                                break;
+                            case "3月":
+                                yue = "03";
+                                break;
+                            case "4月":
+                                yue = "04";
+                                break;
+                            case "5月":
+                                yue = "05";
+                                break;
+                            case "6月":
+                                yue = "06";
+                                break;
+                            case "7月":
+                                yue = "07";
+                                break;
+                            case "8月":
+                                yue = "08";
+                                break;
+                            case "9月":
+                                yue = "09";
+                                break;
+                            case "10月":
+                                yue = "10";
+                                break;
+                            case "11月":
+                                yue = "11";
+                                break;
+                            case "12月":
+                                yue = "12";
+                                break;
+                        }
+                        var StartDate = year + '-' + yue + '-01';
+                        var EndDate = year + '-' + yue + '-31'
+                        url += "?ToCore=ToCore&StartDate=" + StartDate + "&EndDate=" + EndDate;
+                        mini.open({ url: url, width: "80%", heigth: "160%" });
+                    }
+                })
+            })
+        }
+
+        //**饼图*2
+        function chartInContract() {
+            var p = {};
+            $.ajax({
+                url: "/Al/GetInContractCount",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var datas = mini.decode(o.data);
+                        LoadchartInContract(datas.InContractCount);
+                    }
+                }
+            });
+        }
+        function LoadchartInContract(datas) {
+            var seriesdata = [];
+            var legenddata = [];
+            $.each(datas, function () {
+                legenddata.push(this.Types);
+                var item = { value: this.Counts, name: this.Types };
+                seriesdata.push(item);
+            })
+            var opt = {
+                title: {
+                    text: '',
+                    subtext: '',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: legenddata
+                },
+
+                series: [
+					{
+					    name: '进项合同状态',
+					    type: 'pie',
+					    radius: '55%',
+					    center: ['50%', '60%'],
+					    itemStyle: {
+					        normal: {
+					            label: {
+					                formatter: '{b} : {c}  '
+					            },
+
+					        },
+					        emphasis: {
+					            label: {
+					                formatter: '{b} : {c} '
+					            }
+					        }
+					    },
+					    data: seriesdata
+					}
+                ]
+            };
+            InitEChart("chartInContract", opt);
+        }
+
+
+        function LoadContractCharts() {
+            var p = {};
+            $.ajax({
+                url: "/Al/GetOutContractCount",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var datas = mini.decode(o.data);
+                        LoadchartOutContract(datas.OutContractCount);
+                    }
+                }
+
+            });
+        }
+        function LoadchartOutContract(datas) {
+            var seriesdata = [];
+            var legenddata = [];
+            $.each(datas, function () {
+                legenddata.push(this.Types);
+                var item = { value: this.Counts, name: this.Types };
+                seriesdata.push(item);
+            })
+
+            var opt = {
+                title: {
+                    text: '',
+                    subtext: '',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: legenddata
+                },
+
+                series: [
+					{
+					    name: '出项合同状态',
+					    type: 'pie',
+					    radius: '55%',
+					    center: ['50%', '60%'],
+					    itemStyle: {
+					        normal: {
+					            label: {
+					                formatter: '{b} : {c}  '
+					            },
+
+					        },
+					        emphasis: {
+					            label: {
+					                formatter: '{b} : {c} '
+					            }
+					        }
+					    },
+					    data: seriesdata
+					}
+                ]
+            };
+            InitEChart("chartOutContract", opt);
+        }
+        function toThousands(num) {
+            var result = [], counter = 0;
+            num = (num || 0).toString().split('');
+            for (var i = num.length - 1; i >= 0; i--) {
+                counter++;
+                result.unshift(num[i]);
+                if (!(counter % 3) && i != 0) { result.unshift(','); }
+            }
+            return result.join('');
+        }
+
+
+        /*五张进项、六张出项图表Start*/
+        function CreateIncomeChart(index, title, value) {
+            var div = document.getElementById("AutoCharts");
+
+            var chart = '<div style="width:100%;height:400px;">'
+                        + '    <h5>' + title + '-年度合同额 '
+                        + '    起始:<input id="QEndDate' + index + '" class="mini-monthpicker" format="yyyy-MM" width="130px" />'
+                        + '    截至:<input id="QStartDate' + index + '" class="mini-monthpicker" format="yyyy-MM" width="130px" />'
+                        + '    </h5>'
+                        + '    <div id="InChart' + index + '" style="width:1200px;height:350px;"></div>'
+                        + '</div>';
+            div.innerHTML += chart;
+
+        }
+        function CreateOutcomeChart(index, title, value) {
+            var div = document.getElementById("AutoCharts2");
+
+            var chart = '<div style="width:100%;height:400px;">'
+                        + '    <h5>' + title + '-年度合同额 '
+                        + '    起始:<input id="OutQEndDate' + index + '" class="mini-monthpicker" format="yyyy-MM" width="130px" />'
+                        + '    截至:<input id="OutQStartDate' + index + '" class="mini-monthpicker" format="yyyy-MM" width="130px" />'
+                        + '    </h5>'
+                        + '    <div id="OutChart' + index + '" style="width:1200px;height:350px;"></div>'
+                        + '</div>';
+            div.innerHTML += chart;
+
+        }
+        function LoadIncomeData(index,syear, eyear, title, value) {
+            $.ajax({
+                url: "/zyx/GetIncomeContract",
+                data: { "index": index,"syearmonth": syear, "eyearmonth": eyear, "title": title, "value": value },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var ContractTypeGroup = mini.decode(text).data.ContractTypeGroup;
+                        var n = mini.decode(text).data.n;
+                        var dex = parseInt(o.list[0]);
+                        //if(n==1&&ContractTypeGroup[contractType[dex].title].length == 1){n=0;}
+                        //x-日期
+                        var signeddate = mini.decode(text).data.xAxis;
+                        //如果读出来的是空
+                        if (ContractTypeGroup[contractType[dex].title].length == 0) {
+                            var FinalAmtdata = new Array();
+                            var cntdata = new Array();
+                            var temp=[];
+                            for(var i=0;i<n+1;i++){
+                                temp.push(0);
+                            }
+                            FinalAmtdata["-"] = temp;
+                            cntdata["-"] = temp;
+                            LoadCharts("InChart",o.list[0], index, FinalAmtdata, cntdata, ["-"], signeddate);
+                            return;
+                        }
+                        $.each(mini.decode(text).data.ContractTypeGroup, function (index, value, array) {
+                            var names = [];
+                            $.each(value, function (index1, value1, array1) {
+                                if (names.length == 0) { names.push(value1.name); }
+                                var hasFindName = false;
+                                for (var i = 0; i < names.length; i++) {
+                                    if (names[i] == value1.name) {
+                                        hasFindName = true;
+                                    }
+                                    if ((!hasFindName) && i == names.length - 1) {
+                                        names.push(value1.name);
+                                    }
+                                }
+                            });
+                            var FinalAmtdata = new Array();
+                            var cntdata = new Array();
+                            $.each(value, function (index1, value1, array1) {
+                                if (!FinalAmtdata[value1.name]) { 
+                                    var temp=[];
+                                    for(var i=0;i<n+1;i++){
+                                        temp.push(0);
+                                    }
+                                    FinalAmtdata[value1.name] = temp; 
+                                };
+                                if (!cntdata[value1.name]) { 
+                                    var temp=[];
+                                    for(var i=0;i<n+1;i++){
+                                        temp.push(0);
+                                    }
+                                    cntdata[value1.name] = temp; 
+                                };
+                                for( var i=0;i<n+1;i++){
+                                    var tmy,tmm;
+                                    if(signeddate[i].substring(5,6)=="0"){tmm=signeddate[i].substring(6,7);}
+                                    else{tmm=signeddate[i].substring(5,7);}
+                                    tmy=signeddate[i].substring(0,4);
+                                    if(tmy==value1.years&&tmm==value1.months){
+                                        FinalAmtdata[value1.name][i] = (value1.FinalContractAmount / 10000).toFixed(0);
+                                        cntdata[value1.name][i] = value1.cnt;
+                                        break;   
+                                    }
+                                }
+                            });
+                            LoadCharts("InChart",o.list[0], index, FinalAmtdata, cntdata, names, signeddate);
+                        });
+                    }
+                }
+            });
+        }
+
+        function LoadOutcomeData(index,syear, eyear, title, value) {
+            $.ajax({
+                url: "/zyx/GetOutcomeContract",
+                data: { "index": index,"syearmonth": syear, "eyearmonth": eyear, "title": title, "value": value },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var ContractTypeGroup = mini.decode(text).data.ContractTypeGroup;
+                        var n = mini.decode(text).data.n;
+                        var dex = parseInt(o.list[0]);
+                        var signeddate = mini.decode(text).data.xAxis;
+                        if (ContractTypeGroup[OutcontractType[dex].title].length == 0) {
+                            var FinalAmtdata = new Array();
+                            var cntdata = new Array();
+                            var temp=[];
+                            for(var i=0;i<n+1;i++){
+                                temp.push(0);
+                            }
+                            FinalAmtdata["-"] = temp;
+                            cntdata["-"] = temp;
+                            LoadCharts("OutChart",o.list[0], index, FinalAmtdata, cntdata, ["-"], signeddate);
+                            return;
+                        }
+                        $.each(mini.decode(text).data.ContractTypeGroup, function (index, value, array) {
+                            var names = [];
+                            $.each(value, function (index1, value1, array1) {
+                                if (names.length == 0) { names.push(value1.name); }
+                                var hasFindName = false;
+                                for (var i = 0; i < names.length; i++) {
+                                    if (names[i] == value1.name) {
+                                        hasFindName = true;
+                                    }
+                                    if ((!hasFindName) && i == names.length - 1) {
+                                        names.push(value1.name);
+                                    }
+                                }
+                            });
+                            var FinalAmtdata = new Array();
+                            var cntdata = new Array();
+                            $.each(value, function (index1, value1, array1) {
+                                if (!FinalAmtdata[value1.name]) { 
+                                    var temp=[];
+                                    for(var i=0;i<n+1;i++){
+                                        temp.push(0);
+                                    }
+                                    FinalAmtdata[value1.name] = temp; 
+                                };
+                                if (!cntdata[value1.name]) { 
+                                    var temp=[];
+                                    for(var i=0;i<n+1;i++){
+                                        temp.push(0);
+                                    }
+                                    cntdata[value1.name] = temp; 
+                                };
+                                for( var i=0;i<n+1;i++){
+                                    var tmy,tmm;
+                                    if(signeddate[i].substring(5,6)=="0"){tmm=signeddate[i].substring(6,7);}
+                                    else{tmm=signeddate[i].substring(5,7);}
+                                    tmy=signeddate[i].substring(0,4);
+                                    if(tmy==value1.years&&tmm==value1.months){
+                                        FinalAmtdata[value1.name][i] = (value1.FinalContractAmount / 10000).toFixed(0);
+                                        cntdata[value1.name][i] = value1.cnt;
+                                        break;   
+                                    }
+                                }
+                            });
+                            LoadCharts("OutChart",o.list[0], index, FinalAmtdata, cntdata, names, signeddate);
+                        });
+                    }
+                }
+            });
+        }
+        
+        function LoadCharts(chartname,ii, title, FinalAmtdata, cntdata, legend, signeddate) {
+            var series = [];
+            var legends = [];
+            var itemStyle1 = {
+                normal: {
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}',
+                        textStyle: {
+                            fontSize: '12',
+                            fontFamily: '黑体'
+                        }
+                    }
+                }
+            };
+            var itemStyle2 = {
+                normal: {
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{c} 份',
+                            }
+                        }
+                    }
+                }
+            };
+            $.each(legend, function (index, value, array) {
+                var itemBar = { "name": value + "金额", type: 'bar', data: FinalAmtdata[value], itemStyle: itemStyle1, yAxisIndex: 0 };
+                var itemLine = { "name": value + "数量", type: 'line',  smooth: true, data: cntdata[value], itemStyle: itemStyle2, yAxisIndex: 1 };
+                series.push(itemBar);
+                series.push(itemLine);
+            });
+            $.each(legend, function (index, value, array) {
+                legends.push(value + "金额");
+                legends.push(value + "数量");
+            });
+            var option = {
+                noDataLoadingOption: {
+                    text: '暂无数据',
+                    effect: 'bubble',
+                    effectOption: {
+                        effect: {
+                            n: 0
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                legend: {
+                    data: legends
+                },
+                xAxis: {
+                    type: 'category',
+                    data: signeddate
+                },
+                yAxis: [
+        			{
+        			    type: 'value',
+        			    name: '金额（万元）',
+        			    axisLabel: {
+        			        formatter: '{value} 万元'
+        			    }
+        			},
+        			{
+        			    type: 'value',
+        			    name: '合同数量（份）',
+        			    axisLabel: {
+        			        formatter: '{value} 个'
+        			    }
+        			}
+                ],
+                series: series
+            };
+            InitECharts( chartname + ii, option);
+        }
+        
+        //渲染图表
+        function InitECharts(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',
+                'echarts/chart/bar',
+                'echarts/chart/funnel',
+                'echarts/chart/pie'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+        /*五张进项、六张出项图表End*/
+    </script>
+
+</body>
+</html>

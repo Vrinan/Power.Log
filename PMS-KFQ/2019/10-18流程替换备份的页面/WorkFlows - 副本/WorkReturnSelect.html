@@ -1,0 +1,553 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title> 
+
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>   
+     <script language="javascript" src="/Scripts/PlatForm/ComTools.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowUtil.js?v=$AppVersion"></script>
+    <style>
+        v\:* {
+            behavior: url(#default#VML);
+        }
+        /*.mini-tabs-position-top .mini-tabs-scrollCt {
+            background-color: #CAE1FF;
+        }*/
+    </style>
+</head>
+
+<body id="body" onselectstart="return false">
+     
+    <div  style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <label>流程驳回</label>
+                </div><!--流程流转-->
+                <div class="actions">
+                    <a class="mini-button blue" onclick="onEditMind('cancel');" enabled="true"><i class="fa fa-wrench"></i>常用意见</a><!--常用意见--> 
+                    <a class="mini-button blue" id="btnOK" onclick="onNext" enabled="false">下一步</a><!--下一步-->
+                    <a class="mini-button blue" onclick="WorkFlowUtil.CloseWindow('cancel');" title="aaa"><i class="fa fa-power-off" ></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; padding-top: 4px">
+                    <form id="frmMain" style="height: 100%">
+                        <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" onactivechanged="onMainTabActivechanged" >
+                               
+                            <div title="人员选择" name="tabSelectUser" class="portlet-body" style="height: 100%;" enabled="false">
+                                <!--节点选择-->
+                                <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 100%;" borderstyle="border:0;">
+                                    <div id="divContent" region="center" split="true" title="流程选择"  >
+                                        <!--流程选择-->
+                                        <div id="mnuNodeList" borderstyle="border:0">
+                                        </div> 
+                                    </div>
+
+                                    <div region="south" id="workMindInfo" title="办理意见" height="250" showcollapsebutton="false">
+                                        <!--办理意见--> 
+                                         <div id="spnReturnedMode" style="float:left; line-height:30px; ">  <span style="float:left">驳回后发送模式：</span>  
+                                            <div id="rdoReturnedSendMode"  name="ReturnedSendMode" title="aaa" class="mini-radiobuttonlist" enabled="false"
+                                                 data-tooltip="Tooltip left" data-placement="right"
+                                                  style="float:left" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Normal" data="[{'Code':'Normal' ,'Text':'正常驳回' },{'Code':'MustSendCurrent' ,'Text':'直接送还本节点(点对点)' },{'Code':'MustReturnAndNormal' ,'Text':'正常驳回，且收件人只能常规发送' } ]"> </div> 
+                                              <span id="divReturnedSendModeInfo" />
+                                         </div>
+                                          <div id="spnPlanEndDate" style="display:none; float:left;margin-left:10px;"> <span>期望完成时间：</span><div id="dtPlanEndDate" class="mini-datepicker" style="width:150px;" ondrawdate="onDrawPlanEndDate" ></div></div>
+                                     
+                                        <div borderstyle="border:2; padding:10px;">
+                                            <div id="txtMindInfo" class="mini-textarea" height="80" borderstyle="border:2; padding:10px;" style="background-color: blue" emptytext="请输入办理意见"></div><!--请输入办理意见-->
+                                        </div>
+                                        <div id="mindList"></div>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript">
+
+        mini.parse();
+        var form = new mini.Form("frmMain");
+
+        var tabMain = mini.get("tabMain");  
+        
+        var curWin = null;  //当前窗体
+        var FormInfo = null;  // 表单信息
+        var curFlowOperate = null;
+        var AllData = null;   //所有节点列表
+         
+        var onMainTabActivechanged = function (e) {
+            var txt = "<i class='fa fa-save'></i>";
+            if (e.name == "tabSelectUser")
+                txt +=  "提交";
+            else
+                txt +=  "下一步";
+            mini.get("btnOK").setText(txt);
+             
+        }
+        function ShowFlowPicture() {
+            var row = gridWorkFlowList.getSelected();
+            if (!row) return;
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/ShowWorkFlow.html",
+                width: 800, height: 600, //title: "流程流转",
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.SetData(row.WorkFlowID, row.Version);
+                },
+                ondestroy: function (action) {
+                }
+            });
+        }
+        function onShowRenderer(e) {
+            var row = e.record;
+            var s = '<a class="New_Button" href="javascript:ShowFlowPicture()">流程图</a>';//流程图
+            return s;
+        }
+        var onWorkFlowSelection = function (e) {
+            if (!e) return;
+            if (e.selected == false) return;
+
+            var row = e.selected;
+            if (!row) return;
+            var tab = tabMain.getTab("tabSelectNode");
+            tabMain.updateTab(tab, { visible: (row.IsByDraft == true) }); //如果有起草者定义节点，则此流程显示第二特tab页
+
+            mini.get("btnOK").setEnabled(true);
+        }
+        var onWorkFlowDblClick = function (e) {
+            var row = e.record;
+            if (!row) return;
+             
+            //如果涵盖起草者定义的节点，则必须先完善流程
+            if (row.IsByDraft == true) {
+                var tab = tabMain.getTab("tabSelectNode");
+                tabMain.activeTab(tab);
+                DraftWorkNodes(row);
+                return;
+            }
+            else {
+                var tab = tabMain.getTab("tabSelectUser");
+                tabMain.activeTab(tab);
+                ActiveWorkFlow(row);   //激活tab页
+                return;
+            }
+        }
+        var onNext = function () {
+          
+            if (CheckSelectUser() == false) return;   //选择人员
+            mini.get("btnOK").setEnabled(false);
+            WorkFlowUtil.CloseWindow("ok");
+            return;
+
+        }
+        var onNodeStatusRenderer = function (e) {
+            var row = e.row;
+            var s ='';
+            if (row.Status == true) s = '√';
+            return s;
+        }
+        var onNodeRenderer = function (e) {
+            var s = '';
+            var row = e.row;
+
+            switch (row.SendUserMode) {
+                case "ByDraft":               //起草者定义模式        
+                    s += '&nbsp;<a class="New_Button" href="javascript:onDesignUser()">全局筛选</a>';
+                    
+                    if ( row.UserList)  row.UserList = mini.decode(row.UserList)
+                    if (row.UserList && row.UserList.length > 0) {
+                        s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDesignUserTwo()">二次筛选</a>';
+                    }
+                    break;
+                case "BySendUser":
+                    s += '&nbsp;发送时定义';
+                    break;
+                default:
+                    break;
+            }
+
+            return s;
+        }
+         
+        //调取选择人员处理
+        var CheckSelectUser = function () {
+             
+            form.validate();
+            if (form.isValid() == false) {
+                 Power.ui.info("非发送操作，请您录入意见信息");//"非发送操作，必须录入意见信息" 
+                return false;
+            }
+
+            var len = AllData.NextNodeList.length; 
+            var OtherUserInfo = "";  //回退操作中，如果干扰别人，则信息放入此变量
+            var iCount = 0;
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = AllData.NextNodeList[iTmp];
+                var rdoNode = document.getElementById("rdoNode" + node.NodeCode);
+                if (rdoNode.checked != true) continue;
+                var rdoNodeUser = document.getElementsByName("rdoNodeUser" + node.NodeCode);
+                var selectedUser = '';
+                for (var i = 0; i < rdoNodeUser.length; i++)
+                {
+                    if (!rdoNodeUser[i].checked) continue;
+                    selectedUser = AllData.NextNodeList[iTmp].ItemList[i];
+                    break;
+                }
+                 
+                if (!selectedUser) {
+                    Power.ui.error("对不起，节点[" + node.NodeName + "]没有选择目标人");
+                    return false;
+                }
+                
+                for (var irow = 0; irow < selectedUser.OtherUserList.length; irow++)
+                    OtherUserInfo += selectedUser.OtherUserList[irow].UserName + ",";
+                if (OtherUserInfo.length > 0) OtherUserInfo = OtherUserInfo.substring(0, OtherUserInfo.length - 1);
+                 
+                iCount++;
+            }
+            //if (iCount == 0) {
+            //    alert("对不起，请至少选择一个目标节点"); return false;//"对不起，退回操作只能选择一个目标节点"
+            //}           
+            //if (iCount > 1) {
+            //    alert("对不起，退回操作只能选择一个目标节点"); return false;//"对不起，退回操作只能选择一个目标节点"
+            //}
+            if (OtherUserInfo) {
+                if (confirm("您的此项退回操作，将会将 : [" + OtherUserInfo + "] 手中的待办记录一并回退到目标节点，请问是否要继续? \r\n\r\n(相关人员会自动收到一份告知单)") == false) return false;
+            }  
+            return true;
+        }
+          
+        //绘制到界面上
+        var bindNode = function (data) {
+
+            if (curWin && data.Current && data.Current.PlanEndDate) {
+                var curTitle = curWin.getTitle();
+                if (data.Current.PlanEndDate.getFullYear() > 1970)
+                   curWin.setTitle(curTitle + " 期望在 " + fomateDate(data.Current.PlanEndDate, "YYYY-MM-DD hh:mm") + " 之前完成.");
+            }
+
+              AllData = data ;
+
+            var mnuNodeList = document.getElementById("mnuNodeList");
+            //先清除里面的内容
+            mnuNodeList.innerHTML = "";
+
+            var len = data.NextNodeList.length;
+            
+            var sOutput = '<table border="1" style="width:100%" cellpadding="2">';
+            var sUserPut = '';
+
+            var beforeNodeItem = {};
+            var beforeCount = 0;  //扫描当前节点对应的前序节点数量
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = data.NextNodeList[iTmp];
+                var beforeCount = 0;
+                var beforeSequeID = 0; 
+                $.each(data.NextNodeList, function () {
+                    if (!this.ItemList) return;
+                    if (!node.ItemList) return;
+                    if (this.ItemList.length > 1) return;
+                    if (node.ItemList.length > 1) return;
+                    if (node.ItemList[0].BeforeSequeID != this.ItemList[0].BeforeSequeID) return;
+                    beforeCount++;
+                    beforeSequeID = node.ItemList[0].BeforeSequeID;
+                });
+                beforeNodeItem[node.NodeCode] = {
+                    "BeforeCount": beforeCount, "BeforeSequeID": beforeSequeID
+                };
+            }
+            
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = data.NextNodeList[iTmp];
+                sOutput += '<tr>';
+                sOutput += '<td style="width:120px">';
+                var controltype = "radio";
+                var controlName = "ReturnGroup";
+                if (beforeNodeItem[node.NodeCode].BeforeCount > 1) {
+                    controltype = "checkbox"; controlName = "CheckBox_" + beforeNodeItem[node.NodeCode].BeforeSequeID;
+                }
+
+                sOutput += '<label ><input id="rdoNode' + node.NodeCode + '" name="' + controlName +'"  type="' + controltype +'"  onclick="onSelectedNode(\'' + node.NodeCode + '\')"  />&nbsp;';
+                sOutput +=  node.NodeName + '</label></td>';
+
+                var sItemStr = '<td>';
+                
+                for (var irow = 0; irow < node.ItemList.length; irow++) {
+                   
+                    var sUserInfo = '';
+                    var item = node.ItemList[irow];
+                    for (var icol = 0; icol < item.UserList.length; icol++) {
+                        var user = item.UserList[icol]; 
+                        sendDate = mini.formatDate(user.SendDate ,"MM-dd HH:mm");
+                        if (new Date(user.SendDate).getFullYear() <= 1901)
+                             sendDate = mini.formatDate(user.RecvDate ,"MM-dd HH:mm");
+                         
+                        if (user.SourceUserID && user.SourceUserID != user.UserID)
+                            sUserInfo += user.UserName + "  代(" + user.SourceUserName + ") (" + sendDate + ") ,";
+                        else
+                            sUserInfo += user.UserName + "  (" + sendDate + ") ,";
+                    }
+                     if (sUserInfo.length > 0) sUserInfo = sUserInfo.substring(0, sUserInfo.length - 1);
+                     if (irow != 0) sItemStr += '<br/>';
+                     sItemStr += '<label ><input id="rdoNode' + node.NodeCode + '_' + item.BeforeSequeID + '" name="rdoNodeUser' + node.NodeCode +'"  type="radio"  />&nbsp;' + sUserInfo + '</label>';
+                }
+                sItemStr += '</td>';
+                sOutput += sItemStr;
+                sOutput += '</tr>';
+                 
+            }
+            sOutput += '</table>';
+           
+            var win_column_obj = $(sOutput);
+            win_column_obj.appendTo(mnuNodeList);
+            mini.parse();
+
+            if (len == 1) {
+                var rdoNode = document.getElementById("rdoNode" + data.NextNodeList[0].NodeCode);
+                setReturnedSendMode(data.NextNodeList[0].NodeCode);
+                rdoNode.checked = true;
+                if (data.NextNodeList[0].ItemList.length == 1) {
+                    var rdoNodeUser = document.getElementById("rdoNode" + data.NextNodeList[0].NodeCode + '_' + data.NextNodeList[0].ItemList[0].BeforeSequeID);
+                    rdoNodeUser.checked = true;
+                }
+            }
+        }
+
+        var setReturnedSendMode = function (nodeCode) {
+            debugger;
+            for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                var node = AllData.NextNodeList[irow];
+                if (node.NodeCode != nodeCode) continue;
+
+                var ReturnedSendMode = node.ReturnedSendMode;
+                if (!ReturnedSendMode) ReturnedSendMode = "Normal";
+                mini.get("rdoReturnedSendMode").setValue(ReturnedSendMode);
+                mini.get("rdoReturnedSendMode").setEnabled(node.IsAllowReturnedSendMode);
+
+                if (node.IsAllowReturnedSendMode == false) break;
+                if (node.DefaultReturnedSendMode) mini.get("rdoReturnedSendMode").setValue(node.DefaultReturnedSendMode);
+                break;
+            }
+        }
+        var onSelectedNode = function(nodeCode)
+        {
+            var scanNode = nodeCode +",";
+            var rdoNode = document.getElementById("rdoNode" + nodeCode);
+            if (rdoNode.type == "radio") {
+                if (rdoNode.checked == false) return;
+                var rdoNodeUser = document.getElementsByName("rdoNodeUser" + nodeCode);
+                if (rdoNodeUser.length == 1) rdoNodeUser[0].checked = true;
+            }
+            else  //是checkbox
+            { 
+                var chkLst = document.getElementsByName(rdoNode.name);
+                for (k in chkLst) {
+                    if (!chkLst[k].id) continue;
+                    chkLst[k].checked = rdoNode.checked;
+                    var tmpNodeCode = chkLst[k].id.replace("rdoNode", "");
+                    scanNode += tmpNodeCode + ",";
+                    var rdoNodeUser = document.getElementsByName("rdoNodeUser" + tmpNodeCode);
+                    if (rdoNodeUser.length == 1) rdoNodeUser[0].checked = rdoNode.checked;
+                }
+            }
+            debugger;
+            var len = AllData.NextNodeList.length;
+            //未选中的 节点，对应的人员也全部取消选中
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = AllData.NextNodeList[iTmp];
+                var tmpNodeCode = node.NodeCode;
+                if (scanNode.indexOf(tmpNodeCode + ",") >= 0) continue;
+                var rdoTmpNode = document.getElementById("rdoNode" + tmpNodeCode);
+                rdoTmpNode.checked = false;
+                var rdoTmpNodeUser = document.getElementsByName("rdoNodeUser" + tmpNodeCode);
+                for (var irow = 0; irow < rdoTmpNodeUser.length; irow++)
+                    rdoTmpNodeUser[irow].checked = false;
+            }
+            setReturnedSendMode(nodeCode);
+        }
+  
+        //只允许选择当前日期之后的日期
+        var onDrawPlanEndDate = function (e) {
+            var date = e.date;
+            var d = new Date();
+
+            if (date.getTime() < d.getTime()) {
+                e.allowSelect = false;
+            }
+        }
+        //--------------------------意见编辑
+        var onEditMind = function (e) {
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlow/CommonMind.html",
+                width: 600, height: 400, //title: "流程流转",
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+
+                    var iframe = this.getIFrameEl();
+                    var tmpData = iframe.contentWindow.GetData();
+                    mini.get("txtMindInfo").setValue(tmpData);
+                }
+            });
+        }
+        //提取目标节点可选人员
+        var GetNodesUser = function (data) {
+             
+            var tabNode = tabMain.getTab("tabSelectUser");
+            tabNode.enabled = true;
+            tabMain.activeTab(tabNode);
+
+            if (data == null || data == "") {
+                alert("用户信息提取失败"); return;//"提取失败"
+            }
+            mini.get("btnOK").setEnabled(true);
+
+            curFlowOperate = data.FlowOperate;
+
+            bindNode(data);
+
+             
+            //判断是否有期望完成时间要手工定义的，如果有，放开选择日期框
+            var len = data.NextNodeList.length;
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = data.NextNodeList[iTmp];
+                if (node.IsCancel == true) continue;     //自定义事件中，强制指定此节点无视掉
+                if (node.InputLimitDaysByRun != true) continue;
+
+                document.getElementById("spnPlanEndDate").style.display = "";
+                mini.get("dtPlanEndDate").setVisible(true);
+                mini.get("dtPlanEndDate").setRequired(true);
+                mini.get("dtPlanEndDate").setRequiredErrorText("请填写期望完成时间");//"请填写办理意见"
+                break;
+            }
+             
+            var div = $("#mindList");
+            WorkFlowUtil.DrawMindList(div, data.HistoryMind, data.Agreelable, data.DisagreeLabel);
+            mini.get("txtMindInfo").setValue(data.MindInfo);
+         
+           //如果当前节点意见必填,或者不是发送操作，则意见必填
+            mini.get("txtMindInfo").setRequired(true);
+            mini.get("txtMindInfo").setRequiredErrorText("请填写办理意见");//"请填写办理意见" 
+        } 
+         
+ 
+        //提取流程列表
+        var onSelectNode = function (data, MyFlowOperate,subOperate) {
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = subOperate;   //选择目标流程人员信息
+            if (data.SequeID) CurrentInfo.SequeID = data.SequeID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    
+                    result.data.FlowOperate = MyFlowOperate;
+                    
+                    ////如果同时待办有多人，则不允许操作“直接返还本人"
+                    //if (result.data.InboxCount && result.data.InboxCount > 1) {
+                    //    mini.get("rdoReturnedSendMode").setEnabled(false); 
+                    //    document.getElementById("divReturnedSendModeInfo").innerHTML = "<font color='red'>有[" + result.data.InboxCount + "]项待办，您并非独享表单，禁用直接送还</font>" ;
+                    //}
+
+                    GetNodesUser(result.data);
+                        
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data, flowOperate,win) {
+                                     
+            curWin = win;
+            onSelectNode(data, flowOperate, "ReadReturnNodeList");
+               
+        }
+        var GetData = function () {
+            var mindInfo = mini.get("txtMindInfo").getValue();
+            var selectNode = [];
+            var user = null;
+            var planEndDate = mini.get("dtPlanEndDate").getValue();
+            var len = AllData.NextNodeList.length;
+            debugger;
+            var sReturnedSendMode = mini.get("rdoReturnedSendMode").getValue();   //驳回后，处理模式
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = AllData.NextNodeList[iTmp];
+                var nodeCode= node.NodeCode;
+                var rdoNode = document.getElementById("rdoNode" + node.NodeCode);
+                if (rdoNode.checked != true) continue;
+                var rdoNodeUser = document.getElementsByName("rdoNodeUser" + node.NodeCode);
+                 
+                var selectedUser = [];
+                for (var i = 0; i < rdoNodeUser.length; i++) {
+                    if (!rdoNodeUser[i].checked) continue;
+                    selectedUser = AllData.NextNodeList[iTmp].ItemList[i];                    
+                    break;
+                }
+               
+
+                if (!selectedUser && !selectedUser.UserList) {
+                    Power.ui.error("对不起，节点[" + node.NodeName + "]没有选择目标人");
+                    return false;
+                }
+                if (node.InputLimitDaysByRun == true) {
+                    for (var irow = 0; irow < selectedUser.UserList.length; irow++)
+                        selectedUser.UserList[irow].PlanEndDate = planEndDate;
+                }
+                var sendNode = {};
+                sendNode.ItemList = [];
+                sendNode.ItemList.push(selectedUser);
+                sendNode.NodeCode = node.NodeCode;
+                sendNode.NodeName = node.NodeName;
+
+                sendNode.ReturnedSendMode = sReturnedSendMode;
+                selectNode.push(sendNode);
+            }
+             
+          
+         
+            
+            var voteValue = '';
+            return {"Current":AllData.Current, "SelectedNode": selectNode,  "MindInfo": mindInfo};
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">                
+                             <a class="mini-button blue" id="PS_ContractClaim.CC" onclick="ViewFrom()"><i class="fa fa-eye"></i>查看明细</a>                       
+                            <a class="mini-button blue" id="PS_ContractClaim.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools"></div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                       <div id="PS_ContractClaim" class="mini-datagrid" height="699" style="width: 100%; height: 100%;" visible="true" width="974" pagesize="20" fitcolumns="" summarycolumns="" idfield="Id" >
+                            <div property="columns">
+                                <div type="indexcolumn"  headeralign="center" width="45" align="center">序号</div>
+                                <div width="120" field="Code" headeralign="center" header="编号"  guideid="" allowsort="true" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div width="150" field="Title" headeralign="center" header="标题" guideid="" allowsort="true" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div width="150" field="ContractName" headeralign="center" header="合同名称"  guideid="" allowsort="true" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div width="80" field="SubmitSupervisionDate" headeralign="center" header="提交监理日期" dateformat="yyyy-MM-dd"  guideid="" allowsort="true" align="center">提交监理日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div width="80" field="ClaimAmount" headeralign="center" header="申请索赔金额"  guideid="" allowsort="true" align="center">申请索赔金额<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div width="80" field="OwnerReplyDate" headeralign="center" header="业主批复日期"  guideid="" dateformat="yyyy-MM-dd" allowsort="true" align="center">业主批复日期<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div width="80" field="ReplyAmount" headeralign="center" header="业主批复金额"  guideid="" allowsort="true" align="center">业主批复金额<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                <div type="comboboxcolumn"  headeralign="center" name="PS_ContractDefaultNotices.Status" width="60" field="Status" header="审批状态" guideid="" allowsort="true" align="center">审批状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div width="80" field="RegHumName"  headeralign="center" header="录入人"  guideid="" allowsort="true" align="center">录入人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                <div width="80" field="RegDate"  headeralign="center" header="录入时间"  guideid="" allowsort="true" dateformat="yyyy-MM-dd" align="center">录入时间<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+		PowerForm.EventBeforeLoadData = function (e) {
+			var Contract_Guid = getParameter("Contractid");
+            debugger;
+            if (e.params.swhere != "")
+                e.params.swhere += " and Contract_Guid='" + Contract_Guid + "'";
+            else
+                e.params.swhere = "  Contract_Guid='" + Contract_Guid + "'";
+        }
+		function ViewFrom() {
+            debugger;
+            var grid = mini.get("PS_ContractClaim");
+			var row=grid.getSelected();
+			if(!row){
+			 Power.ui.warning("没有选择记录！!"); return false;
+			}
+            var id = row.Id;
+            var url = "/Form/ViewForm/1dd49a11-68a1-43c5-ad63-8aba0050339d/" + id + "/"
+            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+            mini.open({
+                url: url,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                onload: function () {
+
+                },
+                ondestroy: function () {
+                }
+            });
+        }
+
+        //
+    </script>
+</body>
+</html>

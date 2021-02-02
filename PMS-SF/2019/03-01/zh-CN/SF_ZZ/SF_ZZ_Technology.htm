@@ -1,0 +1,204 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>科技管理内部(鉴定表)
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <a class="mini-button blue" id="SF_ZZ_Technology.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存
+                        </a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Technology.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新
+                        </a>
+                        <!--刷新-->
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="SF_ZZ_Technology.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭
+                        </a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Technology" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Technology.Title" name="Title" class="mini-textbox"   required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            建议名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Technology.Name" name="Name" class="mini-textbox"  readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            申请表申请人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.Applicant" name="Applicant" textname="Applicant" class="mini-buttonedit"
+                                                   allowinput="false" onbuttonclick="PowerForm.OnBtnWizard(this)" emptytext="请选择人员..." required />
+
+                                        </td>
+                                        <td>
+                                            申请人所属部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.Department" name="Department" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            申请时间
+                                        </td>
+                                        <td>
+
+                                            <input id="SF_ZZ_Technology.TimeA" name="TimeA" class="mini-datepicker" allowinput="false" />
+                                        </td>
+                                       
+                                        <td>
+                                            协作部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.DepartmentA" name="DepartmentA" textname="DepartmentA" class="mini-textbox"
+                                                   readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            参与人员
+                                        </td>
+                                        <td >
+                                            <input id="SF_ZZ_Technology.Personnel" name="Personnel" class="mini-textbox" />
+                                        </td>
+                                   
+                                        <td>
+                                            费用核算
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.Cost" name="Cost" class="mini-Spinner"   minValue="0"
+                                                maxValue="999999999999999"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            建议内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Technology.Memo" name="Memo" class="mini-textarea"   height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_ZZ_Technology.Project">实施方案</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Technology.Project" name="Project" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            实际经济效<br>
+                                            益或社会效益
+
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Technology.Benefits" name="Benefits" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Technology.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,668 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>优秀设计评选
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_ExcellentDesignSelection.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>项目设计总结</a>
+                    <a class="mini-button blue" id="SF_ExcellentDesignSelection.ViewForm1" onclick="ViewForm1()"><i class="fa fa-eye"></i>清水试车合同证</a>
+                    <a class="mini-button blue" id="SF_ExcellentDesignSelection.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ExcellentDesignSelection.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ExcellentDesignSelection.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ExcellentDesignSelection" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ExcellentDesignSelection.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ExcellentDesignSelection.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>项目设计总结</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ProjectDesignsummarize" name="ProjectDesignsummarize" textname="ProjectDesignsummarize" class="mini-buttonedit"
+                                                   emptytext="关联项目设计总结..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                        <td>清水试车合格证</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.RinsingTrialRunCompact" name="RinsingTrialRunCompact" textname="RinsingTrialRunCompact" class="mini-buttonedit"
+                                                   emptytext="关联清水试车合格证..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ProjectCode" name="ProjectCode" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ProjectName" class="mini-textbox" name="ProjectName" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            项目负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ProjectLeader" name="ProjectLeader" textname="ProjectLeader" class="mini-buttonedit"
+                                                   emptytext="请选择项目负责人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                        <td>
+                                            设计类别
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.DesignType" name="DesignType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计开始时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.DesignStartTime" name="DesignStartTime" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            设计结束时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.DesignEndTime" name="DesignEndTime" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            清水联动试车时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.CommissioningTime" name="CommissioningTime" class="mini-datepicker" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            验收时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ReceptionTime" name="ReceptionTime" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            交付使用时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.UseTime" name="UseTime" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            验收部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ReceptionDepartment" name="ReceptionDepartment" textname="ReceptionDepartment" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目模式
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.ProjectPattern" name="ProjectPattern" class="mini-combobox" />
+                                        </td>
+                                        <!--<td>
+                                            申报等级
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.DeclarationGrade" name="DeclarationGrade" class="mini-textbox" />
+                                        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title='评分明细'>
+                            <div id="SF_ExcellentDesignSelection_list" class="form">
+                                <table class="table table-bordered" style="border:none;">
+                                    <!--<tr>
+                                        <td>评分项</td>
+                                        <td width="100">评分规则</td>
+                                        <td>评分部门</td>
+                                        <td>评分部门</td>
+                                        <td>满分</td>
+                                        <td>本项目得分</td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>评分项</td>
+                                        <td width="200">评分规则</td>
+                                        <td colspan="2">评分部门</td>
+                                        <td>满分</td>
+                                        <td>本项目得分</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">设计质量</td>
+                                        <td rowspan="2">未违反强规、工艺合理、图纸美观、总图布置合理、自动化程度、设计失误少等</td>
+                                        <td>设计部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesQua_DesDep" name="DesQua_DesDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>10</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesQua_DesDepScore" name="DesQua_DesDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>项目部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesQua_ProjDep" name="DesQua_ProjDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>15</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesQua_ProjDepScore" name="DesQua_ProjDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>技术协议质量</td>
+                                        <td>技术协议签订及时、质量较高</td>
+                                        <td>合同部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.TechPro_ConDep" name="TechPro_ConDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>5</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.TechPro_ConDepScore" name="TechPro_ConDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>经济性</td>
+                                        <td>预算不超概算5%</td>
+                                        <td>财务部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.Economy_AccDep" name="Economy_AccDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>10</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.Economy_AccDepScore" name="Economy_AccDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>设计进度</td>
+                                        <td>设计进度和变更进度满足要求</td>
+                                        <td>项目部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesSche_ProjDep" name="DesSche_ProjDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>5</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.DesSche_ProjDepScore" name="DesSche_ProjDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>施工图服务质量</td>
+                                        <td>经常到现场服务、处理问题及时</td>
+                                        <td>项目部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.CoraSe_ProjDep" name="CoraSe_ProjDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>5</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore" name="CoraSe_ProjDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>归档资料质量</td>
+                                        <td>归档资料完整、质量符合要求</td>
+                                        <td>设计部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.ArchDat_DesDep" name="ArchDat_DesDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>5</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.ArchDat_DesDepScore" name="ArchDat_DesDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>安全环保性</td>
+                                        <td>设计本质性安全</td>
+                                        <td>安环部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.SafeEnvr_EnvDep" name="SafeEnvr_EnvDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>5</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore" name="SafeEnvr_EnvDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>运行部评价</td>
+                                        <td>设备选型合理、设计合理</td>
+                                        <td>运行部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.OpeApp_OpeDep" name="OpeApp_OpeDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>10</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore" name="OpeApp_OpeDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>市场反馈意见</td>
+                                        <td>业主评价较好</td>
+                                        <td>市场部</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.Marfeba_MarDep" name="Marfeba_MarDep" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>10</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.Marfeba_MarDepScore" name="Marfeba_MarDepScore" onvaluechanged="valueChanged" class="mini-spinner" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td colspan="4">合计</td>
+
+                                        <td>80</td>
+                                        <td>
+                                            <input id="SF_ExcellentDesignSelection_list.SumScore" name="SumScore" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            //if (sessiondata.PosiId)
+            PowerForm.Init();
+        });
+
+        //Ids
+        //1设计部SF_ExcellentDesignSelection_list.DesQua_DesDep DesQua_DesDepScore 10 喻本宏
+        //1项目部SF_ExcellentDesignSelection_list.DesQua_ProjDep DesQua_ProjDepScore 15 汤伟
+        //1合同部SF_ExcellentDesignSelection_list.TechPro_ConDep TechPro_ConDepScore 5
+        //1财务部SF_ExcellentDesignSelection_list.Economy_AccDep Economy_AccDepScore 10 卢莹
+        //1项目部SF_ExcellentDesignSelection_list.DesSche_ProjDep DesSche_ProjDepScore 5
+        //1项目部SF_ExcellentDesignSelection_list.CoraSe_ProjDep CoraSe_ProjDepScore 5
+        //1设计部SF_ExcellentDesignSelection_list.ArchDat_DesDep ArchDat_DesDepScore 5
+        //1安环部SF_ExcellentDesignSelection_list.SafeEnvr_EnvDep SafeEnvr_EnvDepScore 5
+        //运行部SF_ExcellentDesignSelection_list.OpeApp_OpeDep OpeApp_OpeDepScore 10
+        //1市场部SF_ExcellentDesignSelection_list.Marfeba_MarDep Marfeba_MarDepScore 10 王杰
+        //合计SF_ExcellentDesignSelection_list.SumScore
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            //默认不显示,只读
+            mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.SumScore").setVisible(false);
+            mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setReadOnly(true);
+            mini.get("SF_ExcellentDesignSelection_list.SumScore").setReadOnly(true);
+            ////系统管理员和6个项目经理全程可见
+            //if (sessiondata.HumanId == "ad000000-0000-0000-0000-000000000000" || sessiondata.HumanId == "936d2910-3420-471b-9aee-098154caefd3" || sessiondata.HumanId == "9c46b45a-3675-49b5-a65a-4cfad3c33b94" || sessiondata.HumanId == "474ee3df-bad5-41f5-bdda-4de2e77994d9" || sessiondata.HumanId == "256ec418-7822-456c-afc7-8291e92b461e" || sessiondata.HumanId == "365e3163-d30d-4c71-85dc-ad5eedb0012c" || sessiondata.HumanId == "7104a4ce-2c9f-4f63-bf0e-c562783996b1") {
+            //}
+
+            //系统管理员和录入人全程可见+领导班子
+            if (sessiondata.HumanId == "ad000000-0000-0000-0000-000000000000" || sessiondata.HumanId == formconfig.config.joindata.currow.RegHumId || sessiondata.DeptId == '6dac8faa-df4c-4377-a9d6-018f7fd9b5c3') {
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.SumScore").setVisible(true);
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setReadOnly(true);
+                mini.get("SF_ExcellentDesignSelection_list.SumScore").setReadOnly(true);
+            }
+
+            //部长只能编辑自己部门的
+            switch (sessiondata.HumanId) {
+                //设计
+                case "415d10e8-20d2-439a-9399-6b95d1dcd950":
+                    mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setVisible(true);
+                    mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setVisible(true);
+                    break;
+                    //项目
+                case "f253ee8d-ef37-4806-aded-2e6e46906642":
+                    mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setVisible(true);
+                    mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setVisible(true);
+                    mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setVisible(true);
+                    break;
+                    //合同
+                case "e216ece0-f4e6-4b6c-9c48-29e8962fd8c2":
+                    mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setVisible(true);
+                    break;
+                    //财务
+                case "878eba8f-cce7-4472-a9b6-98312103f782":
+                    mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setVisible(true);
+                    break;
+                    //安环
+                case "aefc446a-1fd0-474b-a331-394bcaaed3d3":
+                    mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setVisible(true);
+                    break;
+                    //运行
+                case "5f9fdc8f-3540-4fcb-950c-16c55f8e5cad":
+                    mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setVisible(true);
+                    break;
+                    //市场
+                case "038d3105-5ce4-47fa-983e-441a959aa434":
+                    mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setVisible(true);
+                    break;
+                default:
+            }
+
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "pf") {
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection_list.SumScore").setReadOnly(false);
+                mini.get("SF_ExcellentDesignSelection.Save").enable();
+            }
+        }
+
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var a = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").getValue());
+            var b = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").getValue());
+            var c = parseFloat(mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").getValue());
+            var d = parseFloat(mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").getValue());
+            var e = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").getValue());
+            var f = parseFloat(mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").getValue());
+            var g = parseFloat(mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").getValue());
+            var h = parseFloat(mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").getValue());
+            var i = parseFloat(mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").getValue());
+            var j = parseFloat(mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").getValue());
+            var sum = a + b + c + d + e + f + g + h + i + j;
+            mini.get("SF_ExcellentDesignSelection_list.SumScore").setValue(sum);
+        }
+
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "pf") {
+                e.isValid = true;
+                var a = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesQua_DesDepScore").getValue());//设计
+                var b = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesQua_ProjDepScore").getValue());//项目
+                var c = parseFloat(mini.get("SF_ExcellentDesignSelection_list.TechPro_ConDepScore").getValue());//合同
+                var d = parseFloat(mini.get("SF_ExcellentDesignSelection_list.Economy_AccDepScore").getValue());//财务
+                var aa = parseFloat(mini.get("SF_ExcellentDesignSelection_list.DesSche_ProjDepScore").getValue());//项目
+                var f = parseFloat(mini.get("SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore").getValue());//项目
+                var g = parseFloat(mini.get("SF_ExcellentDesignSelection_list.ArchDat_DesDepScore").getValue());//设计
+                var h = parseFloat(mini.get("SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore").getValue());//安环
+                var i = parseFloat(mini.get("SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore").getValue());//运行
+                var j = parseFloat(mini.get("SF_ExcellentDesignSelection_list.Marfeba_MarDepScore").getValue());//市场
+                switch (sessiondata.HumanId) {
+                    //设计
+                    case "415d10e8-20d2-439a-9399-6b95d1dcd950":
+                        if (IsEmpty(a) || IsEmpty(g)) {
+                            e.isValid = false;
+                            Power.ui.alert("设计部未打分")
+                        }
+                        break;
+                        //项目
+                    case "f253ee8d-ef37-4806-aded-2e6e46906642":
+                        if (IsEmpty(b) || IsEmpty(aa) || IsEmpty(f)) {
+                            e.isValid = false;
+                            Power.ui.alert("项目部未打分")
+                        }
+                        break;
+                        //合同
+                    case "e216ece0-f4e6-4b6c-9c48-29e8962fd8c2":
+                        if (IsEmpty(c)) {
+                            e.isValid = false;
+                            Power.ui.alert("合同部未打分")
+                        }
+                        break;
+                        //财务
+                    case "878eba8f-cce7-4472-a9b6-98312103f782":
+                        if (IsEmpty(d)) {
+
+                            Power.ui.alert("财务部未打分")
+                            e.isValid = false;
+                        }
+                        break;
+                        //安环
+                    case "aefc446a-1fd0-474b-a331-394bcaaed3d3":
+                        if (IsEmpty(h)) {
+                            e.isValid = false;
+                            Power.ui.alert("安环部未打分")
+                        }
+                        break;
+                        //运行
+                    case "5f9fdc8f-3540-4fcb-950c-16c55f8e5cad":
+                        if (IsEmpty(i)) {
+                            e.isValid = false;
+                            Power.ui.alert("运行部未打分")
+                        }
+                        break;
+                        //市场
+                    case "038d3105-5ce4-47fa-983e-441a959aa434":
+                        if (IsEmpty(j)) {
+                            e.isValid = false;
+                            Power.ui.alert("市场部未打分")
+                        }
+                        break;
+                    default:
+                }
+            }
+        }
+
+        //打分不能大于满分，大于满分时自动变为最高分
+        function valueChanged(e) {
+            var a = mini.get(e.sender.id).getValue();
+            switch (e.sender.id) {
+                //市场
+                case "SF_ExcellentDesignSelection_list.Marfeba_MarDepScore":
+                    if (parseFloat(a) > 10) {
+                        Power.ui.warning("满分10分");
+                        mini.get(e.sender.id).setValue(10);
+                    }
+                    break;
+                    //运行
+                case "SF_ExcellentDesignSelection_list.OpeApp_OpeDepScore":
+                    if (parseFloat(a) > 10) {
+                        Power.ui.warning("满分10分");
+                        mini.get(e.sender.id).setValue(10);
+                    }
+                    break;
+                    //安环
+                case "SF_ExcellentDesignSelection_list.SafeEnvr_EnvDepScore":
+                    if (parseFloat(a) > 5) {
+                        Power.ui.warning("满分5分");
+                        mini.get(e.sender.id).setValue(5);
+                    }
+                    break;
+                    //设计
+                case "SF_ExcellentDesignSelection_list.ArchDat_DesDepScore":
+                    if (parseFloat(a) > 5) {
+                        Power.ui.warning("满分5分");
+                        mini.get(e.sender.id).setValue(5);
+                    }
+                    break;
+                    //项目1
+                case "SF_ExcellentDesignSelection_list.CoraSe_ProjDepScore":
+                    if (parseFloat(a) > 5) {
+                        Power.ui.warning("满分5分");
+                        mini.get(e.sender.id).setValue(5);
+                    }
+                    break;
+                    //项目2
+                case "SF_ExcellentDesignSelection_list.DesSche_ProjDepScore":
+                    if (parseFloat(a) > 5) {
+                        Power.ui.warning("满分5分");
+                        mini.get(e.sender.id).setValue(5);
+                    }
+                    break;
+                    //财务
+                case "SF_ExcellentDesignSelection_list.Economy_AccDepScore":
+                    if (parseFloat(a) > 10) {
+                        Power.ui.warning("满分10分");
+                        mini.get(e.sender.id).setValue(10);
+                    }
+                    break;
+                    //合同
+                case "SF_ExcellentDesignSelection_list.TechPro_ConDepScore":
+                    if (parseFloat(a) > 5) {
+                        Power.ui.warning("满分5分");
+                        mini.get(e.sender.id).setValue(5);
+                    }
+                    break;
+                    //项目
+                case "SF_ExcellentDesignSelection_list.DesQua_ProjDepScore":
+                    if (parseFloat(a) > 15) {
+                        Power.ui.warning("满分15分");
+                        mini.get(e.sender.id).setValue(15);
+                    }
+                    break;
+                    //设计
+                case "SF_ExcellentDesignSelection_list.DesQua_DesDepScore":
+                    if (parseFloat(a) > 10) {
+                        Power.ui.warning("满分10分");
+                        mini.get(e.sender.id).setValue(10);
+                    }
+                    break;
+                default:
+                    var al = 1;
+                    break;
+            }
+        }
+
+        //关联查看
+        function ViewForm1() {
+
+            var id = formconfig.config.joindata.currow["Id"];
+            var InvestorId = formconfig.config.joindata.currow["RinsingTrialRunCompactId"];
+
+            if (formconfig.FormState == "add" || mini.get("SF_ExcellentDesignSelection.RinsingTrialRunCompact").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/2b3b0a60-928c-4ab1-a363-eb6463c74e13/" + "/view/" + InvestorId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+
+            }
+        }
+
+        function ViewForm() {
+
+            var id = formconfig.config.joindata.currow["Id"];
+            var InvestorId = formconfig.config.joindata.currow["ProjectDesignsummarizeId"];
+
+            if (formconfig.FormState == "add" || mini.get("SF_ExcellentDesignSelection.ProjectDesignsummarize").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/61f53cb9-16f8-4908-aef4-fd46e845c898/" + "/view/" + InvestorId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+
+            }
+        }
+    </script>
+</body>
+</html>

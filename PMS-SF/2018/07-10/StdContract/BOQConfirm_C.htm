@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>工程量申报
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+				    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_BOQConfirm.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_BOQConfirm.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_BOQConfirm.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_BOQConfirm" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_BOQConfirm.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_BOQConfirm.Title" name="Title" class="mini-textbox" required="true"  />
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+										
+                                        <td colspan="3">
+										<input id="PS_BOQConfirm.Contract_Guid" name="Contract_Guid" class="mini-textbox" style="display:none" />
+                                            <input id="PS_BOQConfirm.ContractName" class="mini-buttonedit" name="ContractName" textname="ContractName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;"   required="true"  />
+                                        </td>
+                                       
+                                    </tr> 									
+                                    <tr>
+                                   <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.ContractCode" name="ContractCode" class="mini-textbox"   readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            申报日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.ApplyDate" name="ApplyDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr> 
+									<tr>
+									    <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+										<td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOQConfirm.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='工程量申报明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+							
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="PS_BOQConfirm_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>新增-->
+								<a class="mini-button blue" iconcls="fa-plus" id="PS_BOQConfirm_Dtl.Add" onclick="AddConPi(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_BOQConfirm_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_BOQConfirm_Dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+										
+                                        <div field="PiCode" headeralign="center">
+                                            支付项编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" style="width: 100%;"  />
+                                        </div>	
+                                       <div field="PiName" headeralign="center">
+                                            支付项名称
+                                              <input property="editor"  class="mini-textbox" style="width: 100%;" readonly="readonly"  />
+                                        </div>
+                                        <div field="PiUnit"    headeralign="center">
+                                            单位
+                                        <input property="editor" class="mini-textbox"  style="width: 100%;"  />
+                                        </div>
+										 <div field="PiAmount" headeralign="center">
+                                            数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                        </div>
+										   <div field="FinishAmount" headeralign="center">
+                                            完成数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+										 <div field="ApplyAmount" headeralign="center">
+                                            申请数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+										<div field="ReviewAmount" headeralign="center">
+                                            审核数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+										<div field="ReplyAmount" headeralign="center">
+                                            批复数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function AddConPi() {
+            var Grid = mini.get("PS_BOQConfirm_Dtl");
+            var ContactId = mini.get("PS_BOQConfirm.Contract_Guid").getValue();
+            var AllayId = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/WizardWinSubContractBOQConfirmdtl.htm&multi=1&ContactId=" + ContactId + "&AllayId=" + AllayId,
+                showMaxButton: true,
+                width: 800,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.Confirm_Guid = data[i].Id;
+                        row.Pi_Guid = data[i].Pi_Guid;
+                        row.PiClass_Guid = data[i].PiClass_Guid;
+                        row.PiCode = data[i].PiCode;
+                        row.PiName = data[i].PiName;
+                        row.PiUnit = data[i].PiUnit;
+                        row.PiPrice = data[i].PiPrice;
+                        row.PiAmount = data[i].PiAmount;
+                        row.ApplyMoney = data[i].PiMoney;
+                        row.FinishAmount = data[i].FinishPiAmount;
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_BOQConfirm.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_BOQConfirm.ContractName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/5c89e719-843a-4ac4-a542-129e9b4cfa0f/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+    </script>
+</body>
+</html>

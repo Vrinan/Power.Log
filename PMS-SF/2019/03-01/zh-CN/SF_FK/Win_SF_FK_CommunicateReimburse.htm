@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="SF_FK_CommunicateReimburse.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="SF_FK_CommunicateReimburse.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="SF_FK_CommunicateReimburse.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="SF_FK_CommunicateReimburse.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="SF_FK_CommunicateReimburse-Export" title="交通通讯费用报销" class="btn-group"></div>
+                        </div>
+                        <div class="tools">
+                            <input id="SF_FK_CommunicateReimburse-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="SF_FK_CommunicateReimburse-search">
+                                <input id="SF_FK_CommunicateReimburse-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_FK_CommunicateReimburse-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_FK_CommunicateReimburse" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id" sortField="RegDate" sortOrder="desc">
+                            <div property="columns">
+                                <div type="comboboxcolumn" field="Status" name="SF_FK_CommunicateReimburse.Status" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="状态" align="left">状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left" width="80">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left"  width="200">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="ApplicationHuman" name="ApplicationHuman" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="申请人" align="left" width="60">申请人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="ApplicationTrafficAmount" name="ApplicationTrafficAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="申报交通费" align="left"  width="60">申报交通费<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+
+                                <div field="ApplicationComAmount" name="ApplicationComAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="申报通讯费" align="left"  width="60">申报通讯费<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+
+                                <div field="ApproveTrafficAmount" name="ApproveTrafficAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="审定交通费" align="left"  width="60">审定交通费<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+
+                                <div field="ApproveComAmount" name="ApproveComAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="审定通讯费" align="left"  width="60">审定通讯费<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+
+                                <div field="AddYearMonth" name="AddYearMonth" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="填报日期" dateformat="yyyy-MM" align="left">填报日期<input property="editor" class="mini-monthpicker" style="width: 100%;" /></div>
+                                
+                                <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var dept = sessiondata.DeptName;
+            var humid = sessiondata.HumanId;
+            if(dept == "财务部" || humid =="ad000000-0000-0000-0000-000000000000")
+            {
+                
+            }
+            else
+            {
+                formconfig.config.joindata.swhere ="  RegHumId='"+humid+"'";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+
+
+    </script>
+</body>
+</html>

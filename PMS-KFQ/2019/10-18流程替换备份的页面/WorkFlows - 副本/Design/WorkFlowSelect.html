@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="portlet box">
+    <div class="portlet-body">
+        <div id="rdoWorkFlowList" class="mini-radiobuttonlist" repeatLayout="table" repeatDirection="horizontal" textField="WorkFlowName" valueField="WorkFlowID">
+        </div>  
+        <div class="margin-top-10" style="text-align:center;">
+            <input class="mini-button blue" id="btnOK" text="$Helper.GetResource('g_ok')" onclick="btnOK" /> &nbsp;&nbsp;<!--确定-->
+            <input class="mini-button default" text="$Helper.GetResource('g_cancel')" onclick="CloseWindow('cancel');" /><!--取消-->
+        </div>
+    </div>
+</div>
+<script language="javascript">
+    mini.parse();
+    var rdoWorkFlowList = mini.get("rdoWorkFlowList");
+    var btnOK = function () {
+       
+        if (!rdoWorkFlowList.getValue()) {
+            Power.ui.alert(app_global["workflow_select_workflow"]);//"请选择流程"
+            return;
+        }
+
+        CloseWindow("ok");
+    }
+
+    function CloseWindow(action) {
+        if (action == "close" && form.isChanged()) {
+            if (confirm(app_global["workflow_update_save"])) {//"数据被修改了，是否先保存？"
+                return false;
+            }
+        }
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+    var SetData = function (data) {        
+        rdoWorkFlowList.setData(data); 
+    }
+
+    var GetData = function () {
+
+        var value = rdoWorkFlowList.getValue();
+        if (!value) {
+            Power.ui.alert(app_global["workflow_select_workflow"]);//"请选择流程"
+            return null;
+        }
+        var arr = rdoWorkFlowList.getData();
+        var len = arr.length;
+        for (var itmp = 0; itmp < len; itmp++) {
+            if (arr[itmp].WorkFlowID != value) continue;
+            return arr[itmp];
+        }
+    }
+</script>
+  
+</body>
+</html>

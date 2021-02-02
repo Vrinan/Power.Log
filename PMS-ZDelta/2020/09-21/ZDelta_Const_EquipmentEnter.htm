@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsFormVue.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title bottom">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>施工设备进场报验单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="ZDelta_Const_EquipmentEnter.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="ZDelta_Const_EquipmentEnter.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit scroll">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb0')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>基本信息
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb0">
+                            <div id="ZDelta_Const_EquipmentEnter" name="ZDelta_Const_EquipmentEnter" class="form">
+                                <table id="ZDelta_Const_EquipmentEnter_table" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.Code" name="Code" class="design mini-textbox" readonly/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">状态</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.Status" name="Status" readonly class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>标题</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_Const_EquipmentEnter.Title" name="Title" required class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.ContractCode" name="ContractCode" class="design mini-textbox" readonly/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.ContractName" name="ContractName" class="design mini-textbox" readonly/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required >监理机构</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.SupervisorName" name="SupervisorName" textName="SupervisorName" required class="design mini-buttonedit"
+                                                allowInput="false" showClose="true" onbuttonclick="PowerForm.OnBtnWizard(this)"/>
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_EnterDate" required >进场日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.EnterDate" name="EnterDate" class="design mini-datepicker" timeformat="yyyy-MM-dd" allowInput="false" required />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName">录入人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.RegHumName" name="RegHumName" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate">录入日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_Const_EquipmentEnter.RegDate" name="RegDate" readonly class="design mini-datepicker" timeformat="yyyy-MM-dd"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" title="进场设备明细">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>进场设备明细
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb1">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_Const_EquipmentEnterDtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>                                
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_Const_EquipmentEnterDtl.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" id="ZDelta_Const_EquipmentEnterDtl.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                                <a class="mini-button blue" id="ZDelta_Const_EquipmentEnterDtl.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                            </div>
+                            <div id="ZDelta_Const_EquipmentEnterDtl" class="mini-datagrid" style="width: 100%; height:400px;" idfield="Id" allowAlternating="true" multiSelect="true"
+                                allowresize="true" checkRecursive="false" allowcellselect="true" allowcelledit="true"  pageSize="50" data-options="{canImport:true}">
+                                <div property="columns">
+                                    <div type="checkcolumn"></div>
+                                    <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                    <div field="Name" name="Name" header="设备名称" width="130" headeralign="center" align="left">
+                                        <input property="editor" style="width: 100%;"  class="mini-textbox"/>
+                                    </div>
+                                    <div field="Description" name="Description" header="规格型号" width="150" headeralign="center" allowsort="false" align="left">
+                                        <input property="editor" style="width: 100%;" class="mini-textbox"/>
+                                    </div>
+                                    <div field="Quantity" name="Quantity" header="数量" headeralign="center" align="right" width="100" allowsort="false" numberformat="n2">
+                                        <input property="editor"class="mini-spinner" style="width: 100%;" format="n2" changeOnMousewheel="false" maxValue="9999999999" minValue="0"/>
+                                    </div>
+                                    <div field="EnterDate" name="EnterDate" header="进场日期" width="100" headeralign="center" allowsort="false" align="center" dateformat="yyyy-MM-dd">
+                                        <input property="editor" style="width: 100%;" class="mini-datepicker" format="yyyy-MM-dd" allowInput="false"/>
+                                    </div>
+                                    <div field="State" name="State" header="完好状况" width="80" headeralign="center" allowsort="false" align="left">
+                                        <input property="editor" style="width: 100%;" class="mini-textbox"/>
+                                    </div>
+                                    <div field="Ownership" name="Ownership" header="设备权属" width="120" headeralign="center" allowsort="false" align="left">
+                                        <input property="editor" style="width: 100%;" class="mini-textbox"/>
+                                    </div>
+                                    <div field="Capacity" name="Capacity" header="生产能力" width="110" headeralign="center" allowsort="false" align="left">
+                                        <input property="editor" style="width: 100%;" class="mini-textbox"/>
+                                    </div>
+                                    
+                                    <div type="checkboxcolumn" field="IsSpecialEquipment" truevalue="1" falsevalue="0" width="100" header="是否特种设备" headerAlign="center"></div>
+                                    <div field="Memo" name="Memo" header="备注" width="130" headeralign="center" allowsort="false" align="left">
+                                        <input property="editor" style="width: 100%;" class="mini-textarea" height="80"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb2')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>附件</div>
+                        </div>
+                        <div class="section-content" id="tb2">
+                            <iframe id="attachfile" style="height:100%;width:100%;"  frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="WorkFlowSection" style="display: none;">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb5')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程</div>
+                        </div>
+                        <div class="section-content" id="tb5" style="height:400px;">
+                            <iframe id="workflow" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="div_workflowInfo">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb8')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程处理</div>
+                        </div>
+                        <div class="section-content notool" id="tb8" style="height:600px;">
+                            <div id="workflowInfo" class="mini-panel" style="height:100%;width:100%; padding-top:0px !important;" showHeader="false"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+
+        /********************************************开始：变量定义********************************************/
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var supervisorName= mini.get("ZDelta_Const_EquipmentEnter.SupervisorName");//监理机构
+        var title = mini.get("ZDelta_Const_EquipmentEnter.Title");//标题
+        var grid = mini.get("ZDelta_Const_EquipmentEnterDtl");
+        /********************************************结束：变量定义********************************************/
+
+        /********************************************开始：平台事件重写********************************************/
+         PowerForm.EventBeforeLoadCode = function(f){
+            if(f.KeyWord == "ZDelta_Const_EquipmentEnter"){
+                currow = f.currow;
+                $.ajax({
+                   url:"/ZDelta_Common/GetSupervisionUnitInfo",
+                   type: "POST",
+                   data: { BidId: sessiondata.ExtendParam.BidId },
+                   async: false,
+                   success:function (text){
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            currow = formconfig.config.joindata.currow;
+                            oldcurrow = formconfig.config.joindata.oldcurrow;
+                            var supplier = mini.decode(o.data.Supplier);//施工单位
+                            var suppervision = mini.decode(o.data.Suppervision);//监理单位
+                            var supperOrg = mini.decode(o.data.SupperOrg);//标段监理 组织权限
+                            var bidOrg = mini.decode(o.data.BidOrg);//标段 组织权限
+                            currow.SupplierShortName = supplier.ShortName;
+                            currow.SupervisorShortName = suppervision.ShortName;
+                            currow.SupplierId = bidOrg.UnitId;
+                            currow.SupplierName = bidOrg.UnitName;
+                            currow.SupplierDeptId = bidOrg.DeptId;
+                            currow.SupplierDeptName = bidOrg.DeptName;
+                            currow.SupervisorId = supperOrg.UnitId;
+                            currow.SupervisorName = supperOrg.UnitName;
+                            currow.SupervisorDeptId = supperOrg.DeptId;
+                            currow.SupervisorDeptName = supperOrg.DeptName;
+                            if(supervisorName){
+                                supervisorName.setText(supperOrg.UnitName);
+                                supervisorName.setValue(supperOrg.UnitName);
+                            }
+                        }
+                   }
+                });
+            }
+        }
+        //表单加载后事件
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+            FormLoadCommomMethod(e, data);
+
+            if (FormState == 'add') {
+                   title.setValue("施工设备进场报验单");
+                   currow.Title = "施工设备进场报验单";
+                   oldcurrow.Title = "施工设备进场报验单";
+            } else {
+                
+            }
+
+
+        }
+
+        PowerForm.EventBeforeAddRow=function(e,data){
+            data.Quantity = 0;
+            data.EnterDate = currow.EnterDate;
+        }
+
+        //检查子表 设备名称是否有空
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            if(grid.data && grid.data.length>0){
+                e.isValid=true;
+                for (var i = 0 ; i < grid.data.length; i++) {
+                    if (grid.data[i].Name == null || grid.data[i].Name == undefined) {
+                        Power.ui.alert("第" + (grid.pageIndex*grid.pageSize + i + 1) + "行,设备名称不能为空!");
+                        e.isValid = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //粘贴导入前校验。
+        FormFuns.BeforeUpdateFromCopyExcel = function(grid,row){
+            //这里考虑用户只输入基础数据的Name,因此做一个转换
+            if(grid.id == "ZDelta_Const_EquipmentEnterDtl"){
+                if(row && row.EnterDate){
+                    row.EnterDate = (isNaN(row.EnterDate)&&!isNaN(Date.parse(row.EnterDate)))?row.EnterDate:null;//对日期格式做校验,不满足则赋值为null
+                }
+                if(row && row.Quantity){
+                    row.Quantity = isNaN(Number(row.Quantity))?0:Number(row.Quantity);//校验数字。
+                }
+            }
+        }
+        /********************************************结束：平台事件重写********************************************/
+
+        /********************************************开始：miniui拦截事件********************************************/
+        supplierName.on("closeclick", function (e) {
+            supplierName.setText("");
+            supplierName.setValue("");
+            currow.SupplierId = "";
+            currow.SupplierCode = "";
+            currow.SupplierName = "";
+        });
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+        /********************************************开始：自定义事件********************************************/
+
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+
+</html>
+保存
+

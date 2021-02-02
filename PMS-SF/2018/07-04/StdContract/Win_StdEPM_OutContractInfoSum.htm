@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+
+                        <div class="captiontools">
+                            <span>切换EPS/项目</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="100px" />
+                            <span>合同类型</span>
+                            <input id="cboContractType" class="mini-combobox" allowinput="false" shownullitem="true" width="80px" />
+                            <span>合同名称</span>
+                            <input id="txtContractName" class="mini-textbox" allowinput="true" shownullitem="true" width="80px" />
+                            <span>分包商</span>
+                            <input id="txtPartyBName" class="mini-textbox" allowinput="true" shownullitem="true" width="80px" />
+                            <span>签订日期从</span>
+                            <input id="txtSignFDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="100px" />
+                            <span>到</span>
+                            <input id="txtSignTDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="100px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_OutComeContractInfoSum" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917"
+                             height="601" allowalternating="false" pagesize="10" summarycolumns=""
+                             fitcolumns="" idfield="Id" showpager="false" parentfield="" onnodedblclick="ViewForm(e)">
+
+                            <div property="columns">
+                                 <div field="project_name" name="project_name" headeralign="center" guideid="" datatype="" currencyunit="" header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div type="comboboxcolumn" field="SubContractType" name="V_PS_OutComeContractInfoSum.SubContractType" headeralign="center" guideid="" datatype="" currencyunit="" header="合同类型" align="center">合同类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="SubContractCode" headeralign="center" name="SubContractCode" header="合同编号">合同编号</div>
+                                <div field="SubContractName" headeralign="center" name="SubContractName" header="合同名称">合同名称</div>
+                                <div field="PartyB" name="PartyB" headeralign="center" header="分包商">分包商</div>
+                                <div field="PartyA" name="PartyA" headeralign="center" header="甲方">甲方</div>
+                                <div field="SubContractAmount" headeralign="center" name="SubContractAmount" header="合同金额" align="center">合同金额</div>
+                                <div field="ChangeAmount" headeralign="center" name="ChangeAmount" header="变更金额">变更金额</div>                              
+                                <div field="ApplyAmount" headeralign="center" name="ApplyAmount" header="累计申请金额">累计申请金额</div>
+                                <div field="InvoiceAmount" headeralign="center" name="InvoiceAmount" header="已开票金额">已开票金额</div>
+                                <div field="PaymentAmount" headeralign="center" name="PaymentAmount" header="已支付金额">已支付金额</div>
+                                <div type="comboboxcolumn" field="Status" name="V_PS_OutComeContractInfoSum.Status" headeralign="center" guideid="" datatype="" currencyunit="" header="合同状态" align="center">合同状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div field="AllocationStatus" name="AllocationStatus" align="left" headeralign="center" header="分摊状态" align="left">分摊状态</div>
+                                <div field="SignDate" name="SignDate" headeralign="center" guideid="" datatype="" currencyunit="" header="签订日期" dateformat="yyyy-MM-dd" align="center">签订日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        var newLongCode = "";
+        var contractType = "";
+        var contractName = "";
+        var PartyBName = "";
+        var SignFDate = "";
+        var SignTDate = "";
+        $(function () {
+            PowerForm.Init();
+            SetBtnEditValue("txtPlanName", EpsProjName);
+            LoadData();
+        });
+        mini.parse();
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].project_guid;
+                newLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+        function LoadData() {
+            contractType = mini.get("cboContractType").getValue();
+            contractName = mini.get("txtContractName").getValue();
+            PartyBName = mini.get("txtPartyBName").getValue();
+            SignFDate = mini.get("txtSignFDate").getFormValue();
+            SignTDate = mini.get("txtSignTDate").getFormValue();
+            var swhere = "";
+            swhere = " where  LongCode like  '%" + newLongCode + "%' and SubContractName like  '%" + contractName + "%' and PartyB like  '%" + PartyBName + "%' and SubContractType like  '%" + contractType + "%' ";
+            if (SignFDate == "") {
+                if (SignTDate != "") {
+                    swhere += " and SignDate <'" + SignTDate + "'";
+                }
+            }
+            else {
+                if (SignTDate != "") {
+                    swhere += " and SignDate between '" + SignFDate + "' and '" + SignTDate + "'";
+                }
+                else {
+                    swhere += " and SignDate >'" + SignFDate + "'";
+                }
+            }
+
+            $.ajax({
+                url: "/Contract/GetOutComeContractEPS",
+                data: { sWhere: swhere },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("V_PS_OutComeContractInfoSum");
+                        debugger
+                        grid.loadList(o.data.value, "Id", "");
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+        function ViewForm(e) {
+
+            //var OpenFormId = "";
+            switch (e.node["SubContractType"]) {
+                case "E": OpenFormId = "c56cea22-6dcd-46a7-bceb-57e26ddfb4db"
+                    break;
+                case "S": OpenFormId = "2797fbca-e50e-4bda-b53c-7bc6c3a5f9cf"
+                    break;
+                case "C": OpenFormId = "5c89e719-843a-4ac4-a542-129e9b4cfa0f"
+                    break;
+                case "P": OpenFormId = "689f81fa-3adb-4f1f-ac32-20f99cd76266"
+                    break
+            }
+
+            var SubContractId = e.node["Id"];
+
+            var url = "/Form/ValidForm/" + OpenFormId + "/" + "/view/" + SubContractId;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+
+
+    </script>
+</body>
+</html>
+

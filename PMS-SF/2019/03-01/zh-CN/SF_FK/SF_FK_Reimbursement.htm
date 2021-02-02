@@ -1,0 +1,537 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script src="/Scripts/KindEditor/kindeditorboot.js?v=541" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>费用报销
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+
+
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_FK_Reimbursement.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_FK_Reimbursement.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存
+                    </a>
+                    <!--保存-->
+                    <a class="mini-button blue" id="SF_FK_Reimbursement.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新
+                    </a>
+                    <!--刷新-->
+                    <a class="mini-button blue" id="SF_FK_Reimbursement.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭
+                    </a>
+                    <!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+
+                        <div title='基本信息'>
+                            <div style="height:40%;" showcollapsebutton="false">
+                                <div class="mini-fit">
+                                    <div id="SF_FK_Reimbursement" class="form">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    编号
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.Code" name="Code" class="mini-textbox"
+                                                           required="true" />
+                                                </td>
+                                                <td>
+                                                    状态
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.Status" name="Status" class="mini-combobox" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    标题
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_FK_Reimbursement.Title" name="Title" class="mini-textbox"
+                                                           required="true" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>
+                                                    申请人
+                                                </td>
+                                                <td>
+
+                                                    <input id="SF_FK_Reimbursement.ApplicationHuman" name="ApplicationHuman"
+                                                           class="mini-textbox" readonly="readonly" />
+                                                    <input id="SF_FK_Reimbursement.ApplicationHumanId" name="ApplicationHumanId"
+                                                           class="mini-textbox" readonly="readonly" visible="false" />
+                                                </td>
+                                                <td>
+                                                    申请部门
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.DeptName" name="DeptName" class="mini-textbox"
+                                                           readonly />
+                                                    <input id="SF_FK_Reimbursement.DeptId" name="DeptId" class="mini-textbox"
+                                                           readonly visible="false" />
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    申请金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.AuthorizedAmount" name="AuthorizedAmount"
+                                                           class="mini-spinner" allowlimitvalue="false" format="n2"  onvaluechanged="changed"
+                                                           required />
+                                                </td>
+                                                <td>
+                                                    审定金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.Amount" name="Amount" class="mini-spinner"
+                                                           allowlimitvalue="false" format="n2" readonly="readonly"
+                                                           required="false" />
+                                                </td>
+
+                                            </tr>
+                                            <!--<tr>
+                                                <td>
+                                                    对方单位名称
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.PartyBName" name="PartyBName" class="mini-textbox" required />
+                                                </td>
+                                                <td>
+                                                    开户行
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.PartyBBank" name="PartyBBank" class="mini-textbox" required />
+                                                </td>
+                                            </tr>-->
+
+                                            <tr>
+                                                <td>
+                                                    事项说明
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_FK_Reimbursement.MatterDescription" name="MatterDescription"
+                                                           class="mini-textarea" height="100" required />
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    录入人
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.RegHumName" name="RegHumName" class="mini-textbox"
+                                                           readonly="readonly" />
+                                                </td>
+                                                <td>
+                                                    录入时间
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.RegDate" name="RegDate" class="mini-datepicker"
+                                                           readonly="readonly" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <!--<td>
+                                                    帐号
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.PartyBBankCode" name="PartyBBankCode" class="mini-textbox" required />
+                                                </td>-->
+                                                <td>
+                                                    是否安全环保费
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.IsHSAmount" name="IsHSAmount"
+                                                           truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                                </td>
+                                                <td>
+                                                    是否安全风险抵押金
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_Reimbursement.IsHSMortgageMoney" name="IsHSMortgageMoney"
+                                                           truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                                </td>
+                                            </tr>
+                                            <!--<tr>
+                                                <td>
+                                                    说明
+                                                </td>
+                                                <td colspan="4">
+                                                    <input id="content1" name="content1" data-options={kename:"content1"} class="mini-textarea" style="width:100%;height:300px;visibility:hidden;" />
+                                                </td>
+                                            </tr>-->
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="height:50%;" showcollapsebutton="false">
+                                <!--<div class="mini-fit">-->
+                                <div class="mini-toolbar">
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_Reimbursement_PartyB.Add"
+                                       onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_Reimbursement_PartyB.Delete"
+                                       onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                </div>
+                                <div id="SF_FK_Reimbursement_PartyB" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                     multiselect="true" idfield="Id" allowresize="true" allowcelledit="true" data-options="{canImport:true}"
+                                     allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="PartyBName" headeralign="center">
+                                            对方单位名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="BankName" headeralign="center">
+                                            开户行
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Code" headeralign="center" style="width: 100%;">
+                                            帐号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div title='出差申请明细' name="SF_FK_Reimbursement_Traveldtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_Reimbursement_Traveldtl.Add"
+                                   onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_Reimbursement_Traveldtl.Delete"
+                                   onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_FK_Reimbursement_Traveldtl" class="mini-datagrid" style="height: 100%;"
+                                     multiselect="true" oncellbeginedit="beginedit" idfield="Id" allowresize="true"
+                                     allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="Code" headeralign="center">
+                                            编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Title" headeralign="center">
+                                            标题
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="TravelDate" headeralign="center" dateformat="yyyy-MM-dd HH:mm:ss">
+                                            出差日期
+                                            <input property="editor" class="mini-datepicker" showTime="true" format="yyyy-MM-dd HH:mm:ss" />
+                                        </div>
+                                        <div field="TravelReason" headeralign="center">
+                                            出差事由
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='接待申请明细' name="SF_FK_Reimbursement_Receptiondtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_Reimbursement_Receptiondtl.Add"
+                                   onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_Reimbursement_Receptiondtl.Delete"
+                                   onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_FK_Reimbursement_Receptiondtl" class="mini-datagrid" style="height: 100%;"
+                                     multiselect="true" oncellbeginedit="beginedit" idfield="Id" allowresize="true"
+                                     allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="Code" headeralign="center">
+                                            编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Title" headeralign="center">
+                                            标题
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ReceptionDate" headeralign="center" dateformat="yyyy-MM-dd HH:mm:ss">
+                                            申请日期
+                                            <input property="editor" class="mini-datepicker" showTime="true" format="yyyy-MM-dd HH:mm:ss" />
+                                        </div>
+                                        <div field="Amount" headeralign="center" numberformat="n2">
+                                            金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0"
+                                                   style="width: 100%;" />
+                                        </div>
+                                        <div field="ReceptionReason" headeralign="center">
+                                            接待事由
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='出租车明细' name="SF_FK_Reimbursement_Taxi">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_Reimbursement_Taxi.Add"
+                                   onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_Reimbursement_Taxi.Delete"
+                                   onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+
+                            <div class="mini-fit">
+                                <div id="SF_FK_Reimbursement_Taxi" class="mini-datagrid" style="height: 100%;"
+                                     multiselect="true" pageSize="50" idfield="Id" allowresize="true" allowcelledit="true"
+                                     allowcellselect="true" showSummaryRow="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn">序号</div>
+
+                                        <div field="Code" headeralign="center">
+                                            编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="StartLocation" headeralign="center">
+                                            标题
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="EndLocation" headeralign="center">
+                                            申请人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="TaxiReason" headeralign="center">
+                                            申请部门
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="TaxiAmount" headeralign="center" numberformat="n2" summaryType="sum">
+                                            金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0"
+                                                   style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div title='说明'>
+                            <!--通常-->
+                            <div size="100%" showcollapsebutton="false">
+                                <div class="mini-fit">
+                                    <div id="SF_FK_Reimbursement-1" class="form">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    <input id="content1" name="content1" data-options="{kename:'content1'}"
+                                                           class="mini-textarea" style="width:100%;height:300px;visibility:hidden;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function changed() {
+            var a = mini.get("SF_FK_Reimbursement.AuthorizedAmount").getValue();
+            mini.get("SF_FK_Reimbursement.Amount").setValue(a);
+        }
+
+        function beginedit(e) {
+            if (e.field != "Memo") {
+                e.cancel = true;
+            }
+        }
+
+        mini.get("SF_FK_Reimbursement_Traveldtl").on("drawcell", function (e) {
+            e.cellStyle = "background:#D7F5D9";
+            var field = e.field;
+            if (field == "Code") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('dc42c961-fbc6-4344-a3e3-4f6602be1684', '" + e.record.TravelId + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+            }
+        });
+        mini.get("SF_FK_Reimbursement_Receptiondtl").on("drawcell", function (e) {
+            e.cellStyle = "background:#D7F5D9";
+            var field = e.field;
+            if (field == "Code") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('1aa2720a-00cd-488e-9fcc-96b7b15a737a', '" + e.record.ReceptionId + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+            }
+        });
+
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+
+
+
+        PowerForm.EventWizardWhere = function (e) {
+            var humid = mini.get("SF_FK_Reimbursement.ApplicationHumanId").getValue();
+            if (e.id == "SF_FK_Reimbursement_Traveldtl.Add") {//出差
+                e.where = " status=50 and id not in(select TravelId from SF_FK_Reimbursement_Traveldtl) ";
+            }
+            if (e.id == "SF_FK_Reimbursement_Receptiondtl.Add") {//接待
+                e.where = " status = 50 and id not in(select ReceptionId from SF_FK_Reimbursement_Receptiondtl) ";
+            }
+        }
+        //关联查看
+        //function ViewForm() {
+        //    var id = formconfig.config.joindata.currow["Id"];
+        //    //var InvestorId = formconfig.config.joindata.currow["BusinessTravelCodeId"];
+        //    var InvestorId = mini.get("SF_FK_Reimbursement.BusinessTravelId").getValue();
+
+        //    if (formconfig.FormState == "add" || mini.get("SF_FK_Reimbursement.BusinessTravelCode").value == "") {
+        //        return;
+        //    }
+        //    else {
+        //        var url = "/Form/ValidForm/dc42c961-fbc6-4344-a3e3-4f6602be1684/" + "/view/" + InvestorId;
+        //        mini.open({
+        //            url: url,
+        //            width: 900,
+        //            height: 550
+        //        });
+        //    }
+        //}
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            var human = mini.get("SF_FK_Reimbursement.ApplicationHuman").getValue();
+            if (IsEmpty(human)) {
+                mini.get("SF_FK_Reimbursement.ApplicationHuman").setValue(sessiondata.HumanName);
+                mini.get("SF_FK_Reimbursement.ApplicationHumanId").setValue(sessiondata.HumanId);
+                mini.get("SF_FK_Reimbursement.DeptName").setValue(sessiondata.DeptName);
+                mini.get("SF_FK_Reimbursement.DeptId").setValue(sessiondata.DeptId);
+            }
+
+        };
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("cwjb") > -1) {
+                var AuthorizedAmount = mini.get("SF_FK_Reimbursement.AuthorizedAmount").getValue();
+                var Amount = mini.get("SF_FK_Reimbursement.Amount").getValue();
+                mini.get("SF_FK_Reimbursement.Amount").setReadOnly(false);
+                //为0才赋值
+                if (Amount == 0) {
+                    mini.get("SF_FK_Reimbursement.Amount").setValue(AuthorizedAmount);
+                }
+                mini.get("SF_FK_Reimbursement.Amount").setRequired(true);
+                mini.get("SF_FK_Reimbursement.Save").enable();
+            }
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("cwbz") > -1) {
+                var AuthorizedAmount = mini.get("SF_FK_Reimbursement.AuthorizedAmount").getValue();
+                var Amount = mini.get("SF_FK_Reimbursement.Amount").getValue();
+                mini.get("SF_FK_Reimbursement.Amount").setReadOnly(false);
+                //为0才赋值
+                if (Amount == 0) {
+                    mini.get("SF_FK_Reimbursement.Amount").setValue(AuthorizedAmount);
+                }
+                mini.get("SF_FK_Reimbursement.Amount").setRequired(true);
+                mini.get("SF_FK_Reimbursement.Save").enable();
+            }
+
+        }
+        //送审前,检查下子表,必须有一行且 对方单位名称、开户行、帐号 不能为空
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_FK_Reimbursement_PartyB");
+            //只对新增单据做判断(考虑历史送审中数据很多未填)
+            if (mini.get("SF_FK_Reimbursement.Status").getValue() == 0) {
+                if (grid.data.length == 0) {
+                    Power.ui.alert("请在本页下方,新增一条对方单位,并填写完整信息!");
+                    e.isValid = false;
+                } else {
+                    for (var i = 0; i < grid.data.length; i++) {
+                        if (grid.data[i].PartyBName == null ? true : (grid.data[i].PartyBName.trim().length == 0 ? true : false)
+                           || grid.data[i].BankName == null ? true : (grid.data[i].BankName.trim().length == 0 ? true : false)
+                           || grid.data[i].Code == null ? true : (grid.data[i].Code.trim().length == 0 ? true : false)
+                          ) {
+                            Power.ui.alert("第" + (i + 1) + "行,对方单位名称、开户行、帐号不能为空!");
+                            e.isValid = false;
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+    </script>
+</body>
+
+</html>

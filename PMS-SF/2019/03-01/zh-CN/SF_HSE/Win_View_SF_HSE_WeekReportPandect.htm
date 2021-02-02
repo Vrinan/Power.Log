@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="V_SF_HSE_WeekReportPandect.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <!--<div class="btn-group customcolumn" gridid="View_SF_ZH_MatRequisitions">栏位</div>
+                            <div class="btn-group customfilter" gridid="View_SF_ZH_MatRequisitions">过滤</div>-->
+                            
+                            <!--<a class="mini-button blue" id="View_SF_ZH_MatRequisitions.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                            <span>开始日期</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>结束日期</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>
+                            <div id="V_SF_HSE_WeekReportPandect-Export" title="HSE周报" class="btn-group"></div>
+                        </div>
+						 <div class="tools">
+                            <!--<input id="View_SF_ZH_MatRequisitions-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="PowerForm.ColseCombobox" onvaluechanged="PowerForm.GroupChanged(this)" style="width: 130px;" />-->
+                            <input id="V_SF_HSE_WeekReportPandect-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="V_SF_HSE_WeekReportPandect-search">
+                            <input id="V_SF_HSE_WeekReportPandect-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="V_SF_HSE_WeekReportPandect-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_SF_HSE_WeekReportPandect" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                             showpager="true" pagesize="50" sizelist="[50,100,200,500]" allowcellselect="true" ondrawcell="DrawCell" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup" onload="OnLoad">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <div type="indexcolumn" width="45">序号</div>
+                                <div field="DeptName" name="DeptName" width="150" allowsort="true">填报部门</div>
+
+                                <div field="TroubleType" headeralign="center" header="隐患类别" type="comboboxcolumn">
+                                    隐患类别
+                                    <input property="editor" name="TroubleType" class="mini-combobox" />
+                                </div>
+                                <!--<div field="TroubleType" width="150" allowsort="true">隐患类别</div>-->
+                                <div field="TroubleContent" width="80" allowsort="true">隐患内容</div>
+                                <div field="TroubleChange" width="80" allowsort="true">整改措施</div>
+                                
+                                <div field="ChangeTime" name="ChangeTime" headeralign="center" header="期限完成时间" dateformat="yyyy-MM-dd">
+                                    期限完成时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <!--<div field="ChangeTime" width="150" allowsort="true">期限完成时间</div>-->
+                                <div field="ScheduleContent" width="150" allowsort="true">进度情况</div>
+                                <div field="ChangeDate" name="ChangeDate" headeralign="center" header="完成整改时间" dateformat="yyyy-MM-dd">
+                                    完成整改时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <!--<div field="ChangeDate" width="200" allowsort="true">完成整改时间</div>-->
+                                <div field="NextRequest" width="80" allowsort="true">下一步工作要求</div>
+                                <div field="Memo" width="80" allowsort="true">备注</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            var grid = mini.get("V_SF_HSE_WeekReportPandect");
+
+            PowerForm.Init();
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            var grid = mini.get("V_SF_HSE_WeekReportPandect");
+            //grid.frozenColumns(0, 6);
+        });
+        function DrawCell(e) {
+            var record = e.record;
+        }
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search(){
+            mini.get('V_SF_HSE_WeekReportPandect').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "V_SF_HSE_WeekReportPandect") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " a.RegDate between'" + mini.get("QStartDate").getFormValue() + "' and'" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+                else {
+                    e.params.swhere += "and a.StartTime between '" + mini.get("QStartDate").getFormValue() + "' and ='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+            }
+        }
+        mini.parse();
+        function OnLoad(e) {
+            var grid = e.sender;
+            mini.get("V_SF_HSE_WeekReportPandect").mergeColumns(["DeptName"]);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<!-- meta使用viewport以确保页面可自由缩放 -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+	<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+	<meta HTTP-EQUIV="expires" CONTENT="0">
+	<script src="/Scripts/boot.js?v=864" type="text/javascript"></script>
+	<script src="/Scripts/PlatForm/ComTools.js?v=895" type="text/javascript"></script>
+	<title>Title</title>
+	<style>
+		::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+			background-color: #fff;
+		}
+
+		/* 滚动槽 */
+		::-webkit-scrollbar-track {
+			border-radius: 10px;
+		}
+
+		/* 滚动条滑块 */
+		::-webkit-scrollbar-thumb {
+			border-radius: 10px;
+			background: #eee;
+		}
+
+		.new-template {
+			background: #fff;
+			border: 1px solid #ddd;
+		}
+
+		.label-title {
+			background-color: #fff;
+			color: #333;
+			height: 40px;
+			text-align: center;
+			font-size: 13px;
+			line-height: 40px;
+			margin: auto;
+			cursor: pointer;
+			letter-spacing: 1px;
+		}
+
+		.label-title:first-child {
+			/* border-top-right-radius: 4px;
+			border-top-left-radius: 4px; */
+		}
+
+		.label-title:last-child {
+			border-bottom: 0;
+			border-bottom-right-radius: 4px;
+			border-bottom-left-radius: 4px;
+		}
+
+		.label-title:hover,
+		.label-title.active {
+			background: rgba(229, 242, 254, 1);
+			-webkit-transition: all .5s;
+			-moz-transition: all .5s;
+			-ms-transition: all .5s;
+			-o-transition: all .5s;
+			transition: all .5s;
+		}
+
+		.label-title:hover {
+			background: rgba(229, 242, 254, 1);
+		}
+
+		.label-list {
+			/* width: 90%; */
+			overflow: auto;
+			zoom: 1;
+			padding: 0 5px;
+		}
+
+		.label-list::after {
+			clear: "both";
+		}
+
+		.label-list li {
+			background-color: #fff;
+			color: #333;
+			font-size: 13px;
+			transition: transform .3s ease-in;
+			float: left;
+			display: block;
+			height: 48px;
+			line-height: 48px;
+			margin-right: 20px;
+			cursor: pointer;
+		}
+
+		.label-list li:hover {
+			border-bottom: 2px solid #4292FA;
+			color: #4292FA;
+			-webkit-transition: all .5s;
+			-moz-transition: all .5s;
+			-ms-transition: all .5s;
+			-o-transition: all .5s;
+			transition: all .5s;
+		}
+
+		.label-list li.active {
+			border-bottom: 2px solid #4292FA;
+			color: #4292FA;
+		}
+
+		.box {
+			background-color: #fff;
+			padding: 10px;
+			border-radius: 4px;
+		}
+
+		.title {
+			font-weight: bold;
+		}
+
+		.label-title-box {
+			/* box-shadow: 0px 0px 8px rgba(57, 69, 77, 0.3); */
+			padding: 0;
+			overflow-y: auto;
+			height: 100%;
+
+		}
+
+		.mini-grid-rows-lock {
+			border-right: #eee 1px solid;
+		}
+
+		.new-template .mini-splitter-pane1-button,
+		.new-template .mini-splitter-pane2-button {
+			overflow: hidden;
+			width: 100%;
+			height: 60px;
+			display: block;
+			background: url(/images/left.png) no-repeat 50% 50%;
+			cursor: pointer;
+		}
+
+		.new-template .mini-splitter-pane1-button:hover,
+		.new-template .mini-splitter-pane2-button:hover {
+			background: url(/images/hoverL.png) no-repeat 50% 50%;
+		}
+
+		.new-template .mini-splitter-handler-buttons {
+			left: -4px !important;
+		}
+
+		.mini-splitter-pane2 .mini-toolbar {
+			border-top: 0;
+			border-right: 0;
+			height: 68px;
+			line-height: 46px;
+		}
+
+		.mini-grid-headerCell {
+			background: #F3F6FB;
+		}
+
+		.mini-grid-cell,
+		.mini-grid-headerCell {
+			border: 0 !important;
+		}
+
+		.mini-splitter-pane2 .mini-grid .mini-panel-border {
+			border-bottom: 0 !important;
+			border-right: 0 !important;
+			border-left: 0 !important;
+			border-top: 0 !important;
+		}
+
+		.mini-grid-headerCell-inner,
+		.mini-grid-cell-inner {
+			line-height: 40px !important;
+		}
+
+		.mini-grid-table>tbody>tr:nth-child(odd) {
+			background-color: #F8FAFD;
+		}
+
+		.mini-grid-rowstable .mini-grid-row-selected,
+		.mini-panel-border .mini-grid-table tbody .mini-grid-row-selected,
+		.mini-panel-border .mini-grid-table tbody .mini-grid-row-hover {
+			background: rgba(226, 240, 254, 1) !important;
+		}
+
+		.mini-grid-rows-content .mini-grid-table {
+			border: 1px solid #ddd;
+			border-top: 0;
+		}
+
+		.mini-grid-columns-view .mini-grid-table {
+			border: 1px solid #ddd;
+			border-bottom: 0;
+		}
+
+		.mini-splitter-pane2 .mini-panel .mini-panel-viewport {
+			border-left: 1px solid #ddd;
+			padding: 0 5px;
+		}
+
+		.mini-toolbar {
+			border-bottom: 0;
+			background-color: #fff;
+		}
+
+		.new-template .mini-splitter-handler {
+			width: 18px !important;
+		}
+	</style>
+</head>
+
+<body style="background: #f5f6fa;">
+
+
+	<div class="new-template" style="width:100%;height: 100%;">
+		<div class="mini-splitter" style="width:100%;height:100%;" allowResize="true" handlerSize="0">
+			<div size="250px" showCollapseButton="true">
+				<div class="mini-toolbar" style="width: 100%;height: 100%;overflow-y: auto;padding: 0;">
+					<div id="label_title_box" class="label-title-box"></div>
+
+
+				</div>
+				<div class="mini-fit" style="width:100%;">
+
+
+				</div>
+			</div>
+			<div showCollapseButton="false">
+				<div class="mini-toolbar">
+
+					<ul class="label-list" id="label_list">
+
+					</ul>
+
+
+				</div>
+				<div class="mini-fit">
+					<!--  onrowdblclick="DemoFormChild" -->
+					<div id="app" idfield="Id" url="/html/demo/app.txt" class="mini-treegrid"
+						style="width: 100%; height: 100%;" showtreeicon="true" treecolumn="text" parentfield="ParentId"
+						resultastree="false" multiselect="true" allowresize="true" expandonload="true"
+						allowcelledit="true" allowcellselect="true" showPager="false">
+						<div property="columns">
+
+							<div type="indexcolumn" field="id" name="id" width="50">序号</div>
+							<div field="userId" name="userId" width="120" headeralign="center" align="left">
+								用户id
+								<input id="userId" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="userName" name="userName" width="200" headeralign="center" align="left">
+								用户名称
+								<input id="userName" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="app" name="app" width="100" headeralign="center" align="center">
+								产品
+								<input id="app" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="appName" name="appName" width="200" headeralign="center" align="left">
+								应用名称
+								<input id="appName" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="type" name="type" width="80" headeralign="center" align="center">
+								部署类型
+								<input id="type" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="address" name="address" width="200" headeralign="center" align="center">
+								访问地址+端口
+								<input id="address" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="Isintranet" name="Isintranet" width="80" headeralign="center" align="center">
+								是否内网
+								<input id="Isintranet" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="permit" name="permit" width="80" headeralign="center" align="center">
+								总占用许可
+								<input id="permit" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- <div class="row" style="height: 100%;">
+		  <div class="col-md-2" style="height: 100%;">
+			<div id="label_title_box" class="label-title-box"></div>
+		</div>  
+		<div class="col-md-12" style="height: 100%;">
+			<div style="height: 100%;">
+				<ul class="label-list" id="label_list">
+					 
+				</ul>
+				<div id="right_box" class="box" style="height: calc(100% - 67px)">
+					<p id="title" class="title"></p>
+					<div id="app" url="/html/demo/app.txt" class="mini-datagrid mini-grid-border" idField="id"
+						multiSelect="true" style="height:calc(100% - 30px)" showPager="false" editNextRowCell="true"
+						allowAlternating="true" showFilterRow="true" frozenStartColumn="0" frozenEndColumn="2">
+						<div property="columns">
+							<div type="indexcolumn" field="id" name="id" width="50"></div>
+							<div field="userId" name="userId" width="120" headeralign="center" align="left">
+								用户id
+								<input id="userId" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="userName" name="userName" width="200" headeralign="center" align="left">
+								用户名称
+								<input id="userName" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="app" name="app" width="100" headeralign="center" align="center">
+								产品
+								<input id="app" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="appName" name="appName" width="200" headeralign="center" align="left">
+								应用名称
+								<input id="appName" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="type" name="type" width="80" headeralign="center" align="center">
+								部署类型
+								<input id="type" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="address" name="address" width="200" headeralign="center" align="center">
+								访问地址+端口
+								<input id="address" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="Isintranet" name="Isintranet" width="80" headeralign="center" align="center">
+								是否内网
+								<input id="Isintranet" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+							<div field="permit" name="permit" width="80" headeralign="center" align="center">
+								总占用许可
+								<input id="permit" property="filter" class="mini-textbox" style="width:100%;"
+									onvaluechanged="onFilterChanged" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div> -->
+	<script type="text/javascript">
+		mini.parse();
+		var App = mini.get("app");
+		App.load();
+
+
+
+		function setData(e) {
+			var title = $(e).text();
+			$("#title").text(title);
+			$(e).addClass("active").siblings().removeClass("active");
+			App.reload();
+		}
+		$(document).ready(function () {
+			var data = [{ "uid": "1", "name": "前期管理", "pid": "-1" },
+			{ "uid": "2", "name": "设计管理", "pid": "-1" }, { "uid": "3", "name": "设计进度", "pid": "2" }, { "uid": "4", "name": "设计进度", "pid": "2" },
+			{ "uid": "5", "name": "科研管理", "pid": "-1" }, { "uid": "6", "name": "征拆管理", "pid": "-1" }, { "uid": "7", "name": "概算管理", "pid": "-1" },
+			{ "uid": "8", "name": "概算四维度对比", "pid": "7" }, { "uid": "9", "name": "招标采购", "pid": "-1" }, { "uid": "10", "name": "招投标统计表", "pid": "9" },
+			{ "uid": "10", "name": "合同管理", "pid": "-1" }, { "uid": "11", "name": "合同执行汇总分析表", "pid": "10" }, { "uid": "12", "name": "合同台账", "pid": "10" },
+			{ "uid": "13", "name": "合同统计报表", "pid": "10" }, { "uid": "14", "name": "保函执行情况汇总表", "pid": "10" }, { "uid": "15", "name": "监管资金划拨汇总表", "pid": "10" },
+			{ "uid": "16", "name": "质量管理", "pid": "-1" }, { "uid": "18", "name": "成本管理", "pid": "-1" }, { "uid": "19", "name": "月度计划汇总表", "pid": "18" }, { "uid": "20", "name": "资金滚动计划汇总表", "pid": "18" },
+			{ "uid": "21", "name": "预算维度三算对比", "pid": "18" }, { "uid": "22", "name": "进度管理", "pid": "-1" }, { "uid": "23", "name": "形象进度分析曲线", "pid": "22" },
+			{ "uid": "24", "name": "施工管理", "pid": "-1" }, { "uid": "25", "name": "物资管理", "pid": "-1" }, { "uid": "26", "name": "变更管理", "pid": "-1" }, { "uid": "27", "name": "概算四维度对比", "pid": "26" },
+			{ "uid": "28", "name": "综合管理", "pid": "-1" }, { "uid": "29", "name": "通讯录", "pid": "28" }, { "uid": "30", "name": "系统基础信息统计", "pid": "28" }, { "uid": "31", "name": "新闻公告汇总表", "pid": "28" },
+			{ "uid": "32", "name": "文档管理", "pid": "-1" }, { "uid": "33", "name": "施工结算", "pid": "-1" }];
+			for (var i = 0; i < data.length; i++) {
+				var txt1 = "<li onclick='setData(this)'>合同台账" + i + "</li>";
+				if (data[i].pid == "-1") {
+					if (data[i].name == "合同管理") {
+						var txt = '<div class="label-title active">' + data[i].name + '</div>'
+						for (var j = 0; j < data.length; j++) {
+							if (data[j].pid == data[i].uid) {
+								var txt1 = "<li onclick='setData(this)'>" + data[j].name + "</li>";
+								$("#label_list").append(txt1)
+							}
+							$("#label_list li:eq(0)").addClass("active");
+							var title = $("#label_list li:eq(0)").text();
+							$("#title").text(title);
+						}
+					} else {
+						var txt = '<div class="label-title">' + data[i].name + '</div>'
+					}
+					$("#label_title_box").append(txt)
+				}
+			}
+			$(".label-title").click(function () {
+				$(this).addClass("active").siblings().removeClass("active");
+				$("#label_list").empty();
+				var text = $(this).text();
+				for (var i = 0; i < data.length; i++) {
+					if (data[i].name == text) {
+						for (var j = 0; j < data.length; j++) {
+							if (data[j].pid == data[i].uid) {
+								var txt1 = "<li onclick='setData(this)'>" + data[j].name + "</li>";
+								$("#label_list").append(txt1)
+							}
+						}
+					}
+				}
+				if ($("#label_list").html() == "") {
+					$("#right_box").css("height", "100%");
+				} else {
+					$("#right_box").css("height", "calc(100% - 67px)");
+				}
+				$("#label_list li:eq(0)").addClass("active");
+				var title = $("#label_list li:eq(0)").text();
+				if ($("#label_list li").length > 0) {
+					$("#title").text(title);
+				}
+				$("#title").text(text);
+				App.reload();
+			})
+			$("#label_list li").click(function () {
+				debugger;
+				var title = $(this).text();
+				$("#title").text(title);
+				$(this).addClass("active").siblings().removeClass("active");
+				App.reload();
+			})
+
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,425 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>业务对象关联图</title>
+
+    <style type="text/css">
+        body {
+            font: 10pt sans;
+        }
+
+        #keyWordWork {
+            float: left;
+            margin: 5px;
+            border: 1px solid lightgray;
+        }
+
+        #pastWork {
+            float: left;
+            width: 900px;
+            height: 300px;
+            margin: 5px;
+            border: 1px solid lightgray;
+        }
+
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+
+        #input_output {
+            height: 10%;
+            width: 15%;
+        }
+
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+
+        p {
+            font-size: 16px;
+            max-width: 700px;
+        }
+
+        span.mini-tools-help {
+            width: 16px;
+            height: 16px;
+            background: url(/Scripts/flow/visJs/img/help.gif) no-repeat;
+        }
+
+        .clickLink {
+            background-color: red!important;
+            font-weight: bold;
+            color: #FFF;
+        }
+
+
+        .rightClickMenu-div {
+            border: 1px solid #fcfcfc; /*  边框为1*/
+            width: 250px;
+            height: 150px;
+            background: #fcfcfc;
+            border-radius: 5px; /*边框设置圆角*/
+            padding: 5px; /*调节边距*/
+            -webkit-box-shadow: 0px 1px 6px #777; /* 阴影*/
+        }
+
+        /*弹出页左侧的小箭头*/
+            .rightClickMenu-div:before {
+                border: 10px solid transparent;
+                border-right: 10px solid #a94442;
+                width: 0;
+                position: absolute;
+                content: ' ';
+                margin-left: -26px;
+                margin-top: 20px;
+            }
+
+            .rightClickMenu-div > table {
+                width: 100%;
+            }
+
+            .rightClickMenu-div ul > li {
+                list-style: none;
+                margin-left: -40px;
+                border: 1px solid #eee;
+                margin-top: 3px;
+            }
+
+                .rightClickMenu-div ul > li:hover {
+                    background: #eee;
+                }
+
+                .rightClickMenu-div ul > li > a {
+                    text-decoration: none;
+                    color: #555;
+                    font-size: 16px;
+                    font-family: '黑体';
+                    margin-left: 50px;
+                    cursor: pointer;
+                }
+    </style>
+
+
+    <script type="text/javascript" src="/Scripts/flow/visJs/vis.js"></script>
+    <link href="/Scripts/flow/visJs/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Scripts/flow/visJs/ionicons.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="/Scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <link href="/App_Themes/Default/miniui/default/miniui.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/jQuery/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/Scripts/miniui/miniui.js?v=$AppVersion" type="text/javascript"></script>
+
+
+</head>
+
+<body>
+
+
+    <div id="winKeyWordWork" class="mini-window" title="业务对象图" style="width: 600px; height: 350px;"
+        showmaxbutton="true" showcollapsebutton="true" showshadow="true" showclosebutton="false"
+        showtoolbar="true" showfooter="true" showmodal="false" allowresize="true" allowdrag="true" buttons="help collapse max ">
+
+        <div class="mini-splitter" style="width: 100%; height: 100%;">
+            <div size="30%" showcollapsebutton="true" style="padding: 5px;">
+                <div id="txtKeyWords" class="mini-textbox" value="GEDI_Cont_Application_In_Subcontract,GEDI_Supplier_Review,GEDIPurchasePlan,GEDI_Cont_Change_Assess_Area,GEDI_Purchasepay_Procurement"></div>
+                <div id="btnScan" class="mini-button" onclick="ScanKeyWord">检索</div>
+                <div id="btnReadKeyWordInfo" class="mini-button" onclick="ReadKeyWordInfo">提取详细信息</div>
+            </div>
+            <div showcollapsebutton="true" id="divKeyWordWork">
+                <div id="keyWordWork" style="width: 98%; height: 92%;"></div>
+            </div>
+        </div>
+    </div>
+
+     <div id="winFlowGroupWork" class="mini-window" title="流程分析图" style="width: 600px; height: 350px;"
+        showmaxbutton="true" showcollapsebutton="true" showshadow="true" showclosebutton="false"
+        showtoolbar="true" showfooter="true" showmodal="false" allowresize="true" allowdrag="true" buttons="help collapse max ">
+
+         <div id="flowGroupWork"" style="width: 98%; height: 95%;"></div>
+    </div>
+
+    <p id="selection"></p>
+
+
+    <script type="text/javascript">
+        mini.parse();
+        var keyWordWork;
+
+        var containerKeyWord;
+        var containerFlowGroup;
+        var curWin = null;   //当前整个窗体对象
+
+
+        var keyWordData = {}; //整个流程引擎的 json       ，含bookmarklist等其他字典信息
+
+        var curSelectedNode = null;  //当前鼠标放置的节点
+
+        var ShowWorkNode = null;
+
+        function init() {
+            containerKeyWord = document.getElementById('keyWordWork');
+            containerFlowGroup = document.getElementById('flowGroupWork');
+        }
+
+        //设置关键词详细信息
+        var SetKeyWordInfo = function (data) {
+            if (!keyWordData) return;
+            var KeyWordInfo = new vis.DataSet(data.nodes);
+
+            $.each(keyWordData.nodes._data, function () {
+
+                var nodeInfo = KeyWordInfo.get(this.id);
+                if (!nodeInfo) return;
+
+                this.label = nodeInfo.Description + "\n" + "记录数:" + nodeInfo.RecordCount;
+
+                keyWordData.nodes.update([this]);
+            });
+
+        }
+        //触发统计信息
+        var btnWorkFlowStat = function (keyWord) {
+
+
+        }
+
+        //加载完毕后,渲染显示
+        var ShowKeyWord = function (data) {
+
+            keyWordData = {
+                nodes: new vis.DataSet(data.nodes),
+                edges: new vis.DataSet(data.edges),
+            }
+
+            var optionsKeyWord = {
+                nodes: {
+                    shape: 'dot',
+                 //   'size': 150,
+                    margin: 10,
+                    'font': { 'face': 'monospace', 'align': 'left' },
+                    widthConstraint: {
+                        maximum: 200
+                    }
+                },
+                edges: {
+                    smooth: { type: 'continuous' }   //节点多的时候，优化显示速度
+                },
+                physics: { stabilization: false },
+                interaction: {
+                    hover: true//设置鼠标悬浮状态
+                },
+            }
+            keyWordWork = new vis.Network(containerKeyWord, keyWordData, optionsKeyWord);
+
+
+            // 选中连线触发
+            keyWordWork.on('click', function (params) {
+                var selection = keyWordWork.getSelection();
+                if (!selection) $('.rightClickMenu-div').remove();
+                if (selection.nodes.length == 0) $('.rightClickMenu-div').remove();
+
+            });
+
+
+            // 选中连线触发
+            keyWordWork.on('selectNode', function (params) {
+
+                if (params.nodes.length == 0) {
+                    $('.rightClickMenu-div').remove();
+                    return;
+                }
+                var nodeItem = keyWordData.nodes.get(params.nodes[0]);
+                
+                var left_x = Number(params.pointer.DOM.x) + Number($('.top-menu-div ').width());
+                var parentdiv = $('<div class="rightClickMenu-div">' +
+                    '<table>' +
+                    '<tr>' +
+                    '<td style="width: 20%">关键词:</td>' +
+                    '<td>' + nodeItem.id + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td style="width: 20%">简述:</td>' +
+                    '<td>' + nodeItem.label + '</td>' +
+                    '</tr>' +
+                    '<td style="width: 20%">group:</td>' +
+                    '<td>cc</td>' +
+                    '</tr>' +
+                    '<td style="width: 20%">pid:</td>' +
+                    '<td>dd</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '<p><a href="javascript:btnWorkFlowStat(\"' + nodeItem.id + '\")" class="btn-primary btn-xs">审核统计</a></p>' +
+                    '<p><a href="javascript:removeNodeBtnRightClick()" class="btn-danger btn-xs">删除</a></p>' +
+                    '</div>');
+                parentdiv.appendTo($("#divKeyWordWork"));
+                $(parentdiv).css("position", "absolute");
+                $(parentdiv).css('left', left_x + 35 + 'px');
+                $(parentdiv).css('top', params.pointer.DOM.y + 30 + 'px');
+            });
+        }
+
+        var ReadKeyWordInfo = function () {
+
+            if (!keyWordData) {
+                alert("请至少选择一项关键词");
+                return;
+            }
+            var keyWords = "";
+            $.each(keyWordData.nodes._data, function () {
+                keyWords += this.id + ",";
+            });
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadKeyWordInfo";   //加载某几个关键词
+            CurrentInfo.Current = {};
+            CurrentInfo.KeyWords = keyWords;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Reports;    //报表系列
+
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                dataType: "text",
+                cache: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        alert(result.message);
+                        return;
+                    }
+
+                    var data = mini.decode(result.data.KeyWordList);
+
+                    SetKeyWordInfo(data);
+                },
+                error: function (e, r, h) {
+                    mini.unmask(document.body);
+                    alert(app_global["workflow_error"] + ":" + e.responseText);
+                }
+            });
+        }
+        var ScanKeyWord = function () {
+            var keyWords = mini.get("txtKeyWords").getValue();
+            if (!keyWords) {
+                alert("请至少选择一项关键词");
+                return;
+            }
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadKeyWordConfig";   //加载某几个关键词
+            CurrentInfo.Current = {};
+            CurrentInfo.KeyWords = keyWords;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Reports;    //报表系列
+
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                dataType: "text",
+                cache: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        alert(result.message);
+                        return;
+                    }
+
+                    var data = mini.decode(result.data.KeyWordList);
+
+                    ShowKeyWord(data);
+                },
+                error: function (e, r, h) {
+                    mini.unmask(document.body);
+                    alert(app_global["workflow_error"] + ":" + e.responseText);
+                }
+            });
+        }
+
+
+        function SetData(data, win) {
+
+            curWin = win;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadKeyWordsConfig";   //加载所有关键词
+            CurrentInfo.Current = {};
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Reports;    //报表系列
+
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                dataType: "text",
+                cache: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        alert(result.message);
+                        return;
+                    }
+
+                    var data = mini.decode(result.data.KeyWordList);
+
+                    ShowKeyWord(data);
+
+
+                },
+                error: function (e, r, h) {
+                    mini.unmask(document.body);
+                    alert(app_global["workflow_error"] + ":" + e.responseText);
+                }
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            mini.get("winKeyWordWork").showAtPos("left", "top");
+            mini.get("winKeyWordWork").setTitle("业务关系图");
+            init();
+            //   SetData();
+
+
+        });
+
+        </script>
+</body>
+</html>

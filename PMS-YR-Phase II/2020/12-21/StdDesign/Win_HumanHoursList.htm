@@ -1,0 +1,217 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+  
+</head>
+<body>
+<div class="row-wrap">
+    <div class="row  row-hd row-hd-responsive" style="height: 100%">
+        <!--工时填报 -->
+        <div class="col-md-12 col-hd-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+						<span>切换人员</span>
+                        <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" />
+
+                        <span>日期：</span>
+                        <span><input property="editor" id="startDate" class="mini-datepicker" style="width: 120px;"  /></span>
+                        <span>&nbsp;至&nbsp;</span>
+                        <span><input property="editor" id="endDate" class="mini-datepicker" style="width: 120px;"  /> </span>
+                        
+						<a class="mini-button blue" onclick="LoadData"><i class="fa fa-search"></i>查询</a>
+                        
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 100%">
+                    <div id="HumanHoursFillList" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" showpager="false" allowSortColumn="false" width="900" allowcelledit="false"
+                         allowcellselect="true" allowresize="true"  frozenstartcolumn="0" frozenendcolumn="5"  idfield="Id">
+                        <div property="columns">
+						<!-- 
+							<div field="ProjectCode" name="ProjectCode" header="项目编码" width="70px">
+                                项目编码
+                            </div>
+                            <div field="ProjectName" name="ProjectName" header="项目名称">
+                                项目名称
+                            </div>
+                            <div field="HumanName" name="HumanName" header="姓名" allowsort="true" width="120px">
+                                姓名
+                            </div>
+							
+                            <div field="ProfName" name="ProfName" header="专业名称" allowsort="true" width="70px">
+                                专业名称
+                            </div>
+                            <div field="HuamnRole" name="HuamnRole" header="角色" allowsort="true" width="85px">
+                                角色
+                            </div>
+                            <div field="Sum" name="Sum" header="总工时"  width="100px">
+                                总工时
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+</div>
+<div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+    <div style="height: 195px; overflow: auto;">
+        <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+    </div>
+    <table style="width: 363px; height: 30px; margin-top: 8px;">
+        <tr>
+            <td align="center">
+                <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+mini.parse();
+var HumanIds=[];
+var grid = mini.get("HumanHoursFillList");
+
+$(function () {
+  var Year= new Date().getFullYear();
+  var startDate=Year+"-01-01";
+  var endDate=Year+"-12-31";
+   mini.get("startDate").setValue(startDate);
+   mini.get("endDate").setValue(endDate);
+   LoadData();
+});
+ mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardMan();
+ })
+
+function OnWiardMan() {
+            var p = { title: "选择人员", multi: "1" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdDesign/Wizard_PS_ProMajor_OBS_List.htm";
+          
+            OpenWizard(p, function (data) {
+				var names=[];
+				 $.each(data, function () {
+					names.push(this.HumanName);
+					HumanIds.push(this.HumanId);
+				});
+				var name=names.join(",");
+                SetBtnEditValue("txtPlanName",name);
+				LoadData();				
+            })
+        }
+    function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+		 function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+
+
+function LoadData() {
+   var StratData = mini.formatDate(mini.get("startDate").getValue(), "yyyy-MM-dd");
+   var EndData = mini.formatDate(mini.get("endDate").getValue(), "yyyy-MM-dd");
+   if(HumanIds.length==0){
+     Power.ui.alert("请先选择专业人员");
+	return false; 
+   }
+   var p={};
+		p.StratData=StratData;
+		p.EndData = EndData;
+		p.HumanIds = HumanIds.join("','");
+           $.ajax({
+                url: "/Design/GetHumanHoursFilllist",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadGrid(o.data);
+                    }
+                }
+
+            });
+
+    
+    
+}
+function LoadGrid(data){
+  var columns=[{headerAlign: "center",header:"项目编码", field: "ProjectCode",width:70},
+  {headerAlign: "center",header:"项目名称", field: "ProjectName"},
+  {headerAlign: "center",header:"姓名", field: "HumanName",width:120},
+  {headerAlign: "center",header:"专业名称", field: "ProfName",width:70},
+  {headerAlign: "center",header:"角色", field: "HuamnRole",width:70},
+  {headerAlign: "center",header:"总工时", field: "Sum",width:80}
+  ];
+  
+   $.each(data.title, function () {
+       var item={ headerAlign: "center",header:this.title, field: this.title,width:100};
+	   columns.push(item);
+   });
+   grid.setColumns(columns);
+   grid.setFrozenStartColumn(0);
+	grid.setFrozenEndColumn(5);
+   grid.setData(data.value);
+}
+</script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,381 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-5 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <a class="mini-button blue" id="PS_CBS_Class.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_CBS_Class.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <!--       <a class="mini-button blue" id="PS_CBS_Class.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>   -->
+                            <a class="mini-button blue" id="PS_CBS_Class.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <!--       <a class="mini-button blue" id="PS_CBS_Class.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>    -->
+                            <a class="mini-button blue" id="PS_CBS_Class.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                            <a class="mini-button blue" id="PS_CBS_Class.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                            <a class="mini-button blue" id="PS_CBS_Class.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                            <a class="mini-button blue" id="PS_CBS_Class.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="PS_CBS_Class" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="Id" treecolumn="text" width="890" allowcelledit="true" fitcolumns=""
+                             parentfield="ParentId" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true">
+
+                            <div property="columns">
+                                <div name="text" field="CbsClassCode" headeralign="center" header="长代码" allowsort="true">长代码<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+
+                                <div field="CbsClassName" header="代码名称" headeralign="center" allowsort="true">代码名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+
+                                <div field="CbsClassType" type="comboboxcolumn" headeralign="center" header="类型" allowsort="true" align="center">类型<input id="PS_CBS_Class.CbsClassType" property="editor" class="mini-combobox" style="width: 100%;" /> </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-7 col-hd-12">
+                <div class="portlet blue box" style="height: 50%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_CBS.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_CBS.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <!--<a class="mini-button blue" id="PS_CBS.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>-->
+                            <!--<a class="mini-button blue" id="PS_CBS.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>-->
+                            <!--<a class="mini-button blue" id="PS_CBS.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                            <a class="mini-button blue" id="PS_CBS.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="PS_CBS.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" href="/Upload/费用科目定义.xls">模版下载</a>
+                            <div id="PS_CBS_Class.Upload"></div>
+
+
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_CBS" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                             allowcelledit="true" allowcellselect="true" multiselect="true" pagesize="20" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div field="CbsCode" headeralign="center" width="60">
+                                    编码
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="CbsName" headeralign="center">
+                                    名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <!--
+                                 <div field="EstimatePrice" headeralign="center" width="60" align="center">
+                                      估算价
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="BudgetPrice" headeralign="center" width="60" align="center">
+                                      预算价
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="ControlPrice" headeralign="center" width="60" align="center">
+                                      控制价
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="ActualPrice" headeralign="center" width="60" align="center">
+                                      实际价
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="AlertPercent_Contract" headeralign="center" width="60" align="center">
+                                      合同预警值
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="AlertPercent_Pay" headeralign="center" width="60" align="center">
+                                      支付预警值
+                                      <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                  </div>
+                                  <div field="ResponsibleHumName" headeralign="center" width="60" align="center">
+                                      责任人
+                                      <input property="editor" allowinput="false" id="PS_CBS.ResponsibleHumName" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" style="width: 100%;" />
+                                  </div>
+                                  -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="portlet blue box" style="height: 50%;">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="Tab" class="mini-tabs" activeIndex="0" style="width:100%;height:100%" plain="false">
+                            <div title="支付项">
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <a class="mini-button blue" id="PS_PICBS.Add" onclick="addPi()"><i class="fa fa-plus"></i>新增</a>
+                                        <a class="mini-button blue" id="PS_PICBS.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                                        <a class="mini-button blue" id="PS_PICBS.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                        <!--<a class="mini-button blue" id="PS_PICBS.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>-->
+                                        <!--<a class="mini-button blue" id="PS_PICBS.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                                            <a class="mini-button blue" id="PS_PICBS.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                                        <a class="mini-button blue" id="PS_PICBS.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                    </div>
+                                    <div class="tools">
+                                    </div>
+                                </div>
+                                <div id="PS_PICBS" class="mini-datagrid" style="width: 100%; height: 100%"
+                                     idfield="Id" allowresize="true" showpager="false" allowcellselect="true" allowcelledit="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn" width="15"></div>
+                                        <div field="PiCode" headeralign="center">
+                                            支付编号
+                                            <input property="editor" id="PS_PICBS.PiCode" name="PiCode" textname="PiCode"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                        <div field="PiName" headeralign="center">
+                                            支付项名称
+                                            <input property="editor" id="PS_PICBS.PiName" name="PiName" textname="PiName"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                        <div field="PiUnit" headeralign="center">
+                                            支付单位
+                                            <input property="editor" id="PS_PICBS.PiUnit" name="PiUnit" textname="PiUnit"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                        <div field="UnitPrice" headeralign="center">
+                                            支付单价
+                                            <input property="editor" id="PS_PICBS.UnitPrice" name="UnitPrice" textname="UnitPrice"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                        <div field="PiAmount" headeralign="center" align="center">
+                                            支付数量
+                                            <input property="editor" id="PS_PICBS.PiAmount" name="PiAmount" textname="PiAmount"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                        <div field="PiMoney" headeralign="center" align="center">
+                                            支付金额
+                                            <input property="editor" id="PS_PICBS.PiMoney" name="PiMoney" textname="PiMoney"
+                                                   allowinput="false" class="mini-textbox" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="WBS">
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <a class="mini-button blue" id="PS_CBSWBS.Add" onclick="addWbs()"><i class="fa fa-plus"></i>新增</a>
+                                        <a class="mini-button blue" id="PS_CBSWBS.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                                        <a class="mini-button blue" id="PS_CBSWBS.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                        <a class="mini-button blue" id="PS_CBSWBS.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                    </div>
+                                    <div class="tools">
+                                    </div>
+                                </div>
+                                <div id="PS_CBSWBS" class="mini-datagrid" style="width: 100%; height: 100%"
+                                     idfield="Wbs_Guid" allowresize="true" showpager="false" allowcellselect="true" allowcelledit="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn" width="15"></div>
+                                        <div field="Wbs_Name" headeralign="center">
+                                            WBS名称
+                                            <input property="editor" id="" name="" textname="" allowinput="false" class="mini-textbox" />
+                                        </div>
+										<div field="wt" headeralign="center">
+                                            WBS权重
+                                            <input property="editor" id="wt" name="" textname="" allowinput="true" class="mini-textbox" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+
+        var tree = mini.get("PS_CBS_Class");
+        var tree_project_type = -1;
+
+        tree.on("nodeselect", function (e) {
+            tree_project_type = e.node.project_type;
+        });
+        var WBS_Guid = null;
+        mini.get("PS_CBS").on("select", function (e) {
+            WBS_Guid = e.record.Id;
+        });
+        PowerForm.EventBeforeAddForm = function (e) {
+            if (tree_project_type != 1) {
+                Power.form.warning("请选择项目节点进行新增");
+                e.canNext = false;
+            }
+            else {
+                e.canNext = true;
+            }
+        }
+
+
+        var CreateCycle = false;//标记是否要创建子从表，只有点新增的时候创建一次，其他的时候，保存不创建
+        function OnBtnAdd(e) {
+            CreateCycle = true;
+            PowerForm.OnBtnAdd({ id: "PS_CBS" });
+            PowerForm.OnBtnSave({ id: "PS_CBS" });
+            grid.accept();
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            if (e.id == "PS_CBS" && CreateCycle) {
+                CreateCycle = false;//防止多次创建，设置为false
+                var MainData = formconfig.config.joindata.currow;
+                CreateTimeCycle(MainData.PlanYear, MainData.PlanMonth);
+            }
+            if (e.id == "PS_PICBS") {
+                PowerForm.OnBtnSave({ id: "PS_CBS" });
+            }
+        }
+        function OnBtnSave(e) {
+            //先触发子从表保存，子从表保存完再触发子表保存
+            PowerForm.OnBtnSave({ id: "PS_PICBS" });
+        }
+        function addPi() {
+            var Grid = mini.get("PS_PICBS");
+            if (!WBS_Guid) {
+                Power.ui.alert("请选择CBS!");
+                e.cancel = true;
+                return false;
+            } else {
+                mini.open({
+                    url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardWin_PS_CBS_Class.htm&multi=1&WBS_Guid=" + WBS_Guid,
+                    showMaxButton: true,
+                    width: 800,
+                    height: 500,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        iframe.contentWindow.WizardParams = { multi: "1" };
+                        iframe.contentWindow.Select.LoadStepFirst();
+                    },
+                    ondestroy: function (action) {
+                        debugger;
+                        if (action != "ok")
+                            return;
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.Select.GetData();
+                        if (!data || data.length == 0) {
+                            Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                            return;
+                        }
+                        data = mini.clone(data);
+                        for (var i = 0; i < data.length; i++) {
+                            var row = {};
+                            row.Id = CreateGUID();
+                            row.Pi_Guid = data[i].Id;
+                            row.Cbs_Guid = WBS_Guid;
+                            row.PiCode = data[i].PiCode;
+                            row.PiName = data[i].PiName;
+                            row.PiUnit = data[i].PiUnit;
+                            row.UnitPrice = data[i].UnitPrice;
+                            row.PiAmount = data[i].PiAmount;
+                            row.PiMoney = data[i].PiMoney;
+                            Grid.addRow(row, 0)
+                        }
+                        var a = { id: "PS_PICBS.Save" };
+                        PowerForm.OnBtnSave(a);
+                    }
+                })
+            }
+        }
+
+        function addWbs() {
+            var Grid = mini.get("PS_PICBS");
+            if (!WBS_Guid) {
+                Power.ui.alert("请选择CBS!");
+                return false;
+            }else {
+                mini.open({
+                    url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardWBS.htm&multi=1&WBS_Guid=" + WBS_Guid,
+                    showMaxButton: true,
+                    width: 800,
+                    height: 500,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        iframe.contentWindow.WizardParams = { multi: "1" };
+                        iframe.contentWindow.Select.LoadStepFirst();
+                    },
+                    ondestroy: function (action) {
+                        debugger;
+                        if (action != "ok")
+                            return;
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.Select.GetData();
+                        if (!data || data.length == 0) {
+                            Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                            return;
+                        }
+                        data = mini.clone(data);
+						var grid = mini.get("PS_CBSWBS");
+                        for (var i = 0; i < data.length; i++) {
+                            var row = {};
+                            row.WBS_Guid = data[i].wbs_guid;
+							row.Cbs_Guid = WBS_Guid;
+                            row.Wbs_Name = data[i].wbs_name;
+                            grid.addRow(row, 0);
+                        }
+                    var a = { id: "PS_CBSWBS.Save" };
+                    PowerForm.OnBtnSave(a);
+					var b = {id:"PS_CBSWBS.Refresh"};
+					PowerForm.OnBtnRefresh(b);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

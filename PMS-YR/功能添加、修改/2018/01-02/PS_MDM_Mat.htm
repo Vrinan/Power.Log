@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>物资编码申请
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_MDM_Mat.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="GetMatCode" onclick="GetMatCode()"><i class="fa fa-refresh"></i>生成编码</a><!--生成编码-->
+                    <a class="mini-button blue" id="PS_MDM_Mat.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_MDM_Mat.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="PS_MDM_Mat" class="form">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>
+                                    小类编号
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatBS_Code" name="MatBS_Code" textname="MatBS_Code" class="mini-buttonedit" required="true" requirederrortext="小类编号" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                </td>
+                                <td>
+                                    小类名称
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatBS_Name" name="MatBS_Name" class="mini-textbox" required="true" requirederrortext="小类名称" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    物资编码
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatCode" name="MatCode" class="mini-textbox" readonly="readonly" />
+                                </td>
+                                <td>
+                                    短描述
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatShortName" name="MatShortName" class="mini-textbox" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    长描述
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatLongName" name="MatLongName" class="mini-textbox" />
+                                </td>
+                                <td>
+                                    单位
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.MatUnit" name="MatUnit" class="mini-combobox" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    录入人
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                </td>
+                                <td>
+                                    录入日期
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    规格型号
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.Specifi" name="Specifi" class="mini-textbox" />
+                                </td>
+                                <td>
+                                    制造标准
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.Standard" name="Standard" class="mini-textbox"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    材质
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.Texture" name="Texture" class="mini-textbox" />
+                                </td>
+                                <td>
+                                    型式
+                                </td>
+                                <td>
+                                    <input id="PS_MDM_Mat.Pattern" name="Pattern" class="mini-textbox" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div class="mini-tabs" id="maintabs" tabposition="top" tabalign="left" style="height: 100%;">
+                            <div title='特征值定义'>
+                                <!--数据明细-->
+								
+                                <div class="mini-fit">
+                                    <div id="PS_MDM_Mat_Property" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                         idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" showpager="false">
+                                        <div property="columns">
+                                            <div type="indexcolumn"></div>
+                                            <!--编号-->
+                                            <div field="Property" headeralign="center">
+                                                属性名称
+                                            </div>
+                                            <div field="BS_GetValue" headeralign="center">
+                                                特征值名称
+                                            </div>
+                                            <!--名称-->
+                                            <div field="FrontCode" headeralign="center">
+                                                前置符号
+                                            </div>
+
+                                            <!--单位-->
+                                            <div field="GetCode" headeralign="center">
+                                                编码
+                                                <input property="editor" class="mini-buttonedit" style="width: 100%;" onbuttonclick="onbtnGetValue(this)" />
+                                            </div>
+                                            <div field="GetValue" headeralign="center">
+                                                描述
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="PostCode" headeralign="center">
+                                                后置符号
+
+                                            </div>
+                                            <div field="Unit" headeralign="center">
+                                                单位
+
+                                            </div>
+                                            <div type="checkboxcolumn" field="IsDescription" truevalue="1" falsevalue="0" headeralign="center" readonly="true">单位加入描述</div><!--生效-->
+
+                                            <div field="JointCode" headeralign="center">
+                                                与后特征值连接符合
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+			
+        });
+		PowerForm.EventAfterFormLoad = function (e,data) {
+			debugger
+			if(FormState=="add"){
+		     if(data.MatBS_Guid){
+				var grid = mini.get("PS_MDM_Mat_Property");
+
+                grid.clearRows();
+                var p = { KeyWord: "PS_MDM_MatBS_Property", url: "/Form/GridPageLoadEx" };
+                p.swhere = "MasterId='" + data.MatBS_Guid + "'";
+                FormFuns.GridPageLoad(p, function (o) {
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        for (var i = 0; i < data.length; i++) {
+                            var row = FormFuns.OnGridTreeAdd(grid.id);
+                            var j = data[i];
+                            grid.updateRow(row, {
+                                Property: j.Property, FrontCode: j.FrontCode, Unit: j.Unit, IsDescription: j.IsDescription,
+                                BS_GetValue_Guid: j.GetValue_Guid, BS_GetValue: j.GetValue, PostCode: j.PostCode, JointCode: j.JointCode, Sequ: j.Sequ
+                            })
+                        }
+                    }
+                })
+			 }
+			} 
+        }
+        PowerForm.EventWizardAfterUpdateRow = function (sender, data, btnid) {
+            if (btnid == "PS_MDM_Mat.MatBS_Code" && data) {
+                var grid = mini.get("PS_MDM_Mat_Property");
+
+                grid.clearRows();
+                var p = { KeyWord: "PS_MDM_MatBS_Property", url: "/Form/GridPageLoadEx" };
+                p.swhere = "MasterId='" + data.MatBS_Guid + "'";
+                FormFuns.GridPageLoad(p, function (o) {
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        for (var i = 0; i < data.length; i++) {
+                            var row = FormFuns.OnGridTreeAdd(grid.id);
+                            var j = data[i];
+                            grid.updateRow(row, {
+                                Property: j.Property, FrontCode: j.FrontCode, Unit: j.Unit, IsDescription: j.IsDescription,
+                                BS_GetValue_Guid: j.GetValue_Guid, BS_GetValue: j.GetValue, PostCode: j.PostCode, JointCode: j.JointCode, Sequ: j.Sequ
+                            })
+                        }
+                    }
+                })
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (o) {
+            if (o.id == "PS_MDM_Mat") {
+                var flag = mini.get("PS_MDM_Mat.Save").enabled
+                mini.get("GetMatCode").setEnabled(flag);
+            }
+        }
+
+        function onbtnGetValue(edt) {
+            var grid = mini.get("PS_MDM_Mat_Property");
+            var row = grid.getSelected();
+            if (row.BS_GetValue_Guid) {
+                mini.open({
+                    url: "/Form/OpenURL?url=/PowerPlat/FormXML/zh-CN/StdMasterData/WizardMDM_MatPropValue.htm&propid=" + row.BS_GetValue_Guid,
+                    width: "80%", height: "80%",
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        var selobj = iframe.contentWindow.Select;
+                        if (selobj) {
+                            if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                        }
+                    },
+                    ondestroy: function (action) {
+                        if (action != "ok")
+                            return;
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.Select.GetData();
+                        data = mini.clone(data)
+                        var i = data[0];
+                        edt.setValue(i.PropertyCode);
+                        edt.setText(i.PropertyCode);
+                        grid.updateRow(row, { GetCode: i.PropertyCode, GetValue: i.PropertyName })
+                    }
+                });
+            }
+        }
+
+        function GetMatCode() {
+            var grid = mini.get("PS_MDM_Mat_Property");
+            var data = grid.data;
+            var code = "";
+            for (var i = 0; i < data.length; i++) {
+                var row = data[i];
+                if (row.FrontCode) code += row.FrontCode;
+                if (row.GetValue) code += row.GetValue;
+                if (row.PostCode) code += row.PostCode;
+                if (row.IsDescription && row.IsDescription == "1" && row.Unit) code += row.Unit;
+                if (row.JointCode) code += row.JointCode;
+            }
+            mini.get("PS_MDM_Mat.MatLongName").setValue(code);
+            var txtmatcode = mini.get("PS_MDM_Mat.MatCode");
+            var matcode = txtmatcode.getValue();
+            if (matcode && matcode.length > 0)
+                PowerForm.OnBtnSave({ id: "PS_MDM_Mat.Save" });
+            else {
+                $.getJSON("/Purchase/BuilderMatCode/" + formconfig.config.joindata.currow.MatBS_Guid, function (o) {
+                    if (o.success) {
+                        mini.get("PS_MDM_Mat.MatCode").setValue(o.data.value);
+                        PowerForm.OnBtnSave({ id: "PS_MDM_Mat.Save" });
+                    }
+                    else
+                        Power.ui.warning(o.message);
+                })
+            }
+        }
+    </script>
+</body>
+</html>

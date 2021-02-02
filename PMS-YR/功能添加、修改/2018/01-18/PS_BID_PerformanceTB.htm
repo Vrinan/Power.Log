@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var projname = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>退缴投标保证金</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_BID_PerformanceTB.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_BID_PerformanceTB.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="PS_BID_PerformanceTB.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <!--portlet-body-->
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" style="height: 100%; border: 0px;" tabposition="left">
+                        <div title="基本信息" name='PlanApprove'>
+                            <div id="PS_BID_PerformanceTB" name="PS_BID_PerformanceTB" class="form">
+                                <table id="PS_BID_PerformanceTB_table" class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            退缴投标保证金编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_BID_PerformanceTB.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.Status" name="Status" class="mini-combobox" required="true" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            退缴投标保证金标题
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            公司名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.CompanyId" name="CompanyId" class="mini-textbox" visible="false" />
+                                            <input id="PS_BID_PerformanceTB.CompanyName" name="CompanyName" textname="CompanyName" class="mini-buttonedit"
+                                                   emptytext="请选择公司..." onbuttonclick="PowerForm.OnBtnWizard(this)"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            经办人
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PassHumanId" name="PassHumanId" class="mini-textbox" visible="false" />
+                                            <input id="PS_BID_PerformanceTB.PassHumanName" name="PassHumanName" textname="PassHumanName" class="mini-buttonedit"
+                                                   emptytext="请选择经办人..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            部门
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PassHumanDepartment" name="PassHumanDepartment" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            职务
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PassHumanDuty" name="PassHumanDuty" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            退缴日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContract.PerformanceTBDate" name="PerformanceTBDate" class="mini-datepicker" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            付款方式
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PayType" name="PayType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            类别
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PayNature" name="PayNature" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            收款单位/人
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_BID_PerformanceTB.PayToId" name="PayToId" class="mini-textbox" visible="false" />
+                                            <input id="PS_BID_PerformanceTB.PayTo" name="PayTo" textname="PayTo" class="mini-buttonedit"
+                                                   emptytext="请选择收款单位/人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                        </td>
+                                        <!--<td>
+                                            是否事前审批
+                                        </td>
+                                        <td>
+                                            <div id="PS_BID_PerformanceTB.IsInAdvance" name="IsInAdvance" class="mini-checkbox" truevalue="1" falsevalue="0" width="100%" readOnly="false" text=""></div>
+                                        </td>-->
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            开户银行
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.BankName" name="BankName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            银行账号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.BankCode" name="BankCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            付款类别
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PayMoneyType" name="PayMoneyType" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            保证金金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.PerformanceAmount" name="PerformanceAmount" class="mini-spinner" minValue="0" maxValue="999999999999.99" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_BID_PerformanceTB.ReceiveDate">付款摘要及理由</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.PerformanceRemark" name="PerformanceRemark" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_BID_PerformanceTB.ReceiveDate">备注</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContract.Remark" name="Remark" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_BID_PerformanceTB.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                            <input id="PS_BID_PerformanceTB.PaymentType" name="PaymentType" class="mini-textbox" readonly="readonly"  visible="false"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e,data) {
+            mini.get("PS_BID_PerformanceTB.PayMoneyType").setValue("1");
+            mini.get("PS_BID_PerformanceTB.PaymentType").setValue("A");
+            
+            mini.get("PS_BID_PerformanceTB.CompanyName").setValue("福建永荣科技有限公司");
+            mini.get("PS_BID_PerformanceTB.CompanyId").setValue("06EA4861-D120-454E-AB01-359510CAF5DC");
+        }
+    </script>
+</body>
+</html>

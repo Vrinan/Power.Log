@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+    <style type="text/css">
+        .icon-redalert, .icon-yelalert,.icon-greenalert {
+            width: 24px;
+            height: 24px;
+            overflow: hidden;
+            margin: auto;           
+            text-align: center;
+            display: block;
+        }
+
+       .reds{width:26px;height:26px;display: inline-block;font-size:30px;line-heigth:16px;text-align:center;color:#f00;text-decoration:none}
+         .yellows{width:26px;height:26px;display: inline-block;font-size:30px;line-heigth:16px;text-align:center;color:#ff0;text-decoration:none}
+          .blues{width:26px;height:26px;display: inline-block;font-size:30px;line-heigth:16px;text-align:center;color:#0f0;text-decoration:none}
+    </style>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                             <span>切换EPS/项目</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                         </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width:100%;height:100%" vertical="true">
+                            <div size="45%" showcollapsebutton="true">
+                                <div id="V_PS_ContractPayable" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917"
+                                     height="601" allowalternating="false" pagesize="10" summarycolumns=""
+                                     fitcolumns="" idfield="Id" showpager="false" parentfield="">
+                                    <div property="columns">
+
+                                        <div field="rate1" name="rate1" headeralign="center" align="left" width="40">标识列</div>
+										
+										<div field="project_name" name="project_name" headeralign="center" header="项目名称" align="left">项目名称</div>
+
+                                        <div field="PartyB" name="PartyB" headeralign="center" header="分包商名称" align="left">分包商名称</div>
+
+                                        <div field="SubContractName" name="SubContractName" headeralign="center" header="合同名称" align="left">合同名称</div>
+
+                                        <div field="FinalSubContractAmount" name="FinalSubContractAmount" headeralign="center" header="合同金额" numberFormat="n2" align="right">合同金额</div>
+
+                                        <div field="TInvoiceAmount" name="TInvoiceAmount" headeralign="center" header="累计开票" numberFormat="n2" align="right">累计开票</div>
+
+                                        <div field="TPayAmount" name="TPayAmount" headeralign="center" header="累计支付" numberFormat="n2" align="right">累计到款</div>
+
+                                        <div field="Payable" name="Payable" headeralign="center" header="应付账款" numberFormat="n2" align="right">应收账款</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div showcollapsebutton="true">
+                                <div id="charthere" style="width:100%;height:100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var newLongCode = "";
+        $(function () {
+            SetBtnEditValue("txtPlanName", EpsProjName);
+            LoadData();            
+        });
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].project_guid;
+                newLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function LoadData() {
+            $.ajax({
+                url: "/Contract/GetContractPayable",
+                data: { LongCode: newLongCode == "" ? LongCode : newLongCode },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("V_PS_ContractPayable");
+                        debugger
+						grid.loadList(o.data.value,"Id","");
+                        LoadChart(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+
+            });
+        }
+        //加载图表
+        function LoadChart(data) {
+            var yaxis = { type: 'category', data: [] };
+
+            var actcur = { "name": "应付账款", type: 'bar', data: [] };
+            var contractAmount = { "name": "合同金额", type: 'bar', data: [] };
+			 var len = data.length > 10 ? 10 : data.length;
+			 var char = data.length > 10 ? data.length - 10 : 0;
+			 var lens = data.length - 1 - char;
+			 for (var i = len; i > 0; i--) {
+			     debugger;
+			     yaxis.data.push(data[lens].SubContractName);
+			     actcur.data.push(data[lens].Payable);
+			     contractAmount.data.push(data[lens].FinalSubContractAmount);
+			     lens--;
+			 }
+            var opt = {};
+            opt.title = { text: "应付账款Top10(单位:元)" };
+            opt.legend = {
+                data: [ '合同金额','应付账款']
+            };
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.xAxis = [{ type: 'value' }];
+            opt.yAxis = [yaxis];
+            opt.series = [actcur,contractAmount];
+
+            InitEChart("charthere", opt);
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+
+        var grid = mini.get("V_PS_ContractPayable");
+        
+		//加载标识图
+        grid.on("drawcell", function (e) {
+            var record = e.record,
+        column = e.column,
+        field = e.field,
+        value = e.value;
+
+            if (column.field == "rate1") {
+                if (value ==2) {
+                    e.cellHtml = "<span class='reds'>●</span>"
+                }
+                else if (value == 1) {
+                    e.cellHtml = "<span class='yellows'>●</span>"
+                }
+                else {
+                    e.cellHtml = "<span class='blues'>●</span>"
+                }
+            }
+        });
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+    </script>
+   
+</body>
+</html>

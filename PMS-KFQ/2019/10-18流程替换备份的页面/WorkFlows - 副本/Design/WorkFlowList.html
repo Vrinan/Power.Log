@@ -1,0 +1,453 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/TreeManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="mini-splitter" style="width:100%;height: 100%">
+
+        <div class="col-md-4" size="30%" style="height: 100%;">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" iconcls="fa-plus" onclick="OpenDetail">$Helper.GetResource("g_add")</a><!--新增-->
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="onWorkFlowConfig('Global','全局环境信息配置')">$Helper.GetResource("config_edit")</a><!--全局参数-->
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="onOutPutLibrary">输出</a><!--全局参数-->
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="treeWorkFlowList.expandAll();">展开</a><!-- wf 2018-7-19 增加 展开按钮 -->
+                    </div>
+                    <!--<div class="tools">
+                        <input id="key" class="mini-textbox" emptytext="请输入条件" style="float: left; width: 150px;" onenter="onKeyEnter" />
+                        <a class="mini-button blue" onclick="search()">查询</a>
+                    </div>-->
+                </div>
+                <div class="mini-fit" style="background: #FFF;">
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="treeWorkFlowList" class="mini-treegrid"  
+                             showtreeicon="true" treecolumn="text" idfield="Id" iconfield="icon" resultastree="true"
+                             expandonload="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div>
+                                <div name="text" field="text" width="180" headeralign="center">$Helper.GetResource("g_name")</div><!--名称-->
+                                <div field="KeyWord" width="120" headeralign="center"  >$Helper.GetResource("g_keyword")</div><!--关键词-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--portlet-body-->
+            </div>
+        </div>
+        <div class="col-md-8" style="height: 100%;">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" iconcls="fa-plus" onclick="onAddWorkFlow">$Helper.GetResource("g_add")</a><!--新增-->
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="WorkFlowEdit">$Helper.GetResource("g_edit")</a><!--编辑-->
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="onDBClickWorkFlow">$Helper.GetResource("workflow_design")</a><!--设计流程-->
+                        <a class="mini-button blue" iconcls="fa-refresh" onclick="onRefresh">$Helper.GetResource("g_refresh")</a><!--刷新-->
+                        <a class="mini-button blue" iconcls="fa-trash-o" onclick="onDelete">$Helper.GetResource("g_delete")</a> 
+                       <span class="separator"></span>
+                        <a class="mini-button blue" iconcls="fa-trash-o" onclick="onEvents">事件</a>                       
+                    </div>
+                </div>
+                <div class="mini-fit" style="background: #FFF;">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="dataWorkFlowList" style="width: 100%; height: 100%;" class="mini-datagrid" onrowdblclick="onDBClickWorkFlow"
+                             idfield="WorkFlowID" url="/PowerPlat/Action/GridAction.aspx"
+                             onbeforeload="onbeforeload" onpreload="onPreload" showpager="false"  onshowrowdetail="onShowRowDetail" ondrawcell="onDrawCell" >
+                            <div property="columns">
+                                <div type="expandcolumn"  field="ExpandColumn" >#</div>
+                                <div type="indexcolumn"></div>
+                                <div field="WorkFlowName" width="120" headeralign="center">$Helper.GetResource("g_name")</div><!--名称-->
+                                <div field="Version" width="100" headeralign="center">$Helper.GetResource("workflow_version")</div><!--版本-->
+                                <div field="Description" width="200" headeralign="center">$Helper.GetResource("workflow_about")</div><!--说明-->
+                                <div field="IsDisabled" width="30" headeralign="center" align="center"  renderer="onDisabledRenderer">
+                                    是否禁用
+                                </div>
+                                <div width="80" headeralign="center" align="center" renderer="onCodeRenderer">事件</div>
+                            </div>
+                        </div>
+                        <div id="detailGrid_Form" style="display:none;margin-left: 40px" >
+                            <div id="gdWorkFlowOldList" class="mini-datagrid" style="width:100%;height:120px;"  showColumns="false"  showpager="false"  url="/PowerPlat/Action/GridAction.aspx"  onbeforeload="onsubbeforeload"  onpreload="onPreload" >
+                                <div property="columns">
+                                    <div field="Version" width="100" headeralign="center" align="center">$Helper.GetResource("workflow_version")</div><!--版本-->
+                                    <div field="Description" width="200" headeralign="center">升级缘由</div> 
+                                    <div field="LastUpdateTime" dateFormat="yyyy-MM-dd HH:mm:ss" >最后更新时间</div>
+                                    <div width="80" headeralign="center" align="center" renderer="onSettingRenderer">查阅</div>
+                                </div>
+                            </div>    
+                        </div>
+                    </div>
+                    <!--portlet-body-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var AssemblyID;
+
+        var KeyWord = "FlowsManage";
+        var treeWorkFlowList = mini.get("treeWorkFlowList");
+        var gridWorkFlowList = mini.get("dataWorkFlowList");
+        var gdWorkFlowOldList = mini.get("gdWorkFlowOldList");
+        var detailGrid_Form = document.getElementById("detailGrid_Form");
+        treeWorkFlowList.on("nodeselect", function (e) {
+            if (!e.node) return;
+            if (e.node.Alias != "WorkFlowKeyWord") return;    //只有点中 关键词列，才会刷新右侧Grid
+
+            gridWorkFlowList.reload();
+            //  gridWorkFlowList.load({ dept_id: e.node.id });
+        });
+        
+        var onShowRowDetail = function(e) {
+            var grid = e.sender;
+            var row = e.record;
+
+            var td = grid.getRowDetailCellEl(row);
+            td.appendChild(detailGrid_Form);
+            detailGrid_Form.style.display = "block";
+
+            gdWorkFlowOldList.load({ WorkFlowID: row.WorkFlowID,Version:row.Version });
+        }
+        
+
+        var menu = mini.get("treeMenu");
+        var mnuAddWorkFlow = mini.getbyName("mnuAddWorkFlow", menu);
+        function onBeforeOpen(e) {
+            var node = treeWorkFlowList.getSelectedNode();
+            if (!node) {
+                e.cancel = true;
+                return;
+            }
+            mnuAddWorkFlow.hide();
+
+            if (node.Alias == "Module") {
+                mnuAddWorkFlow.show();
+                return;
+            }
+
+            e.cancel = true;
+            return;
+        }
+        function onWorkModuleConfig() {
+            var row = treeWorkFlowList.getSelected();
+            if (!row) return;
+            onWorkFlowConfig("Module", "分类码级环境设置",row.Id);
+        }
+       //输出类库
+        function onOutPutLibrary() {
+           
+            var  url = "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/OutPutLibrary.html";
+            
+            mini.open({
+                url: url,
+                title: "输出发布", width: 800, height: 500,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                }
+            });
+        }
+        function onBeforeOpen(e) {
+            var node = treeWorkFlowList.getSelectedNode();
+            if (!node) {
+                e.cancel = true;
+                return;
+            }
+            mnuAddWorkFlow.hide();
+
+            if (node.Alias == "WorkFlowKeyWord") {
+                mnuAddWorkFlow.show();
+                return;
+            }
+            e.cancel = true;
+            return;
+        }
+        //添加实体对象
+        var onAddWorkFlow = function (e) {
+
+            var row = treeWorkFlowList.getSelected();
+            
+            if (!row || row.KeyWord == undefined || row.KeyWord == null) {
+                Power.ui.alert(app_global["workflow_select_key"]);//"请选择关键词"
+                return;
+            }
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowManage.html&KeyWord=" + KeyWord + "&WorkFlowKeyWord=" + row.KeyWord + "&OperatorType=AddRecord&ModuleID=" + row.ModuleID + "&ProjectID=" + row.ProjectID,
+                //title: "工作流管理",
+                width: 800,
+                height: 620,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    //treeManage.LoadTreeList(null, EndLoad);
+                    gridWorkFlowList.reload();
+                }
+            });
+        }
+        var formManage = new FormManage();
+        var onDelete = function (e) {
+
+            var row = gridWorkFlowList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_delete"]);//"请选择要删除的流程"
+                return;
+            }
+            Power.ui.confirm(app_global["rightpage_alert_delete_select_data"], function (ret) {//"确定删除选中的记录？"
+                if (ret) {
+                    formManage.setKeyValue(row.WorkFlowID);
+                    formManage.setKeyWord("FlowsManage");
+
+                    formManage.DeleteData(EndDelete);
+                }
+            });
+        }
+        var EndDelete = function () {
+            Power.ui.success(app_global["g_delete_success"]);//"删除成功"
+            gridWorkFlowList.reload()
+        }
+        //双击实体对象
+        var onDBClickWorkFlow = function (e) {
+
+            var row = gridWorkFlowList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_design"]);//"请选择要设计的流程"
+                return;
+            }
+
+            var url = "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowDesign.html?WorkFlowMode=WorkFlowDesign&WorkFlowID=" + row.WorkFlowID + "&Version=" + row.Version;
+            mini.open(
+                {
+                    url: url,
+                    title: app_global["workflow_workflow"] + "[" + row.WorkFlowName + "]",//流程
+                    width: 1200,
+                    height: 650,
+                    onload: function () {
+
+                    },
+                    ondestroy: function (action) {
+                        onRefresh();
+                       
+                    }
+                });
+        }
+
+
+        ///创建一个实体对象
+        function OpenDetail(sender, record) {
+
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Commons/SelectKeyWord.html",
+                //title: "工作流管理", width: 800, height: 500,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    //treeManage.LoadTreeList(null, EndLoad);
+                    treeManage.LoadTreeList(treeRenderer, EndLoad);
+                }
+            });
+        }
+        var WorkFlowEdit = function () {
+            var row = gridWorkFlowList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_edit"]);//"请选择要编辑的流程"
+                return;
+            }
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowManage.html&KeyWord=" + KeyWord + "&OperatorType=OpenRecord&ModuleID=" + row.ModuleID + "&KeyValue=" + row.WorkFlowID,
+                width: 800,
+                height: 620,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    // treeManage.LoadTreeList(null, EndLoad);
+                    gridWorkFlowList.reload();
+                }
+            });
+        }
+        //工作流全局配置 mode ='Global' 'Module' 'Node'  三级，分别对应 全局，分类码级，节点级
+        function onWorkFlowConfig(mode, title,moduleid) {
+            var url = "";
+            switch (mode) {
+                case "Global":
+                    url = "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowConfig.html";
+                    break;
+                case "Module":
+                    url = "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkModuleConfig.html?ModuleID=" + moduleid;
+                    break;
+            }
+
+
+            mini.open({
+                url: url,
+                title: title, width: 800, height: 500,
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                }
+            });
+        }
+
+        //自定义事件
+        var onEvents = function () {
+            var row = gridWorkFlowList.getSelected();
+            if (!row) {
+                Power.ui.alert(app_global["workflow_select_edit"]);//"请选择要编辑的流程"
+                return;
+            }
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/CodePage.html?MainKeyValue=" + row.WorkFlowID + "&MainKeyWord=FlowsManage",
+                width: 1050, height: 600,
+                onload: function () {
+                    
+                },
+                ondestroy: function (action) {
+
+                }
+            });
+        }
+        ///生成代码
+        function CreateCode(KeyValue) {
+            mini.open({
+                url: "/PowerPlat/WorkFlows/Design/CreateCode.html?KeyWord=FlowsManage&KeyValue=" + KeyValue,
+                title: "流程事件代码", width: 980, height: 600, allowResize: false,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                }
+            });
+        }
+        var  onCodeRenderer = function(e) {
+            var record = e.record;
+            var s = ""; 
+            s = "<a class='New_Button' href='javascript:CreateCode(\"" + record.WorkFlowID + "\")'>代码</a>"; 
+            return s;
+        }
+        var onDisabledRenderer = function (e) {
+            var record = e.record;
+            var s = "";
+            if (record.IsDisabled == true) s = '√';
+            return s;
+        }
+        var treeFilter = function () {
+            treeWorkFlowList.filter(function (node){
+			 return nodeFiter(node);
+			});
+        }
+		var nodeFiter = function (node) { 			            
+                if (node.Alias == "Module") node.expanded = true;
+                if (node.Alias == "WorkFlowKeyWord") return true;
+				if (!node.children) return false;
+                if (node.children.length == 0) return false;				
+                var isChildren = false;
+                for (var irow = 0; irow < node.children.length; irow++) {
+                  if (nodeFiter(node.children[irow])==true){
+					isChildren = true; break;
+				  };
+                }
+                return isChildren;
+            }
+        //树加载完毕后触发
+        var EndLoad = function (tmpData) {
+             
+            if (tmpData.SessionData) this.AssemblyID = tmpData.SessionData.BizAreaId;
+            treeFilter();
+        }
+        var treeManage = new TreeManage();
+        treeManage.setKeyWord("FlowsModuleTreeList");
+        treeManage.setControl(treeWorkFlowList);
+      
+        var treeRenderer = new Object();
+        treeRenderer.IgnoreAliasList = [];
+        treeRenderer.IgnoreAliasList.push("WorkFlows");  //无视掉 WorkFlow 层的数据源
+        treeManage.LoadTreeList(treeRenderer, EndLoad);
+        function onbeforeload(e) {
+            var json = {};
+            json.Conditions = {};
+
+            var row = treeWorkFlowList.getSelected();
+            if (row && row.KeyWord != undefined && row.KeyWord != null && row, KeyWord != "")
+                json.Conditions.Where = " KeyWord='" + row.KeyWord + "' and EpsProjectID='[@EpsProjId]'";
+            else
+                json.Conditions.Where = " 0=1";
+            json.Conditions.OrderField = "SerialNo";
+
+            e.params.ServerOperatorType = "LoadRecord";
+            e.params.KeyWord = "FlowsManage";
+            e.params.BindList = "";
+            e.params.json = mini.encode(json);
+
+        }
+        function onPreload(e) { 
+            var tmpdata = mini.decode(e.text);
+            e.data = tmpdata.DataList;
+        }
+
+        function onsubbeforeload(e) {
+            var json = {};
+            json.Conditions = {};  
+            json.Conditions.Where = " WorkFlowID='"+ e.data.WorkFlowID +"' and Version!='"+ e.data.Version +"'";
+            e.params.ServerOperatorType = "LoadRecord";
+            e.params.KeyWord = "FlowsManageList";
+            e.params.BindList = "";
+            e.params.json = mini.encode(json);
+        }
+        var ShowHistoryWorkFlow = function (workFlowID,version) {
+           
+            var url = "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowDesign.html?WorkFlowMode=WorkFlowHistoryDesign&WorkFlowID=" + workFlowID + "&Version=" + version;
+            mini.open(
+                {
+                    url: url,
+                    title: app_global["workflow_workflow"]  ,//流程
+                    width: 1200,
+                    height: 650,
+                    onload: function () {
+
+                    },
+                    ondestroy: function (action) { 
+                    }
+                });
+        }
+        var onDrawCell = function (e) { 
+            var row = e.row;
+            var name = e.field;
+           
+            if (name != "ExpandColumn") return;
+            
+            if (row.Version == "1.0.0.1") {
+                e.cellHtml = "";
+            } 
+        }
+        var onSettingRenderer = function (e) {
+            var record = e.record;
+            var s = "";
+            s = "<a class='New_Button' href='javascript:ShowHistoryWorkFlow(\"" + record.WorkFlowID + "\",\"" + record.Version +"\")'>查看</a>";
+            return s;
+        }
+        function onRefresh(e)
+        {
+            gridWorkFlowList.reload();
+        }
+    </script>
+
+</body>
+</html>

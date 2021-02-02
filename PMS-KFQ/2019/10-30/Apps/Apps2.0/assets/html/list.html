@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title>菜单列表</title>
+    <link href="/Apps/js/mui/css/mui.min.css?v=781" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/Apps/Apps2.0/assets/global/plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .mui-content>.mui-table-view:first-child { 
+            margin-top: 0px; 
+        }
+
+        .mui-table-view-cell .mui-media-body {
+            line-height: 42px;
+        }
+        .mui-media-body span{
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.7);
+        }
+        .mui-table-view .mui-media-object{
+            width: 30px;
+        }
+
+        .mui-media-object.mui-pull-left span{
+            color: #33A0F2;
+            font-size: 20px;
+        }
+        .mui-table-view-cell {
+            padding: 6px 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mui-content">
+        <ul id="menuLists" class="mui-table-view mui-table-view-chevron"></ul>
+    </div>
+</body>
+<script src="/WebCenter/MenuEpsJson/menu" type="text/javascript"></script>
+<script src="/Apps/js/jquery-1.8.3.min.js?v=781" type="text/javascript"></script>
+<script src="/Apps/js/mui/js/mui.min.js?v=781" type="text/javascript"></script>
+<script src="/Apps/newAppjs/appUtils.js?v=781"></script>
+<script src="/Apps/newAppjs/appPhysicalUtils.js?v=781"></script>
+<script type="text/javascript">
+    (function (mui, $) {
+        var menuLists = {
+            init: function () {
+                this.events();
+            },
+            menuListArray: _menulist,
+            _getLocaArg: function () {
+                var name;
+
+                if (arguments.length === 0 || arguments.length >= 2) {
+                    throw Error("arguments.length = 1");
+                } else {
+                    name = arguments[0];
+                }
+
+                var pattern = new RegExp("[\?\&]" + name + "=([^\&]+)", "i"),
+                    result = location.search.match(pattern);
+
+                if (result == null || result.length < 1) {
+                    return "";
+                }
+                return result[1];
+            },
+            getMenuListData: function (id) {
+                var array = [],
+                    data = this.menuListArray,
+                    i = 0,
+                    list;
+                if (id) {
+                    for (; i < data.length; i++) {
+                        list = data[i];
+                        if (list.ParentId && list.ParentId == id) {
+                            array.push(list);
+                        }
+                    }
+                }
+                return array;
+            },
+            menuListsTemp: function (data, Id) {
+                if (data) {
+                    var i = 0,
+                        list, html = '';
+                    for (; i < data.length; i++) {
+                        list = data[i];
+                        var icon = list.IconClass16;
+                        if (!icon) {
+                            icon = "fa-book";
+                        }
+                        html += '<li data-id="' + list.Id + '" data-name = "' + list.Name + '"  data-parentid = "' + list.ParentId + '" class="mui-table-view-cell mui-media">' +
+                            '<div class="mui-navigate-right">' +
+                            '<div class="mui-media-object mui-pull-left">' +
+                            '<span class="' + " fa font-color-blue " + icon + '"></span>' +
+                            '</div>' +
+                            '<div class="mui-media-body">' +
+                            '<span>'+ list.Name +'</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</li>';
+                    }
+                    $("#" + Id).html(html);
+                }
+            },
+            openMenu: function openmenu(id, title) {
+                var url = "/WebCenter/MainMenu/" + id;
+                CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":"' + title + '"}', url);
+            },
+            events: function () {
+                var that = this;
+                var getId = that._getLocaArg("id"),
+                    openMenu = this.openMenu;
+
+                if (getId == null || getId == "") {
+                    return false;
+                }
+
+                this.menuListsTemp(this.getMenuListData(getId), "menuLists");
+
+                $("#menuLists .mui-table-view-cell").on("tap", function (e) {
+                    var Id = $(this).attr("data-id"),
+                        title = $(this).attr("data-name");
+                    //打开对应表单的页面
+                    openMenu(Id, title);
+                });
+            }
+        };
+        menuLists.init();
+    })(mui, jQuery);
+</script>
+</html>

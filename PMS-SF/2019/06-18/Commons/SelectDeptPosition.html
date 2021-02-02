@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script> 
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>岗位部门选择
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onOK">确定</a><!--确定-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')" iconcls="fa-power-off">取消</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <table style="width:100%" >
+                        <tr>
+                            <td>
+                                <div id="chkShowAllEpsProjId" name="ShowAllEpsProjId" class="mini-checkbox" text='显示全部Eps' onvaluechanged="onShowAllEPSClick" /><!--显示全部epps-->
+                            </td>
+                            <td id="tdSourceMode1" >
+                                定义方式：
+                            </td>
+                            <td id="tdSourceMode2">    
+                                <div id="rdoSourceMode" name="SourceMode"  class="mini-radiobuttonlist" onvaluechanged="onModeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Position" data='[{Code:"Position",Text:"岗位" },{Code:"Dept",Text:"部门"} ]'>
+                                </div>
+                            </td> 
+                            <td  style="text-align:right;float:right;width:100%">
+                                <label id="lblTitle">部门/岗位</label><!--部门/岗位--><input id="search_deptposi" class="mini-textbox" width="120" onenter="onSearch" />                                
+                                <a class="mini-button blue" onclick="onSearch">查询<!--查询--></a>
+                            </td>
+                        </tr> 
+                        
+                    </table>
+                    <div class="mini-fit">
+                        <div class="mini-splitter" style="width:100%;height:100%" vertical="true">
+                            <div size="70%">
+                                <div id="treeDeptPositionList" class="mini-treegrid" style="height:100%"
+                                     showtreeicon="true" treecolumn="DeptPositionName" idfield="DeptPositionID" parentfield="ParentID" checkRecursive="false" autoCheckParent="false" iconfield="icon" resultastree="false" expandonload="true"   onnodedblclick ="onDeptPositionDBLClick" onDrawNode ="onDrawNode" >
+                                    <div property="columns">
+                                        <div name="DeptPositionName" field="DeptPositionName" width="150" headeralign="center">名称</div>
+
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var treeDeptPositionList = mini.get("treeDeptPositionList"); 
+          
+        var rdoSourceMode = mini.get("rdoSourceMode");
+
+        var curNode = null;
+        var currentEpsProjId = "";
+        var AllowMulitUser = false;  //是否多选模式，默认单选，外部可传入参数设置
+      
+        var onShowAllEPSClick = function (e) { 
+            SetData(curNode);
+        }
+       
+        var onSearch = function () {
+            var deptposi = mini.get("search_deptposi").getValue();
+            var name = mini.get("search_name").getValue();
+            if (deptposi) {
+                treeDeptPositionList.filter(function (node) {
+                    return String(node.text).toLowerCase().indexOf(deptposi) != -1;
+                });
+            }
+            else {
+                treeDeptPositionList.filter(function (node) {
+                    return true;
+                });
+            } 
+        }
+        var onDeleteDP = function (grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            curGrid.removeRow(row);
+        }
+        var onDeleteSelected = function (e) {
+            var record = e.record;
+            var s = "";
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDeleteDP(\'' + e.sender.id + '\')")">×</a>';//删除
+            return s;
+        }
+        var onModeChanged = function (e) { 
+            var sourceMode =mini.get("rdoSourceMode").getValue();
+            onLoadDeptPostionList(sourceMode);
+        }
+         
+        var onOK = function (e) {
+            if (AllowMulitUser == false) {
+                if (treeDeptPositionList.getSelected().length == 0) {
+                    Power.ui.error("请您先选择一个岗位/部门"); return;//"请您先选择一个用户"
+                }
+            }
+            else {
+                if (treeDeptPositionList.getCheckedNodes().length == 0) {
+                    Power.ui.error("请您先选择一个岗位/部门"); return;//"请您先选择一个用户"
+                }
+            }
+            CloseWindow("ok");   //确定操作
+        } 
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        function onDrawNode(e) {
+            var tree = e.sender;
+            var node = e.node;
+
+           
+              
+
+            //eps节点，隐藏checkbox ，不可选中
+            if (node.IsEpsNode == true) {
+                e.showCheckBox = false;
+            }
+        }
+        //标准方法接口定义
+        function SetData(node, canSendDeptPosition) {
+            curNode = node;
+            
+            if (node.AllowMulitUser == true)
+            {
+                AllowMulitUser = true;  //mini.get("splitUser").showPane(1);
+            }
+            else
+            {
+                AllowMulitUser = false; //mini.get("splitUser").hidePane(1);
+            }
+            treeDeptPositionList.setShowCheckBox(AllowMulitUser);
+
+            var sourceMode = curNode.SourceMode;
+            if (!sourceMode) sourceMode = "Position";  //如果是第一次，则默认为 岗位+用户 
+            mini.get("rdoSourceMode").setValue(sourceMode);
+
+            //如果外部指定不允许切换岗位部门
+            if (node.AllowSwitchDP == false) {
+                mini.get("rdoSourceMode").setEnabled(false);
+                document.getElementById("tdSourceMode1").style.display = "none";
+                document.getElementById("tdSourceMode2").style.display = "none";
+            } 
+            onLoadDeptPostionList(sourceMode);
+ 
+        }
+
+        var onLoadDeptPostionList = function (sourceMode) {
+             
+            Power.App.loading.show();
+             
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadDeptPositionTree";   //子指令集,加载岗位部门树
+            CurrentInfo.ShowAllEps = mini.get("chkShowAllEpsProjId").getValue();
+            CurrentInfo.SourceMode = rdoSourceMode.getValue();
+            var data = {};
+            CurrentInfo.Current = data;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) { 
+                    Power.App.loading.hide();
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    if (!result.data.DeptPositionList) return;
+
+                    treeDeptPositionList.loadList(result.data.DeptPositionList, "DeptPositionID", "ParentID");
+
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+        
+        var onDeptPositionDBLClick = function (e) {
+            var row = e.record;
+            if (!row) return;
+                
+            if (AllowMulitUser == false) //如果是单选
+                CloseWindow("ok");
+        }
+           
+        function GetData() {
+           
+            var result = [];
+             
+            //如果是单选,直接从容器中选中一行，返回
+            if (AllowMulitUser == false) {
+                var tmpRow = treeDeptPositionList.getSelected();
+                if (tmpRow.DeptPositionName && tmpRow.DeptPositionName.indexOf("(") > 0) {
+                    tmpRow.DeptPositionName = tmpRow.DeptPositionName.substring(0, tmpRow.DeptPositionName.indexOf("(") - 1);
+                    tmpRow.DeptPositionName = tmpRow.DeptPositionName.trim();
+                }
+                result.push(tmpRow);
+                return  result;
+            }
+            result = treeDeptPositionList.getCheckedNodes();
+             
+            for (var irow = 0; irow < result.length; irow++) {
+                var tmpRow = result[irow];
+                if (tmpRow.DeptPositionName && tmpRow.DeptPositionName.indexOf("(") > 0) {
+                    tmpRow.DeptPositionName = tmpRow.DeptPositionName.substring(0, tmpRow.DeptPositionName.indexOf("(") - 1);
+                    tmpRow.DeptPositionName = tmpRow.DeptPositionName.trim();
+                }
+                if (tmpRow.children) tmpRow.children = [];
+            } 
+            return result;
+        }
+
+    </script>
+
+</body>
+</html>

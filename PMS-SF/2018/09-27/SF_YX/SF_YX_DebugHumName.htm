@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>调试人员进场登记
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_YX_DebugHumName.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_YX_DebugHumName.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_YX_DebugHumName.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_DebugHumName.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_YX_DebugHumName.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_DebugHumName" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_DebugHumName.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>   
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>                                     
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_DebugHumName.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugHumName.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='人员明细' name="SF_YX_DebugHumName_list">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_DebugHumName_list.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_YX_DebugHumName_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>--><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_DebugHumName_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_YX_DebugHumName_list" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="HumName" headeralign="center" >
+                                            调试工程师
+                                            <input  property="editor" name="HumName" class="mini-textbox" />
+                                        </div>
+                                        <div field="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                            进场时间
+                                            <input  property="editor" class="mini-datepicker" />
+                                        </div>
+                                        <div field="Remark" headeralign="center" >
+                                            调试简要说明
+                                            <input  property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                      
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+    </script>
+</body>
+</html>

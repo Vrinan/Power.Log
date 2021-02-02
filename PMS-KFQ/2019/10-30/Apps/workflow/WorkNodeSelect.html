@@ -1,0 +1,1121 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+
+    <script src="/Apps/js/MobileWorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/WorkNodeSelect.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/Common.js"></script>
+    <style>
+        body {
+            background-color: #ebebeb;
+        }
+
+        .slidediv {
+            width: 100%;
+        }
+
+        .slidediv h3 {
+            width: 100%;
+            text-align: center;
+            line-height: 40px;
+            color: #666;
+            font-size: 2rem;
+        }
+
+        .slidediv ul li {
+            background-color: #ebebeb;
+            border-bottom: 1px solid #dadada;
+        }
+
+        .slidediv ul li a {
+            padding: 0px 10px;
+            color: #666;
+            font-size: 1.4rem;
+            display: block;
+            height: 36px;
+            line-height: 36px;
+            position: relative;
+            background-color: #fff;
+        }
+
+        .slidediv ul li a span {
+            float: right;
+            display: block;
+            line-height: 36px;
+            font-size: 2rem;
+        }
+
+        .fa-toggle-on {
+            color: #4b8df8;
+        }
+
+
+        .slidediv .slidedivs {
+            display: none;
+            margin: 10px 0;
+        }
+
+        .slidediv .slidedivs ul {
+            background-color: #fff;
+        }
+
+        .slidediv .slidedivs ul li {
+            line-height: 40px;
+            margin: 0px 10px;
+            font-size: 1.4rem;
+            background-color: #fff;
+            position: relative;
+        }
+
+        .slidediv .slidedivs ul li:last-child {
+            border-bottom: 0px;
+        }
+
+        .slidediv .slidedivs ul li input {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        .footbutton {
+            width: 100%;
+            display: -webkit-flex;
+            display: flex;
+            height: 50px;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            text-align: center;
+            background-color: #ffffff;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            border-top: 1px solid #ddd;
+            z-index: 10;
+        }
+
+        .footbutton .button {
+            flex: 1;
+            -webkit-box-flex: 1;
+            -moz-box-flex: 1;
+            box-flex: 1;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            border-right: 1px solid #ddd;
+        }
+
+        .footbutton .button:last-child{
+            border-right: 0px solid #ddd;
+        }
+
+        .footbutton .button a {
+            color: #666;
+        }
+
+        .select {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ebebeb;
+            z-index: 101;
+        }
+
+        .select .title {
+            font-size: 2rem;
+            text-align: center;
+            line-height: 50px;
+        }
+
+
+        .select ul li {
+            padding: 15px;
+            margin: 5px 0px;
+            border-bottom: 1px solid #ebebeb;
+            font-size: 1.4rem;
+            background-color: #fff;
+        }
+
+        .select ul li input {
+            float: right;
+        }
+
+        .select .selectbutton a {
+            flex: 1;
+            padding: 15px 0;
+            color: rgba(0, 0, 0, 0.8);
+            font-size: 1.4rem;
+            text-align: center;
+            border-right: 1px solid #ddd;
+        }
+        .select .selectbutton a:last-child{
+            border-right: 0 solid #ddd;
+        }
+
+        textarea {
+            font-size: 1.4rem;
+            border: 1px solid #ddd;
+            margin: 0;
+            padding: 0;
+        }
+
+        #gdNodeList li {
+            line-height: 30px;
+            border-bottom: 1px dotted #000;
+            font-size: 1.4rem;
+            background-color: #fff;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .select ul li .noderight {
+            width: 20%;
+            float: right;
+            text-align: right;
+        }
+
+        .select ul li .nodeleft {
+            float: left;
+            width: 80%;
+            text-align: left;
+        }
+
+        .select ul li .nodecenter {
+            text-align: left;
+            width: 100%;
+            display: inline-block;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .select ul li .nodecenter a {
+            padding: 3px 5px;
+            background-color: #4b8df8;
+            margin: 0 3px;
+            border-radius: 3px;
+            font-size: 1.4rem;
+            color: #fff;
+            position: relative;
+        }
+
+        .select.s1 .workFlowTitle, .select.s2 .workFlowTitle{
+            font-size:16px;
+            line-height: 45px;
+            text-align:center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ebebeb;
+            z-index: 1000;
+        }
+        .select.s1 ,.select.s2 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .select.s1 .flow-list ,.select.s2 .flow-list {
+            position: absolute;
+            top: 45px;
+            bottom: 45px;
+            left: 0px;
+            right: 0px;
+            overflow-y: auto;
+        }
+
+        .select.s1 .selectbutton, .select.s2 .selectbutton {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 45px;
+            display: -webkit-flex;
+            display: flex;
+            margin: 0;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .slidediv.after-select-content{
+            position: fixed;
+            top:0;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            overflow: auto
+        }
+
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.inactive').click(function () {
+
+            })
+
+            $('#ok').click(function () {
+                onNext('tabSelectWorkFlow');
+            })
+            $('#ok2').click(function () {
+                onNext('tabSelectNode');
+            })
+
+        });
+    </script>
+
+</head>
+
+<body>
+    <div class="slidediv after-select-content" id="mnuNodeList">
+    </div>
+    <div class="select s2">
+        <p style="font-size:16px;text-align:center;margin-top:5px;">请选择人员</p>
+        <div class="flow-list">
+            <ul id="gdNodeList"></ul>
+        </div>
+        <p class="selectbutton">
+            <a href="javascript:void(0);" id="ok2">确定</a>
+            <a href="javascript:void(0);" onclick="WindowClose()">取消</a>
+        </p>
+    </div>
+    <div class="select s1">
+        <p class="workFlowTitle">请选择流程</p>
+        <div class="flow-list">
+            <ul id="gdWorkFlowList"></ul>
+        </div>
+        <p class="selectbutton">
+            <a href="javascript:void(0);" id="ok">确定</a>
+            <a href="javascript:void(0);" onclick="WindowClose()">取消</a>
+        </p>
+    </div>
+    <div class="footbutton">
+        <div class="button active">
+            <a href="javascript:void(0);" onclick="SubmitFlow()">
+                <span>提交</span>
+            </a>
+        </div>
+
+        <div class="button">
+            <a href="javascript:void(0);" onclick="WindowClose()">
+                <span>取消</span>
+            </a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var FormInfo = null; // 表单信息
+        var ds = null; //流程列表
+        var curWin = null; //当前窗体
+        var AllData = null; //所有节点列表
+        $(function () {
+            var SequeID = getParameter("SequeID");
+            var WorkInfoID = getParameter("WorkInfoID");
+            var flowOperate = getParameter("flowOperate");
+            var data = {};
+            if (SequeID != "")
+                data = {
+                    SequeID: SequeID,
+                    WorkInfoID: WorkInfoID
+                };
+
+            if (flowOperate == EFlowOperate.Active) {
+                data.KeyWord = getParameter("KeyWord");
+                data.KeyValue = getParameter("KeyValue");
+                data.FormId = getParameter("FormID");
+                onSelectWorkFlow(data);
+                return;
+            }
+
+            $(".s1").css('display', 'none');
+            $(".s2").css('display', 'none');
+            onSelectNode(data, flowOperate, "ReadSendNodeList");
+        });
+        var onSelectWorkFlow = function (data) {
+            FormInfo = data;
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.SelectFlow;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    ds = result.data.WorkFlowList;
+                    var html = "";
+                    for (var i = 0; i < ds.length; i++) {
+                        var d = ds[i];
+                        html += "<li onclick=\"CheckInput('" + d["WorkFlowID"] + "')\">" + d[
+                                "WorkFlowName"] + "<input id=\"" + d["WorkFlowID"] +
+                            "\"  type=\"checkbox\" /></li>";
+                    }
+                    $("#gdWorkFlowList").html(html);
+                    //gdWorkFlowList.setData(result.data.WorkFlowList);
+
+                    //如果返回数据包中，指定了默认选中行，则触发选中
+                    if (result.data.WorkFlowID) {
+                        if ($("#" + result.data.WorkFlowID).length > 0) {
+                            $("#" + result.data.WorkFlowID).prop("checked", true);
+                        }
+                    }
+                    mini.unmask(document.body);
+
+                    //如果有默认选择的流程,则让列表默认选中,且默认跳到下一步
+                    if (onWorkFlowAfterLoad() == true) {
+                        onNext();
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, {
+                        timeout: 0,
+                        position: "center center",
+                        closeable: true
+                    });
+                }
+            });
+        }
+
+        function CheckInput(id) {
+            if ($("#" + id).length > 0) {
+                if ($("#" + id)[0].checked) {
+                    $("#" + id).prop("checked", false);
+                } else
+                    $("#" + id).prop("checked", true);
+            }
+            var allrows = $("#gdWorkFlowList input:checkbox");
+            for (var i = 0; i < allrows.length; i++) {
+                var row = allrows[i];
+                if (row.id != id)
+                    row.checked = false;
+            }
+        }
+
+        //返回false 说明没有选择默认流程，返回true 说明选择了一行流程
+        var onWorkFlowAfterLoad = function () {
+
+
+            if (ds.length == 1) {
+
+                var data = ds[0];
+                //如果这个流程没有起草者定义，也不可设计，且是自动选择，则触发下一步按钮事件
+                if ((!data.IsByDraft || data.IsByDraft == false) &&
+                    (!data.IsReDesign || data.IsReDesign == false) &&
+                    data.IsAutoSelect && data.IsAutoSelect == true) {
+
+                    $("#" + data.WorkFlowID).prop("checked", true);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //提取流程列表
+        var onSelectNode = function (data, MyFlowOperate, subOperate) {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = subOperate; //选择目标流程人员信息
+            if (data.SequeID) CurrentInfo.SequeID = data.SequeID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    result.data.FlowOperate = MyFlowOperate;
+                    AllData = result.data;
+
+                    GetNodesUser(result.data, true);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, {
+                        timeout: 0,
+                        position: "center center",
+                        closeable: true
+                    });
+                }
+            });
+        }
+        var onNext = function (step) {
+            var allrows = $("#gdWorkFlowList input:checkbox");
+            var selectedid = "";
+            var row = null;
+            for (var i = 0; i < allrows.length; i++) {
+                var row = allrows[i];
+                if (row.checked) {
+                    selectedid = row.id
+                    break;
+                }
+            }
+            if (selectedid == "") {
+                Power.ui.warning("请选择一个流程"); //必须选择一个流程
+                return;
+            }
+            for (var i = 0; i < ds.length; i++) {
+                if (ds[i].WorkFlowID == selectedid)
+                    row = ds[i];
+            }
+            if (row == null) {
+                Power.ui.warning("请选择一个流程"); //必须选择一个流程
+                return;
+            }
+            switch (step) {
+                case "tabSelectWorkFlow":
+
+                    if (row.IsByDraft == false) {
+                        $(".s1").css('display', 'none');
+                        $(".s2").css('display', 'none');
+                        ActiveWorkFlow(row);
+                        return;
+                    } else {
+                        $(".s1").css('display', 'none');
+                        DraftWorkNodes(row);
+                    }
+                    break;
+                case "tabSelectNode":
+                    var gdData = $("#gdNodeList li .nodecenter");
+                    var isnext = true;
+                    $(gdData).each(function () {
+                        if ($(this).text().trim() == "" && $(this).attr("name") == "ByDraft") {
+                            Power.ui.warning("起草者定义节点尚未定义人员信息，不可继续");
+                            isnext = false;
+                            return;
+                        }
+                    });
+                    if (isnext) {
+                        $(".s2").css('display', 'none');
+                        ActiveWorkFlow(row);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        var onDesignUser = function (NodeCode) {
+            var CanSendUsers = [];
+            if (DraftData) {
+                for (var i = 0; i < DraftData.length; i++) {
+                    if (DraftData[i].NodeCode == NodeCode) {
+                        CanSendUsers = mini.decode(DraftData[i].CanSendUsers);
+                        break;
+                    }
+                }
+            }
+            CanSendUsers = mini.decode(CanSendUsers);
+
+            designUser(NodeCode, CanSendUsers, onSaveDraftToInstanceNode);
+        }
+
+        function DeleteDraftUser(nodeCode, userid) {
+            Power.ui.confirm("确认删除", function (action) {
+                if (!action) return;
+
+                var CanSendUsers = [];
+                if (DraftData) {
+                    for (var i = 0; i < DraftData.length; i++) {
+                        if (DraftData[i].NodeCode == nodeCode) {
+                            CanSendUsers = mini.decode(DraftData[i].CanSendUsers);
+                            break;
+                        }
+                    }
+                }
+                CanSendUsers = mini.decode(CanSendUsers);
+                var NowSave = [];
+                for (var i = 0; i < CanSendUsers.length; i++) {
+                    if (CanSendUsers[i].UserID == userid)
+                        continue;
+                    NowSave.push(CanSendUsers[i]);
+                }
+
+                onSaveDraftToInstanceNode(nodeCode, NowSave);
+            });
+        }
+        var designUser = function (nodeCode, CanSendUsers, callback, nodeRow) {
+            var Can = CanSendUsers;
+            var t = mini.open({
+                url: "/Apps/workflow/SelectUser.html",
+                showHeader: false,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = {};
+                    tmpNode.SourceMode = "PositionAndUser"; //默认是选择岗位
+                    tmpNode.AllowMulitUser = true;
+                    iframe.contentWindow.SetData(tmpNode, []);
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+
+                    var data = iframe.contentWindow.GetData();
+                    data = mini.clone(data);
+                    var jd = mini.clone(data);
+                    for (var i = 0; i < Can.length; i++) {
+                        for (var j = 0; j < data.length; j++) {
+                            if (Can[i].UserID == data[j].UserID)
+                                break;
+                            if (j == (data.length - 1))
+                                jd.push(Can[i]);
+                        }
+                    }
+                    //$.merge(data, Can);
+                    if (data.length == 0) {
+                        Power.ui.error("未捕获到任何用户");
+                        return;
+                    }
+                    callback(nodeCode, jd, nodeRow);
+                }
+            });
+            t.max();
+        }
+
+        function OnDesignDelete(nodeCode, userid) {
+            Power.ui.confirm("确认删除", function (action) {
+                if (!action) return;
+                for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                    var node = AllData.NextNodeList[irow];
+                    if (node.NodeCode != nodeCode) continue;
+                    var CanSendUsers = node.CanSelectUsers;
+                    if (!CanSendUsers) CanSendUsers = [];
+                    var NowSave = [];
+                    for (var i = 0; i < CanSendUsers.length; i++) {
+                        if (CanSendUsers[i].UserID == userid)
+                            continue;
+                        NowSave.push(CanSendUsers[i]);
+                    }
+                    onSaveSendUserToInstanceNode(nodeCode, NowSave);
+                    return;
+                }
+            });
+        }
+        var onDesignUserBySendTwo = function (nodeCode) {
+            for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                var node = AllData.NextNodeList[irow];
+                if (node.NodeCode != nodeCode) continue;
+                designUser(nodeCode, node.CanSelectUsers, onSaveSendUserToInstanceNode);
+                return;
+            }
+        }
+
+        //保存起草人定义的信息
+        var onSaveDraftToInstanceNode = function (nodeCode, userList, nodeRow) {
+            var allrows = $("#gdWorkFlowList input:checkbox");
+            var selectedid = "";
+
+            var row = null;
+            for (var i = 0; i < allrows.length; i++) {
+                var row = allrows[i];
+                if (row.checked) {
+                    selectedid = row.id
+                    break;
+                }
+            }
+            if (selectedid == "") {
+                Power.ui.warning("请选择一个流程"); //必须选择一个流程
+                return;
+            }
+            for (var i = 0; i < ds.length; i++) {
+                if (ds[i].WorkFlowID == selectedid)
+                    row = ds[i];
+            }
+            if (row == null) {
+                Power.ui.warning("请选择一个流程"); //必须选择一个流程
+                return;
+            }
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "SaveUserToInstanNode"; //子指令集,保存选择的人员到指定节点中
+            CurrentInfo.NodeCode = nodeCode;
+            CurrentInfo.ConfigUserList = userList;
+            var data = {};
+
+            data.WorkFlowID = row.WorkFlowID;
+            data.Version = row.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID; //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+            if (row.WorkInfoID) {
+                data.WorkInfoID = row.WorkInfoID;
+            } else {
+                if (!data.WorkInfoID) data.WorkInfoID = WorkFlowUtil.CreateGUID(); //申请一个guid
+                var allrows = $("#gdWorkFlowList input:checkbox");
+                var selectedid = "";
+                var row = null;
+                for (var i = 0; i < allrows.length; i++) {
+                    var row = allrows[i];
+                    if (row.checked) {
+                        selectedid = row.id
+                        break;
+                    }
+                }
+
+                for (var i = 0; i < ds.length; i++) {
+                    if (ds[i].WorkFlowID == selectedid)
+                        ds[i].WorkInfoID = data.WorkInfoID;
+                }
+                //gdWorkFlowList.updateRow(row, { "WorkInfoID": data.WorkInfoID });
+            }
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow; //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, {
+                            detail: result.detail,
+                            timeout: 0,
+                            position: "center center",
+                            closeable: true
+                        });
+                        return;
+                    }
+                    if (DraftData) {
+                        for (var i = 0; i < DraftData.length; i++) {
+                            if (DraftData[i].NodeCode == nodeCode) {
+                                DraftData[i].CanSendUsers = userList;
+                                break;
+                            }
+                        }
+                    }
+                    var showUserInfo = "";
+
+                    for (var irow = 0; irow < userList.length; irow++)
+                        showUserInfo += '<a href="#" onclick="DeleteDraftUser(\'' + nodeCode + '\',\'' +
+                        userList[irow].UserID + '\')">' + userList[irow].UserName +
+                        '<i class="fa fa-close" ></i></a>';
+
+                    // if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                    //gdNodeList.updateRow(nodeRow, { "ShowUserInfo": showUserInfo, "Status": true });
+                    $("#center" + nodeCode).html(showUserInfo);
+                    mini.unmask(document.body);
+                    resetcentersize(nodeCode);
+                    //var nodeLst = gdNodeList.getData();
+                    ////如果不是所有的起草者定义节点，都做了定义，则不允许切换到 人员选择界面
+                    //for (var irow = 0; irow < nodeLst.length; irow++) {
+                    //    if (nodeLst[irow].Status != true) return;
+                    //}
+
+                    //   ActiveWorkFlow(row);   //激活tab页 (应山东 薛发刚要求， 节点中定义好人员，不要自动切换到 人员选择列）
+                    mini.unmask(document.body);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        var onDesignUserBySend = function (nodeCode) {
+            for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                var node = AllData.NextNodeList[irow];
+                if (node.NodeCode != nodeCode) continue;
+                var CanSendUsers = mini.decode(node.CanSendUsers);
+                if (!CanSendUsers) CanSendUsers = [];
+                designUser(nodeCode, node.CanSelectUsers, onSaveSendUserToInstanceNode);
+                return;
+            }
+        }
+
+
+        //保存发送者定义的信息
+        var onSaveSendUserToInstanceNode = function (nodeCode, userList) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "SaveUserToInstanNode"; //子指令集,保存选择的人员到指定节点中
+            CurrentInfo.NodeCode = nodeCode;
+            CurrentInfo.ConfigUserList = userList;
+            var data = {};
+
+            data.WorkFlowID = AllData.Current.WorkFlowID;
+            data.Version = AllData.Current.Version;
+            data.WorkInfoID = AllData.Current.WorkInfoID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow; //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message, {
+                            detail: result.detail,
+                            timeout: 0,
+                            position: "center center",
+                            closeable: true
+                        });
+                        return;
+                    }
+                    var tmpData = {};
+                    tmpData.SequeID = AllData.Current.SequeID;
+                    tmpData.WorkFlowID = AllData.Current.WorkFlowID;
+                    tmpData.Version = AllData.Current.Version;
+                    tmpData.WorkInfoID = AllData.Current.WorkInfoID;
+                    onSelectNode(tmpData, EFlowOperate.Send, "ReadSendNodeList");
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        var DraftData = [];
+        var DraftWorkNodes = function (row) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadNodeList"; //子指令集,加载所有节点
+            var data = {};
+            data.WorkFlowID = row.WorkFlowID;
+            data.Version = row.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID; //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+
+            if (row.WorkInfoID)
+                data.WorkInfoID = row.WorkInfoID;
+            else {
+                if (!data.WorkInfoID) data.WorkInfoID = CreateGUID(); //申请一个guid
+            }
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow; //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, {
+                            detail: result.detail,
+                            timeout: 0,
+                            position: "center center",
+                            closeable: true
+                        });
+                        return;
+                    }
+                    DraftData = result.data.NodeList;
+                    var html = ' ';
+                    var nodes = [];
+                    for (var i = 0; i < result.data.NodeList.length; i++) {
+                        var node = result.data.NodeList[i];
+                        if (node.NodeType == "StartNode" || node.NodeType == "EndNode")
+                            continue;
+                        html += '<li id="' + node.NodeCode + '">'
+                        html += '<span class="nodeleft">' + node.NodeName + '</span>';
+                        var userList = mini.decode(node.CanSendUsers);
+                        var showUserInfo = "";
+                        for (var irow = 0; irow < userList.length; irow++)
+                            showUserInfo += '<a href="#" onclick="DeleteDraftUser(\'' + node.NodeCode +
+                            '\',\'' + userList[irow].UserID + '\')">' + userList[irow].UserName +
+                            '<i class="fa fa-close" ></i></a>';
+                        //showUserInfo += ' <option value="' + userList[irow].UserName + '">' + userList[irow].UserName + '</option>';
+                        //html += '<select multiple data-role="tagsinput" name="' + node.SendUserMode + '" id="center' + node.NodeCode + '">'+showUserInfo+'</select>';
+                        if (userList.length > 0)
+                            nodes.push(node.NodeCode);
+                        if (node.SendUserMode == "ByDraft") {
+                            html += "<span class=\"noderight\"><a  href=\"javascript:onDesignUser('" +
+                                node.NodeCode + "')\"  style=\"color:#428bca;\" >选择人员</a>";
+                            //if (node.UserList) node.UserList = mini.decode(node.UserList)
+                            //if (node.UserList && node.UserList.length > 0) {
+                            //    action += '|<a   href="javascript:onDesignUserTwo()">二次筛选</a>';
+                            //}
+                            html += "</span>";
+                        } else if (node.SendUserMode == "BySendUser")
+                            html += '<span class="noderight">发送定义</span>';
+                        html += '<span class="nodecenter" name="' + node.SendUserMode + '" id="center' +
+                            node.NodeCode + '">&nbsp;' + showUserInfo + '</span>';
+
+                        html += '</li>';
+                    }
+                    $("#gdNodeList").html(html);
+                    for (var i = 0; i < nodes.length; i++) {
+                        resetcentersize(nodes[[i]]);
+                    }
+                    mini.unmask(document.body);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        function resetcentersize(id) {
+            if ($("#center" + id) != undefined && $("#center" + id).length > 0) {
+                var width = $("#center" + id).width();
+                var as = $("#center" + id + " a");
+                var w = 0;
+                for (var i = 0; i < as.length; i++) {
+                    var a = $(as[i]);
+                    w += a.width() + 10;
+                    if (w >= width) {
+                        a.before("<br/>");
+                        w = 0;
+                    }
+                }
+            }
+        }
+        //var onDesignUserTwo = function (e) {
+
+        //    var row = gdNodeList.getSelected();
+        //    if (!row) return;
+        //    if (row.UserList) row.UserList = mini.decode(row.UserList);
+
+        //    designUserTwo(row.NodeCode, row.UserList, onSaveDraftToInstanceNode, row);
+        //}
+
+        //激活流程
+        var ActiveWorkFlow = function (row) {
+
+            var CurrentInfo = {};
+            var data = {};
+            data.WorkFlowID = row.WorkFlowID;
+            data.Version = row.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            data.PlanEndDate = row.PlanEndDate;
+
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID; //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+
+            if (row.WorkInfoID)
+                data.WorkInfoID = row.WorkInfoID;
+            else {
+                if (!data.WorkInfoID) data.WorkInfoID = WorkFlowUtil.CreateGUID(); //申请一个guid
+            }
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Active; //激活指令
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, {
+                            detail: result.detail,
+                            timeout: 0,
+                            position: "center center",
+                            closeable: true
+                        });
+                        return;
+                    }
+
+
+
+                    AllData = result.data;
+                    GetNodesUser(result.data, true);
+
+                    mini.unmask(document.body);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data, flowOperate, win) {
+
+            curWin = win;
+
+            if (flowOperate == EFlowOperate.Active) {
+                onSelectWorkFlow(data);
+                return;
+            }
+
+            $(".select").css('display', 'none');
+            onSelectNode(data, flowOperate, "ReadSendNodeList");
+        }
+        var GetData = function () {
+            return getSelectedInfo(AllData.Current);
+        }
+
+        function SubmitFlow() {
+            var tmpData = getSelectedInfo(AllData.Current);
+            if (tmpData == null)
+                return;
+            // var result = {};
+            //result.success = true;
+            // result.Mes
+            tmpData = mini.clone(tmpData);
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = tmpData;
+            msg.data.FlowOperate = EFlowOperate.Send; //执行发送操作
+
+            // result.data = msg;
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+                    var t = mini.decode(text);
+                    if (t.success) {
+
+                        CallAppFunction("appCloseNewWebView", '{"reload":"true"}', "");
+                        //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+                        //    window.m3app.AppCall('appCloseNewWebView', '{"reload":"true"}', function XXX(outparam) {
+
+                        //    });
+                        //}
+                    } else {
+                        Power.ui.alert(t.message);
+                    }
+                }
+            });
+        }
+
+        function WindowClose() {
+            CallAppFunction("appCloseNewWebView", '{"reload":"false"}', "");
+            //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+            //    window.m3app.AppCall('appCloseNewWebView', '{"reload":"false"}', function XXX(outparam) {
+
+            //    });
+            //}
+        }
+    </script>
+</body>
+
+</html>

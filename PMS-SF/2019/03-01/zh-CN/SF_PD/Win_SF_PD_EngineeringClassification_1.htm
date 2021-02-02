@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+        <div class="col-md-4" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification.Add" onclick="PowerForm.OnBtnWizard(this, OpenFormId)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="SF_PD_EngineeringClassification" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" showtreeicon="true" showPager="false"
+                             parentfield="ParentId" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div><!--序号-->
+                                <!--<div type="checkcolumn"></div>-->
+                                <div field="ProjectCode" header="项目编号" allowsort="true">项目编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="ProjectName" header="项目名称" allowsort="true">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end col-md-3-->
+        <div class="col-md-8" style="height: 96%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i>上移</a><!--上移-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i>下移</a><!--下移-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i>左移</a><!--左移-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i>右移</a><!--右移-->
+                        <a class="mini-button blue" id="SF_PD_EngineeringClassification_list.Import" onclick="Import()"><i class="fa fa-upload"></i>导入</a>
+                    </div>
+                    <!--<div class="tools">
+                        <input id="SF_HSE_CareerSafe_dtl-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                        <span id="SF_HSE_CareerSafe_dtl-search">
+                            <input id="SF_HSE_CareerSafe_dtl-search-value" class="mini-textbox" style="width: 120px;" />
+                        </span>
+                        <a class="mini-button blue" id="SF_HSE_CareerSafe_dtl-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>
+                    </div>-->
+                </div>
+
+                <div class="portlet-body" style="height: 100%">
+                    <div id="SF_PD_EngineeringClassification_list" class="mini-treegrid" style="height:100%;" showsummaryrow="true" multiselect="true" idfield="guid"
+                         data-options="{canImport:true}" showtreeicon="true" treecolumn="text" parentfield="parentId" resultastree="false" expandonload="true"
+                         allowresize="true" allowcelledit="true" allowcellselect="true">
+                        <div property="columns">
+                            <div type="indexcolumn" width="20">序号</div>
+                            <div field="Code" name="text" width="60">编号<input property="editor" class="mini-textbox" style="width:100%;" /></div>
+                            <div field="Name">名称<input property="editor" class="mini-textbox" style="width:100%;" /> </div>
+                            <!--<div field="ProjectId">项目Id<input property="editor" class="mini-textbox" style="width:100%;" /> </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+            <div style="height: 195px; overflow:auto;">
+                <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+            </div>
+            <table style="width: 363px; height: 30px; margin-top:8px;">
+                <tr>
+                    <td align="center" style="text-align:right;">
+                        <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                        <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                        <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        //导入
+        function Import() {
+            var node = mini.get("SF_PD_EngineeringClassification").getSelected();
+            if (IsEmpty(node) == true) {
+                Power.ui.warning("没有选中项目不能进行操作");
+                return false;
+            }
+            var MasterId = node.Id;
+            var ProjectId = node.ProjectId;
+            Power.ui.confirm("确定导入？", function (ret) {
+                if (ret) {
+                    //par键值对要和方法里面的对上
+                    var par = { "MasterId": MasterId, "ProjectId": ProjectId };
+                    FormFuns.APIExec("SF_PD_EngineeringClassification", "BO", "Budget", par, function (text) {
+                        //返回的所有字符串
+                        var data = mini.decode(text).data.value;
+                        mini.get("SF_PD_EngineeringClassification.Refresh").doClick();
+                    });
+                }
+            })
+        }
+
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            if (e.id = "SF_PD_EngineeringClassification_list")
+            {
+                var nodeId = mini.get("SF_PD_EngineeringClassification").getSelected().ProjectId;
+                data.ProjectId = nodeId;
+            }
+        }
+    </script>
+</body>
+</html>
+

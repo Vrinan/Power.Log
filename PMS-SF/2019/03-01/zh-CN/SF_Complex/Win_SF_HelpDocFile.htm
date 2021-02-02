@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?version=<%= AppVersion%>" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?version=<%= AppVersion%>" type="text/javascript"></script>
+    <!--[if lte IE 9]>
+        <script src="../Scripts/plugins/uploadify/jquery.uploadify.js?version=<%= AppVersion%>" type="text/javascript"></script>
+    <!-- [endif]-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+
+
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-3 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <!--<i class="fa fa-cogs"></i>$Helper.GetResource("docfolder_name_view")文档分类-->
+                            <a class="mini-button blue" id="PB_HelpTree.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                            <a class="mini-button blue" id="PB_HelpTree.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                            <a class="design mini-button blue selected" iconcls="fa fa fa-save" id="PB_HelpTree.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="overflow-x: hidden;">
+                        <div id="PB_HelpTree" class="mini-treegrid" style="width: 100%; height: 100%" showtreeicon="true" treecolumn="Name" expandonload="true" allowcelledit="true" allowcellselect="true"
+                             idfield="Id" parentfield="ParentId" >
+                            <div property="columns">
+
+                                <div type="indexcolumn"></div>
+                                <!--<div name="Code" field="Code" width="60">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>-->
+                                <div name="Name" field="Name" width="180">分类名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div><!--名称-->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-3-->
+            <div class="col-md-9 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <div id="btnUpload" style="float: left;">
+
+                            </div>
+                            <button class="btn blue" id="btnShow">
+                                <i class="fa fa-eye"></i>    $Helper.GetResource("g_view")
+                            </button><!--查看-->
+                            <button class="btn blue" id="btnDownLoad">
+                                <i class="fa fa-download"></i>  $Helper.GetResource("g_download")
+                            </button><!--下载-->
+                            <button class="btn blue" id="btnDownLoads">
+                                <i class="fa fa-download"></i>  批量下载
+                            </button><!--批量下载-->
+                            <button class="btn blue" id="btnDel">
+                                <i class="fa fa-trash-o"></i>删除
+                            </button><!--删除-->
+
+                        </div>
+                        <div class="tools">
+                            <input id="V_PS_DocFile-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 80px;" />
+                            <span id="V_PS_DocFile-search">
+                                <input id="V_PS_DocFile-search-value" class="mini-textbox" style="width: 100px;" />
+                            </span>
+                            <a class="mini-button blue" id="V_PS_DocFile-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+
+                        </div>
+                    </div>
+
+
+                    <div class="portlet-body" style="height:100%">
+                        <div id="V_PS_DocFile" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true"
+                             pagesize="15" showpager="true" idfield="Id" ondrawcell="onDrawProgressCell" sortfield="Regdate desc">
+                            <div property="columns">
+                                <div type="checkcolumn" width="10"></div>
+                                <div field="countNum" width="18" align="center" allowsort="true">评论数</div><!--编号-->
+                                <div name="action1" width="15" align="center">评论</div>
+                                <div field="Name" allowsort="true">文件名称</div><!--名称-->
+                                <div field="FileExt" width="25" allowsort="true">扩展名</div><!--扩展名-->
+                                <div field="RegHumName" width="30" allowsort="true">上传人</div><!--文件版本-->
+                                <div field="Labels" width="60" allowsort="true">文件说明</div><!--关键词-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--mini-fit end-->
+                </div>
+            </div>
+            <!--end col-md-9-->
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        var FileOperate = mini.get("V_PS_DocFile");
+        var formData = {};
+
+
+
+        var grid = mini.get("V_PS_DocFile");
+        grid.load();
+        grid.sortBy("Regdate", "desc");
+
+        function windowopen(url) {
+            if (FormFuns.DeviceIsPhone()) {
+                FormFuns.MiniOpenURL(url, { showmaxbutton: true, max: true }); //手机打开必须使用弹出
+            }
+            else {
+                window.open(url);
+            }
+        }
+
+        PowerForm.EventAfterNodeSeleted = function (e) {
+            if (e.sender.id == "PB_HelpTree")
+                FileUp("PB_HelpTree", e.node.Id)
+        }
+        function EditLine() {
+            var row = mini.get("V_PS_DocFile").getSelected();
+            if (!row)
+                return;
+            if (row.SourceFileId != null) {
+                Power.ui.alert(app_global['archive_ed_not_edit']);//"已归档文件不能编辑"
+                return;
+            }
+            var Id = row["Id"];
+            var url = "/PowerPlat/FormXml/DocFile/DocumentEdit.aspx?id=" + Id + "&edittype=2";
+            window.open(url);
+        }
+        $(function () {
+            PowerForm.Init();
+            FileUp("PB_HelpTree", mini.get("PB_HelpTree").getRootNode().children[0].Id);
+
+            var folder = mini.get("PB_HelpTree");
+
+            $("#btnShow").click(function () {
+                var sel = FileOperate.getSelected();
+                var Id = sel["Id"];
+                var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + Id;
+                windowopen(url);
+            });
+            $("#btnDownLoad").click(function () {
+                var sel = FileOperate.getSelected();
+                var Id = sel["Id"];
+                var url = "/File/Download/ftp/" + Id;
+                window.open(url);
+            });
+            $("#btnDownLoads").click(function () {
+                var sel = FileOperate.getSelecteds();
+                var ids = "";
+                if (!sel || sel.length <= 0)
+                { Power.ui.alert(app_global['file_select_download_files']); return }//"请选择下载文件"
+                else
+                {
+                    for (var i = 0; i < sel.length; i++) {
+                        ids += sel[i]["Id"] + ",";
+                    }
+                }
+                if (ids.length > 0)
+                    ids = ids.substring(0, ids.length - 1);
+                postDataToServer("/PowerPlat/Control/File.ashx", { action: "zip", _type: "ftp", fileids: ids });
+
+
+            });
+
+            $("#btnDel").click(function () {
+                var sel = FileOperate.getSelecteds();
+
+                //var Id = sel["Id"];
+                var yes = app_global['docfile_yes'];//是
+                var no = app_global['docfile_no'];//否
+                if (sel.length > 0) {
+                    var buttonOption = {};
+                    buttonOption[yes] = {
+                        theme: 'primary',
+                        handler: function () {
+                            var s = 0;
+                            var ss = false;
+                            for (var i = 0; i < sel.length; i++) {
+                                var Id = sel[i].Id;
+
+                                if (sel[i].SourceFileId != null && sel[i].SourceFileId != "00000000-0000-0000-0000-000000000000") {
+                                    ss = true;
+                                    continue;
+                                }
+                                $.getJSON('/PowerPlat/Control/File.ashx?_type=ftp&action=delete&_fileid=' + Id, function (data) {
+                                    s++;
+                                    if (ss)
+                                        Power.ui.alert(app_global['archive_ed_not_delete']);//已归档文件不能删除
+                                    if (s == sel.length)
+                                        FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("V_PS_DocFile"));
+                                });
+                            }
+
+                        }
+                    };
+                    buttonOption[no] = function () { };
+                    Power.ui.confirm(app_global['docfile_confirmdelete'], { button: buttonOption });//是否删除该文件?
+                }
+                return false;
+            });
+
+            $("#btnUpload").uploadify({
+                height: 30,
+                width: 56,
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                buttonText: "<i class=\"fa fa-upload\"></i> " + app_global['docfile_up'],//上传
+                swf: '/Scripts/plugins/uploadify/uploadify.swf',
+                uploader: '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: formData,
+                onUploadComplete: function () {
+                    FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("V_PS_DocFile"));
+                },
+                onDialogClose: function () {
+                    //$(".uploadify-queue")
+                    //var messageid = mini.loading("Loading, Please wait ...", "Loading");
+                },
+                dragzone: "#V_PS_DocFile"
+            });
+        });
+
+        function FileUp(keyword, keyvalue) {
+
+
+            if (keyword == "")
+                keyword = "PB_HelpTree";
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var cfg = FormFuns.GetConfig(keyword);
+            if (cfg)
+                keyword = cfg.BusinessKeyWord || cfg.KeyWord;
+            formData.KeyWord = keyword;
+            formData.KeyValue = keyvalue;
+            FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("V_PS_DocFile"));
+        }
+
+        function onDrawProgressCell(e) {
+
+            if (e.column.name == "action1") {
+
+                e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('0a3fc68f-0f04-4187-ad8a-02cd0e49f1b2','" + e.record.Id + "')\"><i class='fa fa-plus-square' ></i></a>";
+            }
+
+            if (e.field == "Name") {
+                e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('0b04809c-0d90-4830-bf80-830371e838b7','" + e.record.Id + "')\">" + e.record.Name + "</a>";
+            }
+
+
+        }
+
+
+        grid.on("drawcell", function (e) {
+            var record = e.record,
+        column = e.column,
+        field = e.field,
+        value = e.value;
+            //评论超过10条，红色标识
+            if (field == "countNum" && value >= 10) {
+                e.cellStyle = "color:red;font-weight:bold;";
+            }
+        });
+
+
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/EditForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 800,
+                height: 600
+            })
+        }
+
+
+    </script>
+
+
+
+
+</body>
+</html>

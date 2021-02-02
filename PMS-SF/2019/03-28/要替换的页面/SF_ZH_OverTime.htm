@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var WizardParams = "$Model.data.params";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>加班申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_OverTime.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_OverTime.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_OverTime.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_OverTime.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新
+                    </a>
+                    <!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_OverTime.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭
+                    </a>
+                    <!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%">
+                    <div class="mini-splitter" showcollapsebutton="true" vertical="true" style="width: 100%; height: 100%;">
+                        <div size="55%" showcollapsebutton="false">
+                            <div class="mini-fit">
+                                <div id="SF_ZH_OverTime" class="form" style="margin-bottom:10px;" >
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>
+                                                编号
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.Code" name="Code" class="mini-textbox"
+                                                       required="true" requirederrortext="编号不能为空" />
+                                            </td>
+                                            <td>
+                                                名称
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.Title" name="Title" class="mini-textbox"
+                                                       required="true" requirederrortext="名称不能为空" />
+                                            </td>
+                                            <td>
+                                                <label for="SF_ZH_OverTime.Status">状态</label>
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.Status" name="Status" class="mini-combobox" />
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                加班人员
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.HumName" name="HumName" textname="HumName"
+                                                       class="mini-buttonedit" emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                       allowinput="false" required />
+                                                <input id="SF_ZH_OverTime.HumId" name="HumId" class="mini-textbox"
+                                                       style="display:none" />
+                                            </td>
+                                            <td>
+                                                工号
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.HumCode" name="HumCode" class="mini-textbox"
+                                                       readonly />
+                                            </td>
+                                            <td>
+                                                加班部门
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.Department" name="Department" class="mini-textbox"
+                                                       readonly />
+                                                <input id="SF_ZH_OverTime.DaptId" name="DaptId" class="mini-textbox"
+                                                       style="display:none" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                加班类型
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.OverType" name="OverType" class="mini-combobox"
+                                                       required />
+                                            </td>
+                                            <td>
+                                                加班时长
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.OverTime" name="OverTime" class="mini-textbox" />
+                                            </td>
+                                            <td>
+                                                当月累计加班时长
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZH_OverTime.MouthTime" name="MouthTime" class="mini-textbox"
+                                                       readonly />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                加班事由
+                                            </td>
+                                            <td colspan="5">
+                                                <input id="SF_ZH_OverTime.OverRemark" name="OverRemark" class="mini-textarea"
+                                                       height="60"  required/>
+                                                <input id="SF_ZH_OverTime.Mouth" name="Mouth" class="mini-textbox"
+                                                       style="display:none" />
+                                            </td>
+                                            <!-- <td>
+                                                备注
+                                            </td>
+                                            <td colspan="3">
+                                                <input id="SF_ZH_OverTime.Memo" name="Memo" class="mini-textarea" height="60" />
+                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                录入人
+                                            </td>
+                                            <td colspan="2.5">
+                                                <input id="SF_ZH_OverTime.RegHumName" name="RegHumName" class="mini-textbox"
+                                                       readonly="readonly" />
+                                                <input id="SF_ZH_OverTime.Position" name="Position" class="mini-textbox"
+                                                       readonly="readonly" style="display:none" />
+                                            </td>
+                                            <td>
+                                                录入时间
+                                            </td>
+                                            <td colspan="2.5">
+                                                <input id="SF_ZH_OverTime.RegDate" name="RegDate" class="mini-datepicker"
+                                                       readonly="readonly" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div size="45%" showcollapsebutton="true">
+                            <div class="mini-fit">
+                                <div class="mini-toolbar">
+                                    <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_OverTime_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_OverTime_list.Delete"
+                                       onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                </div>
+
+                                <div id="SF_ZH_OverTime_list" class="mini-datagrid" oncellendedit="endedit" sortField="OverDate"
+                                     showsummaryrow="true" idfield="Id" allowresize="true" allowcelledit="true"
+                                     allowcellselect="true" style="width: 100%; height: 100%;">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="OverDate" headeralign="center" dateformat="yyyy-MM-dd HH:mm">
+                                            起始日期
+                                            <input property="editor" name="OverDate" class="mini-datepicker" showTime="true"
+                                                   format="yyyy-MM-dd HH:mm" />
+                                        </div>
+                                        <div field="OverDate1" headeralign="center" dateformat="yyyy-MM-dd HH:mm">
+                                            结束日期
+                                            <input property="editor" name="OverDate" class="mini-datepicker" showTime="true"
+                                                   format="yyyy-MM-dd HH:mm" />
+                                        </div>
+                                        <div field="OverTime" headeralign="center">
+                                            加班时长
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0"
+                                                   style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div id="attachfile" name="attachfile" title="附件" url=""></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+
+
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            e.isValid = true;
+            //子表判断
+            var grid = mini.get("SF_ZH_OverTime_list");
+            if(grid.data.length==0){
+                Power.ui.alert("加班明细不能为空!");
+                e.isValid = false;
+            }
+            for( var i = 0 ; i < grid.data.length; i++){
+                //验证起始日期
+                if(grid.data[i].OverDate==null){
+                    Power.ui.alert("第"+(i+1)+"行 起始日期 不能为空!");
+                    e.isValid = false;
+                    break;
+                }
+                //验证结束日期
+                if(grid.data[i].OverDate1==null){
+                    Power.ui.alert("第"+(i+1)+"行 结束日期 不能为空!");
+                    e.isValid = false;
+                    break;
+                }
+                //验证日期是否填反
+                if(grid.data[i].OverDate>grid.data[i].OverDate1){
+                    Power.ui.alert("第"+(i+1)+"行 起始日期 不得大于 结束日期!");
+                    e.isValid = false;
+                    break;
+                }
+                //验证子表每行是否超过24h
+                if(grid.data[i].OverTime>24){
+                    Power.ui.alert("第"+(i+1)+"行加班时长不能超过24小时!");
+                    e.isValid = false;
+                    break;
+                }
+            }
+        }
+
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get("SF_ZH_OverTime_list");
+            var OverDate = record.OverDate;
+            var OverDate1 = record.OverDate1;
+            var StartDate = record.StartDate;
+            var EndDate = record.EndDate;
+            if (e.field == "StartDate" || e.field == "EndDate" || e.field == "OverDate" || e.field == "OverDate1") {
+                var start = new Date(OverDate).format("yyyy-MM-dd");
+                var end = new Date(OverDate1).format("yyyy-MM-dd");
+                //获取月
+                var Mouth = new Date(OverDate1).getMonth() + 1;
+                //获取小时
+                var Starthour = new Date(StartDate).getHours();
+                var Endhour = new Date(EndDate).getHours();
+
+                Mouth = Mouth == NaN ? 0 : parseFloat(Mouth);
+                mini.get("SF_ZH_OverTime.Mouth").setValue(Mouth);
+
+                var OverTime = new Number;
+                var OverDay = new Number;
+                // if (start == end) {
+                //    OverTime = Endhour - Starthour;
+                //    var OverTime1 = isNaN(parseFloat(OverTime));
+                //    if (OverTime < 0) {
+                //         Power.ui.alert("结束时间不能小于开始时间")
+                //     }
+                //    else {
+                //         grid.updateRow(record, { OverTime: OverTime });
+                //     }
+                // }
+                // else {
+                //     //把日期天数差改为小时
+                //     OverDay = DateDiff(end, start) * 24;
+                //     OverTime = 24 - Starthour + OverDay + Endhour;
+                //     var OverTime1 = isNaN(parseFloat(OverTime));
+                //     grid.updateRow(record, { OverTime: OverTime });
+                // }
+                var DateStart = new Date(OverDate).getTime();
+                var DateEnd = new Date(OverDate1).getTime();
+                var Over_time = isNaN(DateEnd - DateStart) ? 0 : (DateEnd - DateStart);
+                Over_time /= (1000 * 60 * 60);
+                Over_time = Over_time.toFixed(2);
+                Over_time = aa(Over_time);
+                grid.updateRow(record, { OverTime: Over_time });
+                debugger;
+            }
+
+            //var sum = new Number;
+            var sum = new Number(0);
+            var row = grid.findRow(function (row) {
+                sum = sum + parseFloat(row.OverTime);
+            });
+            mini.get("SF_ZH_OverTime.OverTime").setValue(sum);
+        }
+        function aa(a1) {
+            if (String(a1).indexOf(".") > -1) {
+                var bb = a1.toString().replace(/\d+\.(\d*)/, "$1");//小数部分
+                var cc = parseInt(a1); //整数部分
+                var a2 = "0.";
+                a2 += bb;
+                if (Number(a2) >= 0.5) {
+                    return Number(cc + ".5");
+                } else {
+                    return cc;
+                }
+            }
+            return a1;
+        }
+        function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+            var aDate, oDate1, oDate2, iDays
+            aDate = sDate1.split("-")
+            oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+            aDate = sDate2.split("-")
+            oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+            iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+            return iDays - 1;
+        }
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_ZH_OverTime.HumCode").value == "") {
+                var HumanId = sessiondata.HumanId;
+                mini.get("SF_ZH_OverTime.HumId").setValue(HumanId);
+                var HumanName = sessiondata.HumanName;
+                mini.get("SF_ZH_OverTime.HumName").setValue(HumanName);
+                var HumanCode = sessiondata.HumanCode;
+                mini.get("SF_ZH_OverTime.HumCode").setValue(HumanCode);
+
+                var DeptId = sessiondata.DeptId;
+                if (DeptId == '') {
+                    mini.get("SF_ZH_OverTime.DaptId").setValue('00000000-0000-0000-0000-000000000000');
+                    mini.get("SF_ZH_OverTime.Department").setValue(' ');
+                }
+                else {
+                    mini.get("SF_ZH_OverTime.DaptId").setValue(DeptId);
+                    var DeptName = sessiondata.DeptName;
+                    mini.get("SF_ZH_OverTime.Department").setValue(DeptName);
+                }
+            }
+            if (mini.get("SF_ZH_OverTime.Position").value == "") {
+                var Position = sessiondata.PosiName;
+                mini.get("SF_ZH_OverTime.Position").setValue(Position);
+            }
+        }
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            UpdateMonthTime();
+
+            // 判断子表起始日期和其他单据有没有重复
+            Power.ui.loading("明细检查中……");
+            var par = { "Id": KeyValue };
+            FormFuns.APIExec("SF_ZH_OverTime", "BO", "IsRedundante", par, function (text) {
+                Power.ui.loading.close();
+                var js= JSON.parse(text);
+                text=js.data.value;
+                if(text != "0___")
+                {
+                    text=text.replace("___","条明细的起始日期已存在:<br/>")
+                    text=text.replace(",","<br/>")
+                    text=text.substring(0, text.length - 1);
+                    Power.ui.warning("有"+text);
+                }
+            });
+        }
+        
+        //更新当月累计加班时长
+        function UpdateMonthTime() {
+            var Id = formconfig.config.joindata.currow.Id;
+            var RegDate = mini.get("SF_ZH_OverTime.RegDate").value;
+            RegDate = new Date(RegDate).format("yyyy-MM-dd");
+            var p = { "Id": Id, "RegDate": RegDate };
+            FormFuns.APIExec("SF_ZH_OverTime", "BO", "UpdareMonthTime", p, function (text) {
+                mini.get("SF_ZH_OverTime.Refresh").doClick();
+            });
+        }
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            data.OverTime = 0;
+        }
+        //送审前判断下 明细是否为空
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_ZH_OverTime_list");
+            if (grid.data.length == 0) {
+                Power.ui.alert("加班明细不能为空!");
+                e.isValid = false;
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+        <div style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_FK_TotalPackageSettlement.AddForm" onclick="PowerForm.OnBtnAdd(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_FK_TotalPackageSettlement.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="SF_FK_TotalPackageSettlement.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                        <a class="mini-button blue" id="SF_FK_TotalPackageSettlement.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        <div id="SF_FK_TotalPackageSettlement-Export" title="总包结算工作情况表" class="btn-group"></div>
+                    </div>
+                    <div class="tools">
+                            <input id="SF_FK_TotalPackageSettlement-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="SF_FK_TotalPackageSettlement-search">
+                                <input id="SF_FK_TotalPackageSettlement-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_FK_TotalPackageSettlement-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                        </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="SF_FK_TotalPackageSettlement" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" showtreeicon="true" allowcellwrap="true"
+                             resultastree="false" multiselect="true" allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div><!--序号-->
+                                <div field="ContractCode" header="合同编号" allowsort="true" headerAlign="center" width="150">
+                                    合同编号
+                                    <input property="editor" id="SF_FK_TotalPackageSettlement.ContractCode" class="mini-buttonedit" name="ContractCode" 
+                                           textname="ContractCode" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;"/>
+                                </div>
+                                <div field="ProjectName" header="工程/项目名称" allowsort="true" headerAlign="center" width="250">
+                                    工程/项目名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Scale" header="规模" allowsort="true" headerAlign="center" width="80">
+                                    规模<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <!--<div field="Major" header="分包专业" allowsort="true" type="comboboxcolumn" headerAlign="center" width="80">
+                                    分包专业<input property="editor" class="mini-combobox" style="width: 100%;" /> 
+                                </div>-->
+                                <div field="Contractor" header="总包方名称" allowsort="true" headerAlign="center" width="250" align="center">
+                                    总包方名称<input property="editor" class="mini-textbox" style="width: 100%;" /> 
+                                </div>                                
+                                <div field="StartDate" header="开工日期" allowsort="true" dateformat="yyyy.MM.dd" headerAlign="center" width="150" align="center">
+                                    开工日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> 
+                                </div>
+                                <div field="EndDate" header="完工日期" allowsort="true" dateformat="yyyy.MM.dd" headerAlign="center" width="150" align="center">
+                                    完工日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> 
+                                </div>
+                                <div field="SubmissionDate" header="结算资料提交日期" allowsort="true" dateformat="yyyy.MM.dd" headerAlign="center" width="150" align="center">
+                                    结算资料提交日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> 
+                                </div>
+                                <div field="ContractAmount" header="总包合同金额" allowsort="true" numberformat="n2" headerAlign="center" width="150" align="right">
+                                    总包合同金额<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" /> 
+                                </div>
+                                <div field="TrialAmount" header="总包送审金额" allowsort="true" numberformat="n2" headerAlign="center" width="150" align="right">
+                                    总包送审金额<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" /> 
+                                </div>
+                                <!--<div field="AuditAmount" header="公司审核金额" allowsort="true" numberformat="n2" headerAlign="center" width="150" align="right">
+                                    公司审核金额<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" /> 
+                                </div>-->
+                                <div field="ExternalAuditorDate" header="送外审日期" allowsort="true" dateformat="yyyy.MM.dd" headerAlign="center" width="150">
+                                    送外审日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> 
+                                </div>
+                                <div field="SettlementAmount" header="结算金额" allowsort="true" numberformat="n2" headerAlign="center" width="150" align="right">
+                                    结算金额<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" /> 
+                                </div>
+                                <div field="SettlementReportDate" header="结算报告日期" allowsort="true" dateformat="yyyy.MM.dd" headerAlign="center" width="150" align="center">
+                                    结算报告日期<input property="editor" class="mini-datepicker" style="width: 100%;"/> 
+                                </div>
+                                <div field="SettlementAgent" header="结算经办人" allowsort="true" headerAlign="center" width="150" align="center">
+                                    结算经办人
+                                    <input property="editor" id="SF_FK_TotalPackageSettlement.SettlementAgent" class="mini-buttonedit" name="SettlementAgent"
+                                           textname="SettlementAgent" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                </div>
+                                <div field="Memo" header="备注" allowsort="true" headerAlign="center" width="150" >
+                                    备注<input property="editor" class="mini-textarea" height="30" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+            <div style="height: 195px; overflow:auto;">
+                <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+            </div>
+            <table style="width: 363px; height: 30px; margin-top:8px;">
+                <tr>
+                    <td align="center" style="text-align:right;">
+                        <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                        <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                        <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+       
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            //mini.get("SF_FK_TotalPackageSettlement.Refresh").doClick();
+            PowerForm.Init();
+        }
+
+        PowerForm.EventWizardData = function (e, data) {
+            var SettlementAgents = "";
+            if (e.id == "SF_FK_TotalPackageSettlement.SettlementAgent") {
+                for (var i = 0; i < data.length; i++) {
+                    if (i < data.length - 1) {
+                        SettlementAgents += data[i]["Name"] + "，";
+                    } else {
+                        SettlementAgents += data[i]["Name"];
+                    }
+                }
+                mini.get("SF_FK_TotalPackageSettlement.SettlementAgent").setValue(SettlementAgents);
+                e.Next = false;
+            }
+            
+        }
+        
+    </script>
+</body>
+</html>

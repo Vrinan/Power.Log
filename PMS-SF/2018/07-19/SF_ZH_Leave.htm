@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>请假申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_Leave.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_Leave.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_Leave.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a>
+                    <!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_Leave.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新</a>
+                    <!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_Leave.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                    <!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_Leave" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_Leave.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>
+                                        <td>
+                                            请假类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.LeaveType" name="LeaveType" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            请假人员
+                                        </td>
+                                        <td>
+                                            <!-- <input id="SF_ZH_Leave.HumName" name="HumName" textname="HumName" class="mini-textbox" readonly/> -->
+
+
+                                            <input id="SF_ZH_Leave.HumName" name="HumName" textname="HumName" class="mini-buttonedit"  class="mini-textbox" emptytext=""
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true"  />
+
+                                            
+
+
+
+                                            <input id="SF_ZH_Leave.HumId" name="HumId" class="mini-textbox" style="display:none" />
+                                        </td>   
+                                        <td>
+                                            工号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.HumCode" name="HumCode" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            请假部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.Department" name="Department" class="mini-textbox" readonly/>
+                                            <input id="SF_ZH_Leave.DaptId" name="DaptId" class="mini-textbox" style="display:none" />
+                                        </td>
+                                        <td>
+                                            销假状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.LeaveStatus" name="LeaveStatus" class="mini-combobox" allowinput="false" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            请假起始
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.StartDate" name="StartDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            请假结束
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.EndDate" name="EndDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            请假期限(天)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.LeaveTime" name="LeaveTime" class="mini-textbox" required />
+                                        </td>
+                                        <td>
+                                            备案人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.RemarkHum" name="RemarkHum" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Leave.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                            <input id="SF_ZH_Leave.Position" name="Position" class="mini-textbox" readonly="readonly" style="display:none" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Leave.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_ZH_Leave.HumId").value == "") {
+                var HumanId = sessiondata.HumanId;
+                mini.get("SF_ZH_Leave.HumId").setValue(HumanId);
+                var HumanName = sessiondata.HumanName;
+                mini.get("SF_ZH_Leave.HumName").setValue(HumanName);
+                var HumanCode = sessiondata.HumanCode;
+                mini.get("SF_ZH_Leave.HumCode").setValue(HumanCode);
+                var DeptName = sessiondata.DeptName;
+                mini.get("SF_ZH_Leave.Department").setValue(DeptName);
+                var DeptId = sessiondata.DeptId;
+                mini.get("SF_ZH_Leave.DaptId").setValue(DeptId);
+            }
+            if (mini.get("SF_ZH_Leave.Position").value == "") {
+                var Position = sessiondata.PosiName;
+                mini.get("SF_ZH_Leave.Position").setValue(Position);
+            }
+        }
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var start = mini.get("SF_ZH_Leave.StartDate").value;
+            var end = mini.get("SF_ZH_Leave.EndDate").value;
+            var LeaveTime = mini.get("SF_ZH_Leave.LeaveTime").value;
+            if (start != '' && end != '') {
+
+                var start = new Date(start).format("yyyy-MM-dd");
+                var end = new Date(end).format("yyyy-MM-dd");
+
+                var time = DateDiff(end, start);
+                mini.get("SF_ZH_Leave.LeaveTime").setValue(time);
+                //if (isNaN(LeaveTime)) {
+                //    mini.get("SF_ZH_Leave.LeaveTime").setValue(time);
+                //    Power.ui.alert("请假期限只能填数字");
+
+                //}
+            }
+
+        }
+        function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+            var aDate, oDate1, oDate2, iDays
+            aDate = sDate1.split("-")
+            oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+            aDate = sDate2.split("-")
+            oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+            iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+            return iDays + 1
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            if (formconfig.config.joindata.currow.Status == "50") {
+                mini.get("SF_ZH_Leave.LeaveStatus").setReadOnly(false);
+                mini.get("SF_ZH_Leave.Save").enable();
+            }
+        }
+    </script>
+</body>
+
+</html>

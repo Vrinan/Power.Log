@@ -1,0 +1,237 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=911" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=911" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=911" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=911" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=911" type="text/javascript"></script>-->
+    <script src="/Form/Init/bdf61eba-307b-421c-9df2-bfb9b3685b26/add/"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=911 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=911 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=911 "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "";
+        var FormId = "bdf61eba-307b-421c-9df2-bfb9b3685b26";
+        var FormState = "add";
+        var FormParams = '';
+		var EpsId="00000000-0000-0000-0000-0000000000a4";	
+		var  EpsName="三峰科技";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计任务通知单
+                </div>
+                <div style="float: left;">
+    &nbsp;&nbsp;
+    <div id="txtCurrentWorkInfoID" class="mini-textbox" style="display: none"></div>
+    <div id="txtCurrentSequeID" class="mini-textbox" enabled="false" style="display: none"></div>
+    <div id="btnActive" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Active');" enabled="false" style="display: none" visible="false"><i class="fa fa-paper-plane"></i>送审</div><!--送审-->
+    <div id="btnGetBack" class="mini-button flowbuttoncolor" onclick="onExecute(this,'GetBack');" enabled="false" style="display: none" visible="false"><i class="fa fa-trash-o"></i>回收</div><!--回收-->
+    <div id="btnSend" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Send');" enabled="false" style="display: none" visible="false"><i class="fa fa-thumbs-up"></i>审批</div><!--同意-->
+    <div id="btnBatchSends" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,BatchSends');" enabled="false" style="display: none" visible="false"><i class="fa fa-thumbs-up"></i>批量同意</div><!--批量同意-->
+    <div id="btnReturn" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Return');" enabled="false" style="display: none" visible="false"><i class="fa fa-mail-reply"></i>驳回</div><!--驳回-->
+    <div id="btnStop" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Stop');" enabled="false" style="display: none" visible="false"><i class="fa fa-pause"></i>终止</div><!--终止-->
+    <div id="btnScrap" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Scrap');" enabled="false" style="display: none" visible="false"><i class="fa fa-pause"></i>作废</div><!--作废-->
+    <div id="btnDelegate" class="mini-button flowbuttoncolor" enabled="false" onclick="onExecute(this,'Delegate');" style="display: none" visible="false"><i class="fa fa-graduation-cap"></i>委派</div><!--委派-->
+    <div id="btnShowMonitor" class="mini-button flowbuttoncolor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>监控</div><!--old监控-->
+    <div id="btnShowMonitorVIS" class="mini-button flowbuttoncolor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>监控 </div><!--监控-->
+    <div id="btnShowHistoryMonitor" class="mini-menubutton  flowbuttoncolor" menu="#popupHistoryMonitor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>审批历史</div><!--历史-->
+    <div id="btnHangUp" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,HangUp');" enabled="false" style="display: none" visible="false"><i class="fa fa-arrow-up"></i>挂起</div><!--挂起-->
+    <div id="btnUnHangUp" class="mini-button flowbuttoncolor" onclick="onExecute(this,'UnHangUp');" enabled="false" style="display: none" visible="false"><i class="fa fa-arrow-down"></i>撤销挂起</div><!--撤销挂起-->
+    <div id="btnDelayDate" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,DelayDate');" enabled="false" style="display: none" visible="false"><i class="fa fa-calendar"></i></div><!--延期-->
+    <div id="btnUnEndFlow" class="mini-button flowbuttoncolor" onclick="onExecute(this,'UnEndFlow');" enabled="false" style="display: none" visible="false"><i class="fa fa-trash-o"></i></div><!--撤销办结-->
+ <div id="btnForward" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Forward');" enabled="false" style="display: none" visible="false" title="历史经手人，打开已结束的单据，还能添加人员做额外的抄送"><i class="fa fa-arrow-down"></i>转发</div>
+   
+       <div id="btnExportRecord" class="mini-button flowbuttoncolor" onclick="PowerWorkFlowUtil.TransRecord('ExportInstance');" style="display:none" visible="false" enabled="false"    ><i class="fa fa-trash-o"></i>导出</div><!--导出记录-->
+       <div id="btnImportRecord" class="mini-button flowbuttoncolor" onclick="PowerWorkFlowUtil.TransRecord('ImportInstance');"   style="display:none" visible="false" enabled="false"   ><i class="fa fa-trash-o"></i>导入</div><!--导入记录-->
+
+</div>
+<ul id="popupHistoryMonitor" class="mini-menu" style="display: none;">
+    <li></li>
+</ul>
+
+
+<style type="text/css">
+    .mini-button.flowbuttoncolor {        
+          border-radius:6px;            /* W3C syntax */
+        background-color: rgb(67, 108, 241);
+        color: white;
+    }
+
+    .flowbuttoncolor i {
+        color: #fff;
+    }
+
+</style> 
+
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_ZZ_DesignTaskAdviceNote.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_ZZ_DesignTaskAdviceNote.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZZ_DesignTaskAdviceNote.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZZ_DesignTaskAdviceNote.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZZ_DesignTaskAdviceNote" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            单据编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.Code" name="Code" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            单据名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.Name" name="Name" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            任务类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.TaskType" name="TaskType" class="mini-combobox" required="true"/>
+                                        </td>
+                                    </tr>     
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            项目地点
+                                        </td>
+                                        <td >
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.ProjectSite" name="ProjectSite" class="mini-textbox" readonly="readonly"/>                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            业主单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.ProprietorUnit" name="ProprietorUnit" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            项目性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.ProjectNature" name="ProjectNature" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计规模(T/D)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.DesignScale" name="DesignScale" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            具体内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.Details" name="Details" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            委托方提供的资料清单
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.CliProvMaterialList" name="CliProvMaterialList" class="mini-textarea" height="100" />
+                                        </td>
+                                      
+                                    </tr>
+                                    <tr>                                        
+                                        <td>
+                                            受委托方返回资料清单
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.TrusRetMaterialList" name="TrusRetMaterialList" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td>
+                                            受委托方返回资料时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.TrusRetMaterialTime" name="TrusRetMaterialTime" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            任务接受人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.Receiver" name="Receiver" textname="Receiver" class="mini-buttonedit"
+                                                   emptytext="请选择任务接受人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_DesignTaskAdviceNote.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+	    
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "rwjsr") {
+                mini.get("SF_ZZ_DesignTaskAdviceNote.Receiver").setReadOnly(false);
+                mini.get("SF_ZZ_DesignTaskAdviceNote.Save").enable();
+            }
+        }
+
+
+    </script>
+</body>
+</html>

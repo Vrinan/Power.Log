@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+					<i class="fa fa-reorder"></i>培训计划
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_TrainPlan.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_TrainPlan.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_TrainPlan.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_TrainPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_TrainPlan.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_TrainPlan" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_TrainPlan.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>   
+                                        <td>
+                                            岗位类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.HiddenTypeType" name="HiddenTypeType" class="mini-combobox" required />
+                                        </td>                                  
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            培训类别
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.TrainType" name="TrainType" class="mini-combobox"  required/>
+                                        </td>
+                                        <td>
+                                            培训方式
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.TrainMode" name="TrainMode" class="mini-combobox" required/>
+                                            <input id="SF_ZH_TrainPlan.TrainPlan_Id" name="TrainPlan_Id" class="mini-textbox" style="display:none"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            培训机构/讲师
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Teacher" name="Teacher" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            培训人数
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Number" name="Number" class="mini-textbox"  format="0"/>
+                                        </td>
+                                        <td width="0">
+                                            <input id="SF_ZH_TrainPlan.ChangeNum" name="ChangeNum" class="mini-textbox" readonly width="0"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开始时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.StartDate" name="StartDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            结束时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.EndDate" name="EndDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            培训地点
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Address" name="Address" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            费用预算
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.Money" name="Money" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            主办单位
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_TrainPlan.PartyB" name="PartyB" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            培训内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_TrainPlan.Remark" name="Remark" class="mini-textarea"  height="60"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            培训人员
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_TrainPlan.TrainHumans" name="TrainHumans" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_TrainPlan.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_TrainPlan.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>     
+                        <div title="培训人员">
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_TrainPlan_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>新增-->
+
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_TrainPlan_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_TrainPlan_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_TrainPlan_list-Export" class="btn-group"></div>
+                                <div id="btnUpload"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/培训计划导入模板.xlsx">导入模板下载</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_TrainPlan_list" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="HumName" width="100" headeralign="center" allowSort="true" >
+                                            姓名   
+                                        </div>
+                                        <div field="HumCode" width="100" headeralign="center" allowSort="true">
+                                            工号
+                                        </div>
+                                        <div field="Department" width="100" headeralign="center" allowSort="true">
+                                            部门
+                                        </div>
+                                        <div field="Remark" width="100" allowSort="true" >
+                                            备注
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                 
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_ZH_TrainPlan_list", CreateGUID())//此处修改关键词
+        });
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var len = mini.get("SF_ZH_TrainPlan_list").data.length;
+            mini.get("SF_ZH_TrainPlan.Number").setValue(len);
+            mini.get("SF_ZH_TrainPlan.ChangeNum").setValue(len);
+            if (mini.get("SF_ZH_TrainPlan.TrainPlan_Id").value == '') {
+                mini.get("SF_ZH_TrainPlan.TrainPlan_Id").setValue("00000000-0000-0000-0000-000000000000");
+            }
+        }
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "SF_ZH_TrainPlan_list";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_ZH_TrainPlan_list");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                height: 24,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入培训记录",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_ZH_TrainPlan";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+
+        }
+    </script>
+</body>
+</html>

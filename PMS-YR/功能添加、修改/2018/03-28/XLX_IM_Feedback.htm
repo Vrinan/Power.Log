@@ -1,0 +1,177 @@
+﻿﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!--基础引用-->
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <!--流程引用-->
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <!--多语言引用-->
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var HumanId = "$!CurrentSession.HumanId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>
+                    <span>问题反馈</span>
+                </div>
+                <div class="actions">
+                    <!--表单-->
+                    <a class="mini-button blue" id="XLX_IM_Feedback.Save" onclick="Send"><i class="fa fa-sign-in"></i>发送给责任人</a><!--保存-->
+                    <a class="mini-button blue" id="XLX_IM_Feedback.FK" onclick="fk(this)"><i class="fa fa-sign-in"></i>处理反馈</a><!--保存-->
+                    <a class="mini-button blue" id="XLX_IM_Feedback.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                    <a class="mini-button blue" id="XLX_IM_Feedback.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                    <a class="mini-button blue" id="XLX_IM_Feedback.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>$Helper.GetResource("g_off")</a><!--关闭-->
+                </div>
+            </div>
+            <!--portlet-body-->
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <!--tab 通常 -->
+                        <div title="$Helper.GetResource('g_general')" iconcls="fa fa-h-square">
+                            <!--通常-->
+                            <div id="XLX_IM_Feedback" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="Code" name="Code" class="mini-textbox" readonly="True" /></td>
+                                        <td>处理进度</td>
+                                        <td><input id="XLX_IM_Feedback.Speed" name="Speed" class="mini-ComboBox" readonly="True" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3"><input id="Title" name="Title" class="mini-textbox" required="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>问题类型</td>
+                                        <td><input id="XLX_IM_Feedback.Type" name="Type" class="mini-ComboBox" required="true" /></td>
+                                        <td>责任人</td>
+                                        <td>
+                                            <input id="XLX_IM_Feedback.ToHumanId" name="ToHumanId" class="mini-textbox" visible="false" />
+                                            <input id="XLX_IM_Feedback.ToHumanName" name="ToHumanName" textname="ToHumanName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择责任人..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>详细描述</td>
+                                        <td colspan="3"><input id="Detail" name="Detail" class="mini-textarea" height="250px" emptytext="请将详细内容以附件形式上传！" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_IM_Feedback.RegHumName" name="RegHumName" class="mini-textbox" readonly="True" />
+                                        </td>
+                                        <td>
+                                            录入日期
+                                        </td>
+                                        <td>
+                                            <input id="XLX_IM_Feedback.RegDate" name="RegDate" class="mini-datepicker" readonly="True" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!--tab 通常 end-->
+                        <div title="回复" name="tagcomment" url=""></div>
+                        <!--tab 内容 -->
+                        <div id="attachfile" name="attachfile" title="$Helper.GetResource('g_attachment')" url="">
+                        </div>
+                        <!--tab 内容 end-->
+                    </div>
+                </div>
+                <!--portlet-body end-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            var tag = tabs.getTab("tagcomment");
+            var url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/Systems/Comment.html&FormId=FormId&KeyWord=XLX_IM_Feedback&KeyValue=" + formconfig.KeyValue;
+            tabs.loadTab(url, tag);
+
+        });
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (formconfig.FormState == "add") {
+                mini.get("XLX_IM_Feedback.Speed").setValue("新增");
+                mini.get("XLX_IM_Feedback.Type").setValue("问题反馈");
+            }
+            if (HumanId != "ad000000-0000-0000-0000-000000000000") {
+                mini.get("XLX_IM_Feedback.FK").hide();
+            }
+        }
+        function fk(e) {
+            var fnAction = function () {
+                mini.get("XLX_IM_Feedback.Speed").setValue("已完成");
+                PowerForm.OnBtnSave(e);
+            }
+            var buttonOption = {};
+            var yes = "是";
+            var no = "否";
+            buttonOption[yes] = {
+                theme: 'primary',
+                handler: function (ret) {
+                    fnAction();
+                }
+            };
+            buttonOption[no] = function () {
+            };
+            Power.ui.confirm("确定执行[已处理]操作?", { button: buttonOption });
+        }
+
+        function Send(e) {
+            Power.ui.confirm("发送给责任人，是否继续？", function (ret) {
+                if (ret) {
+                    var tohumId = formconfig.config.joindata.currow.ToHumanId;
+                    var tohumName = formconfig.config.joindata.currow.ToHumanName;
+                    var title = "【新消息】沟通交流信息";
+                    var widgetId = "7148130e-77d1-4c97-9b02-431787d72907";
+                    var senderId = formconfig.config.joindata.currow.RegHumId;
+                    var senderName = formconfig.config.joindata.currow.RegHumName;
+                    var keyWord = "XLX_IM_Feedback";
+                    var mainId = KeyValue;
+                    if (IsEmpty(tohumId) == true || IsEmpty(tohumName) == true) {
+                        Power.ui.warning("责任人为空");
+                    }
+                    else {
+                        var par = { "TohumId": tohumId, "TohumName": tohumName, "Title": title, "WidgetId": widgetId, "SenderId": senderId, "SenderName": senderName, "KeyWord": keyWord, "MainId": mainId, };
+
+                        Power.ui.loading("发送中……");
+
+                        FormFuns.APIExec("XLX_IM_Feedback", "BO", "SendTo", par, function (text) {
+
+                            Power.ui.success(mini.decode(text).data.value);
+
+                            Power.ui.loading.close();
+
+                            mini.get("PS_ArrivalCheck.Refresh").doClick();
+
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计提资
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_DesignInformation.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_DesignInformation.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_DesignInformation.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_DesignInformation" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                              <input id="SF_DesignInformation.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_DesignInformation.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DesignInformation.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td>
+                                            项目号
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit"
+                                                   emptytext="请选择项目号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                        <td>
+                                            项目信息
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProjectMessage" name="ProjectMessage" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                    </tr>       
+                                    <tr>
+                                        <td>
+                                            项目负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProjectManager" name="ProjectManager" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        
+                                        
+                                        <!--<td>
+                                            设计阶段
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.Phases" name="Phases" class="mini-combobox" readonly="readonly" />
+                                        </td>-->
+
+                                        <td>
+                                            阶段
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.Stage" name="Stage" class="mini-combobox" required='true'/>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesignInformation.Profession">专业</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.Profession" name="Profession" textname="Profession" class="mini-buttonedit"
+                                                   emptytext="请选择专业..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                     
+                                        <td>
+                                            要求返回时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ReConTime" name="ReConTime" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr bgcolor="#F0F8FF">
+                                        <td class="cell td-label" colspan="4" rowspan="1">
+                                            <label class="design mini-powerlabel">项目概况</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处理规模
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.DisposeScale" name="DisposeScale" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            劳动定员
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.LabourCrew" name="LabourCrew" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处理对象
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProcessObject" name="ProcessObject" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            项目性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProjectProperty" name="ProjectProperty" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处理工艺
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.DisposeCraft" name="DisposeCraft" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            工程地点
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.ProjectSite" name="ProjectSite" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            占地面积
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.FloorSpace" name="FloorSpace" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            工作班制
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.WorkShift" name="WorkShift" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            使用年限
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.DurableYears" name="DurableYears" class="mini-textbox" />
+                                        </td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计条件及要求
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DesignInformation.EnTaskContDem" name="EnTaskContDem" class="mini-textarea" height="120"/>
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td>
+                                            返回资料内容                                      
+                                        </td>
+                                        <td colspan="3">
+										    <input id="SF_DesignInformation.Memo" name="Memo" class="mini-textarea" height="120"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            任务接受人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.MissionRecipient" name="MissionRecipient" textname="MissionRecipient" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" readonly="readonly" required="false"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesignInformation.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='接收人明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_DesignInformationList.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_DesignInformationList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                 <div id="SF_DesignInformationList" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>                           
+                                        <div field="ForProfessional" headeralign="center">
+                                            接收专业
+                                            <input property="editor" id="SF_DesignInformationList.ForProfessional" class="mini-textbox"  name="ForProfessional"  style="width: 100%;"/>                                        </div>
+                                        <div field="ProfessionaLead" headeralign="center">
+                                            接收专业负责人 
+                                              <!--<input property="editor" id="SF_DesignInformationList.ProfessionaLead" class="mini-textbox" name="ProfessionaLead" style="width: 100%;"/>-->
+                                            <input property="editor" id="SF_DesignInformationList.ProfessionaLead" class="mini-buttonedit" name="ProfessionaLead" textname="ProfessionaLead"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;"/>
+                                        </div>
+										<div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='子项编号' name="SF_SJ_DesignInformation_dtl">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_SJ_DesignInformation_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_SJ_DesignInformation_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_SJ_DesignInformation_dtl" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <!--oncellendedit="endedit"-->
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="SubitemCode" headeralign="center">
+                                            子项编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="SubitemName" headeralign="center">
+                                            子项名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DesignInformation";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DesignInformation";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("rwjsr") > -1) {
+                mini.get("SF_DesignInformation.MissionRecipient").setReadOnly(false);
+                mini.get("SF_DesignInformation.MissionRecipient").setRequired(true);
+                mini.get("SF_DesignInformation.Save").enable();
+            }
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            var Projid=formconfig.config.joindata.currow.ProjectCodeId;
+            var a = mini.get("SF_DesignInformation.DisposeScale").getValue();
+            var b = mini.get("SF_DesignInformation.LabourCrew").getValue();
+            var c = mini.get("SF_DesignInformation.ProcessObject").getValue();
+            var d = mini.get("SF_DesignInformation.ProjectProperty").getValue();
+            var e = mini.get("SF_DesignInformation.DisposeCraft").getValue();
+            var f = mini.get("SF_DesignInformation.ProjectSite").getValue();
+            var g = mini.get("SF_DesignInformation.FloorSpace").getValue();
+            var h = mini.get("SF_DesignInformation.WorkShift").getValue();
+            var i = mini.get("SF_DesignInformation.DurableYears").getValue();
+            if(!IsEmpty(Projid) && IsEmpty(a) && IsEmpty(b) && IsEmpty(c) && IsEmpty(d) && IsEmpty(e) && IsEmpty(f) && IsEmpty(g) && IsEmpty(h) && IsEmpty(i))
+            {
+                var par = { "Projid": Projid, "id": KeyValue};
+                FormFuns.APIExec("SF_DesignInformation", "BO", "OnSelect", par, function (text) {
+                    PowerForm.OnBtnRefresh(e)
+                });
+            }
+        }
+
+
+    </script>
+</body>
+</html>

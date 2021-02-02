@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+
+    <style type="text/css">
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #4f94cd;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: white;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-6">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>签订日期 从</span>
+                            <input id="txtSignFDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()" />
+                            <span>到</span>
+                            <input id="txtSignTDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()" />
+                            <span>项目名称</span>
+                            <input id="project_name1" class="mini-textbox" allowinput="true" width="100px" onvaluechanged="LoadData()" />
+                            <span>合同名称</span>
+                            <input id="txtContractName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" onvaluechanged="LoadData()" />
+                            <span>甲方</span>
+                            <input id="txtPartyAName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_IncomeContractInfoSum" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917"
+                             height="601" allowalternating="false" showsummaryrow="true" ondrawcell="DrawCell"
+                             fitcolumns="" idfield="Id" showpager="false" parentfield="" onnodedblclick="ViewForm(e)" virtualScroll="true" allowCellWrap="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="40px">序号</div>
+                                <div field="project_name" name="project_name" headeralign="center" header="项目名称" align="left" width="180px">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="ContractCode" name="ContractCode" headeralign="center" header="合同编号" align="left" width="160px">合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="ContractName" name="ContractName" headeralign="center" header="合同名称" align="left" summarytype="count" width="150px">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="PartyA" name="PartyA" headeralign="center" header="甲方" align="left">甲方<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div type="comboboxcolumn" field="CurrencyType" name="V_PS_IncomeContractInfoSum.CurrencyType" headeralign="center" header="币种" align="center" width="80px">币种<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ContractAmount" name="ContractAmount" headeralign="center" header="合同金额" align="right" summarytype="sum" width="100px">合同金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ApplyAmount" name="ApplyAmount" headeralign="center" header="请款金额" align="right" summarytype="sum" width="100px">请款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="InvoiceAmount" name="InvoiceAmount" headeralign="center" header="开票金额" align="right" summarytype="sum" width="100px">开票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ReceiveAmount" name="ReceiveAmount" headeralign="center" header="到款金额" align="right" summarytype="sum" width="100px">到款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div field="ReceiveAmountPercent" name="ReceiveAmountPercent" headeralign="center" header="收款百分比" numberformat="n2" datatype="float" align="100px">收款百分比%<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div field="SignedDate" name="SignedDate" headeralign="center" header="签订日期" dateformat="yyyy-MM-dd" align="center">签订日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegDate" name="RegDate" headeralign="center" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegHumName" name="RegHumName" headeralign="center" header="录入人名称" align="center">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-hd-6">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            金额明细
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_SF_AmountList" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917"
+                             height="601" allowalternating="false" showsummaryrow="true" 
+                             fitcolumns="" idfield="Id" showpager="false" virtualScroll="true">
+                            <div property="columns">
+                                <div field="Name" name="Name" headeralign="center" header="费用类型" align="center">费用类型<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ContractAmount" name="ContractAmount" headeralign="center" header="合同金额" align="right" summarytype="sum" width="150px">合同金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ApplyAmount" name="ApplyAmount" headeralign="center" header="累计申请" align="right" summarytype="sum" width="150px">累计申请<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="InvoiceAmount" name="InvoiceAmount" headeralign="center" header="累计开票" align="right" summarytype="sum" width="150px">累计开票<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ReceiptAmount" name="ReceiptAmount" headeralign="center" header="累计到款" align="right" summarytype="sum" width="150px">累计到款<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="NeverApplyAmount" name="NeverApplyAmount" headeralign="center" header="未申请金额" align="right" summarytype="sum" width="150px">未申请金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="NeverInvoiceAmount" name="NeverInvoiceAmount" headeralign="center" header="未开票金额" align="right" summarytype="sum" width="150px">未开票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="NeverReceiptAmount" name="NeverReceiptAmount" headeralign="center" header="未到款金额" align="right" summarytype="sum" width="150px">未到款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        var newLongCode = "";
+        var contractName = "";
+        var PartyAName = "";
+        var SignFDate = "";
+        var SignTDate = "";
+
+        $(function () {
+            PowerForm.Init();
+            SetBtnEditValue("txtSignFDate", new Date().getFullYear() + "-1-1");
+            SetBtnEditValue("txtSignTDate", new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate());
+        });
+        mini.parse();
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        mini.get("V_PS_IncomeContractInfoSum").on("rowclick", function (e) {
+            if (!IsEmpty(e.row.Id)) {
+                LoadAmountList(e.row.Id);
+            }
+        });
+
+        function DrawCell(e) {
+            var node = e.node;
+            column = e.column;
+            field = e.field;
+            value = e.value;
+            //进度条
+            if (field == "ReceiveAmountPercent") {
+                e.cellHtml = '<div class="progressbar">'
+                                + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                                + '<div class="progressbar-label">' + value + '%</div> '
+                                + '</div>';
+            }
+        }
+
+        function LoadAmountList(Contractid) {
+            //Power.ui.info(Contractid);
+            //--**--
+            //sqlserver proc named P_SF_InComeContractAmountList
+            //vs controller funs named GetInComeContractAmountList
+            //--**--
+            $.ajax({
+                url: "/Al/GetInComeContractAmountList",
+                data: { ContractId: Contractid },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("V_SF_AmountList");
+                        grid.setData(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        function LoadData() {
+            var project_name = mini.get("project_name1").getValue();
+            contractName = mini.get("txtContractName").getValue();
+            PartyAName = mini.get("txtPartyAName").getValue();
+            SignFDate = mini.get("txtSignFDate").getFormValue();
+            SignTDate = mini.get("txtSignTDate").getFormValue();
+            var swhere = "";
+            swhere = " where 1=1 "
+                   + " and project_name like  '%" + project_name + "%'"
+                   + " and ContractName like  '%" + contractName + "%'"
+                   + " and PartyA like  '%" + PartyAName + "%'";
+            if (SignFDate == "") {
+                if (SignTDate != "") {
+                    swhere += " and SignedDate <'" + SignTDate + "'";
+                }
+            }
+            else {
+                if (SignTDate != "") {
+                    swhere += " and SignedDate between '" + SignFDate + "' and '" + SignTDate + "'";
+                }
+                else {
+                    swhere += " and SignedDate >'" + SignFDate + "'";
+                }
+            }
+
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+        function ViewForm(e) {
+            var SubContractId = e.node["Id"];
+            var url = "/Form/ValidForm/" + OpenFormId + "/" + "/view/" + SubContractId;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+        mini.get("V_PS_IncomeContractInfoSum").on("drawsummarycell", function (e) {
+            if (e.field == "ContractName" || e.field == "ContractAmount"
+               || e.field == "ApplyAmount" || e.field == "InvoiceAmount" || e.field == "ReceiveAmount") {
+                e.cellStyle = "text-align:right;"
+                e.cellHtml = e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+            if (e.field == "project_name") {
+                e.cellHtml = "合计";
+            }
+        })
+    </script>
+</body>
+</html>

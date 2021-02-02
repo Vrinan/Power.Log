@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <!-- <a class="mini-button blue" id="SF_CG_PurchasePlan.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a> -->
+                            <span>项目名称:</span>
+                            <input id="QProjName" class="mini-autocomplete" width="180px" onvaluechanged="Finished()" url="/Data/AutoComplete?keyword=Project&id=project_name&text=project_name"/>
+                            <span>录入人:</span>
+                            <input id="QRegHumName" class="mini-autocomplete" width="80px" onvaluechanged="Finished()" url="/Data/AutoComplete?keyword=Human&id=Name&text=Name"/>
+                            <a class="mini-button blue" id="serach" onclick="Finished()">查询</a>
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="SF_CG_PurchasePlan-Export" title="请购计划总览" class="btn-group"></div>
+                        </div>
+                        <div class="tools">
+                            <input id="SF_CG_PurchasePlan-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="SF_CG_PurchasePlan-search">
+                                <input id="SF_CG_PurchasePlan-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_CG_PurchasePlan-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_CG_PurchasePlan" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="50" summarycolumns="" fitcolumns="" idfield="Id" showModified="false">
+                            <div property="columns">
+                              
+                                <div type="comboboxcolumn" width="50" field="Status" name="SF_CG_PurchasePlan.Status" headeralign="center"   allowsort="true" currencyunit="" header="状态" align="center">状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                
+                                <div field="cnt" name="cnt" headeralign="center"   allowsort="true" currencyunit="" header="附件数" align="center" width="40" >附件数</div>
+
+                                <div field="Code" name="Code" headeralign="center"   allowsort="true" currencyunit="" header="编号" align="center">编号</div>
+
+                                <div field="Title" name="Title" headeralign="center"   allowsort="true" currencyunit="" header="标题" align="center">标题</div>                            
+
+                                <div field="ProjName" name="ProjName" headeralign="center"   allowsort="true" currencyunit="" header="项目名称" align="center">项目名称</div>  
+
+                                <div type="comboboxcolumn" field="PurchaseMajor" name="PurchaseMajor" headeralign="center"   allowsort="true" currencyunit="" header="请购类型" align="center">请购类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>                            
+                                
+                                <div type="comboboxcolumn" field="PlanType" name="PlanType" headeralign="center"   allowsort="true" currencyunit="" header="计划类型" align="center">计划类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>   
+                                
+                                <div field="DepartmentName" name="DepartmentName" headeralign="center"   allowsort="true" currencyunit="" header="请购部门" align="center">请购部门</div>                            
+                                
+                                <div field="PurchaseDate" name="PurchaseDate" headeralign="center"    allowsort="true" currencyunit="" header="计划采购日期" dateformat="yyyy-MM-dd" align="center">计划采购日期</div>
+
+                                <div field="RegDate" name="RegDate" headeralign="center"    allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期</div>
+
+                                <div field="RegHumName" name="RegHumName" headeralign="center"    allowsort="true" currencyunit="" header="录入人名称" align="center">录入人名称</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        closecancel=0;
+        mini.parse();
+        PowerForm.EventAfterLoadData = function (e) {
+            debugger;
+            var grid = mini.get("SF_CG_PurchasePlan");
+            var Ids="";
+            for(var i = 0;i<grid.data.length;i++){
+                Ids+="'"+grid.data[i].Id+"',";
+            }
+            if(grid.data.length>0){
+                Ids="("+Ids.substr(0,Ids.length-1)+")";
+            }
+            var par = { "Ids": Ids };
+            //根据本页Id 获取附件数
+            FormFuns.APIExec("SF_CG_PurchasePlan", "BO", "GetAccessory", par, function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.success){
+                    var grid = mini.get("SF_CG_PurchasePlan");
+                    var cnts= mini.decode(mini.decode(text).data.value).data.value;
+                    for(var i=0 ; i<grid.data.length;i++){
+                        for(var j = 0 ;j<cnts.length;j++){
+                            if(grid.data[i].Id ==cnts[j].Id) {
+                                grid.updateRow(grid.data[i], { "cnt": cnts[j].cnt });
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+            });
+
+        }
+        //多条件查询
+        function Finished(){
+            var swhere = "";
+            var QProjName = mini.get("QProjName").getValue();
+            var QRegHumName = mini.get("QRegHumName").getValue();
+            if (QProjName) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " ProjName like '%" + QProjName + "%' ";
+            }
+            if (QRegHumName) {
+                swhere = (swhere ? swhere + " and " : swhere);
+                swhere += " RegHumName like '%" + QRegHumName + "%' ";
+            }
+            formconfig.config.joindata.swhere = swhere;
+            var grid = mini.get("SF_CG_PurchasePlan");
+            if (grid.showPager)
+                grid.gotoPage(0);
+            else
+                FormFuns.ReLoadData(grid);
+        }
+    </script>
+</body>
+</html>

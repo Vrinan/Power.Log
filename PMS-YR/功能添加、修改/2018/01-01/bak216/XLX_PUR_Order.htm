@@ -1,0 +1,554 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+        var NowDate = getdate(); //ComTools 获取当前日期 2013-01-02
+        var now = new Date();
+        var NYear = now.getFullYear();
+        var NMonth = now.getMonth() + 1;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>采购分包</span>
+                </div>
+                <div class="actions">
+                    $!WorkFlowButtons <a class="mini-button blue" id="XLX_PUR_Order.ToXLXInquiry" onclick="OnToXLXInquiry()">
+                        <i class="fa fa-save"></i>生成采购审批</a>
+                    <!--<a class="mini-button blue" id="XLX_PUR_Order.ToContract" onclick="OnToContract()"><i class="fa fa-save"></i>生成合同</a>-->
+                    <a class="mini-button blue" id="XLX_PUR_Order.ToInquriy" onclick="OrderToInquiry()">
+                        <i class="fa fa-save"></i>生成竞价方案</a> <a class="mini-button blue" id="XLX_PUR_Order.Save"
+                            onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                id="XLX_PUR_Order.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh">
+                                </i>刷新</a>
+                    <div id="btnPrint" class="btn-group">
+                    </div>
+                    <a class="mini-button blue" id="XLX_PUR_Order.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="XLX_PUR_Order" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            分包编号
+                                        </td>
+                                        <td>
+                                            <input id="OrderCode" name="OrderCode" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            采购专业
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.ProMajor" name="ProMajor" class="mini-combobox" textfield="Name"
+                                                valuefield="Name" url="/Data/ProMajorData/P" />
+                                        </td>
+                                        <td>
+                                            采购类型
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.BuyType" name="BuyType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            采购方式
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.BuyWay" name="BuyWay" class="mini-combobox" onvaluechanged="BuyWaychange" />
+                                        </td>
+                                        <td>
+                                            分包类型
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.OrderType" name="OrderType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划完成日期
+                                        </td>
+                                        <td>
+                                            <input id="Date_PlanFinish" name="Date_PlanFinish" class="mini-datepicker" format="yyyy-MM-dd"
+                                                valuetype="String" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            计划合同评审日期
+                                        </td>
+                                        <td>
+                                            <input id="Date_Contract" name="Date_Contract" class="mini-datepicker" format="yyyy-MM-dd"
+                                                valuetype="String" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划到货日期
+                                        </td>
+                                        <td>
+                                            <input id="Date_Get" name="Date_Get" class="mini-datepicker" format="yyyy-MM-dd"
+                                                valuetype="String" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            采购员
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_Order.BuyerName" name="BuyerName" textname="BuyerName" class="mini-buttonedit"
+                                                onclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <textarea class="mini-textarea" id="Memo" name="Memo" height="100px"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入日期
+                                        </td>
+                                        <td>
+                                            <input id="RegDate" name="RegDate" class="mini-datepicker" format="yyyy-MM-dd HH:mm:ss"
+                                                readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_Order_List.Add" onclick="PowerForm.OnBtnWizard(this)">
+                                    新增</a><!--新增(向导)-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XLX_PUR_Order_List.Delete" onclick="PowerForm.OnBtnDel(this)">
+                                    删除</a><!--删除-->
+                                <div id="XLX_PUR_Order_List-Print" class="btn-group">
+                                </div>
+                                <div id="XLX_PUR_Order_List-Export" class="btn-group">
+                                </div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_PUR_Order_List" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    idfield="Id" showpager="false" allowcellselect="true" allowcelledit="true" multiselect="true"
+                                    allowcellvalid="true" allowalternating="true" editnextonenterkey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn">
+                                        </div>
+                                        <!--复选框组-->
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <!--序号-->
+                                        <div field="MatCode" width="100" headeralign="center" allowsort="true">
+                                            物料编码</div>
+                                        <div field="MatName" width="100" headeralign="center" allowsort="true">
+                                            物料名称</div>
+                                        <div field="Model" width="100" headeralign="center" allowsort="true">
+                                            物资描述</div>
+                                        <div field="MatUnit" width="100" headeralign="center" allowsort="true">
+                                            基本计量单位</div>
+                                        <div field="Qty_Order" width="100" headeralign="center" allowsort="true">
+                                            请购数量<input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0"
+                                                maxvalue="999999999999" format="n2" /></div>
+                                        <div field="Remark" width="120" headeralign="center" allowsort="true">
+                                            备注<input property="editor" class="mini-textarea" style="width: 100%;" minwidth="200"
+                                                minheight="50" /></div>
+                                        <!--<div field="Model" width="100" headerAlign="center" allowSort="true">规格型号</div>
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">标准或图号</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材料性能等级</div>
+                                        <div field="MatUnit" width="100" headerAlign="center" allowSort="true">基本计量单位</div>
+                                        <div field="MatUnit2" width="100" headerAlign="center" allowSort="true">辅助计量单位</div>
+                                        <div field="Equ" width="100" headerAlign="center" allowSort="true">换算率</div>
+                                        <div field="Pressure" width="100" headerAlign="center" allowSort="true">压力等级壁厚</div>
+                                        <div field="TaxRate" width="100" headerAlign="center" allowSort="true">税率</div>
+                                        <div field="MatMoney" width="100" headerAlign="center" allowSort="true" summaryType="sum">总价<input property="editor" class="mini-spinner" style="width: 100%;"  minValue="0" maxValue="999999999999" format="n2" /></div>
+                                        <div field="LinkMan" width="100" headerAlign="center" allowSort="true">联系人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="LinkPhone" width="100" headerAlign="center" allowSort="true">联系电话<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatPrice" width="100" headerAlign="center" allowSort="true">单价<input property="editor" class="mini-spinner" style="width: 100%;"  minValue="0" maxValue="999999999999" format="n2" /></div>
+                                        <div field="SupplieName" width="100" headerAlign="center" allowSort="true">供应商名称<input id="XLX_PUR_Order_List.SupplieName" name="SupplieName" textname="SupplieName" property="editor" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" /></div>
+                                        <div field="PayClause" width="100" headerAlign="center" allowSort="true">付款条件<input property="editor" class="mini-textbox" style="width: 100%;" /></div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url="">
+                        </div>
+                        <div title='相关信息'>
+                            <div class="portlet box gray" style="height: 100%">
+                                <div class="mini-tabs" id="Div1" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                                    <div title="采购询价">
+                                        <div class="mini-fit">
+                                            <div id="XLX_PUR_Inquiry" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                idfield="Id">
+                                                <div property="columns">
+                                                    <!--<div field="OrderName" name="OrderName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="订单名称" align="left">订单名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="OrderCode" name="OrderCode" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="关联订单编号" align="left">关联订单编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    -->
+                                                    <div field="InquiryCode" name="InquiryCode" headeralign="center" guideid="" datatype=""
+                                                        allowsort="true" currencyunit="" header="询价单编号" align="left">
+                                                        询价单编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="询价单名称" align="left">
+                                                        询价单名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid=""
+                                                        datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">
+                                                        录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype=""
+                                                        allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">
+                                                        录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="采购合同">
+                                        <div class="mini-fit">
+                                            <div id="PS_SubContract" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true"
+                                                fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="SubContractCode" name="SubContractCode" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="合同编号" align="left">
+                                                        合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="SubContractName" name="SubContractName" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="合同名称" align="left">
+                                                        合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <!--<div field="OrderName" name="OrderName" guideid="" datatype="" allowsort="true" currencyunit="" header="订单名称" align="left">订单名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>-->
+                                                    <div field="SubContractAmount" name="SubContractAmount" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="合同金额" align="left">
+                                                        合同金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                                    <div field="RegDate" name="RegDate" guideid="" datatype="" allowsort="true" currencyunit=""
+                                                        header="录入日期" dateformat="yyyy-MM-dd" align="left">
+                                                        录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                    <div field="RegHumName" name="RegHumName" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="录入人名称" align="left">
+                                                        录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="竞价报告">
+                                        <div class="mini-fit">
+                                            <div id="XLX_PS_BID_Inquiry" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true"
+                                                fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="竞价报告编号" align="left">
+                                                        竞价报告编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="竞价报告名称" align="left">
+                                                        竞价报告名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div title="请购单">
+                                        <div class="mini-fit">
+                                            <div id="XLX_PUR_Request" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                visible="true" allowalternating="false" pagesize="15" summarycolumns="" showsummaryrow="true"
+                                                fitcolumns="" idfield="Id">
+                                                <div property="columns">
+                                                    <div field="RequestCode" name="RequestCode" headeralign="center" guideid="" datatype=""
+                                                        allowsort="true" currencyunit="" header="请购单编号" align="left">
+                                                        请购单编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true"
+                                                        currencyunit="" header="请购单名称" align="left">
+                                                        请购单名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div id="win_tocontract" class="mini-window" title="请选择">
+        <p style="padding-left:40px;padding-right:40px;padding-top:20px">
+            <div id="rbtocontract" class="mini-radiobuttonlist" repeatlayout="table" textfield="text" valuefield="id" value="1"
+                 data="[{id:'生成采购合同',text:'生成采购合同'}]">
+            </div>
+        </p>
+        <p>
+            <div style="text-align:center;padding-bottom:10px;padding-top:20px">
+                <button id="btn_tocontract_ok" onclick="OnToContract()">确定</button>
+                <button style="margin-left:10px;" onclick="mini.get('win_tocontract').hide()">取消</button>
+            </div>
+        </p>
+    </div>-->
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            //冻结列
+            var grid = mini.get("XLX_PUR_Order_List");
+            grid.frozenColumns(0, 2);
+            //采购询价
+            mini.get("XLX_PUR_Inquiry").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "XLX_PUR_Inquiry.ViewForm" }, "4b140dee-6936-46e8-bfc0-d37bc9478c69");
+            });
+            //合同
+            mini.get("PS_SubContract").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "PS_SubContract.ViewForm" }, "0172ef6c-e0e9-497a-bab6-1eb81a298f82");
+            });
+            //竞价报告
+            mini.get("XLX_PS_BID_Inquiry").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "XLX_PS_BID_Inquiry.ViewForm" }, "4f689b2b-b518-4a6d-b8c3-0ec98f04cf38");
+            });
+            //竞价报告
+            mini.get("XLX_PUR_Request").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "XLX_PUR_Request.ViewForm" }, "52599d7a-5f45-4ff1-8031-f90b365c6b37");
+            });
+        });
+        mini.parse();
+        PowerForm.EventAfterFormLoad = function () {
+            if (FormState == "add") 	//新增时设置默认值
+            {
+                mini.get("Title").setValue(NowDate + "_表单标题");
+                //mini.get("XLX_PUR_Order.DeptName").getValue(DeptName);
+                //mini.get("XLX_PUR_Order.DeptName").setValue(DeptName);
+                //mini.get("XLX_PUR_Order.Date").setValue(NDate);
+                //mini.get("XLX_PUR_Order.Year").setValue(NYear);
+                //mini.get("XLX_PUR_Order.Month").setValue(NMonth);
+
+            }
+            BuyWaychange();
+        };
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "XLX_PUR_Request") {
+                var swhere = "1=0";
+                if (formconfig.FormState != 'add')
+                    swhere = "Id in( select FK from  XLX_PUR_Request_List  B where B.id in (select InquirymatList_Id from XLX_PUR_Order_List  where FK='" + formconfig.KeyValue + "'))";
+                if (e.params.swhere == "")
+                    e.params.swhere = swhere;
+                else
+                    e.params.swhere += " and " + swhere;
+            }
+        }
+        //邀请招标对应竞价方案，询价采购、独家采购对应采购审批
+        function BuyWaychange() {
+      
+                var purway = mini.get("XLX_PUR_Order.BuyWay").getValue()
+                if (purway == '01') {
+                    mini.get("XLX_PUR_Order.ToInquriy").setVisible(true)
+                    mini.get("XLX_PUR_Order.ToXLXInquiry").setVisible(false)
+                }
+                if (purway == '02' || purway == '03') {
+                    mini.get("XLX_PUR_Order.ToInquriy").setVisible(false)
+                    mini.get("XLX_PUR_Order.ToXLXInquiry").setVisible(true)
+
+                } 
+            
+        }
+
+        //控制表单中向导的尺寸
+        PowerForm.EventWizardWhere = function (e) {
+            //alert(e.id);
+            //通过判断向导ID,分别控制向导的尺寸
+            //if(e.id=='XLX_PUR_Order_List.Add')
+            //{
+            //e.iwidth=1000;
+            //e.iheight=800;
+            //}
+        }
+        //发起流程前检查数据正确性
+        function PMS_WorkFlow(e) {
+            var ID = formconfig.KeyValue;
+            if (ID != '') {
+                var par = { "ID": ID };
+                FormFuns.APIExec("XLX_PUR_Order", "BO", "Proc_XLX_PUR_Order_ResetList", par, function (text) {
+                    if (mini.decode(text).data.value == "") {
+                        WorkFlowUtils.ActiveWorkFlow(e);
+                    }
+                    else {
+                        //Power.ui.info(mini.decode(text).data.value);
+                        Power.ui.alert(mini.decode(text).data.value);
+                        //Power.ui.warning("内容");    //黄色小方块,自动消失.
+                        //Power.ui.error("sfsdf");    //bug提示.
+                        //Power.ui.info( '您点击了"确定"' );
+                    }
+                });
+            }
+            else {
+                Power.ui.error("错误!");
+            }
+        }
+
+
+        //送审前判断子表是否有数据
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("XLX_PUR_Order_List");
+            if (grid) {
+                if (grid.data.length == 0 || grid.data.length == undefined) {
+                    Power.ui.alert("无明细内容,请填报后再审批!");
+                    e.isValid = false;
+                }
+                else {
+                    //for (var i = 0; i < grid.data.length; i++) {
+                    //    if (grid.data[i].jhsl == 0 || grid.data[i].jhsl == null) {
+                    //        Power.ui.alert("请输入计划数量");
+                    //        e.isValid = false;
+                    //        break;
+                    //    }
+                    //}
+                }
+            }
+        }
+
+        //生成招标询价单
+        function OrderToInquiry() {
+            //var BuyWay= mini.get("XLX_PUR_Order.BuyWay").getValue();
+            //if(BuyWay=='P5')
+            //	{
+            //		Power.ui.alert("单一来源不用询价!"); return false;
+            //	}
+            //	if(BuyWay=='P6')
+            //	{
+            //		Power.ui.alert("直接委托不用询价!"); return false;
+            //	}
+            //	if(BuyWay=='P7')
+            //	{
+            //		Power.ui.alert("电子商务不用询价!"); return false;
+            //	}
+            //	if(BuyWay=='P8')
+            //	{
+            //		Power.ui.alert("续标不用询价!"); return false;
+            //	}
+            if(formconfig.config.joindata.currow.Status=='50'||formconfig.config.joindata.currow.Status=='35'){
+            var par = { "Type": "发起招标询价", "OrderId": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName };
+            FormFuns.APIExec("XLX_PUR_Order", "BO", "Proc_XLX_PUR_Order", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("XLX_PUR_Order.Refresh").doClick();
+            });
+            }
+            else
+            Power.ui.alert("请先批准！");
+        }
+        function OnToXLXInquiry() {
+
+            //   var BuyWay = mini.get("XLX_PUR_Order.BuyWay").getValue();
+            //   if (BuyWay == 'P5') {
+            //       Power.ui.alert("单一来源不用询价!"); return false;
+            //   }
+            //   if (BuyWay == 'P6') {
+            //        Power.ui.alert("直接委托不用询价!"); return false;
+            //    }
+            //    if (BuyWay == 'P7') {
+            //        Power.ui.alert("电子商务不用询价!"); return false;
+            //    }
+            //    if (BuyWay == 'P8') {
+            //        Power.ui.alert("续标不用询价!"); return false;
+            //    }
+              if(formconfig.config.joindata.currow.Status=='50'||formconfig.config.joindata.currow.Status=='35'){
+            var par = { "Type": "发起询价", "OrderId": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName };
+            FormFuns.APIExec("XLX_PUR_Order", "BO", "Proc_XLX_PUR_Order", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("XLX_PUR_Order.Refresh").doClick();
+            });
+            }
+            else
+            Power.ui.alert("请先批准！");
+        }
+        //打开窗体
+        //function OnOpenFormS(o){
+        // var p = { formid: "b4f58168-a440-4967-9839-78ac0f942ee3", keyvalue: o.data.InquiryId, action: "edit" };
+        // FormFuns.OnOpenForm(p);
+        //}
+
+        //显示生成合同div
+        //function ShowToContract() {
+        //    var win = mini.get("win_tocontract");
+        //    win.showAtPos("center", "middle");
+        //}
+        //生成生成合同评审单\生成采购合同
+        //function OnToContract() {
+        //  var isreview = "生成采购合同"
+        //	var par = {"Type":isreview,"OrderId":formconfig.KeyValue,"HumanId":HumanId,"HumanName":HumanName};
+        //	FormFuns.APIExec("XLX_PUR_Order","BO","Proc_XLX_PUR_Order", par, function(text){
+        //		var R = mini.decode(text).data.value.split("！");
+        //		Power.ui.alert(R[0]);
+        //		mini.get('win_tocontract').hide();
+        //		if(R[1] != undefined & R[1] !='')
+        //		{
+        //			var p = { keyvalue: R[1], action: "edit" };
+        //			p.formid = isreview == "生成合同评审单" ? "d33921b2-ff92-4c70-8262-7d5bc4904575" : "0172ef6c-e0e9-497a-bab6-1eb81a298f82";
+        //			FormFuns.OnOpenForm(p);
+        //		}
+        //	});
+
+
+        //$.ajax({
+        //	url: "/Purchase/OrderToContract",
+        //	data: { orderid: formconfig.KeyValue, isreview: isreview },
+        //	type: "POST",
+        //	success: function (text) {
+        //		var o = mini.decode(text);
+        //		if (o.success) {
+        //			mini.get('win_tocontract').hide();
+        //			var p = { keyvalue: o.data.Id, action: "edit" };
+        //			p.formid = isreview == "1" ? "d33921b2-ff92-4c70-8262-7d5bc4904575" : "689f81fa-3adb-4f1f-ac32-20f99cd76266";
+        //			FormFuns.OnOpenForm(p);
+        //		}
+        //		else {
+        //			Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+        //		}
+        //	}
+        //})
+        //}
+    </script>
+</body>
+</html>

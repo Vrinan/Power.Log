@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="/App_Themes/Default/PlatForm/demo.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/App_Themes/Default/miniui/themes/blue/skin.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" width="800" align="center" border="0">
+        <tr>
+            <td valign="top" width="100%">
+                <table class="9hei" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+                    <tr valign="top">
+                        <td><IMG height="24" id="imgsjx" alt="展开收件箱" border="0" src="images/ima_sjx.gif" width="600" usemap="#MapOne" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="treeInceptList" class="mini-treegrid" onrowdblclick="onDBClickBox" ondrawnode="onDrawNode"
+                                 showTreeIcon="true" treeColumn="text" idField="Id" iconField="icon" resultAsTree="true"
+                                 expandOnLoad="true">
+                                <div property="columns">
+                                    <div name="text" field="text" width="120" headeralign="center">文号</div>
+                                    <div field="Title" width="200" headeralign="center">标题</div>
+                                    <div field="SendUserName" width="80" headeralign="center" align="center">发件人</div>
+                                    <div field="RecvDate" width="80" headeralign="center" align="center">发件时间</div>
+                                    <div field="WaitingDays" width="40" headeralign="center" align="center">办理期限</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td><img height="24" id="imgzbx" alt="展开办件箱" border="0" src="images/ima_zbx.gif" width="600" usemap="#MapTwo" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="treeManageList" class="mini-treegrid" onrowdblclick="onDBClickBox" ondrawnode="onDrawNode"
+                                 showTreeIcon="true" treeColumn="text" idField="Id" iconField="icon" resultAsTree="true"
+                                 expandOnLoad="true">
+                                <div property="columns">
+                                    <div name="text" field="text" width="120" headeralign="center">文号</div>
+                                    <div field="Title" width="200" headeralign="center">标题</div>
+                                    <div field="SendUserName" width="80" headeralign="center" align="center">发件人</div>
+                                    <div field="RecvDate" width="80" headeralign="center" align="center">发件时间</div>
+                                    <div field="WaitingDays" width="40" headeralign="center" align="center">办理期限</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td><img height="24" id="imgfjx" alt="展开发件箱" border="0" src="images/ima_fjx.gif" width="600" usemap="#MapThree" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="treeSendList" class="mini-treegrid" onrowdblclick="onDBClickBox" ondrawnode="onDrawNode" onDrawCell="onDrawCell"
+                                 showTreeIcon="true" treeColumn="text" idField="Id" iconField="icon" resultAsTree="true"
+                                 expandOnLoad="true">
+                                <div property="columns">
+                                    <div name="text" field="text" width="120" headeralign="center">文号</div>
+                                    <div field="Title" width="200" headeralign="center">标题</div>
+                                    <div field="RecvUserName" width="80" headeralign="center" align="center">收件人</div>
+                                    <div field="RecvDate" width="80" headeralign="center" align="center">收件时间</div>
+                                    <div width="30" headeralign="center" align="center" renderer="onSendBoxRenderer">--</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <map name="MapOne">
+        <area shape="RECT" coords="10,1,120,25" onclick="javascript:fn_ShowAllBox('sjx')" href="#" />
+    </map>
+    <map name="MapTwo">
+        <area shape="RECT" coords="10,1,120,25" onclick="javascript:fn_ShowAllBox('bjx')" href="#" />
+    </map>
+    <map name="MapThree">
+        <area shape="RECT" coords="10,1,120,25" onclick="javascript:fn_ShowAllBox('fjx')" href="#" />
+    </map>
+    <script language="javascript">
+        mini.parse();
+        var treeInceptList = mini.get("treeInceptList");
+        var treeManageList = mini.get("treeManageList");
+        var treeSendList = mini.get("treeSendList");
+
+        //绘制每个树形节点时
+        function onDrawNode(e) {
+            var row = e.record;
+            var field = e.field;
+            if (e.source.id != "treeSendList") return;  //只处理发件箱
+
+
+            if (row.RecvAllUserName)
+                e.cellHtml = '<a  title="' + row.RecvAllUserName + '"  >' + row.RecvUserName + '</a>';
+
+        }
+        function onDrawCell(e) {
+            var node = e.node,
+                   column = e.column,
+                   field = e.field,
+                   value = e.value;
+            if (e.source.id != "treeSendList") return;  //只处理发件箱
+
+            //超链接任务
+            if (field == "RecvUserName") {
+                if (node.RecvAllUserName) e.cellHtml = '<a  title="' + node.RecvAllUserName + '"  >' + node.RecvUserName + '</a>';
+            }
+        }
+        //双击实体对象
+        var onDBClickBox = function (e) {
+            var row = e.record;
+            if (row.Alias != "Record") return;
+
+            OpenRecord(row);
+        }
+        //打开表单
+        function OpenRecord(row, flag) {
+
+            mini.open({
+                url: row.HtmlPath + "?KeyWord=" + row.KeyWord + "&OperatorType=OpenRecord&KeyValue=" + row.KeyValue,
+                title: "计划测试单", width: 980, height: 600,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    LoadInboxList();   //刷新文件箱
+                }
+            });
+        }
+
+        var tmpFormManage = new FormManage();
+        ///触发回收操作
+        function GetBackRecord(workInfoID, sequeID) {
+
+            mini.confirm("您确认回收该记录么？", "确定？",
+              function (action) {
+                  if (action != "ok") return;
+                  var workFlowInfo = new Object();
+                  workFlowInfo.WorkInfoID = workInfoID;
+                  workFlowInfo.SequeID = sequeID;
+                  tmpFormManage.setWorkInfo(workFlowInfo);
+                  tmpFormManage.GetBackRecord(workInfoID, sequeID, EndGetBack);
+              }
+             );
+        }
+        var EndGetBack = function () {
+            ShowMessage("回收成功");
+            LoadInboxList();   //刷新文件箱
+        }
+        function onSendBoxRenderer(e) {
+            var record = e.record;
+            var s = "";
+
+            if (record.Alias != "Record") return;
+            if (record.AllowGetBack == "true")
+                s = "<a class='New_Button' href='javascript:GetBackRecord(\"" + record.Id + "\",\"" + record.SequeID + "\")'>回收</a>";
+            else
+                s = "<a class='New_Button'  title='" + record.GetBackInfo + "'>回收</a>";
+
+            return s;
+        }
+        //读取记录
+        var LoadInboxList = function () {
+
+            $.ajax({
+                url: "WorkFlowAction.aspx",
+                data: { ServerOperatorType: 'ReadInbox' },
+                cache: false,
+                success: function (text) {
+                    var tmpData = mini.decode(text);
+
+                    treeInceptList.setData(tmpData.InceptBox);
+                    treeManageList.setData(tmpData.ManageBox);
+                    treeSendList.setData(tmpData.SendBox);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        LoadInboxList();
+
+    </script>
+</body>
+</html>

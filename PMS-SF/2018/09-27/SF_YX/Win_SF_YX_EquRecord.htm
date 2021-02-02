@@ -1,0 +1,179 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="mini-splitter" vertical="true" style="width: 100%; height: 100%">
+                <div size="100%" showcollapsebutton="true">
+                    <div class="portlet blue box" style="height: 100%">
+                        <div class="portlet-title">
+                            <div class="captiontools">
+                                <a class="mini-button blue" id="SF_YX_EquRecord.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>                                
+                                <a class="mini-button blue" id="SF_YX_EquRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                                <a class="mini-button blue" id="SF_YX_EquRecord.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="mini-fit">
+                            <div class="portlet-body" style="height:100%">
+                                <!--<div id="SF_FK_CBS_Class" idfield="Id" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true" name="TreeColumn"
+                                     treecolumn="CbsClassCode" parentfield="ParentId" resultastree="false" multiselect="true"
+                                     allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">-->
+                                <div id="SF_YX_EquRecord" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                                     checkrecursive="false" expandonload="true" idfield="Id" treecolumn="text"  allowcelledit="true" fitcolumns="" multiselect="true"
+                                     parentfield="ParentId" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" ><!--ondrawcell="MatDrawcell" 先注释等后面确定好在说-->
+                                    <div property="columns">
+                                        <!--<div type="checkcolumn" width="10"></div>-->
+                                        <div type="indexcolumn" width="40">序号</div>
+                                        <div name="text" field="Code" header="编号" allowsort="true" width="120">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="RunStation" header="站点" allowsort="true">站点<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="EquCode" header="设备出厂编号" allowsort="true">设备出厂编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="FileCode" header="附件出厂编号" allowsort="true">附件出厂编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="Name" header="名称" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="SafeCode" header="安监编号" allowsort="true">安监编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                        <div field="Model" header="型号" allowsort="true">型号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="CbsClassName" header="使用地点" allowsort="true">使用地点<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="ProduceDate" header="生产日期" allowsort="true" dateformat="yyyy-MM-dd">生产日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                        <div field="UseDate" header="投用日期" allowsort="true" dateformat="yyyy-MM-dd">投用日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                        <div field="Deadline" header="推荐使用期限(年)" allowsort="true">推荐使用期限(年)<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="TestDate" header="检验日期" allowsort="true" dateformat="yyyy-MM-dd">检验日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                        <div field="TestDeadline" header="检验周期(月)" allowsort="true">检验周期(月)<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        <div field="CheckDate" header="应检日期" allowsort="true" dateformat="yyyy-MM-dd">应检日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                        <div field="Memo" header="备注" allowsort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        var tree = mini.get("SF_YX_EquRecord");
+        var tree_project_type = -1;
+
+        tree.on("nodeselect", function (e) {
+            tree_project_type = e.node.project_type;
+        });
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    //1、如果检验日期为空： 应检日期=生产日期+检验周期。
+        //    // 2、检验日期不为空：应检日期=检验日期 + 检验周期
+
+        //    var TestDeadline = mini.get("SF_YX_EquRecord.TestDate").getValue();
+        //    if (TestDeadline == NaN || TestDeadline == '' || TestDeadline == null) {
+        //        var Deadline = mini.get("SF_YX_EquRecord.TestDeadline").getValue();
+        //        var ProduceDate = mini.get("SF_YX_EquRecord.ProduceDate").getValue();
+        //        ProduceDate = new Date(ProduceDate).format("yyyy-MM-dd");
+        //        var date = AddYear(ProduceDate, Deadline);
+        //        mini.get("SF_YX_EquRecord.CheckDate").setValue(date);
+        //    }
+        //    else {
+        //        var Deadline = mini.get("SF_YX_EquRecord.TestDeadline").getValue();
+        //        ProduceDate = new Date(TestDeadline).format("yyyy-MM-dd");
+        //        var date = AddYear(TestDeadline, Deadline);
+        //        mini.get("SF_YX_EquRecord.CheckDate").setValue(date);
+        //    }
+        //}
+        function AddYear(date, Month) {
+            var d = new Date(date);
+            d.setMonth(parseFloat(d.getMonth()) + parseFloat(Month));
+            var m = d.getMonth() + 1;
+            return d.getFullYear() + '-' + m + '-' + d.getDate();
+        }        function MatDrawcell(e) {
+            var date = new Date().format("yyyy-MM-dd");
+            //var Day = new Date(date).getDay();
+            //var Month = new Date(date).getMonth() + 1;
+            //var Year = new Date(date).getFullYear();
+
+            var CheckDate = e.row.CheckDate;
+            var CheckDate = new Date(CheckDate).format("yyyy-MM-dd");
+            //var Day1 = new Date(date1).getDay();
+            //var Month1 = new Date(date1).getMonth() + 1;
+            //var Year1 = new Date(date1).getFullYear();
+            var sum = new Number;
+            var sum1 = new Number;
+            var sum2 = new Number;
+            var sum3 = new Number;
+            //sum1 = Day - Day1;
+            //sum2 = Month - Month1;
+            //sum3 = Year - Year1;
+            //if (e.field == "CheckDate") {
+            //    if (parseFloat(e.row.LeaveStatus) == "0" && sum1 >= 0 && sum2 >= 2 && sum3 >= 0) {
+            //        e.rowStyle = "background:#7FFFAA";
+            //    }
+            //}
+            date = new Date(date);
+            CheckDate = new Date(CheckDate);
+            if (CheckDate.getFullYear() > date.getFullYear() && CheckDate.getMonth() >= date.getMonth())
+                sum1 = CheckDate.getFullYear() - date.getFullYear();
+
+            if (CheckDate.getMonth() > date.getMonth() && CheckDate.getDate() >= date.getDate())
+                sum2 = CheckDate.getMonth() - date.getMonth();
+
+            if (CheckDate.getDate() > date.getDate() && CheckDate.getHours() >= date.getHours())
+                sum3 = CheckDate.getDate() - date.getDate();
+            sum1 = sum1 * 365;
+            sum2 = sum2 * 30;
+            sum = sum1 + sum2 + sum3;
+            if (sum <= 60 && sum >= 30) {
+                e.rowStyle = "background:#FFFF00";
+            }
+            if (sum <= 30 && sum >= 0) {
+                e.rowStyle = "background:#DC143C";
+            }
+        }
+
+    </script>
+</body>
+</html>

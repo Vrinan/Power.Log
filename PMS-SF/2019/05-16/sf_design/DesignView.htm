@@ -1,0 +1,537 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+       var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+    </script>
+    <style>
+        .portlet.box {
+            z-index: 11;
+            background-color: #fff;
+        }
+
+            .portlet.box .portlet-title {
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                color: #fff;
+                padding: 8px 18px;
+                border-bottom: 0px;
+            }
+
+            .portlet.box .portlet-body {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-top: 0px;
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+            }
+
+        .portlet > .portlet-title > .caption > i {
+            color: #fff;
+        }
+
+        /* .diva1 {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px 5px;
+            margin: 5px;
+            box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        } */
+
+        .diva1:hover,.diva2:hover,
+        .divb1:hover,.divb2:hover,
+        .divc1:hover,
+        .divd1:hover,.divd2:hover,
+        .dive1:hover,.dive2:hover,
+        .divf1:hover{
+            cursor: pointer; 
+            /* box-shadow: 4px 4px 3px rgb(159, 167, 170); */
+            color: red;
+        }
+
+            /* .textname {
+                padding: 0px;
+                margin: 0px;
+                font-size: 18px;
+                line-height: 50px;
+            } */
+
+            .textdiv .textname span {
+                margin-left: 10px;
+            }
+
+        .fa {
+            opacity: 0.8;
+        }
+
+        .green {
+            color: #2fc8ca;
+        }
+
+        .blue {
+            color: #76b5f5;
+        }
+
+        .yellow {
+            color: #ff9a00;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet blue box" style="height: 8%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span>切换设计项目</span>
+                            <!-- <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" /> -->
+                            <input id="txtPlanName" name="txtPlanName" textname="txtPlanName" class="mini-buttonedit"
+                            emptytext="请选择项目号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" width="300px" />
+                            <input id="projid" class="mini-textbox" allowinput="false" width="300px" visible="false"/>
+                            <a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>        
+                    </div>
+                </div>
+                <div class="row" style="height: 90%">
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                        <div class="portlet box" style="height: auto;">
+                            <div class="portlet-title" style="background:#2fc8ca">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>
+                                    设计启动
+                                </div>
+                            </div>
+                            <div class="portlet-body" style="height: calc(100% - 45px)">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="diva1">
+                                            <p class="textname">
+                                                <span><i class="fa fa-file green"></i></span>
+                                                项目编号申请:
+                                                <span id="a1"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="diva2">
+                                            <p class="textname">
+                                                <span><i class="fa fa-file green"></i></span>
+                                                团队组建:
+                                                <span id="a2"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                        <div class="portlet box" style="height: auto;">
+                            <div class="portlet-title" style="background:#76b5f5">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>
+                                    设计策划
+                                </div>
+                            </div>
+                            <div class="portlet-body" style="height:auto;background-color:#fff;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="divb1">
+                                            <p class="textname">
+                                                <span><i class="fa fa-file blue"></i></span>
+                                                技术规格书评审:
+                                                <span id="b1"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="divb2">
+                                            <p class="textname">
+                                                <span><i class="fa fa-file blue"></i></span>
+                                                技术协议编制:
+                                                <span id="b2"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                        <div class="portlet box" style="height: auto">
+                            <div class="portlet-title" style="background:#0e7b8b">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>
+                                    设计输入
+                                </div>
+                            </div>
+                            <div class="portlet-body" style="height: calc(100% - 45px)">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="divc1">
+                                            <p class="textname">
+                                                <span><i class="fa fa-file yellow"></i></span>
+                                                设计提资:
+                                                <span id="c1"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                            <div class="portlet box" style="height: auto">
+                                <div class="portlet-title" style="background:#477cdd">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        设计评审
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: calc(100% - 45px)">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="divd1">
+                                                <p class="textname">
+                                                    <span><i class="fa fa-file yellow"></i></span>
+                                                    设计文件校审:
+                                                    <span id="d1"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="divd2">
+                                                <p class="textname">
+                                                    <span><i class="fa fa-file yellow"></i></span>
+                                                    技术文件会审:
+                                                    <span id="d2"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                            <div class="portlet box" style="height: auto">
+                                <div class="portlet-title" style="background:#7e54c0">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        成品管理
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: calc(100% - 45px)">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="dive1">
+                                                <p class="textname">
+                                                    <span><i class="fa fa-file yellow"></i></span>
+                                                    设计成品管理:
+                                                    <span id="e1"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="dive2">
+                                                <p class="textname">
+                                                    <span><i class="fa fa-file yellow"></i></span>
+                                                    发出设计成果:
+                                                    <span id="e2"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-4 col-sm-3" style="height: 30%">
+                            <div class="portlet box" style="height: auto">
+                                <div class="portlet-title" style="background:#6d586e">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        项目总结
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: calc(100% - 45px)">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="divf1">
+                                                <p class="textname">
+                                                    <span><i class="fa fa-file yellow"></i></span>
+                                                    项目总结:
+                                                    <span id="f1"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var projid, projname;
+        var PowerForm = new SingleForm();
+        $(function () {
+            mini.parse();
+            projid="";
+            LoadData(projid);
+        });
+
+
+        PowerForm.EventWizardData = function (e, data) {
+            var record = e.record;
+            projid = data[0].ProjectNameId;
+            projname = data[0].ProjectName1;
+            // Power.ui.success(projid+projname);
+            e.Next = false;
+            mini.get("txtPlanName").setText(projname);
+            mini.get("projid").setValue(projid);
+            LoadData(projid);
+        }
+        
+       function LoadData(projid){
+           if(IsEmpty(projid))
+           {
+            projid="";
+           }
+           $.ajax({
+                url: "/Al/GetDesign",
+                data: { id: projid },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = o.data;
+                        AppendValues(data.a1,data.a2,data.b1,data.b2,data.c1,data.d1,data.d2,data.e1,data.e2,data.f1);
+                    }
+                }
+           });
+       }
+
+        $('.diva1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/f63e278b-9a70-4267-9e2c-39a7f7721bef/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '项目编号申请',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.diva2').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/8d3d9c13-34b3-4222-8c25-1b31758829f0/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '团队组建',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divb1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/893271f8-139b-4437-b213-5d03748147aa/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '技术规格书评审',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divb2').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/8026b45a-db97-4463-ace0-bb5fe83c1515/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '技术协议编制',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divc1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/50f401b7-c25d-488a-943e-a025760f7e8a/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '设计提资',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divd1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/422a7f3d-403a-4530-a34b-306545305beb/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '设计文件校审',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divd2').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/5570d165-446f-4598-a3ff-2c88774356a6/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '技术文件会审',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.dive1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/8cbe33b5-bf4d-45e0-b3ce-969d056539c4/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '设计成品管理',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.dive2').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/1a918c42-90ff-487f-a404-9799bfe75931/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '发出设计成果',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+        $('.divf1').click(function () {
+            var width = 1200;
+            var height = 800;
+            if (typeof ($(window).height) == "function")
+                height = $(window).height();
+                className = "aaa";
+            mini.open({
+                url: "/Form/EditForm/ae5e835f-bd8d-4209-b739-d74ed6835fcd/?projid=" + projid + "",
+                width: width,
+                height: 500,
+                title: '项目总结',
+                showMaxButton: true,
+                cls: className
+            });
+        });
+
+         //清空所有
+         function EmptyAll()
+        {
+            $("#a1").empty();
+            $("#a2").empty(0);
+            $("#b1").empty(0);
+            $("#b2").empty(0);
+            $("#c1").empty(0);
+            $("#d1").empty(0);
+            $("#d2").empty(0);
+            $("#e1").empty(0);
+            $("#e2").empty(0);
+            $("#f1").empty(0);
+        }
+        //赋值为0
+        function AppendZeroAll()
+        {
+            EmptyAll();
+            $("#a1").append(0);
+            $("#a2").append(0);
+            $("#b1").append(0);
+            $("#b2").append(0);
+            $("#c1").append(0);
+            $("#d1").append(0);
+            $("#d2").append(0);
+            $("#e1").append(0);
+            $("#e2").append(0);
+            $("#f1").append(0);
+        }
+        //赋值
+        function AppendValues(a1,a2,b1,b2,c1,d1,d2,e1,e2,f1)
+        {
+            EmptyAll();
+            $("#a1").append(a1);
+            $("#a2").append(a2);
+            $("#b1").append(b1);
+            $("#b2").append(b2);
+            $("#c1").append(c1);
+            $("#d1").append(d1);
+            $("#d2").append(d2);
+            $("#e1").append(e1);
+            $("#e2").append(e2);
+            $("#f1").append(f1);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+     <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap" >
+    <div class="row  row-hd row-hd-responsive" style="height: 100%">
+        <div class="col-md-12 col-hd-12" >
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="WorkInfoList.View" onclick="PowerForm.OnBtnView(this)"><i class="fa fa-eye"></i>查看</a>
+                        <a class="mini-button blue" id="WorkInfoList.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                        <a class="mini-button blue" id="WorkInfoList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        <div id="WorkInfoList-Print" class="btn-group"></div>
+                        <div id="WorkInfoList-Export" class="btn-group"></div>
+                    </div>
+                    <div class="tools">
+                    </div>
+                </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="WorkInfoList"   class="mini-datagrid"    style="width: 100%; height: 100%;"  visible="true"  width="917"  height="544"  pageSize="15"  fitColumns=""  SummaryColumns="" onshowrowdetail="onShowRowDetail"    >
+                            <div property="columns">
+                                    
+                                    <div type="indexcolumn" >序号</div>
+
+                                    <div  field="Title"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="标题"  align="center" >标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                    <div  field="CreateDate"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="制单时间"  dateformat="yyyy-MM-dd"  align="center" >制单时间<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+
+                                    <div  field="FinishDate"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="办结时间"  dateformat="yyyy-MM-dd"  align="center" >办结时间<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+
+                                    <div type="comboboxcolumn"  field="RecordStatus"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="状态"  align="center" >状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+
+                                    <div  field="project_shortname"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="项目编号"  align="center" >项目编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                    <div  field="project_name"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="项目名称"  align="center" >项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+                                    <div  field="UserName"  GuideID=""  dataType=""  allowSort="true"  currencyUnit=""  header="制单人"  align="center" >制单人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                 <div   dataType=""  allowSort="true"  currencyUnit=""  header="管理"  align="center"  renderer="onActionRenderer"> </div>
+
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    </div>
+<div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+    <div style="height: 195px; overflow:auto;" >
+        <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;">
+        </table>
+    </div>
+    <table style="width: 363px; height: 30px; margin-top:8px;">
+        <tr>
+            <td align="center"  style="text-align:right;">
+                <a class="mini-button blue"  id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                <a class="mini-button blue"  id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                <a class="mini-button blue"  id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+   <div id="showHistory" style="display:none;" align="right"> 
+         <div id="tabHistoryList"  class="mini-tabs" style="width:97%;height:100%" activeIndex="0">
+            <div title="当前步骤" id="divInboxList">
+                 <div id="gdInboxList"   class="mini-datagrid"    style="width: 100%; height:150px;"  showPager="fase"  visible="true"  width="917"  height="544"  pageSize="15"     >
+                     <div property="columns">
+                        <div  field="SequeID"    allowSort="true"  header="步骤号"  align="center" ></div>
+                        <div  field="ActName"  allowSort="true"    header="步骤名"   align="center" ></div> 
+                        <div  field="UserName"  allowSort="true"    header="签收人"   align="center" ></div> 
+                        <div  field="RecvDate" dataType=""  allowSort="true"    header="接收时间"  dateformat="yyyy-MM-dd"  align="center" > </div>
+                        <div  field="ReadDate" dataType=""  allowSort="true"    header="签收时间"  dateformat="yyyy-MM-dd"  align="center" > </div> 
+                        <div  field="InboxStatus"  allowSort="true"    header="状态"   align="center" renderer="onInBoxStatusRenderer" > </div> 
+                        <div  field="FlowOperate"  allowSort="true"    header="操作"  align="center"  renderer="onFlowOperateRenderer"> </div> 
+                        <div    header="管理"  align="center"  renderer="onInboxActionRenderer"> </div> 
+                     </div>
+                 </div>
+            </div>
+            <div title="步骤历史" id="divPastNodesList">
+                 <div id="gdPastNodesList"   class="mini-datagrid"    style="width: 100%; height:150px;" showPager="fase"  visible="true"  width="917"  height="544"  pageSize="15"    >
+                     <div property="columns">
+                        <div  field="SequeID"    allowSort="true"  header="步骤号"  align="center" ></div>
+                        <div  field="ActName"  allowSort="true"    header="步骤名"   align="center" ></div> 
+                        <div  field="UserName"  allowSort="true"    header="签收人"   align="center" ></div> 
+                        <div  field="RecvDate" dataType=""  allowSort="true"    header="接收时间"  dateformat="yyyy-MM-dd"  align="center" > </div>
+                        <div  field="ReadDate" dataType=""  allowSort="true"    header="签收时间"  dateformat="yyyy-MM-dd"  align="center" > </div> 
+                        <div  field="InboxStatus"  allowSort="true"    header="状态"   align="center"  renderer="onInBoxStatusRenderer"> </div> 
+                        <div  field="FlowOperate"  allowSort="true"    header="操作"  align="center"  renderer="onFlowOperateRenderer"> </div> 
+                     </div>
+                 </div>
+            </div> 
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        //----------------------------------------------------
+        
+        var showHistory = document.getElementById("showHistory");
+        var gdWorkInfoList = mini.get("WorkInfoList");
+        var gdInboxList = mini.get("gdInboxList");
+        var gdPastNodesList = mini.get("gdPastNodesList");
+        var tabHistoryList = mini.get("tabHistoryList");
+        var InboxStatus = mini.decode("[{'id':'10','text':'空'},{'id':'20','text':'正常'},{'id':'30','text':'隐藏中'},{'id':'40','text':'等候签收'},{'id':'50','text':'等候解锁'},{'id':'60','text':'本线路结束'}]");
+        var FlowOperates = mini.decode("[{'id':'None','text':'空'},{'id':'Insert','text':'保存'},{'id':'Update','text':'修改'},{'id':'Delete','text':'删除'},{'id':'Send','text':'发送'},{'id':'Return','text':'回退'},{'id':'EndFlow','text':'办结'},{'id':'GetBack','text':'回收'},{'id':'CheckOut','text':'签收'},{'id':'Delegate','text':'直接委办'},{'id':'DelegateAndReturn','text':'委办且返还'},{'id':'Stop','text':'终止'},{'id':'Active','text':'激活'},{'id':'ShowFlowMonitor','text':'监控'},{'id':'ShowStopedFlowMonitor','text':'监控历史'} ]");
+        function ShowFlowPicture() {
+           
+            var row = gdWorkInfoList.getSelected();
+            if (!row) return;
+            WorkFlowUtil.ShowMonitor(row.WorkInfoID, row.ConfigMode);
+        }
+        function ShowInboxList() {
+            var row = gdWorkInfoList.getSelected();
+            if (!row) return;
+
+            mini.open({
+                url: "/PowerPlat/WorkFlow/WorkInboxList.html",
+                title: "人员选择", width: "850px", height: "300px",
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();  
+                    iframe.contentWindow.SetData(row.WorkInfoID);
+                },
+                ondestroy: function (action) {
+                }
+            });
+        }
+        function onActionRenderer(e) {
+            var record = e.record;
+            var s = "";
+
+            //已终止和已完单的，不可维护
+            if (record.RecordStatus != 50 && record.RecordStatus != 40) {
+                s += "<a class='New_Button' href='javascript:ShowInboxList()'>维护</a>&nbsp;";
+            }
+            s += "<a class='New_Button' href='javascript:ShowFlowPicture()'>流程图</a>";            
+            return s;
+        }
+
+
+
+        function onSelectUser(grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            row.Mulit = "false";  //只能单选一个
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlow/SelectUser.html?SelectMode=DeptOrPosition",
+                title: "人员选择", width: "800px", height: "600px",
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = mini.clone(row);
+                    tmpNode.SourceMode = row.SourceMode;
+                    iframe.contentWindow.SetData(tmpNode);
+
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    if (data == "1")
+                        return;
+                    if (!data) {
+                        Power.ui.alert("操作异常，未捕获到信息，请重新选择"); return;
+                    }
+                    if (!data.DeptPositionID) {
+                        Power.ui.alert("操作异常，未捕获到信息，请重新选择"); return;
+                    }
+                    data = mini.clone(data);
+                    gdWorkInfoList.loading();
+                    $.ajax({
+                        url: "/WorkFlow/UpdateInboxUser",
+                        data: { "WorkInfoID": row.WorkInfoID, "SequeID": row.SequeID,"json":mini.encode(data)},
+                        success: function (text) {
+                            var result = mini.decode(text);
+                            if (result.success == false) {
+                                Power.ui.error(result.message);
+                                return;
+                            }
+                            curGrid.updateRow(row, { "SourceMode": data.SourceMode, "UserName": data.ShowUserInfo, "DeptPositionID": data.DeptPositionID, "DeptPositionName": data.DeptPositionName, "UserID": data.UserID });
+                            gdWorkInfoList.unmask();
+                        }
+                    });
+                }
+            });
+            
+        }
+        function onInboxActionRenderer(e) {
+            var s = "";
+            s = '<a class="New_Button" href="javascript:onSelectUser(\'' + e.sender.id + '\')">修改审核人</a>';
+            return s;
+        }
+
+        function onInBoxStatusRenderer(e) {
+            for (var i = 0, l = InboxStatus.length; i < l; i++) {
+                var tmp = InboxStatus[i];
+                if (tmp.id == e.value) return tmp.text;
+            }
+            return "";
+        }
+        function onFlowOperateRenderer(e) {
+            for (var i = 0, l = FlowOperates.length; i < l; i++) {
+                var tmp = FlowOperates[i];
+                if (tmp.id == e.value) return tmp.text;
+            }
+            return "";
+        }
+        //-------------------------------------
+
+     
+        function onShowRowDetail(e) {
+            var row = e.record;
+
+            //将editForm元素，加入行详细单元格内
+            var td = gdWorkInfoList.getRowDetailCellEl(row);
+            td.appendChild(showHistory);
+            showHistory.style.display = "";
+            gdWorkInfoList.loading();
+            $.ajax({
+                url: "/WorkFlow/ShowWorkInfoList/" + row.WorkInfoID,
+                success: function (text) {
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    
+                    var showInbox = result.data.InboxList.length != 0;
+                    var showPastNodes = result.data.PastNodesList.length != 0;
+                    gdInboxList.setData(result.data.InboxList);
+                    tabHistoryList.updateTab(tabHistoryList.getTab(0), { visible: showInbox });
+                    gdPastNodesList.setData(result.data.PastNodesList);
+                    tabHistoryList.updateTab(tabHistoryList.getTab(1), { visible: showPastNodes });
+
+                    gdWorkInfoList.unmask();
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html>

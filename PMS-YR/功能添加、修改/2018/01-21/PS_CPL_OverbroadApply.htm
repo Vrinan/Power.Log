@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyWord = "XLX_OverbroadApply";
+        var strEpsProjId = "22499ebc-401c-44e1-a036-6134dd424d8d"
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>概算变更
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<span class="UnitYuan">单位：元</span>-->
+                    <a class="mini-button blue" id="XLX_OverbroadApply.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="XLX_OverbroadApply.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="XLX_OverbroadApply.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="XLX_OverbroadApply.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="XLX_OverbroadApply.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="XLX_OverbroadApply" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            变更编号
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="XLX_OverbroadApply.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_OverbroadApply.Name" name="Name" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目预算编号
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.PiId" name="PiId" class="mini-textbox" readonly="true" visible="false" />
+                                            <input id="XLX_OverbroadApply.PiCode" name="PiCode" textname="PiCode" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            项目预算名称
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.PiName" name="PiName" class="mini-textbox" readonly="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概算金额
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.Price" name="Price" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            变更金额
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.ChangePrice" name="ChangePrice" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更后金额
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.FinalPrice" name="FinalPrice" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.OwnProjName" name="OwnProjName" class="mini-textbox" readonly="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_OverbroadApply.remark" name="remark" class="mini-textarea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="XLX_OverbroadApply.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='CBS明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_OverbroadApply_item.Add" onclick="PowerForm.OnBtnWizard(this)">选择CBS</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XLX_OverbroadApply_item.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_OverbroadApply_item" class="mini-datagrid" style="height: 100%;" multiselect="true" oncellendedit="EidtApp"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" pagesize="15" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="Id" headeralign="center" allowsort="true" width="0">
+                                            主键
+                                        </div>
+                                        <div field="CBSId" headeralign="center" allowsort="true" width="0">
+                                            CBSId
+                                        </div>
+                                        <div field="CBScode" headeralign="center" width="120">
+                                            CBS编码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="CBSname" headeralign="center">
+                                            CBS名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <!--<div field="TotalFee" headeralign="center" summarytype="sum" align="center" allowsort="true">
+                                            当前概算金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="ChangeFee" headeralign="center" summarytype="sum" align="center" allowsort="true">
+                                            变更金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="FinalFee" headeralign="center" summarytype="sum" align="center" allowsort="true">
+                                            变更后金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" readonly="readonly" />
+                                        </div>-->
+                                        <!--<div field="CbsValue" headeralign="center">
+                                            Cbs值
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="CbsTitle" headeralign="center">
+                                            Cbs标题
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <div field="Remarks" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            //var grid = mini.get("XLX_OverbroadApply_item");
+            //grid.frozenColumns(0, 3);
+        });
+
+
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "XLX_OverbroadApply_item.Add") {
+                if (formconfig.FormState == "add") {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表.");
+                    return;
+                }
+                var piId = formconfig.config.joindata.currow.PiId;
+                if (!piId) {
+                    e.canOpen = false;
+                    Power.ui.warning("请先选择概算科目");
+                    return;
+                }
+                e.where = " MasterId='" + piId + "' ";
+                //e.where = "(MasterId='" + contractid + "' and ((MatAmount-ArrivalNum)>0) and (ISNULL(IsChange,'') <> '1')) or ((MatAmount-ArrivalNum)>0 and MasterId in (select q.id from PS_cm_SubContract q where q.AddSubContractId = isnull('908e97c2-91a3-4f55-a648-641f3372ddb8','00000000-0000-0000-0000-000000000000')))";
+            }
+        }
+
+        function EidtApp(e) {
+            var record = e.record;
+            var grid = mini.get("XLX_OverbroadApply_item");
+            var changefee = Number(0);
+            if (e.field == "ChangeFee") {
+                var row = grid.findRow(function (row) {
+                    changefee = changefee + parseFloat(row.ChangeFee);
+                });
+                var price = parseFloat(mini.get("XLX_OverbroadApply.Price").getValue());
+                mini.get("XLX_OverbroadApply.ChangePrice").setValue(changefee);
+                mini.get("XLX_OverbroadApply.FinalPrice").setValue(changefee + price);
+                //e.sender.updateRow(e.record, { "ArrivalNum": t });
+            }
+
+        }
+        //数据时触发
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            //动态增加列
+            debugger;
+            if (e.sender.id == "XLX_OverbroadApply_item") {
+                var firstRow = {};
+                if (data && data.length > 0) {
+                    firstRow = data[0];
+                }
+                var cbsTitle = firstRow.CbsTitle;
+                var cols = [];
+                if (!cbsTitle || cbsTitle == "") {
+                    cbsTitle = [];
+                    $.ajax({
+                        url: "/Plan/GetCBSSheetHeader",
+                        data: {
+                            keyword: KeyWord,
+                            keywordFilter: "",
+                            strEpsProjId: strEpsProjId
+                        },
+                        async: false,
+                        dataType: "JSON",
+                        success: function (headerData) {
+                            cbsTitle = headerData.list;
+                        }
+                    });
+                }
+                else
+                    cbsTitle = $.parseJSON(cbsTitle);
+                var columns = e.sender.getColumns();
+                $.each(cbsTitle, function () {
+                    var thisCbs = this;
+                    var filterCols = $.grep(columns, function (item) {
+                        return item.field == thisCbs.Id;
+                    });
+                    if (filterCols.length == 0)
+                        columns.push({
+                            header: this.CbsTitle,
+                            headerAlign: "center",
+                            align: "center",
+                            field: this.Id,
+                            width: 100,
+                            editor: {
+                                type: "spinner",
+                                maxValue: 999999999
+                            }
+                        });
+                    cols.push(this.Id);
+                });
+                e.sender.setColumns(columns);
+                //处理加载时 数据
+                $.each(data, function () {
+                    var value = this.CbsValue;
+                    if (typeof (value) == "string" && value[0] == "{") {
+                        value = $.parseJSON(value);
+                        for (var f in value) {
+                            if (typeof (value[f]) != "function") {
+                                this[f] = value[f];
+                            }
+                        }
+                    }
+                });
+                //编辑完后,将值更新到行的特定列上去
+                var gridObj = e.sender;
+                e.sender.on("cellendedit", function (e) {
+                    debugger;
+                    if ($.inArray(e.field, cols) > -1) {
+                        var _value = e.record.CbsValue;
+                        if (_value == null)
+                            _value = 0;
+                        if (_value[0] != "{") {
+                            //debugger;
+                            _value = "{}";
+                        }
+                        _value = $.parseJSON(_value);
+                        _value[e.field] = e.value;
+                        var upddate = {};
+                        upddate.CbsValue = mini.encode(_value);
+                        upddate.CbsTitle = mini.encode(cbsTitle);
+                        gridObj.updateRow(e.record, upddate);
+                    }
+                })
+                //columns.push({ field: "CbsValue", width: 120, headerAlign: "center", allowSort: false, header: "Cbs值", editor: { type: "textbox" } });
+                //columns.push({ field: "CbsTitle", width: 120, headerAlign: "center", allowSort: false, header: "Cbs标题", editor: { type: "textbox" } });
+                //columns.push({ field: "Remarks", width: 120, headerAlign: "center", allowSort: false, header: "备注", editor: { type: "textbox" } });
+            }
+            return data;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>调试周形象进度计划及汇总
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_YX_DebugWeekPlan.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_DebugWeekPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_YX_DebugWeekPlan.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_DebugWeekPlan" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                              <input id="SF_YX_DebugWeekPlan.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_DebugWeekPlan.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugWeekPlan.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_DebugWeekPlan.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_DebugWeekPlan.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this,true)" allowinput="false" required/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开始时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugWeekPlan.StartDate" name="StartDate" class="mini-datepicker" onvaluechanged="ChangesDate" required/>
+                                        </td>
+                                        <td>
+                                            结束时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugWeekPlan.EndDate" name="EndDate" class="mini-datepicker" readonly="readonly" required/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_DebugWeekPlan.Memo" name="Memo" class="mini-textarea" height="60"/>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugWeekPlan.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_DebugWeekPlan.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='形象进度明细'>
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_YX_DebugWeekPlan_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>--><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_DebugWeekPlan_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>--><!--删除-->
+                                <!--<div id="SF_YX_DebugWeekPlan_list.importxls"></div>-->
+                                <div id="SF_YX_DebugWeekPlan_list-Export" class="btn-group"></div>
+                                <div id="btnUpload"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/周形象进度计划导入模板.xlsx">导入模板下载</a>  
+                            </div>
+                            <div class="mini-fit">
+                                 <div id="SF_YX_DebugWeekPlan_list" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>       
+                                        <div field="DeBugName" headeralign="center">
+                                            调试工艺段
+                                            <input property="editor" class="mini-textbox" style="width: 100%; height:90px;" readonly="readonly"/>
+                                        </div>
+                                        <div field="WeekPlan" headeralign="center">
+                                            本周计划调试形象进度
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>  
+                                        <div field="LastWeekPlan" headeralign="center">
+                                            下周计划安排形象进度
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>   
+                                        <div header="本周完成进水(m3/d)" headeralign="center">
+                                            <div property="columns">
+                                                <div field="WeekWater1" headeralign="center">
+                                                    1#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>  
+                                                <div field="WeekWater2" headeralign="center">
+                                                    2#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>  
+                                            </div>
+                                        </div>   
+                                        <div header="下周计划进水(m3/d)" headeralign="center">
+                                            <div property="columns">
+                                                <div field="LastWeekWater1" headeralign="center">
+                                                    1#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                                <div field="LastWeekWater2" headeralign="center">
+                                                    2#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div header="本周达到设计能力(%)" headeralign="center">
+                                            <div property="columns">
+                                                <div field="WeekE1" headeralign="center">
+                                                    1#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                                <div field="WeekE2" headeralign="center">
+                                                    2#
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                            </div>
+                                        </div>   
+                                        <div header="备注" headeralign="center" width="300">
+                                            <div property="columns">
+                                                <div field="Remark1" headeralign="center" width="150">
+                                                    本周计划未完成的主要原因
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                                <div field="Remark2" headeralign="center" width="150">
+                                                    需公司协助解决的问题
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                                </div>
+                                            </div>
+                                        </div>                                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_YX_DebugWeekPlan_list", CreateGUID())//此处修改关键词
+        });
+        function ChangesDate() {
+            var Date= mini.get("SF_YX_DebugWeekPlan.StartDate").getValue();
+            var enddate = addDate(Date, 6);
+            mini.get("SF_YX_DebugWeekPlan.EndDate").setValue(enddate);
+        }
+        function addDate(date, days) {
+            var d = new Date(date);
+            d.setDate(d.getDate() + days);
+            var m = d.getMonth() + 1;
+            return d.getFullYear() + '-' + m + '-' + d.getDate();
+        }
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "SF_YX_DebugWeekPlan_list";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_YX_DebugWeekPlan_list");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入周计划",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_YX_DebugWeekPlan";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }
+    </script>
+</body>
+</html>

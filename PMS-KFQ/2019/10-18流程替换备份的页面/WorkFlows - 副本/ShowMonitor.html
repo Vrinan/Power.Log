@@ -1,0 +1,782 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>流程跟踪</title>
+    <!--[if lt IE 9]>
+        <?import namespace="v" implementation="#default#VML" ?>
+    <![endif]-->
+    <script src="/scripts/boot.js" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+    <!--<link href="/PowerPlat/WorkFlows/Design/css/jquery.contextmenu.css" rel="stylesheet" type="text/css" />-->
+    <!--<link href="/PowerPlat/WorkFlows/Design/css/bootstrap.contextmenu.css" rel="stylesheet" type="text/css" />-->
+    <link href="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow2.css" rel="stylesheet" type="text/css" />
+    <script src="/PowerPlat/WorkFlows/Design/js/workflowdesigner.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFunc.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/json2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/PowerPlat/WorkFlows/Design/js/GooFlow/default.css" />
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow_color.js"></script>
+    <!--<script src="/PowerPlat/WorkFlows/Design/js/jquery.contextmenu.js" type="text/javascript"></script>-->
+    <script src="/PowerPlat/WorkFlows/Design/js/bootstrap.contextmenu.js" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript">
+        var flowObject = null;
+        $(document).ready(function () {
+            mini.parse();
+            var regionObject = mini.get("LayoutMain").getRegionBodyEl("center");
+            var optioinObject = mini.get("LayoutMain").getRegionBodyEl("south");
+            var lastHeight = $(regionObject).height();
+
+            flowObject = $.createGooFlow($("#flowContextBody"), {
+                width: $(regionObject).width(),
+                height: lastHeight,
+                toolBtns: ["start round", "end round", "task round", "node", /*"chat", "state", "plug",*/"join", "fork"/*, "complex mix"*/],
+                haveHead: false,
+                haveTool: false,
+                useOperStack: true
+            });
+            $(window).resize(function () {
+                flowObject.reinitSize($(regionObject).width(), $(regionObject).height());
+            });
+            setInterval(function () {
+                if ($(regionObject).height() != lastHeight) {
+                    lastHeight = $(regionObject).height();
+                    flowObject.reinitSize($(regionObject).width(), lastHeight);
+                }
+            }, 500);
+        });
+    </script>
+    <style type="text/css">
+        .media-object {
+            border-radius: 32px; /*border: 1px solid #ccc;*/
+            line-height: 32px;
+            text-align: center;
+            margin: 5px;
+        }
+
+        .media {
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .media-heading {
+            margin: 5px 0 5px; /*border-bottom: 1px dotted #ccc;*/
+            font-weight: bold;
+        }
+
+        .tooltip-user {
+        }
+
+        .tooltip-inner {
+            max-width: 200px;
+            padding: 3px 8px;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            background-color: red!important;
+            border-radius: 4px;
+        }
+
+        .mini-layout-region-body {
+            overflow: hidden;
+        }
+
+        .myrow {
+            background: #fceee2;
+        }
+
+        .myHidden {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body id="body">
+    <div style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>$Helper.GetResource("workflow_monitor")</span>&nbsp;&nbsp;&nbsp;<span id="spnWorkFlowName"></span>
+                    <div class="mini-checkbox" id="chkShowToolTips" onvaluechanged="onShowToolTipsChanged">显示所有经手人</div>
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="CloseWindow('cancel')">
+                        <i class="fa fa-power-off"></i>$Helper.GetResource("g_off")
+                    </a>
+                    <!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%">
+                    <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" tabposition="left">
+                        <div title="流程图" name="tabWorkFlowPicture">
+
+                            <!--流程图-->
+                            <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 100%;">
+                                <div region="center" title="$Helper.GetResource('workflow_plot')" id="contextBody"
+                                    class="mapContext">
+                                    <div id="flowContextBody">
+                                    </div>
+                                </div>
+                                <!--绘图区-->
+                                <div region="south" id="workMindInfo" style="font-size: 12px;" title="$Helper.GetResource('workflow_opinion')"
+                                    height="250">
+                                    <!--办理意见-->
+                                    <!--<div id='treeMindList' class='mini-tree' showtreelines='false' showexpandbuttons='false' style='padding: 5px;' expandonnodeclick='true'>
+        </div>-->
+                                    <div class="mini-fit">
+
+                                        <div id="mindList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div title="审批意见" name="tabMindList">
+                            <div id="workMindInfo" title="$Helper.GetResource('workflow_opinion')"
+                                 height="200">
+                                <div class="mini-fit">
+                                    <div id="mindList">  </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div title="流转历史" name="tabPastList">
+                            <div id="gdPastNodeList" class="mini-treegrid" style="width: 100%; height: 100%;" idfield="SequeID" showpager="false" showemptytext="true">
+                                <div property="columns">
+                                    <div field="img" width="20"></div>
+                                    <div field="SequeInfo" width="40" headeralign="center">步骤号</div>
+                                    <div field="NodeInfo" width="70" headeralign="center">节点名称</div>
+                                    <div field="UserInfo" width="120" headeralign="center">操作人员</div>
+                                    <div field="RecvDate" width="70" headeralign="center" datatype="date" dateformat="MM-dd HH:mm">送达时间</div>
+                                    <div field="ReadDate" width="70" headeralign="center" dateformat="MM-dd HH:mm">读取时间</div>
+                                    <div field="SendDate" width="70" headeralign="center" dateformat="MM-dd HH:mm">送出时间</div>
+                                    <div field="PlanEndDate" width="70" headeralign="center" dateformat="MM-dd HH:mm">期望完成时间</div>
+                                    <div field="MindInfo" name="MindInfo" width="250" headeralign="center" allowcellwrap="true" valign="middle" align="left">意见</div>
+                                    <div field="InboxStatus" width="70" headeralign="center">当前状态</div>
+                                    <div field="FlowOperate" width="70" headeralign="center">对应操作</div>
+                                    <div field="TreePath" width="70" headeralign="center">步骤链</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--portlet box-->
+        </div>
+    </div>
+    <script language="javascript">
+        GooFlow.prototype.color.mark = "blue";
+        GooFlow.prototype.color.line = "#cccccc";
+        mini.parse();
+
+        var gdPastNodeList = mini.get("gdPastNodeList");
+
+        var MindData = null;
+        var SelectData = null;
+
+        var getEnumsName = function (EnumName, code, dataType) {
+            var lst = SelectData[EnumName];
+            if (!lst) {
+                alert("枚举[" + EnumName + "]无法提取");
+                return;
+            }
+
+            var len = lst.length;
+            for (var irow = 0; irow < len; irow++) {
+                switch (dataType) {
+                    case "Int":
+                        if (lst[irow].ID != code) continue;
+                        break;
+                    case "String":
+                        if (lst[irow].Code != code) continue;
+                        break;
+                }
+                return lst[irow].Text;
+            }
+            return '';
+        }
+        var showSequeInfo = function (record) {
+            var result = '';
+            if (!record.SubTreePath) {
+                result = record.BeforeSequeID + "->" + record.SequeID;
+                return result;
+            }
+
+
+            var dataList = gdPastNodeList.getData();
+            var subPath = record.SubTreePath.split(",");
+            var sOutput = '<table border="1" style="width:100%"  >';
+            sOutput += '<tr>';
+            sOutput += "<td>";
+            var sTmpInfo = '';
+            $.each(dataList, function () {
+                if (record.BeforeSequeID == this.SequeID)   //得到主发起人
+                {
+                    if (!sTmpInfo)
+                        sTmpInfo += this.SequeID;
+                    else
+                        sTmpInfo += "<br />" + this.SequeID;
+
+                }
+
+                //得到被过滤的发起人
+                for (var irow = 0; irow < subPath.length; irow++) {
+                    if (!subPath[irow]) continue;
+                    if (this.SequeID == subPath[irow]) {
+                        sTmpInfo += "<br />" + this.SequeID;
+                    }
+                }
+            });
+            sOutput += sTmpInfo + "</td>";
+            sOutput += "<td style='vertical-align:middle'>->" + record.SequeID + "</td>";
+            sOutput += '</table>';
+
+            return sOutput;
+        }
+        //显示人员信息
+        var showUserInfo = function (record) {
+            var result = '';
+            if (!record.SubTreePath) {
+                if (record.BeforeUserName)
+                    result = record.BeforeUserName + "-->" + record.UserName;
+                else
+                    result = record.UserName;
+                return result;
+            }
+            var dataList = gdPastNodeList.getData();
+            var subPath = record.SubTreePath.split(",");
+            var sOutput = '<table border="1" style="width:100%"  >';
+            sOutput += '<tr>';
+            sOutput += "<td>";
+            var sTmpInfo = '';
+
+            $.each(dataList, function () {
+                if (record.BeforeSequeID == this.SequeID)   //得到主发起人
+                {
+                    if (sTmpInfo == '')
+                        sTmpInfo += this.UserName;
+                    else
+                        sTmpInfo += "<br />" + this.UserName;
+                }
+
+                //得到被过滤的发起人
+                for (var irow = 0; irow < subPath.length; irow++) {
+                    if (!subPath[irow]) continue;
+                    if (this.SequeID == subPath[irow]) {
+                        sTmpInfo += "<br />" + this.UserName;
+                    }
+                }
+            });
+            sOutput += sTmpInfo + "</td>";
+            sOutput += "<td style='vertical-align:middle'>-->" + record.UserName + "</td>";
+            sOutput += '</table>';
+
+            return sOutput;
+
+        }
+
+        var getMindDate = function (sequeID) {
+            var result = '';
+            $.each(MindData, function () {
+                if (this.BeforeSequeID == sequeID && this.Content) {
+                    result = this.RecvDate;
+                    return result;
+                }
+            });
+            return result;
+        }
+
+        Array.prototype.contains = function (obj) {
+            var i = this.length;
+            while (i--) {
+                if (this[i] === obj) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        var getMindContent = function (sequeID) {
+            var result = '';
+            $.each(MindData, function () {
+                if (this.SequeID == sequeID && this.Content) {
+                    result = this.Content;
+                    return result;
+                }
+            });
+            return result;
+        }
+        //显示意见信息
+        var showMindInfo = function (record) {
+            var result = '';
+            var OutputLst = [];
+            var dataList = gdPastNodeList.getData();
+            var subPath = record.SubTreePath.split(",");
+
+
+            $.each(dataList, function () {
+                if (this.SequeID == record.BeforeSequeID)   //得到主发起人
+                {
+                    var content = getMindContent(this.SequeID);
+                    if (!content) return;
+                    sOutput = this.UserName + "： " + content;
+                    if (OutputLst.contains(sOutput) == false) OutputLst.push(sOutput);
+                }
+                //得到被过滤的发起人
+                for (var irow = 0; irow < subPath.length; irow++) {
+                    if (!subPath[irow]) continue;
+                    if (this.SequeID == subPath[irow]) {
+                        var content = getMindContent(this.SequeID);
+                        if (!content) return;
+                        sOutput = this.UserName + "： " + content;
+                        if (OutputLst.contains(sOutput) == false) OutputLst.push(sOutput);
+                    }
+                }
+            });
+            return OutputLst.join("<br />");
+        }
+        var showRecvDate = function (record) {
+            var result = '';
+
+            if (!record.SubTreePath) return mini.formatDate(record.RecvDate, "MM-dd HH:mm");
+
+            var sOutput = '';
+            var dataList = gdPastNodeList.getData();
+            var subPath = record.SubTreePath.split(",");
+            $.each(dataList, function () {
+                if (record.BeforeSequeID == this.SequeID)   //得到主发起人
+                {
+                    if (sOutput != '') sOutput += "<br />";
+                    sOutput += mini.formatDate(getMindDate(this.SequeID), "MM-dd HH:mm");
+                }
+                //得到被过滤的发起人
+                for (var irow = 0; irow < subPath.length; irow++) {
+                    if (!subPath[irow]) continue;
+                    if (this.SequeID == subPath[irow]) {
+                        sOutput += "<br />" + mini.formatDate(getMindDate(this.SequeID), "MM-dd HH:mm");
+                    }
+                }
+            });
+            return sOutput;
+        }
+        //日期如果是 1901，则返回空
+        var CheckDate = function (value) {
+            if (value.getFullYear() <= 1901) return "--";
+            return value;
+        }
+
+        gdPastNodeList.on("drawcell", function (e) {
+            var record = e.record,
+        column = e.column,
+        field = e.field,
+        value = e.value;
+
+            switch (field) {
+                case "TreePath":  //如果有subTreePath 则补上
+                    if (record.SubTreePath)
+                        e.cellHtml = record.TreePath + "  [" + record.SubTreePath + "]";
+                    return;
+                case "InboxStatus":  //状态
+                    e.cellHtml = getEnumsName("InboxStatus", value, 'Int');
+                    break;
+                case "FlowOperate":  //操作指令
+                    e.cellHtml = getEnumsName("FlowOperate", value, 'Int');
+                    break;
+                case "UserInfo":  //操作人员
+                    e.cellHtml = showUserInfo(record);
+                    break;
+                case "NodeInfo":  //节点
+                    if (record.BeforeNodeCode && record.BeforeNodeCode != record.NodeCode)
+                        e.cellHtml = record.BeforeNodeName + "-->" + record.NodeName;
+                    else
+                        e.cellHtml = record.NodeName;
+                    break;
+                case "SequeInfo":
+                    e.cellHtml = showSequeInfo(record);
+                    break;
+                case "RecvDate":  //送达日期 （聚合的话，该日期需要访问两个列表拼接)
+                    e.cellHtml = showRecvDate(record);
+                    break;
+                case "ReadDate":
+                case "SendDate":
+                case "PlanEndDate":
+                    var tmp = CheckDate(value);
+                    if (tmp == "--") e.cellHtml = tmp;
+                    break;
+                case "MindInfo"://意见信息 
+                    e.cellHtml = showMindInfo(record);
+                    break;
+
+            }
+            //设置行样式
+            switch (record.InboxStatus) {
+                case EFlowInboxStatus.WaitingSign:  //等候签收
+                case EFlowInboxStatus.Normal:  //已签收
+                    e.rowCls = "myrow";
+                    break;
+                case EFlowInboxStatus.Hidden:  //隐藏中
+                    e.rowCls = "myHidden";
+                    break;
+            }
+        });
+
+
+
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        function onShowToolTipsChanged(e) {
+
+            setCookie("Power.WorkFlows.ShowMonitor.ShowToolTips", e.value);  //提取cookie 中默认的，是否显示所有提示
+
+            initShow();
+        }
+
+
+        function initShow() {
+            var obj = {};
+            obj.ShowToolTips = mini.get("chkShowToolTips").getValue();
+
+            if (obj.ShowToolTips == "true")
+                $('.GooFlow_item').tooltip("show");
+            else
+                $('.GooFlow_item').tooltip("hide");
+
+        }
+
+        function SetData(data) {
+            var workInfoID = data.WorkInfoID;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadConfig";   //加载流程图指令
+            CurrentInfo.Current = {};
+            CurrentInfo.Current.WorkInfoID = workInfoID;
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.ShowMonitor;    //流程监控
+
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                dataType: "text",
+                cache: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    var data = mini.decode(result.data.ResultInfo);
+
+                    document.getElementById("spnWorkFlowName").innerHTML = data.WorkFlowName + "   " + data.Version + "    [" + data.RecordStatusName + "]";
+                    SelectData = mini.decode(data.SelectData);
+                    var flowData = mini.decode(data.JsonInfo);
+
+                    $.each(flowData.NodeList, function () {
+                        this.id = this.NodeCode;
+                        this.name = this.NodeName;
+                        this.title = this.NodeName;
+                        this.type = this.NodeType;
+                        this.allowDraggable = true;//允许拖曳
+                        if (this.type == "StartNode") this.type = "start round";
+                        if (this.type == "EndNode") this.type = "end round";
+                    });
+
+                    $.each(flowData.LineList, function () {
+                        this.id = this.LineCode;
+                        if (this.LineName) this.name = this.LineName;
+                        this.title = this.LineName;
+                        this.from = this.FromNode;
+                        this.to = this.ToNode;
+
+                    });
+
+                    flowObject.loadData(flowData);
+                    $.each(flowData.LineList, function () {
+                        if (this.IsDisabled == false) return;  //如果是被禁用的连线，则不显示                         
+                        var lineObj = $(flowObject.$lineDom[this.id])[0];
+                        lineObj.style.display = "none";
+                    });
+
+                    //---------------描绘流程图-------------------------
+                    var historyNodeList = mini.decode(data.HistoryNodeList);
+                    $.each(historyNodeList, function () {
+                        var fromNodeCode = (this + "").split(":")[1];
+                        var nodeCode = (this + "").split(":")[0];
+                        if (fromNodeCode) {
+                            flowObject.markItem(fromNodeCode, "node", true);
+                        }
+                        //结束节点也应该标红
+                        if (nodeCode && nodeCode != "" && flowObject.$nodeData[nodeCode] && flowObject.$nodeData[nodeCode]["NodeType"] == "EndNode") {
+                            flowObject.markItem(nodeCode, "node", true);
+                        }
+                    });
+                    var currentNodeList = mini.decode(data.CurrentNodeList);
+                    $.each(currentNodeList, function () {
+                        var fromNodeCode = (this + "").split(":")[0];
+                        if (!fromNodeCode) return;
+
+                        flowObject.markItem(fromNodeCode, "node", true);
+                        $(flowObject.$nodeDom[fromNodeCode]).css({ "border": "3px red double" });
+
+                    });
+
+                    for (var iTmp = 0; iTmp < historyNodeList.length; iTmp++) {
+                        var str = historyNodeList[iTmp];
+                        var lineCode = (str + "").split(":")[2];
+                        if (!lineCode) continue;
+                        flowObject.markItem(lineCode, "line", true);
+                    }
+                    //------------------end 描绘流程图------------------------
+                    MindData = data.HistoryMind;
+
+                    //显示流转步骤
+                    var pastNodeList = mini.decode(data.PastNodeList);
+                    $.each(pastNodeList, function () {
+                        var record = this;
+                        record.MindInfo = "";
+                        $.each(MindData, function () {
+                            if (this.SequeID == record.BeforeSequeID && this.Content) {
+                                record.MindInfo = this.Content;
+                            }
+                        });
+                    });
+
+                    gdPastNodeList.setData(pastNodeList);
+                    //  gdPastNodeList.mergeColumns(["MindInfo"]);   //意见合并会引发错位
+
+
+                    //显示意见
+                    var historyMind = mini.decode(data.HistoryMind);
+                    DrawList(historyMind);
+
+                    var NodeUserList = mini.decode(data.NodeUserList);
+                    $('.GooFlow_item').on('hide.bs.tooltip', function (e) {
+                        if (mini.get("chkShowToolTips").getValue() == "true") {
+                            this.tooltip('show');
+                        }
+                    })
+                    //---------------------------------------------------
+                    $('.GooFlow_item').each(function () {
+
+                        var ctrlId = $(this).attr("id");
+                        var nodeData = flowObject.$nodeData[ctrlId];
+
+                        var nodeUserList = $.grep(NodeUserList, function (m) {
+                            return typeof (m.NodeCode) != "undefined" && m.NodeCode == ctrlId;
+                        });
+
+                        if (!nodeUserList) return;
+                        if (nodeUserList.length == 0) return;
+                        if (nodeUserList.length == 1 && nodeUserList[0].UserList.length == 0) return;
+                        var _html = [];
+                        _html.push("<div>");
+
+                        $.each(nodeUserList, function () {
+
+                            $.each(this.UserList, function () {
+                                _html.push("<div>");
+                                _html.push("<div style='height:20px;line-height:20px;'><i class='fa fa-user' style='float:left;'></i><span style='float:left;'>" + this.DeptPositionName + "</span></div>");
+                                _html.push("<div style='padding-left:40px;'>");
+
+                                _html.push("(");
+                                if (this.InboxStatus == EFlowInboxStatus.WaitingSign || this.InboxStatus == "WaitingSign") {
+                                    _html.push("<span class='tooltip-user'>" + this.UserName + " [等候签收]</span>");
+                                }
+                                else if (this.InboxStatus == EFlowInboxStatus.Normal || this.InboxStatus == "Normal") {
+                                    _html.push("<span class='tooltip-user'>" + this.UserName + " [已签收]</span>");
+                                }
+                                else
+                                    _html.push("<span class='tooltip-user'>" + this.UserName + "</span>");
+
+
+                                _html.push(")");
+
+                                _html.push("</div>");
+                                _html.push("</div>");
+                            });
+                        });
+                        _html.push("</div>");
+
+                        $(this).tooltip('destroy').tooltip({
+                            placement: 'bottom',
+                            html: true,
+                            title: _html.join("")
+                        });
+
+                        var sShowToolTips = getCookie("Power.WorkFlows.ShowMonitor.ShowToolTips");  //提取cookie 中默认的，是否显示所有提示
+                        if (sShowToolTips)
+                            mini.get("chkShowToolTips").setValue(sShowToolTips);
+
+
+                        // initShow();
+                    });
+                },
+                error: function (e, r, h) {
+                    mini.unmask(document.body);
+                    Power.ui.error(app_global["workflow_error"] + ":" + e.responseText);
+                    //alert("消息", "错误！:" + e.responseText, "info");
+                }
+            });
+
+        }
+        //wsl算法做了调整，依据参数，提取上个节点的操作信息
+        function GetOperate(node) {
+            var flowString = "";
+
+            switch (node.FlowOperate) {
+                case EFlowOperate.Active:
+                    flowString = "送审"; break;
+                case EFlowOperate.Send:
+                    flowString = "发送"; break;
+                case EFlowOperate.Return:
+                    flowString = app_global["workflow_return"]; break; //"退回"
+                case EFlowOperate.Stop:
+                    flowString = app_global["workflow_termination"]; break; //终止
+                case EFlowOperate.CheckOut:
+                    flowString = app_global["workflow_signing"]; break; //签收
+                case EFlowOperate.Delegate:
+                    if (node.IsReturnDelegateRoot == false)
+                        flowString = "委派反馈";
+                    else
+                        flowString = "委派返还发起人";
+                    break; //委派给他人
+                case EFlowOperate.DelegateAndReturn:
+                    flowString = app_global["workflow_delegate_other"]; break; //委派并须返还
+                case EFlowOperate.EndFlow:
+                    flowString = app_global["workflow_end"]; break; //办结
+                default:
+                    flowString = ""; break;
+
+            }
+            if (flowString) flowString = "(" + flowString + ")";
+            return flowString;
+        }
+
+        function getInboxStatus(InboxStatus) {
+            var flowString = '';
+            switch (InboxStatus) {
+                case EFlowInboxStatus.WaitingSign:
+                    flowString += " (等候签收)";
+                    break;
+                case EFlowInboxStatus.Hidden:
+                    flowString += " (隐藏等候中)";
+                    break;
+                case EFlowInboxStatus.Normal:
+                    flowString += " (正在处理)";
+                    break;
+                case EFlowInboxStatus.WorkEnd:
+                    flowString += " (已提交)";
+                    break;
+            }
+            return flowString;
+        }
+
+        function DrawItem(node) {
+            var tb = '';
+            var flowString = "";
+
+            flowString = GetOperate(node);
+
+            var toUserName = node.ToUserName; //node.UserName.substring(0, 1);
+            if (toUserName == null || toUserName == "null") toUserName = "";
+            if (node.SequeID <= -2) toUserName = "管理员";
+
+            var userColor = "bg-blue";
+            if (node.FlowOperate == EFlowOperate.Return) userColor = "bg-red";
+
+            tb += "<li class='media'><a class=\"pull-left\" href=\"#\"><span class=\"media-object " + userColor + "\" style=\"width: 64px; height: 32px;\">" + toUserName + "</span></a>";
+            tb += "<div class='media-body'><h4 class='media-heading bg-green-meadow'>" + node.ActName;
+            if (flowString != "")
+                tb += getInboxStatus(node.InboxStatus);
+            tb += "<span class='pull-right'>" + flowString + node.MindDate + "</span>";
+            tb += "</h4>";
+
+            var c = app_global["workflow_agreed"]; //同意
+            if (node.FlowOperate == EFlowOperate.Return)
+                c = app_global["workflow_not_agreed"]; //不同意
+            if (node.Content && node.Content != "")
+                c = node.Content;
+            if (node.SequeID <= -2)   //<=-2说明是系统消息
+                c = "<font color='red'>" + c + "</font>";
+
+            switch (node.InboxStatus) {
+                case EFlowInboxStatus.WaitingSign:
+                    tb += "<p>" + app_global["workflow_waiting_sign"] + " </p>"; //等候签收
+                    break;
+                case EFlowInboxStatus.Hidden:
+                    tb += "<p>隐藏等待中</p>"; //等候签收
+                    break;
+                case EFlowInboxStatus.WaitingUnlock:
+
+                    tb += "<p>等候解锁</p>"; //等候签收
+                    break;
+                case EFlowInboxStatus.Delegated:
+                    if (c)
+                        tb += "<p>" + c + "</p>";
+                    else
+                        tb += "<p>委派</p>";
+                    break;
+                case EFlowInboxStatus.WorkEnd:
+                    tb += "<p>" + c + "</p>";
+                    break;
+                case EFlowInboxStatus.WorkStop:
+                    if (c)
+                        tb += "<p>" + c + "</p>";
+                    else
+                        tb += "<p>自动跳过</p>";
+                    break;
+                default:
+                    if (c)
+                        tb += "<p>" + c + "</p>";
+                    else
+                        tb += "<p> " + app_global["workflow_transacting"] + "</p>"; //正在办理
+                    break;
+            }
+            tb += "</div></li>";
+
+            return tb;
+        }
+        function DrawList(mindList) {
+
+            var div = $("#mindList");
+            var tb = "<ul class='media-list' style=\"width:100%\" >";
+
+            for (var iTmp = 0, len = mindList.length; iTmp < len; iTmp++) {
+                var node = mindList[iTmp];
+                if (node.InboxStatus == EFlowInboxStatus.Hidden) continue;  //隐藏的记录暂时不显示 
+
+                if (typeof (node["FlowOperate"]) != "undefined" && node.FlowOperate == EFlowOperate.EndFlow) continue;  //如果是办结操作，则无视掉
+                if (node.Alias != "MindRecord") continue;
+
+                //记录如果是隐藏，则不显示 
+                tb += DrawItem(node);
+            }
+
+            tb += "</ul>";
+            div.append(tb);
+        }
+
+        $(document).ready(function () {
+            var workInfoID = getParameter("WorkInfoID");
+            if (!workInfoID) return;
+            var data = {};
+            data.WorkInfoID = workInfoID;
+
+            SetData(data);
+        });
+    </script>
+</body>
+</html>

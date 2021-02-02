@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+							<!--<a class="mini-button blue" id="View_SF_YX_EquProduction.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_YX_EquProduction-Export" title="设备生产数据月统计表" class="btn-group"></div>
+
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+                            <span>运行站</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                        <!--<div class="tools">
+                            <input id="View_SF_YX_EquProduction-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_SF_YX_EquProduction-search">
+                                <input id="View_SF_YX_EquProduction-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_SF_YX_EquProduction-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+
+                        </div>-->
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_YX_EquProduction" class="mini-datagrid" style="width: 100%; height: 100%;"
+                             width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                    填报时间
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" format="yyyy-MM-dd" />
+                                </div>
+                                <div field="Department" headeralign="center" header="运行站">
+                                    运行站
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="SystemWater" headeralign="center">
+                                    系统接水(m³)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div header="原液" headeralign="center">
+                                    <div property="columns">
+                                        <div field="YuanTJCCL" headeralign="center">
+                                            调节池存量(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="YuanXTJS" headeralign="center">
+                                            系统进水(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="YuanWY" headeralign="center">
+                                            外运(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="清液" headeralign="center">
+                                    <div property="columns">
+                                        <div field="QingCL" headeralign="center">
+                                            产量(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="浓液" headeralign="center">
+                                    <div property="columns">
+                                        <div field="NongCL" headeralign="center">
+                                            产量(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="NongHP" headeralign="center">
+                                            回喷(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="NongWY" headeralign="center">
+                                            外运(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="干污泥" headeralign="center">
+                                    <div property="columns">
+                                        <div field="GanCL" headeralign="center">
+                                            产量(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="GanFS" headeralign="center">
+                                            焚烧处置量(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="GanWW" headeralign="center">
+                                            外委处置量(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="泥水混合物" headeralign="center">
+                                    <div property="columns">
+                                        <div field="NiWW" headeralign="center">
+                                            外委处置量(吨)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="能耗" headeralign="center">
+                                    <div property="columns">
+                                        <div field="NengD" headeralign="center">
+                                            电量(Kwh)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="NengS" headeralign="center">
+                                            水量(m³)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div field="MoCSL" headeralign="center" numberformat="p2">
+                                    膜系统产水率(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="CSL" headeralign="center" numberformat="p2">
+                                    系统产水率(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="Remark" headeralign="center">
+                                    备注
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            //var grid = mini.get("View_SF_ZH_MatRequisitions");
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function search() {
+            mini.get('View_SF_YX_EquProduction').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_YX_EquProduction") {
+                var StartMonth = mini.get("QStartDate").getFormValue();
+                var EndMonth = mini.get("QEndDate").getFormValue();
+                var QDepartment = mini.get("QDepartment").getFormValue();
+                var month = new Date(StartMonth).getMonth() + 1;
+                var month2 = new Date(EndMonth).getMonth() + 1;
+                if (month == month2) {
+                    debugger;
+                    if (e.params.swhere == "") {
+                        e.params.swhere = " Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "'  and Department like '%" + QDepartment + "%' ";
+                    }
+                    else {
+                        e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' ";
+                    }
+                }
+                else {
+                    Power.ui.alert("不可跨月查询！");
+                }
+            }
+        }        PowerForm.EventAfterLoadData = function (e) {
+            var data = e.data;
+            var SystemWater = 0;
+            var YuanTJCCL = 0;
+            var YuanXTJS = 0;
+            var YuanWY = 0;
+            var QingCL = 0;
+            var NongCL = 0;
+            var NongHP = 0;
+            var NongWY = 0;
+            var GanCL = 0;
+            var GanFS = 0;
+            var GanWW = 0;
+            var NiWW = 0;
+            var NengD = 0;
+            var NengS = 0;
+            var MoCSL = 0;
+            var CSL = 0;
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                SystemWater += d.SystemWater || 0;
+                YuanTJCCL += d.YuanTJCCL || 0;
+                YuanXTJS += (d.YuanXTJS || 0);
+                YuanWY += (d.YuanWY || 0);
+                QingCL += (d.QingCL || 0);
+                NongCL += (d.NongCL || 0);
+                NongHP += (d.NongHP || 0);
+                NongWY += (d.NongWY || 0);
+                GanCL += (d.GanCL || 0);
+                GanFS += (d.GanFS || 0);
+                GanWW += (d.GanWW || 0);
+                NiWW += (d.NiWW || 0);
+                NengD += (d.NengD || 0);
+                NengS += (d.NengS || 0);
+                MoCSL += (d.MoCSL || 0);
+                CSL += (d.CSL || 0);
+            }
+            var len = data.length;
+            if (len == 0) {
+                len=1
+            }
+            var x = {};
+            x.Date = "合计";
+            x.SystemWater = SystemWater;
+            x.YuanTJCCL = YuanTJCCL;
+            x.YuanXTJS = YuanXTJS;
+            x.YuanWY = YuanWY;
+            x.QingCL = QingCL;
+            x.NongCL = NongCL;
+            x.NongHP = NongHP;
+            x.NongWY = NongWY;
+            x.GanCL = GanCL;
+            x.GanFS = GanFS;
+            x.GanWW = GanWW;
+            x.NiWW = NiWW;
+            x.NengD = NengD;
+            x.NengS = NengS;
+            
+            var num = x.QingCL + x.NongCL;
+            var num1 = x.YuanXTJS;
+            if (num == 0) {
+                num=1
+            }
+            if (num1 == 0) {
+                num1 = 1
+            }
+            x.MoCSL = x.QingCL / num;
+            x.CSL = x.QingCL / num1;
+            data.push(x);
+            
+            if (len != 0) {
+                var y = {};
+                y.Date = "平均";
+                y.SystemWater = (SystemWater / len).toFixed(2);
+                y.YuanTJCCL = (YuanTJCCL / len).toFixed(2);
+                y.YuanXTJS = (YuanXTJS / len).toFixed(2);
+                y.YuanWY = (YuanWY / len).toFixed(2);
+                y.QingCL = (QingCL / len).toFixed(2);
+                y.NongCL = (NongCL / len).toFixed(2);
+                y.NongHP = (NongHP / len).toFixed(2);
+                y.NongWY = (NongWY / len).toFixed(2);
+                y.GanCL = (GanCL / len).toFixed(2);
+                y.GanFS = (GanFS / len).toFixed(2);
+                y.GanWW = (GanWW / len).toFixed(2);
+                y.NiWW = (NiWW / len).toFixed(2);
+                y.NengD = (NengD / len).toFixed(2);
+                y.NengS = (NengS / len).toFixed(2);
+                var num = y.QingCL + y.NongCL;
+                var num1 = y.YuanXTJS;
+                if (num == 0) {
+                    num = 1
+                }
+                if (num1 == 0) {
+                    num1 = 1
+                }
+                y.MoCSL = (y.QingCL / num).toFixed(2);
+                y.CSL = (y.QingCL / num1).toFixed(2);
+                data.push(y);
+            }
+            
+            mini.get("View_SF_YX_EquProduction").setData(data);
+
+        }
+
+
+    </script>
+</body>
+</html>

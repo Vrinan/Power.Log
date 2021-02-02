@@ -1,0 +1,894 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" http-equiv="content-type" content="text/html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>附件上传</title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script type="text/javascript" src="/pageoffice/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/pageoffice/js/pageoffice.js" id="po_js_main"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet"
+          type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion"
+            type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var edocIp = '$!Helper.GetConfigRunTimeValue("EDocConfig","HostAndPort")';
+        var edocUser = '$!Helper.GetConfigRunTimeValue("EDocConfig","UserName")';
+        var edocPsd = '$!Helper.GetConfigRunTimeValue("EDocConfig","Password")';
+        var edocGlobalFolderTemplate = '$!Helper.GetConfigRunTimeValue("EDocConfig","GlobalFolderTemplate")';
+        //var uploadType = '$!Helper.GetConfigRunTimeValue("FtpConfig", "DocUploadType")';
+        var EditOnlineUrlOut = '$!Helper.GetConfigRunTimeValue("FtpConfig", "EditOnlineUrlOut")';
+        var PageOfficePwd = '$!Helper.GetConfigRunTimeValue("FtpConfig", "PageOfficePwd")';
+        var epsProjId = "$!CurrentSession.EpsProjId";
+        var humanid = "$!CurrentSession.HumanId";
+        var usercode = "$!CurrentSession.UserCode";
+        var sessionid = "$!CurrentSession.SessionId";
+        var humanname = "$!CurrentSession.HumanName";
+        var Signature = "";
+        var UsePdfSdk = '$!Helper.GetConfigRunTimeValue("FtpConfig", "UsePdfSdk")';
+        //OSS访问ID
+        var accessid = '$!Helper.GetConfigRunTimeValue("OSSConfig", "AccessKeyId")';
+        //OSS访问密钥
+        var accesskey = '$!Helper.GetConfigRunTimeValue("OSSConfig", "AccessKeySecret")';
+        //OSS外网访问地址
+        var host = '$!Helper.GetConfigRunTimeValue("OSSConfig", "Endpoint")';
+        //是否启用OSS
+        //var IsEnable = '$!Helper.GetConfigRunTimeValue("OSSConfig", "IsEnable")';
+        //OSS签名有效时间/分钟
+        var SignatureTime = '$!Helper.GetConfigRunTimeValue("OSSConfig", "SignatureTime")';
+        //OSS上传模式（外网或者内网）
+        var UploadMode = '$!Helper.GetConfigRunTimeValue("OSSConfig", "UploadMode")';
+        //OSS下载模式（外网或者内网）
+        var DownloadMode = '$!Helper.GetConfigRunTimeValue("OSSConfig", "DownloadMode")';
+        if (UploadMode == '内网') {//如果上传模式是内网的话使用内网地址
+            //OSS内网访问地址
+            var InsideEndpoint = '$!Helper.GetConfigRunTimeValue("OSSConfig", "InsideEndpoint")';
+            host = InsideEndpoint;
+        }
+        var IsEnable = '0';
+        //表单的上传方式
+        var uploadType = '$!Helper.GetConfigRunTimeValue("UploadMode", "FormMess")';
+        if (uploadType == "oss") {
+            IsEnable = '1';
+        }
+        //报表的上传方式
+        var ReportModeMess = '$!Helper.GetConfigRunTimeValue("UploadMode", "ReportModeMess")';
+        if (ReportModeMess == "oss") {
+            IsEnable = '1';
+        }
+        //获取上传白名单
+        var fileTypeExtsValue = '$!Helper.GetConfigRunTimeValue("UploadMode", "FileTypeExts")';//doc,docx
+        var fileTypeExts = "";
+        if (fileTypeExtsValue != null && fileTypeExtsValue != "") {
+            var strs = new Array(); //定义一数组 
+            strs = fileTypeExtsValue.split(","); //字符分割 
+            for (i = 0; i < strs.length; i++) {
+                if (i == (strs.length - 1)) {
+                    fileTypeExts += "*." + strs[i].toLowerCase(); //分割后的字符输出 
+                }
+                else {
+                    fileTypeExts += "*." + strs[i].toLowerCase() + ";"; //分割后的字符输出 
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
+        .btn {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            text-decoration: none;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        a.btn:hover {
+            background-color: #3366b7;
+        }
+
+        .progress {
+            margin-top: 2px;
+            width: 200px;
+            height: 14px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+        }
+
+        .progress-bar {
+            background-color: rgb(92, 184, 92);
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.14902) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.14902) 50%, rgba(255, 255, 255, 0.14902) 75%, transparent 75%, transparent);
+            background-size: 40px 40px;
+            box-shadow: rgba(0, 0, 0, 0.14902) 0px -1px 0px 0px inset;
+            box-sizing: border-box;
+            color: rgb(255, 255, 255);
+            display: block;
+            float: left;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            transition-delay: 0s;
+            transition-duration: 0.6s;
+            transition-property: width;
+            transition-timing-function: ease;
+            width: 266.188px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mini-toolbar">
+        <div id="btnUpload">
+        </div>
+        <!--Ronnie新增-->
+        <a id="selectfiles" href="javascript:void(0);" class='btn blue'><i class="fa fa-file" aria-hidden="true"></i>选择文件</a>
+        <a id="postfiles" href="javascript:void(0);" class='btn blue'><i class="fa fa-upload"></i>上传文件</a>
+        <button class="btn blue" id="btnSave">
+            <i class="fa fa-save"></i>$Helper.GetResource("g_save")<!--保存-->
+        </button>
+        <div class="btn-group" id="btnShow">
+            <!--<a href="#" class="btn blue" data-toggle="dropdown"><i class="fa fa-eye"></i>$Helper.GetResource("g_view")</a>查看-->
+            <ul class="dropdown-menu pull-left">
+                <li><a href="javascript:;" onclick="Show('pdf')"><i class='fa fa-file-pdf-o'></i>$Helper.GetResource("g_convert_to_pdf")</a></li><!--转为PDF查看-->
+                <li id="pdfUpdate">
+                    <a href="javascript:;" onclick="Show('pdfUpdate')">
+                        <i class='fa fa-file-text-o'></i>转为pdf编辑
+                    </a>
+                </li>
+                <li id="pdfAll">
+                    <a href="javascript:;" onclick="Show('pdfAll')">
+                        <i class='fa fa-file-text-o'></i>转为pdf合并查看
+                    </a>
+                </li>
+                <li id="pdfAllUpdate">
+                    <a href="javascript:;" onclick="Show('pdfAllUpdate')">
+                        <i class='fa fa-file-text-o'></i>转为pdf合并编辑
+                    </a>
+                </li>
+                <!--使用office查看-->
+                <!-- <li>
+                    <a href="javascript:;" onclick="Show('office')">
+                        <i class='fa fa-file-text-o'></i>$Helper.GetResource("g_using_msoffice")
+                    </a>
+                </li> -->
+                <!-- <li>
+                    <a href="javascript:;" onclick="Show('dwg')">
+                        <i class='fa fa-file-text-o'></i>dwg图纸查看
+                    </a>
+                </li> -->
+            </ul>
+        </div>
+        <!-- <button class="btn blue" id="btnDownLoad">
+            <i class="fa fa-download"></i>$Helper.GetResource("g_download")
+        </button> -->
+        <button class="btn blue" id="btnDownLoads">
+            <i class="fa fa-download"></i>$Helper.GetResource("g_downloads")
+        </button>
+        <!--批量下载-->
+        <div class="btn-group" id="EditLine">
+            <a href="#" class="btn blue" data-toggle="dropdown"><i class="fa fa-pencil"></i>$Helper.GetResource("g_online_edit")</a><!--在线编辑-->
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" onclick="EditLine('2')">
+                        <i class='fa fa-pencil-square-o'>
+                        </i>$Helper.GetResource("g_mark-reserved")<!--保留痕迹-->
+                    </a>
+                </li>
+                <li><a href="javascript:;" onclick="EditLine('1')"><i class='fa fa-pencil'></i>$Helper.GetResource("g_mark-unreserved")</a></li><!--不保留痕迹-->
+            </ul>
+        </div>
+        <button class="btn blue" id="btnDel">
+            <i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")<!--删除-->
+        </button>
+        <!--<p>&nbsp;</p>-->
+        <!--<label><input name="aliyunOss" type="checkbox" value="" onclick="alert('123');" />阿里云OSS</label>-->
+        <!--<div id="ossfile">你的浏览器不支持flash,Silverlight或者HTML5或先配置需要的参数！</div>>-->
+        <div id="ossfile"></div>
+        <div id="container">
+        </div>
+        <pre id="console"></pre>
+        <!--<p>&nbsp;</p>-->
+    </div>
+    <div class="mini-fit">
+        <div id="FileOperate" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+             allowcelledit="true" allowcellselect="true" multiselect="true" showpager="false" ondrawcell="Isdisplay" onbeforeselect="NoSelect">
+            <div property="columns">
+                <div type="indexcolumn" width="20">
+                </div>
+                <div type="checkcolumn" name="check">
+                </div>
+                <!-- <div field="Code" name="Code" width="50" allowsort="false">
+                    $Helper.GetResource("g_code")
+                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                </div> -->
+                <div field="Name" name="Name" allowsort="false">
+                    $Helper.GetResource("g_name")<!--名称-->
+                </div>
+                <div field="FileExt" name="FileExt" width="30">
+                    $Helper.GetResource("docfile_extension")<!--扩展名-->
+                </div>
+                <div field="FileVersion" name="FileVersion" width="40">
+                    $Helper.GetResource("docfile_version")<!--文件版本-->
+                </div>
+                <div field="RegHumName" name="RegHumName" allowsort=" false" width="30">
+                    $Helper.GetResource("docfile_uploaders")<!--上传人-->
+                </div>
+                <div field="RegDate" name="RegDate" allowsort=" false" width="40" dateformat="yyyy-MM-dd">
+                    $Helper.GetResource("docfile_upload_date")<!--上传日期-->
+                </div>
+                <!-- <div field="Labels" width="40" name="Labels">
+                    $Helper.GetResource("docfile_keyword")
+                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                </div> -->
+                <div field="Memo" width="40" name="Memo">
+                    $Helper.GetResource("project_remark")<!--备注-->
+                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                </div>
+                <div name="action" headeralign="center">操作</div><!--模板文件-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        try { //判断一下，如果是域外iframe的，就不要执行了，会报错 hw2017.6.29
+            top["FileOperate"] = window;
+        }
+        catch (err) {
+
+        }
+        function Isdisplay(e) {
+            if (e.column.name == "check") {
+                //var row = mini.get("FileOperate").getSelected();
+                if (e.row.IsExistence == 1) {
+                    e.cellHtml = "";
+                }
+            }
+        }
+        function NoSelect(e) {
+            if (e.record.IsExistence == 1) {
+                e.cancel = true;
+            }
+        }
+        var isphone = parent && parent.FormFuns && parent.FormFuns.DeviceIsPhone();//【Ronnie】判断是否是手机打开
+        var kwright = null;
+        mini.parse();
+        function CallAppFunction(name, params, url, callback, closeback) {
+            closeback = closeback || "";
+
+            if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+                if (closeback == "") {
+                    window.m3app.AppCall(name, params, callback);
+                } else {
+                    window.m3app.AppCall(name, params, callback, closeback);
+                }
+            } else if (window.PowerM3AppCall && typeof (window.PowerM3AppCall) == "function") {
+                window.PowerM3AppCall(name, params, callback, closeback);
+            } else if (window.parent && window.parent.PowerM3AppCall && typeof (window.parent.PowerM3AppCall) == "function") {
+                window.parent.PowerM3AppCall(name, params, callback, closeback);
+            } else if (url != undefined && url != "") {
+                window.open(url, "_self")
+            }
+        }
+
+        var Utils = {
+            // 判断平台是什么
+            _checkPlat: function () {
+                var u = navigator.userAgent;
+                var tag;
+                if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                    tag = "Android";
+                } else if (u.indexOf('iPhone') > -1) {
+                    tag = "iPhone";
+                } else {
+                    tag = 'PC'
+                }
+
+                return tag
+            },
+            // 打开附件
+            OpenView: function (id, title, fileext) {
+                if (title.toLowerCase().indexOf(".avi") > -1 || title.toLowerCase().indexOf(".mp4") > -1 || title.toLowerCase().indexOf(".mov") > -1) {
+                    CallAppFunction("appPlayVideos", '{"fileid":"' + id + '","filename":"' + title + '"}', "", "");
+                } else {
+                    //var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + id;
+                    var url = "/File/Download/ftp/" + id;
+                    CallAppFunction("appOpenNewWebView", '{"action":"downloadfile","filename":"' + title + '","fileid":"' + id + '","fileext":"' + fileext + '","url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":"' + title + '"}', url);
+                }
+            }
+        }
+
+        function windowopen(url,row) {
+
+            var plat = Utils._checkPlat();
+
+            if (plat == "Android" || plat == "iPhone") {
+                if(row)
+                    Utils.OpenView(row.Id, row.Name, row.FileExt)
+                else
+                    parent.FormFuns.MiniOpenURL(url); 
+            } else if (plat == 'PC') {
+                window.open(url);
+            }
+
+        }
+        function Save(fnback) {
+
+            //判断上级如果是表单且是新增状态,要求先保存主表
+            if (parent && parent.formconfig && parent.formconfig.FormState && parent.formconfig.FormState.toLowerCase() == "add") {
+                Power.ui.warning("请先保存主表");
+                if (fnback) fnback(false);
+                return;
+            }
+            if (mini == null)
+                return;
+            var rows = mini.get("FileOperate").getChanges(null, false); //获取所有修改行及其字段
+            if (!rows || rows.length == 0) {
+                if (fnback) fnback(true);//【Ronnie】?干什么用
+            }
+            else {
+                var result = { DocFile: { data: rows } };
+                var jdata = { formId: "" };
+                jdata.jsonData = mini.encode(result);
+                $.ajax({
+                    url: "/Form/SaveWebForm",//【Ronnie】保存
+                    type: "POST",
+                    data: jdata,
+                    cache: false,
+                    success: function (text) {
+                        var tmp = mini.decode(text);
+                        if (tmp.success == false) {
+                            parent.Power.ui.error(tmp.message, { timeout: 0, position: "center center", closeable: true });
+                        }
+                        else {
+                            mini.get("FileOperate").accept();
+                        }
+                        if (fnback) fnback(tmp.success);
+                    }
+                });
+            }
+        }
+
+        function EditLine(type) {//【Ronnie】在线编辑type=2保留痕迹；type=1不保留痕迹
+            var isUseEdoc2 = (uploadType == "edoc2");
+            var url = "";
+            var row = mini.get("FileOperate").getSelected();
+            if (!row) return;
+            if (EditOnlineUrlOut != "") {
+                POBrowser.openWindowModeless(EditOnlineUrlOut + '/SimpleWord/Word.aspx?type=' + type + '&humanname=' + encodeURI(humanname) + '&pwd=' + PageOfficePwd + '&usercode=' + usercode + '&fileid=' + row["Id"] + "&epsProjId=" + epsProjId + "&keyword=" + keyword + "&keyvalue=" + keyvalue + "&sessionid=" + sessionid + "&humanid=" + humanid + "&fileext=" + row["FileExt"], 'fullscreen=yes;');
+                return;
+            }
+            var serverurl = row.ServerUrl;
+            if (serverurl.indexOf("edoc2:") > -1) {
+                isUseEdoc2 = true;
+                serverurl = serverurl.substring("edoc2:".length);
+            }
+            if (!isUseEdoc2) {
+                url = "/PowerPlat/FormXml/DocFile/DocumentEdit.aspx?id=" + row["Id"] + "&edittype=" + type;
+            }
+            else {
+                var edocfileObject = $.parseJSON(serverurl);
+                url = "http://" + edocIp + "/Preview.aspx?showThumb=true&postilPerm=true&FileId=" + edocfileObject.fileId + "&userName=" + edocUser + "&key=upload&calendarCode=1";
+            }
+            windowopen(url);
+        }
+        function Show(action) {//【Ronnie】查看转为pdf或者office
+            var row = mini.get("FileOperate").getSelected();
+            if (!row) return;
+            //非手机端打开图片时，使用弹出层的方式
+            if (!isphone && (row["FileExt"].toLowerCase() == ".png" || row["FileExt"].toLowerCase() == ".jpg" || row["FileExt"].toLowerCase() == ".bmp" || row["FileExt"].toLowerCase() == ".jpeg")) {
+                ImgTransform.i = 1;
+                //工具条
+                var bdiv = "<div id=\"fileimgtopdiv\" style=\"top:0;left:0;background:rgba(0,0,0,0.8); width: " + parent.parent.parent.document.body.clientWidth + "px;text-align:center; line-height:50px;height:50px;z-index:9999;overflow: visible;position: fixed\">" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Transform()\"><i class=\"fa fa-repeat\"></i>旋转</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Restore()\"><i class=\"fa fa-undo\"></i>还原</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Original('" + row["Id"] + "')\"><i class=\"fa fa-arrows-alt\"></i>原图</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Close()\"><i class=\"fa fa-power-off\"></i>关闭</a></div>";
+                $(parent.parent.parent.document.body).append(bdiv);
+                //图片
+                 var cdiv = "<div id=\"fileimgdiv\" style=\"text-align:center; line-height:" + (parent.parent.parent.document.body.clientHeight - 60) + "px;padding:2px; overflow:auto;top:50px;left:0;background:rgba(0,0,0,0.7); width: " + parent.parent.parent.document.body.clientWidth + "px; height:" + (parent.parent.parent.document.body.clientHeight - 60) + "px;z-index: 9999; position: fixed\">" +
+                     "<a href=\"#\" onclick=\"ImgTransform.Transform()\"><img id=\"bigimg\" style=\"vertical-align:middle;max-width:100%;max-height:100%;border:5px solid #fff;position: \" src=\"/PowerPlat/Control/File.ashx?action=browser&_type=ftp&_fileid=" + row["Id"] + "\" /></a></div>";
+                $(parent.parent.parent.document.body).append(cdiv);
+            }
+            else if (action == "pdf" || action == "pdfAll" || action == "pdfAllUpdate" || action == "pdfUpdate") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    Power.ui.warning(".dwg格式的文件无法转为pdf查看");
+                }
+                else {
+                    var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + row["Id"];
+                    if (row["FileExt"].toLowerCase() != ".pdf") {
+                        url = "/PowerPlat/FormXml/FileViewer.aspx?fileid=" + row["Id"];
+                    }
+                    //启用WebPdf
+                    if (UsePdfSdk == "1" && row["FileExt"].toLowerCase() == ".pdf") {
+                        if (action == "pdf") {
+                            url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=0";//个人查看
+                        }
+                        if (action == "pdfUpdate") {
+                            url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=1";//个人编辑
+                        }
+                        else if (action == "pdfAll") {
+                            url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=2";//合并查看
+                        }
+                        else if (action == "pdfAllUpdate") {
+                            url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=3";//合并编辑
+                        }
+                    }
+                    //var url = "http://localhost:8088/Lite.aspx?fileid=" + row["Id"];
+                    if (isphone)
+                        url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + row["Id"];
+                    windowopen(url);
+                }
+            }
+            else if (action == "office") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    Power.ui.warning(".dwg格式的文件无法使用office查看");
+                }
+                else {
+                    var url = "/PowerPlat/FormXml/DocFile/DocumentEdit.aspx?id=" + row["Id"] + "&readonly=1";
+                    windowopen(url);
+                }
+            }
+            else if (action == "dwg") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    var url = "/WebCAD/view.html?id=" + row["Id"];
+                    windowopen(url);
+                }
+                else {
+                    Power.ui.warning(".dwg格式的文件才可以查看");
+                }
+            }
+        }
+
+        function downloadFile(){
+                var sel = FileOperate.getSelected();
+                if (!sel || sel.length == 0) return;
+                windowopen("/File/Download/ftp/" + sel["Id"],sel);
+            }
+
+        function deleteFile(){
+                var sel = FileOperate.getSelecteds();
+                var yes = app_global['docfile_yes']; //是
+                var no = app_global['docfile_no']; //否
+                if (sel.length > 0) {
+                    var btnOpt = {};
+                    btnOpt[yes] = {
+                        theme: 'primary',
+                        handler: function () {
+                            for (var i = 0; i < sel.length; i++) {
+                                //没有删除权限，只能删除自己上传的附件
+                                if (kwright && !kwright.bDocDel && loginhumanid) {
+                                    if (sel[i].RegHumId != loginhumanid) {
+                                        Power.ui.warning("不是上传人不允许删除.");
+                                        continue;
+                                    }
+                                }
+                                $.getJSON('/PowerPlat/Control/File.ashx?_type=ftp&action=delete&_fileid=' + sel[i].Id, function (data) {
+
+                                });
+                                FileOperate.removeRow(sel[i], true);
+                            }
+                            var count = FileOperate.getData().length;
+                            parent.PowerForm.OnSetAttachFileCount(count);
+                            if (parent && parent.PowerForm && parent.PowerForm.EventAttacchFileAfterDelete)
+                                parent.PowerForm.EventAttacchFileAfterDelete(FileOperate.getData());
+                        }
+                    };
+                    btnOpt[no] = function () { };
+                    parent.Power.ui.confirm(app_global['docfile_confirmdelete'], { button: btnOpt }); //是否删除该文件?
+                }
+                return false;
+            }
+
+        var FileOperate = mini.get("FileOperate");
+        var keyword = getParameter("KeyWord");
+        var keyvalue = getParameter("KeyValue");
+        $(function () {
+            mini.parse();
+            if (getParameter("type") == "3d") {
+                //3d模型时，隐藏保存、批量下载、在线编辑、编号、文件版本、关键词、备注
+                $("#btnSave").css("display", "none");
+                $("#btnDownLoads").css("display", "none");
+                $("#EditLine").css("display", "none");
+                mini.get("FileOperate").hideColumn("Code");
+                mini.get("FileOperate").hideColumn("FileVersion");
+                mini.get("FileOperate").hideColumn("Labels");
+                mini.get("FileOperate").hideColumn("Memo");
+            }
+            //是要用edoc的上传方式
+            else if (getParameter("type") == "edoc") {
+                uploadType = "edoc2";
+                if (getParameter("HostAndPort") != null && getParameter("HostAndPort") != '') {
+                    edocIp = getParameter("HostAndPort");
+                }
+                if (getParameter("UserName") != null && getParameter("UserName") != '') {
+                    edocUser = getParameter("UserName");
+                }
+                if (getParameter("Password") != null && getParameter("Password") != '') {
+                    edocPsd = getParameter("Password");
+                }
+                if (getParameter("GlobalFolderTemplate") != null && getParameter("GlobalFolderTemplate") != '') {
+                    edocGlobalFolderTemplate = getParameter("GlobalFolderTemplate");
+                }
+            }
+            var loginhumanid = null;
+            if (parent && parent.sessiondata) {
+                loginhumanid = parent.sessiondata.HumanId;
+            }
+            loadGrid();
+            if (keyword == "Report") {
+                uploadType = ReportModeMess;
+            }
+            $("#btnUpload").uploadify({
+                fileSizeLimit: 0,
+                auto: true,
+                multi: (uploadType != "edoc2"),
+                blocksize: (uploadType == "edoc2") ? 0 : (2048 * 1024), //分块大小
+                buttonText: '<i class="fa fa-upload"></i>' + app_global["docfile_upload"], //上传文件
+                swf: '/Scripts/plugins/uploadify/uploadify.swf',
+                uploader: '/PowerPlat/Control/File.ashx?_type=' + uploadType + '&action=upload' + '&type=' + getParameter("type") + '&HostAndPort=' + edocIp + '&UserName=' + edocUser + '&Password=' + edocPsd + '&GlobalFolderTemplate=' + edocGlobalFolderTemplate,
+                fileTypeExts: fileTypeExts, //允许上传的文件类型
+                formData: function (file, fileID) {
+                    //var keyword = getParameter("KeyWord");
+                    var documconfig = (window.parent && window.parent.formconfig && window.parent.formconfig.documconfig) || {};
+                    var tableName = documconfig.documtable; //documentum 要存储的表
+                    var docfield = documconfig.documfield; // = { docu字段1: "字段1", docu字段2: "字段2" };
+                    var documfieldvalue = documconfig.documfieldvalue; // = { docu字段1: "字段1", docu字段2: "字段2" };
+                    var extarProperty = {
+
+                    };
+                    if (docfield) {
+                        for (var field in docfield) {
+                            extarProperty[field] = window.parent.mini.get(keyword + "." + docfield[field]).value;
+
+                            if (field == "document_title") {
+                                extarProperty[field] = file.name;
+                            }
+                        }
+                    }
+                    if (documfieldvalue)
+                        extarProperty = $.extend(true, extarProperty, documfieldvalue);
+                    //						extarProperty["title"] = file.name;
+                    var opt = {
+                        KeyWord: keyword,
+                        KeyValue: keyvalue
+
+                    };
+                    if (tableName && tableName != "") {
+                        opt["fileStoreTable"] = tableName;
+                    }
+                    if (extarProperty) {
+                        opt["fileExtarProperty"] = JSON.stringify(extarProperty);
+                    }
+                    if (documconfig.i_folder_id && documconfig.i_folder_id != "")
+                        opt["i_folder_id"] = documconfig.i_folder_id;
+                    if (documconfig.folderpath && documconfig.folderpath != "")
+                        opt["folderpath"] = documconfig.folderpath;
+                    return opt;
+                },
+                onUploadComplete: function () {
+                    loadGrid();
+                },
+                onDialogClose: function () {
+                    //$(".uploadify-queue")
+                    //var messageid = mini.loading("Loading, Please wait ...", "Loading");
+                },
+                dragzone: "#FileOperate",
+                onBeforeclick: function (gonext) {
+                    //先保存数据,然后再上传附件,因为都是异步,恶心
+                    Save(function (saveok) {
+                        gonext(saveok);
+                    });
+                }
+            });
+
+            //$("#btnShow").click(function () {
+            //    var sel = FileOperate.getSelected();
+            //    if (!sel || sel.length == 0) return;
+            //    var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + sel["Id"];
+            //    windowopen(url);
+            //});
+
+            FileOperate.on("drawcell", function (e) {
+                if (e.column.name == "action") {
+                    var uid = e.record._uid;
+                    var s = "<a href='javascript:;' class='upload' uid='" + uid + "' style='margin-right: 0.5em'></a>"
+                    + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=downloadFile()>" + "下载" + "</a>"
+                    + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=Show('pdfAll')>" + "查看" + "</a>"
+                    + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=deleteFile()>" + "删除" + "</a>"
+                    e.cellHtml = s;
+                }
+            })
+
+
+            $("#btnDownLoad").click(function () {
+                var sel = FileOperate.getSelected();
+                if (!sel || sel.length == 0) return;
+                windowopen("/File/Download/ftp/" + sel["Id"],sel);
+            });
+
+            $("#btnDownLoads").click(function () {
+                var sel = FileOperate.getSelecteds();
+                var yes = app_global['docfile_yes']; //是
+                var no = app_global['docfile_no']; //否
+                if (!sel || sel.length == 0) {
+                    parent.Power.ui.alert(app_global['file_select_download_files']); //请选择下载文件
+                    return
+                }
+                var ids = "";
+                for (var i = 0; i < sel.length; i++) {
+                    ids += sel[i]["Id"] + ",";
+                }
+                ids = ids.substring(0, ids.length - 1);
+                var yes = "是";
+                var no = "否";
+                var btnOpt = {};
+                btnOpt[yes] = {
+                    theme: 'primary',
+                    handler: function () {
+                        postDataToServer("/PowerPlat/Control/File.ashx", { action: "zip", _type: "ftp", fileids: ids });
+                    }
+                };
+                btnOpt[no] = function () { };
+                parent.Power.ui.confirm("压缩中，需等待片刻，是否继续?", { button: btnOpt });
+            });
+
+            $("#btnSave").click(function () {
+                Save();
+            });
+            $("#btnDel").click(function () {
+                var sel = FileOperate.getSelecteds();
+                var yes = app_global['docfile_yes']; //是
+                var no = app_global['docfile_no']; //否
+                if (sel.length > 0) {
+                    var btnOpt = {};
+                    btnOpt[yes] = {
+                        theme: 'primary',
+                        handler: function () {
+                            for (var i = 0; i < sel.length; i++) {
+                                //没有删除权限，只能删除自己上传的附件
+                                if (kwright && !kwright.bDocDel && loginhumanid) {
+                                    if (sel[i].RegHumId != loginhumanid) {
+                                        Power.ui.warning("不是上传人不允许删除.");
+                                        continue;
+                                    }
+                                }
+                                $.getJSON('/PowerPlat/Control/File.ashx?_type=ftp&action=delete&_fileid=' + sel[i].Id, function (data) {
+
+                                });
+                                FileOperate.removeRow(sel[i], true);
+                            }
+                            var count = FileOperate.getData().length;
+                            parent.PowerForm.OnSetAttachFileCount(count);
+                            if (parent && parent.PowerForm && parent.PowerForm.EventAttacchFileAfterDelete)
+                                parent.PowerForm.EventAttacchFileAfterDelete(FileOperate.getData());
+                        }
+                    };
+                    btnOpt[no] = function () { };
+                    parent.Power.ui.confirm(app_global['docfile_confirmdelete'], { button: btnOpt }); //是否删除该文件?
+                }
+                return false;
+            });
+            FileOperate.on("headercellclick", reloadGrid);
+            var reloadGrid = function (e) {
+                if (!e.column.allowSort)
+                    return;
+                loadGrid();
+            }
+        });
+
+        var loadGrid = function () {
+            //alert('执行后');
+            var sort = "";
+            if (FileOperate.sortField != "")
+                sort = FileOperate.sortField + "  " + FileOperate.sortOrder;
+            var a = {};
+            if (parent && parent.mini && parent.mini.get && parent.mini.get("maintabs") && parent.mini.get("maintabs").getActiveTab())
+                a = parent.mini.get("maintabs").getActiveTab();
+            if (parent && parent.PowerForm && parent.PowerForm.EvetnAttachFileWhere)
+                parent.PowerForm.EvetnAttachFileWhere(a);
+            var swhere = "";
+            if (a && a.swhere &&a.swhere!=undefined) {
+                swhere = a.swhere;
+            }
+            if(swhere.length>0){
+                swhere += " and ";
+            }
+            swhere +=" BOKeyWord='"+ keyword +"'";
+            $.ajax({
+                url: "/Form/GetDocFiles",
+                data: {
+                    BOKeyWord: keyword,
+                    BOKeyValue: keyvalue,
+                    select: "",
+                    swhere: swhere,
+                    sort: sort,
+                    index: 0,
+                    size: 0
+                },
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    if (tmp.success) {
+                        FileOperate.setData(mini.decode(tmp.data.value));
+                        //根据keyword设置的附件操作权限
+                        if (parent && parent.PowerForm && parent.PowerForm.IsWorkFlowCurrentHuman && parent.PowerForm.IsWorkFlowCurrentHuman())
+                            tmp.data.right = null;
+                        kwright = tmp.data.right;
+                        if (kwright) {
+                            if (!kwright.bDocDown) {
+                                $("#btnDownLoad").css("display", "none");
+                                $("#btnDownLoads").css("display", "none");
+                            }
+                            if (!kwright.bDocUp) $("#btnUpload").css("display", "none");
+                            //没有删除，也没有上传，隐藏删除按钮
+                            if (!kwright.bDocDel && !kwright.bDocUp) {
+                                $("#btnDel").css("display", "none");
+                            }
+                            //没有删除，也没有上传，隐藏删除按钮
+                            if (!kwright.bDocView && !kwright.bDocUp) {
+                                $("#btnShow").css("display", "none");
+                            }
+                            if (!kwright.bDocEdit) {
+                                $("#btnSave").css("display", "none");
+                                $("#EditLine").css("display", "none");
+                                mini.get("FileOperate").setReadOnly(true);
+                            }
+                        }
+                    }
+                    else
+                        FileOperate.setData("");
+                    var count = FileOperate.getData().length;
+                    if (parent && parent.PowerForm && parent.PowerForm.OnSetAttachFileCount)
+                        parent.PowerForm.OnSetAttachFileCount(count);
+                    //加载缺省权限
+                    if (getParameter("canEdit") == "false") {
+                        $("#btnUpload").css("display", "none");
+                        $("#btnDel").css("display", "none");
+                        $("#btnSave").css("display", "none");
+                        $("#EditLine").css("display", "none");
+                        mini.get("FileOperate").setReadOnly(true);
+                    }
+                    //启用OSS
+                    if (IsEnable == '1') {
+                        //原来的上传
+                        $("#btnUpload").css("display", "none");
+                        //查看
+                        //$("#btnShow").css("display", "none");
+                        //在线编辑
+                        $("#EditLine").css("display", "none");
+                        //批量下载
+                        $("#btnDownLoads").css("display", "none");
+                        //保存
+                        $("#btnSave").css("display", "none");
+
+                        //选择文件
+                        //$("#selectfiles").css("display", "none");
+                        //上传
+                        $("#postfiles").css("display", "none");
+
+                    }
+                    else {
+                        //选择文件
+                        $("#selectfiles").css("display", "none");
+                        //上传
+                        $("#postfiles").css("display", "none");
+                        //提示
+                        $("#console").css("display", "none");
+
+                    }
+                    //启用WebPdf
+                    if (UsePdfSdk != "1") {
+                        //转为PDF编辑
+                        $("#pdfUpdate").css("display", "none");
+                        //转为pdf合并查看
+                        $("#pdfAll").css("display", "none");
+                        //转为pdf合并编辑
+                        $("#pdfAllUpdate").css("display", "none");
+                    }
+
+                    if (parent && parent.PowerForm && parent.PowerForm.EventAttacchFileAfterLoadData)
+                        parent.PowerForm.EventAttacchFileAfterLoadData(FileOperate.getData());
+                }
+            });
+            /*
+            //成功之后添加数据库记录
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/Edoc/UploadFile",
+                data: { FileObjectId: "86029550-774F-EC8D-AA13-A0D9B687E8B6", EdocFilePath: "PublicRoot\\[@项目名称]\\[@业务名称]\\[@业务编号]-[@业务标题]", UserCode: "admin", Pwd: "PowerAdmin" },
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    tmp.success;
+                    tmp.data.value;
+                    alert('成功');
+                }
+            });
+           */
+        }
+        //2019-8-6 双击一律pdf打开查看
+        mini.get("FileOperate").on("rowdblclick",function(e){
+            Show('pdfAll');
+        })
+    </script>
+
+    <script type="text/javascript">
+        function ossFiles() {
+            var files = document.getElementById("input").files;
+            for (var i = 0; i < files.length; i++) {
+                alert(input.files[i].name);
+            }
+        }
+
+        function xhr2() {
+            var xhr = new XMLHttpRequest();//第一步
+            //定义表单变量
+            var file = document.getElementById('input').files;
+            //console.log(file.length);
+            //新建一个FormData对象
+            var formData = new FormData(); //++++++++++
+            //追加文件数据
+            for (i = 0; i < file.length; i++) {
+                formData.append("input[" + i + "]", file[i]); //++++++++++
+            }
+            //formData.append("file", file[0]); //++++++++++
+
+            //post方式
+            xhr.open('POST', '/PowerPlat/Control/aliyunOSS.aspx?'); //第二步骤
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    var complete = (event.loaded / event.total * 100 | 0);
+                    var progress = document.getElementById('uploadprogress');
+                    progress.value = progress.innerHTML = complete;
+                }
+            };
+            //发送请求
+            xhr.send(formData);  //第三步骤
+            //ajax返回
+            xhr.onreadystatechange = function () { //第四步
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText);
+                }
+            };
+            //设置超时时间
+            xhr.timeout = 100000;
+            xhr.ontimeout = function (event) {
+                alert('请求超时！');
+            }
+        }
+    </script>
+    <script src="/Scripts/PlatForm/base64.js"></script>
+    <script src="/Scripts/PlatForm/crypto.js"></script>
+    <script src="/Scripts/PlatForm/hmac.js"></script>
+    <script src="/Scripts/PlatForm/sha1.js"></script>
+    <script src="/Scripts/PlatForm/plupload.full.min.js"></script>
+    <script src="/Scripts/PlatForm/hmac-sha1.js"></script>
+    <script src="/Scripts/PlatForm/enc-base64-min.js"></script>
+    <script src="/Scripts/PlatForm/upload.js?v=20170922.1.3"></script>
+</body>
+</html>

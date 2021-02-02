@@ -1,0 +1,456 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>人员选择(没有登录账号的人员不能参与流程)
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onOK">确定</a><!--确定-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')" iconcls="fa-power-off">取消</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                <div id="chkShowAllEpsProjId" name="ShowAllEpsProjId" class="mini-checkbox" text='显示全部Eps' onvaluechanged="onShowAllEPSClick" />
+                                <!--显示全部epps-->
+                            </td>
+                            <td id="tdSourceMode1">定义方式：
+                            </td>
+                            <td id="tdSourceMode2">
+                                <div id="rdoSourceMode" name="SourceMode" class="mini-radiobuttonlist" onvaluechanged="onModeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="Position" data='[{Code:"PositionAndUser",Text:"岗位" },{Code:"DeptAndUser",Text:"部门"} ]'>
+                                </div>
+                            </td>
+                            <td style="text-align: right; float: right; width: 100%">
+                                <label id="lblTitle">部门/岗位</label><!--部门/岗位--><input id="search_deptposi" class="mini-textbox" width="120" onenter="onSearch" />
+                                姓名<!--姓名-->:<input id="search_name" class="mini-textbox" width="120" onenter="onSearch" />
+                                <a class="mini-button blue" onclick="onSearch">查询<!--查询--></a>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div class="mini-fit">
+                        <div class="mini-splitter" style="width: 100%; height: 100%">
+                            <div size="30%">
+                                <div id="treeDeptPositionList" class="mini-treegrid" style="height: 100%"
+                                    showtreeicon="true" treecolumn="DeptPositionName" idfield="DeptPositionID" parentfield="ParentID" iconfield="icon" resultastree="false" expandonload="true" onrowclick="onDeptPositionClick">
+                                    <div property="columns">
+                                        <div name="DeptPositionName" field="DeptPositionName" width="150" headeralign="center">名称</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="splitUser" class="mini-splitter" style="width: 100%; height: 100%" vertical="true">
+                                    <div>
+                                        <div id="gdUserList" class="mini-datagrid" style="height: 90%" showpager="false" multiselect="true" idfield="UserID"
+                                            pagesize="10" onrowdblclick="onUserDblClick">
+                                            <div property="columns">
+                                                <div type="indexcolumn" width="15"></div>
+                                                <div name="UserCode" field="UserCode" allowsort="true" headeralign="center">编号</div>
+                                                <div name="UserName" field="UserName" allowsort="true" headeralign="center">名称</div>
+                                                <div name="DeptPositionName" field="DeptPositionName" allowsort="true" headeralign="center">岗位/部门</div>
+                                            </div>
+                                        </div>
+                                        <div id="gridPager" class="mini-pager" style="width: 100%;" sizelist="[5,10,20,100]" onpagechanged="onPageChanged"
+                                            buttons="#buttons">
+                                        </div>
+                                        <div id="buttons">
+                                            <span class="separator"></span>
+                                            <a class="mini-button" iconcls="fa fa-arrow-down" plain="true" id="btnSelectAll" tooltip="批量下移" onclick="onSelectAll"></a>
+                                        </div>
+                                    </div>
+                                    <div size="35%">
+                                        <div id="gdSelectedUsers" class="mini-datagrid" style="height: 150px" showpager="false" multiselect="true" idfield="UserID">
+                                            <div property="columns">
+                                                <div type="indexcolumn" width="15"></div>
+                                                <div name="UserCode" field="UserCode" allowsort="true" headeralign="center">编号</div>
+                                                <div name="UserName" field="UserName" allowsort="true" headeralign="center">名称</div>
+                                                <div name="DeptPositionName" field="DeptPositionName" allowsort="true" headeralign="center">岗位/部门</div>
+                                                <div width="80px" renderer="onDeleteSelectedUserRenderer">操作</div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var treeDeptPositionList = mini.get("treeDeptPositionList");
+        var gdUserList = mini.get("gdUserList");
+        var gdSelectedUsers = mini.get("gdSelectedUsers");
+        var gridPager = mini.get("gridPager");
+
+
+        var rdoSourceMode = mini.get("rdoSourceMode");
+
+        var curNode = null;
+        var currentEpsProjId = "";
+        var AllowMulitUser = false;  //是否多选模式，默认单选，外部可传入参数设置
+
+        var onShowAllEPSClick = function (e) {
+            SetData(curNode);
+        }
+
+        //批量下移
+        var onSelectAll = function (e) {
+
+            if (AllowMulitUser == false) return;   //单选模式，不允许点击此按钮
+
+            var Users = gdUserList.getData();
+            var tmpData = gdSelectedUsers.getData();
+            for (var itmp = 0; itmp < Users.length; itmp++) {
+                var row = Users[itmp];
+                //已经选择过的，不许反复选中           
+                var flag = false;
+                for (var irow = 0; irow < tmpData.length; irow++) {
+                    if (tmpData[irow].UserID == row.UserID) { flag = true; break; }
+                }
+                if (flag == true) continue;
+                gdSelectedUsers.addRow(mini.clone(row));
+            }
+
+
+        }
+        var onSearch = function () {
+            var deptposi = mini.get("search_deptposi").getValue();
+            var name = mini.get("search_name").getValue();
+            if (deptposi) {
+                treeDeptPositionList.filter(function (node) {
+                    return String(node.text).toLowerCase().indexOf(deptposi) != -1;
+                });
+            }
+            else {
+                treeDeptPositionList.filter(function (node) {
+                    return true;
+                });
+            }
+            if (name) {
+                gdUserList.setPageIndex(0);
+                onLoadUserList(gridPager.getPageSize(), 0);
+            }
+        }
+
+
+        var onModeChanged = function (e) {
+            var sourceMode = mini.get("rdoSourceMode").getValue();
+            onLoadDeptPostionList(sourceMode, null);
+        }
+        function onPageChanged(e) {
+
+            gdUserList.pageSize = e.pageSize;
+            gdUserList.pageIndex = e.pageIndex;
+
+            onLoadUserList(e.pageSize, e.pageIndex);
+        }
+        var onOK = function (e) {
+            if (gdSelectedUsers.getData().length == 0) {
+                Power.ui.error("请您先选择一个用户"); return;//"请您先选择一个用户"
+            }
+            CloseWindow("ok");   //确定操作
+        }
+
+
+
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        var AllResultData;
+        //标准方法接口定义
+        function SetData(node, canSendUsers) {
+            curNode = node;
+
+
+            if (node.AllowMulitUser == true) {
+                AllowMulitUser = true;
+            }
+            else {
+                AllowMulitUser = false;
+                mini.get("btnSelectAll").setVisible(false);
+            }
+
+            var sourceMode = curNode.SourceMode;
+            if (!sourceMode) sourceMode = "PositionAndUser";  //如果是第一次，则默认为 岗位+用户 
+            mini.get("rdoSourceMode").setValue(sourceMode);
+
+            //如果外部指定不允许切换岗位部门
+            if (node.AllowSwitchDP == false) {
+                mini.get("rdoSourceMode").setEnabled(false);
+                document.getElementById("tdSourceMode1").style.display = "none";
+                document.getElementById("tdSourceMode2").style.display = "none";
+            }
+            onLoadDeptPostionList(sourceMode, node);
+
+            //如果有默认信息，且允许多选，则将默认信息放入容器。 单选的话，无须选择默认信息
+            if (canSendUsers && AllowMulitUser == true) gdSelectedUsers.setData(canSendUsers);
+
+        }
+
+        var onLoadDeptPostionList = function (sourceMode, node) {
+
+            Power.App.loading.show();
+
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadDeptPositionTree";   //子指令集,加载岗位部门树
+            CurrentInfo.ShowAllEps = mini.get("chkShowAllEpsProjId").getValue();
+            CurrentInfo.SourceMode = rdoSourceMode.getValue();
+            if (node && node.WorkInfoID) CurrentInfo.WorkInfoID = node.WorkInfoID;
+            var data = {};
+            CurrentInfo.Current = data;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) {
+                    
+                    Power.App.loading.hide();
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    if (!result.data.DeptPositionList) return;
+
+                    treeDeptPositionList.loadList(result.data.DeptPositionList, "DeptPositionID", "ParentID");
+
+                    //如果历史经办人叶子节点存在，则默认选上去
+                    var historyNode = treeDeptPositionList.getNode("00000000-0000-0000-0000-000000000000");
+                    if (historyNode) {
+                        treeDeptPositionList.selectNode(historyNode);
+                        onLoadHistoryUserList(node.WorkInfoID);
+                    }
+
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+
+        //提取历史经手人
+        var onLoadHistoryUserList = function (workInfoID) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadHistoryUserList";   //子指令集,加载岗位部门树  
+            CurrentInfo.WorkInfoID = workInfoID;
+
+            var data = {};
+            CurrentInfo.Current = data;
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) {
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    gdUserList.setData(mini.decode(result.data.UserList));
+                    gdUserList.setTotalCount(result.data.UserList.length);
+
+                    gridPager.setTotalCount(result.data.UserList.length);
+                    Power.App.loading.hide();
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+        //加载用户信息
+        var onLoadUserList = function (iPageSize, iPageIndex) {
+
+            var row = treeDeptPositionList.getSelectedNode();
+            if (row == null) {
+                Power.ui.alert("请先选中人员所在的部门/岗位");//请先选中人员所在的部门/岗位
+                return;
+            }
+            var CurrentInfo = {};
+
+            var childs = treeDeptPositionList.getAllChildNodes(row);
+            //得到选中节点的本身和所有的子节点的id，后台查询的时候，可以查到所有子节点的人
+            var ids = "'" + row.DeptPositionID + "'";
+            if (row.IsEpsNode == true) {//如果是eps节点，查 所有子节点
+                for (var i = 0; i < childs.length; i++) {
+                    ids += ",'" + childs[i].DeptPositionID + "'";
+                }
+            }
+            CurrentInfo.Where = "";
+            if (mini.get("search_name").getValue() != null && mini.get("search_name").getValue() != "") {
+                 
+                var v = mini.get("search_name").getValue();
+                CurrentInfo.Where = " and (x1.Code like '%" + v + "%' or x1.Name like'%" + v + "%')";
+                CurrentInfo.Where = Base64.encode(CurrentInfo.Where);
+            }
+            if (gdUserList.sortOrder != undefined)
+                CurrentInfo.order = gdUserList.sortField + " " + gdUserList.sortOrder;
+            else
+                CurrentInfo.order = gdUserList.sortField;
+            CurrentInfo.id = ids;
+            CurrentInfo.Order = "x1.Name";  //依据姓名排序
+
+            CurrentInfo.SubOperate = "ReadUserList";   //子指令集,加载岗位部门树 
+            CurrentInfo.SourceMode = rdoSourceMode.getValue();
+
+            CurrentInfo.pageIndex = iPageIndex;
+            CurrentInfo.pageSize = iPageSize;
+
+            var data = {};
+            CurrentInfo.Current = data;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) {
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    gdUserList.setData(mini.decode(result.data.UserList));
+                    gdUserList.setTotalCount(result.data.RecordCount);
+
+                    gridPager.setTotalCount(gdUserList.totalCount);
+                    gridPager.update(gridPager.pageIndex, gridPager.pageSize, gridPager.totalCount);
+
+                    Power.App.loading.hide();
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+
+        var onDeptPositionClick = function (e) {
+            var selnode = e.sender.getSelected();
+            if (!selnode || selnode != e.record)
+                e.sender.setSelected(e.record);
+
+            gdUserList.setPageIndex(0);
+            gridPager.setPageIndex(0);
+
+            var row = treeDeptPositionList.getSelectedNode();
+            if (row == null) {
+                Power.ui.alert("请先选中人员所在的部门/岗位");//请先选中人员所在的部门/岗位
+                return;
+            }
+            if (row.Flag == "HistoryList")  //选中了提取历史人
+            {
+                onLoadHistoryUserList(row.WorkInfoID);
+            }
+            else
+                onLoadUserList(gridPager.getPageSize(), 0);
+            return;
+        }
+
+        var onUserDblClick = function (e) {
+            var row = e.record;
+            if (!row) return;
+
+            //已经选择过的，不许反复选中
+            var tmpData = gdSelectedUsers.getData();
+            for (var irow = 0; irow < tmpData.length; irow++) {
+                if (tmpData[irow].UserID == row.UserID) return;
+            }
+
+            gdSelectedUsers.addRow(mini.clone(row));
+            if (AllowMulitUser == false) //如果是单选
+                CloseWindow("ok");
+        }
+        var onDeleteUser = function (grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            curGrid.removeRow(row);
+        }
+        var onDeleteSelectedUserRenderer = function (e) {
+            var record = e.record;
+            var s = "";
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDeleteUser(\'' + e.sender.id + '\')" title="删除"><i class="fa fa-eraser"></i></a>';//删除
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:upUserItem()" title="上移"><i class="fa fa-arrow-up"></i></a>';//上移
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:downUserItem()" title="下移")"><i class="fa fa-arrow-down"></i></a>';//下移
+            return s;
+        }
+        //上移下移
+        function upUserItem() {
+            var items = gdSelectedUsers.getSelecteds();
+            if (!items) return;
+            gdSelectedUsers.moveUp(items);
+        }
+        function downUserItem() {
+            var items = gdSelectedUsers.getSelecteds();
+            if (!items) return;
+            gdSelectedUsers.moveDown(items);
+        }
+        function GetData() {
+
+            return gdSelectedUsers.getData();
+        }
+
+    </script>
+
+</body>
+</html>

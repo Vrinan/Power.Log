@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <title> 3--1审批情况 </title>
+    <link href="/Apps/Apps2.0/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/Apps2.0/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/Apps2.0/assets/global/plugins/icon-font-alibaba/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/Apps2.0/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/Apps/Apps2.0/assets/global/css/common.css" type="text/css">
+</head>
+
+<body>
+
+    <!--nav tab切换导航  -- 开始-->
+    <section class="review-nav">
+        <div class="container">
+            <ul class="clearFix" role="tablist">
+                <li role="presentation"  class="active"><a href="#processLists" aria-controls="profile" role="tab" data-toggle="tab">待处理的</a></li>
+                <li role="presentation"><a href="#meLaunch" aria-controls="messages" role="tab" data-toggle="tab">我发起的</a></li>
+                <li role="presentation"><a href="#meParticipate" aria-controls="settings" role="tab" data-toggle="tab">我参与的</a></li>
+            </ul>
+        </div>
+    </section>
+    <!--nav tab切换导航  -- 结束-->
+
+    <!-- Tab panes -->
+    <!--tab content主体内容  --开始-->
+    <section class="review-body-content">
+        <div class="container">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane  active" id="processLists">
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="meLaunch">
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="meParticipate">
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--tab content主体内容  --结束-->
+
+
+
+    <script src="/Apps/Apps2.0/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="/Apps/Apps2.0/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Apps/Apps2.0/assets/global/js/common.js" type="text/javascript"></script>
+    <!--平台中的JS-->
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script src="/Apps/Common.js"></script>
+    <!--获取菜单数据 方法 _menulist -->
+    <script src="/WebCenter/MenuEpsJson/menu" type="text/javascript"></script>
+    <script src="/Apps/js/TouchSlide.1.1.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var review = {
+                init: function() {
+                    this.events();
+                },
+                reviewTemp: function(data, Id) {
+                    if (data) {
+                        var html = '',
+                            i = 0,
+                            list;
+                        for (; i < data.length; i++) {
+                            list = data[i];
+                            html += '<div data-keyword = "' + list.KeyWord + '" data-path="' + list.HtmlPath + '" data-keyvalue="' + list.KeyValue + '"  data-id="' + list.Id + '" class="review-unit-content">' +
+                                '<div class="review-unit-detail review-unit-content-header">' +
+                                ' <p class="review-unit review-unit-header">' +
+                                '<i class="icon iconfont icon-form font-color-blue">  </i>' +
+                                '<span class="title-message"> ' + list.Title + ' </span>' +
+                                ' <span class="' + "review-unit-header-warn " + list.icon16 + '"> ' + "● " + list.fonts + ' </span>' +
+                                '</p>' +
+
+                                ' <p class="review-unit review-unit-name">' +
+                                list.FromHumanName +
+                                '</p>' +
+
+                                '<p class="review-unit review-unit-date">' +
+                                ' <span> 到达时间: </span>' +
+                                ' <span class="time">  ' + list.wfDate + ' </span>' +
+                                ' </p>' +
+                                '</div>' +
+                                '</div>';
+                        }
+
+                        $("#" + Id).html(html);
+                    }
+                },
+                OpenForm: function(HtmlPath, KeyValue) {
+                    var url = "/Form/ValidForm/" + HtmlPath + "/edit/" + KeyValue + "/";
+                    // CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"true","showTabbar":"false","title":""}', url);
+                    CallAppFunction(
+                        "appOpenNewWebView", 
+                        '{"url":"' + url + '","reload":"true", "selfreload":"true","pullUp":"false","pullDown":"true","showTabbar":"false","title":""}', 
+                        url,
+                        '',
+                        "getData"
+                    );
+                },
+                //如果有原生的，走原生的方法
+                OpenForm1: function(HtmlPath, KeyValue, item) {
+                    var url = "/Form/ValidForm/" + HtmlPath + "/edit/" + KeyValue + "/";
+                    // CallAppFunction("openOtherPage", item, url);
+                    CallAppFunction(
+                        "appOpenNewWebView", 
+                        '{"url":"' + url + '","reload":"true", "selfreload":"true","pullUp":"false","pullDown":"true","showTabbar":"false","title":""}', 
+                        url,
+                        '',
+                        "getData"
+                    );
+                },
+                getData: function() {
+                    var reviewTemp = this.reviewTemp,
+                        OpenForm = this.OpenForm,
+                        OpenForm1 = this.OpenForm1;
+
+                    $.ajax({
+                        url: "/WorkFlow/MyWorkInfos ",
+                        type: "POST",
+                        data: {
+                            types: "infos,actived,join",
+                            index: "0",
+                            size: "8",
+                            swhere: ""
+                        },
+                        cacha: false,
+                        success: function(text) {
+                            var o = jQuery.parseJSON(text);
+                            var getData = o.data;
+
+                            //我发起的
+                            if (getData.actived.length > 0) {
+                                for (var i = 0; i < getData.actived.length; i++) {
+                                    var act_list = getData.actived[i];
+                                    act_list.icon16 = "font-color-blue";
+                                    act_list.fonts = "我发起的";
+                                    act_list.FromHumanName = act_list.UserName;
+                                }
+                            }
+
+                            //我参与的
+                            if (getData.join.length > 0) {
+                                for (var i = 0; i < getData.join.length; i++) {
+                                    var join_list = getData.join[i];
+                                    join_list.icon16 = "font-color-purple";
+                                    join_list.fonts = "我参与的";
+                                }
+                            }
+
+                            //待处理的
+                            if (getData.infos.length > 0) {
+                                for (var i = 0; i < getData.infos.length; i++) {
+                                    var info_list = getData.infos[i];
+                                    info_list.icon16 = "font-color-red";
+                                    info_list.fonts = "待处理的";
+                                }
+                            }
+
+                            reviewTemp(getData.actived, "meLaunch");
+
+                            reviewTemp(getData.join, "meParticipate");
+
+                            reviewTemp(getData.infos, "processLists");
+
+                            $("#allLists,#meLaunch,#meParticipate,#processLists").on("click", ".review-unit-content", function() {
+                                var id = $(this).attr("data-id"),
+                                    htmlPath = $(this).attr("data-path"),
+                                    keyValue = $(this).attr("data-keyvalue"),
+                                    keyword = $(this).attr("data-keyword");
+
+                                var itemList = {
+                                    Id: id,
+                                    HtmlPath: htmlPath,
+                                    KeyValue: keyValue,
+                                    KeyWord: keyword
+                                };
+
+                                itemList = JSON.stringify(itemList);
+
+                                if (keyword == "FeedBackRecord" || keyword == "PS_APP_BusinessTrip" || keyword == "PS_APP_Leave") {
+                                    OpenForm1(htmlPath, keyValue, itemList);
+                                } else {
+                                    OpenForm(htmlPath, keyValue);
+                                }
+
+                            });
+                        }
+                    });
+                },
+                events: function() {
+                    this.getData();
+                }
+            };
+            review.init();
+        });
+    </script>
+</body>
+
+</html>

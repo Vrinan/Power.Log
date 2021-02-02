@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="物资计划编号/名称" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="40%" showcollapsebutton="true">
+                                    <div id="PS_BOMFile" class="mini-datagrid" idfield="Id"
+                                         allowresize="true" style="width: 100%; height: 100%;" expandonload="true" url="/Form/GridPageLoad"
+                                         autoload="false" onbeforeload="OnBeforeLoad" onpreload="OnPreLoad" onselect="OnSelectNode">
+                                        <div property="columns">
+                                            <div field="Code" headeralign="center" allowsort="true">编号 </div>
+                                            <div field="Title" headeralign="center" allowsort="true">标题 </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div showcollapsebutton="true">
+                                    <div id="View_XLX_PS_BOM" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                         url="/Form/GridPageLoadEx" multiselect="true" onbeforeload="OnBeforeLoad" onpreload="OnPreLoad" allowresize="true" autoload="false">
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="20"></div>
+                                            <div type="checkcolumn" width="40"></div>
+
+                                            <div field="StorageName" headeralign="center">
+                                                仓库
+                                            </div>
+                                            <div field="MatBsCode" headeralign="center">
+                                                物资分类码
+                                            </div>
+                                            <div field="MatCode" headeralign="center">
+                                                物资编码
+                                            </div>
+                                            <div field="MatName" headeralign="center">
+                                                物资名称
+                                            </div>
+                                            <div field="MatDescription" headeralign="center" width="200">
+                                                物资描述
+                                            </div>
+                                            <!--单位-->
+                                            <div field="MatUnit" headeralign="center">
+                                                单位
+                                            </div>
+                                            <!--数量-->
+                                            <div field="ValidNum" headeralign="center">
+                                                可领数量
+                                            </div>
+                                            <div field="Pur_Major" headeralign="center" required="true">
+                                                装置
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="MatCode">物资编码</div>
+                                    <div field="MatName">名称</div>
+                                    <div name="action" width="50px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var RightGrid = mini.get("View_XLX_PS_BOM");
+        var LeftGrid = mini.get("PS_BOMFile");
+        var gridselected = mini.get("GridSelected");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        Select.LoadStepFirst = function () {
+            LeftGrid.reload();
+        }
+
+        $(function () {
+            debugger;
+            var bmulti = (WizardParams.multi == "1");
+            RightGrid.multiSelect = bmulti;
+            RightGrid.onlyCheckSelection = bmulti;
+            if (bmulti)
+                RightGrid.showColumn("checkcolumn");
+            else {
+                RightGrid.hideColumn("checkcolumn");
+            }
+        });
+
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            params.KeyWord = e.sender.id;
+            params.KeyWordType = "BO";
+            params.select = WizardParams.select || "";
+            params.swhere = " 1=1";
+            params.index = 0;
+            params.size = 0;
+            params.sort = "";
+
+            if (sender.showPager) {//使用自带的Pager
+                params.index = params.pageIndex;
+                params.size = params.pageSize;
+            }
+            //拼与主表关联的where条件
+            if (sender.id == "PS_BOMFile") {
+                params.swhere += " and " + Select.GetWhere();
+                params.swhere += " and (Status=50 or Status=35)   ";
+                var txtname = mini.get("txtName");
+                if (txtname.value.length > 0)
+                    params.swhere = params.swhere + " and (Code like '%" + txtname.value + "%' or Title like '%" + txtname.value + "%')";
+
+            }
+            else {
+                params.KeyWordType = "ViewEntity";
+                var row = mini.get("PS_BOMFile").getSelected();
+                params.swhere += " and MasterId='" + row.Id + "'   and ValidNum>0 and BalanceType=0";        
+                params.sort = "c.StorageName";
+                //var txtname = mini.get("txtName1");
+                //if (txtname.value.length > 0)
+                //    params.swhere = params.swhere + " and (MatCode like '%" + txtname.value + "%' or MatName like '%" + txtname.value + "%')";
+
+            }
+            //外部过滤条件
+
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                alert(tmpdata.message);
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            e.data = data;
+            e.sender.setTotalCount(tmpdata.data.totalcount);
+
+        }
+        RightGrid.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (!cRow) {
+                if (RightGrid.multiSelect)
+                    gridselected.addRow(row);
+                else {
+                    var data = [];
+                    data.push(row);
+                    gridselected.setData(data);
+                }
+            }
+        })
+        RightGrid.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+				+ e.record.Id + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].Id == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+        function OnSearchClick(e) {
+            LeftGrid.setPageIndex(0);
+            LeftGrid.reload();
+        }
+        function OnSelectNode(e) {
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+</html>

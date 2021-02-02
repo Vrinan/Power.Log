@@ -1,0 +1,909 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <!--Excel导入js引用-->
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>采购询比价</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看上会</a>
+                    <a class="mini-button blue" id="SF_CG_Enquiry.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_CG_Enquiry.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_CG_EnquiryList.Print" onclick="PowerForm.OnExportDataToPDF('SF_CG_EnquiryList', '询比价', null, null, '66,139,202', '255,255,255')"><i class=" fa fa-print"></i>打印物资</a>
+                    <a class="mini-button blue" id="SF_CG_Enquiry.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="基本数据">
+                            <div id="SF_CG_Enquiry" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>询价编号</td>
+                                        <td><input id="SF_CG_Enquiry.Code" name="Code" class="mini-textbox" required="true" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_Enquiry.Status" name="Status" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>询价名称</td>
+                                        <td><input id="SF_CG_Enquiry.Title" name="Title" class="mini-textbox" required="true" /></td>
+                                        <td>采购方案</td>
+                                        <td><input id="SF_CG_Enquiry.SchemeCode" name="SchemeCode" textname="SchemeCode"
+                                                class="mini-buttonedit" emptytext="请选择采购方案..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                allowInput="false" required="required" />
+                                            <input id="SF_CG_Enquiry.SchemeId" name="SchemeId" textname="SchemeId" class="mini-hidden"
+                                                allowInput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>项目名称</td>
+                                        <td>
+                                            <input id="SF_CG_Enquiry.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit" emptytext="请选择项目..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" />
+                                            <input id="SF_CG_Enquiry.ProjName" name="ProjName" textname="ProjName"
+                                                class="mini-textbox" required="false" />
+                                            <input id="SF_CG_Enquiry.ProjId" name="ProjId" textname="ProjId" class="mini-hidden"
+                                                allowInput="false" />
+                                        </td> -->
+                                        <td>采购金额(元)</td>
+                                        <td><input id="SF_CG_Enquiry.Price" name="Price" class="mini-spinner"
+                                                allowlimitvalue="true" minvalue="0" maxvalue="999999999999999"
+                                                changeOnMousewheel="false" format="n2" style="width: 100%;" /></td>
+                                        <td>
+                                            上会编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_CG_Enquiry.MeetingCode" name="MeetingCode" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>评审方式</td>
+                                        <td><input id="SF_CG_Enquiry.BidWay" name="BidWay" class="mini-textbox"
+                                                required="true" /></td>
+                                        <td>计划类型</td>
+                                        <td><input id="SF_CG_Enquiry.PlanType" name="PlanType" class="mini-combobox"
+                                                allowInput="false" readonly /></td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>邀请函回复日期</td>
+                                        <td><input id="SF_CG_Enquiry.InviteReplyDate" name="InviteReplyDate" class="mini-datepicker"
+                                                allowInput="false" /></td>
+                                        <td>报价截止日期</td>
+                                        <td><input id="SF_CG_Enquiry.ApplyEndDate" name="ApplyEndDate" class="mini-datepicker"
+                                                allowInput="false" /></td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>币种</td>
+                                        <td><input id="SF_CG_Enquiry.CurrencyType" name="CurrencyType" class="mini-combobox"  required/></td>    
+                                        <td>是否上会</td>
+                                        <td>
+                                            <input id="SF_CG_Enquiry.IsConference" name="IsConference" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        <td>备注说明</td>
+                                        <td colspan="3"><input id="SF_CG_Enquiry.Remark" name="Remark" class="mini-textarea"
+                                                height="200" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                                <label style="color:red;">&nbsp;&nbsp;操作说明：基本数据的相关信息保存后，在供应商报价页签中中选择供应商信息</label>
+                                <label style="color:red;">&nbsp;&nbsp;在询比价中页签中选择对应的方案物资明细</label>
+
+                            </div>
+                        </div>
+                        <div title='供应商报价'>
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="50%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" id="SF_CG_EnquiryCompany.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                        <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_EnquiryCompany.Add1" onclick="PowerForm.OnBtnWizard(this)">选择供应商</a>
+                                        <a class="mini-button blue" iconcls="fa-rmb (alias)" id="getMinTotalPrice" onclick="getMinTotalPrice()">确认价取最低报价</a>
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_EnquiryCompany.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                        <label style="font-size:12px;color:	#66ccff;font-weight:bold">请注意:若不勾选"是否通过",物资将不写入合同！</label>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="SF_CG_EnquiryCompany" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                            idfield="Id" showpager="false" allowCellSelect="true" allowCellEdit="true"
+                                            multiSelect="false" allowCellValid="true" allowAlternating="true" sortOrder="asc"
+                                            editNextOnEnterKey="true" data-options="{canImport:true}" sortField="CompanyId">
+                                            <div property="columns">
+                                                <div type="checkcolumn"></div>
+                                                <div type="indexcolumn" width="38">序号</div>
+                                                <div field="IsPass" id="IsPass" width="70" allowSort="false" type="checkboxcolumn" truevalue="是" falsevalue="否" headeralign="center">是否通过</div>
+                                                <div field="Company" width="100" allowSort="true">单位名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="Brand" width="100" allowSort="true">品牌<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="Payment" width="100" allowSort="true">付款方式<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="DeliveryDate" width="100" allowSort="true">供货周期<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="LinkMan" width="100" allowSort="true">联系人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="LinkManPhone" width="100" allowSort="true">联系电话<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="50%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button green" iconcls="fa fa-apple" id="selectAll" onclick="selectAll(1)">全选</a>
+                                        <a class="mini-button red" iconcls="fa fa-apple" id="unselectAll" onclick="selectAll(0)">取消</a>
+                                        <a class="mini-button blue" iconcls="fa fa-save" id="SF_CG_EnquiryCompanyChlid.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                                        <div id="btnUpload"></div>
+                                        <a class="mini-button blue" iconcls="fa-ils" href="/Upload/询比价报价导入模版.xlsx">导入模版下载</a>
+                                        <div id="SF_CG_EnquiryCompanyChlid-Export" title="询比价-报价明细" class="btn-group"></div>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="SF_CG_EnquiryCompanyChlid" class="mini-datagrid" style="height: 100%;" 
+                                            pagesize="500" pageSizeWidth="130" sizeList="[10,20,50,100,200,400,500,1000,2000]"  
+                                            showsummaryrow="true" oncellendedit="endedit" idfield="Id"
+                                            allowresize="true" allowcelledit="true" allowcellselect="true" sortField="Left(PlanCode,Len(PlanCode)-CHARINDEX('-' ,Reverse(PlanCode))),Cast(Right(PlanCode,CHARINDEX('-' ,Reverse(PlanCode))-1) AS INT)"
+                                            pageSize="100">
+                                            <div property="columns">
+                                                <div type="indexcolumn" width="40">序号</div>
+                                                <div field="IsSelected" width="100" type="checkboxcolumn" truevalue="1" falsevalue="0" headeralign="center">是否采购</div>
+                                                <div field="PlanCode" width="130" allowSort="true">计划编号</div>
+                                                <div field="MatName" width="130" allowSort="true">物资名称</div>
+                                                <div field="Specification" width="150" allowSort="true">规格型号/技术参数</div>
+                                                <!-- <div field="Supplier" width="150" allowSort="true">厂家/品牌/供应商<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="SupplyDate" width="100" allowSort="true">供货周期<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                                <div field="Amount" width="100" allowSort="true" summarytype="sum" numberformat="n2">数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="9999999999" changeOnMousewheel="false" numberformat="n2" style="width: 100%;" /></div>
+                                                <div field="FinalAmount" width="100" allowSort="true" summarytype="sum" numberformat="n2">最终采购数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="9999999999" changeOnMousewheel="false" numberformat="n2" style="width: 100%;" /></div>
+                                                <div field="Price" width="100" allowSort="true" numberformat="n2">单价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="9999999999" changeOnMousewheel="false" numberformat="n2" style="width: 100%;" /></div>
+                                                <div field="TotalPrice" width="100" allowSort="true" numberformat="n2" summarytype="sum">总价(元)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="询比价">
+                            <div class="mini-toolbar">
+                                <a class="mini-button green" iconcls="fa-plus" id="AddAdjustMat" onclick="AddAdjustMat()">选择物资</a>
+                                <a class="mini-button blue" iconcls="fa fa-refresh" id="SF_CG_EnquiryList.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                <!-- <a class="mini-button blue" iconcls="fa fa-sign-out" id="SF_CG_EnquiryList.Export" onclick="PowerForm.OnExportDataToXls('SF_CG_EnquiryList', '询比价')">导出</a> -->
+                                <a class="mini-button green" iconcls="fa fa-sign-out" id="SF_CG_EnquiryList.Export" onclick="PowerForm.Export('SF_CG_EnquiryList', '询比价','Code')">导出</a>
+                                <a class="mini-button yellow" iconcls="fa fa-paperclip" id="IsFrozens" onclick="IsFrozen()">取消冻结</a>
+                                <!-- <a class="mini-button blue" id="SF_CG_EnquiryList.Print" onclick="PowerForm.OnExportDataToPDF('SF_CG_EnquiryList', '询比价', null, null, '66,139,202', '255,255,255')"><i class=" fa fa-print"></i>打印物资</a> -->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_EnquiryList" class="mini-datagrid" style="width: 100%; height: 100%;" 
+                                    showpager="false" allowCellSelect="true" allowCellEdit="false" multiSelect="false"
+                                    allowCellValid="true" sortField="Left(PlanCode,Len(PlanCode)-CHARINDEX('-' ,Reverse(PlanCode))),Cast(Right(PlanCode,CHARINDEX('-' ,Reverse(PlanCode))-1) AS INT)">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="中标供应商">
+                            <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="30%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" iconcls="fa fa-refresh"  onclick="LoadChosenComData()">刷新</a>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="ChosenCom" class="mini-datagrid" style="width: 100%; height: 100%;" showpager="false" allowCellSelect="true" allowCellEdit="false" >
+                                            <div property="columns">
+                                                <div field="CompanyId" width="0" ></div>
+                                                <div field="Company" width="100%"  headeralign="center" align="center" header="单位名称" ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="70%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <!-- <a class="mini-button blue" iconcls="fa fa-sign-out" id="ChosenMat.Export" onclick="PowerForm.OnExportDataToXls('ChosenMat', '中标供应商物资')">导出</a> -->
+                                        <a class="mini-button green" iconcls="fa fa-sign-out" id="ChosenMat.Export" onclick="PowerForm.Export('ChosenMat', '中标供应商物资','PlanCode')">导出</a>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="ChosenMat" class="mini-datagrid" style="width: 100%; height: 100%;" showpager="false" allowCellSelect="true" allowCellEdit="false" allowCellValid="true">
+                                            <div property="columns">
+                                                <div field="isDel" id="isDel" width="60" allowSort="false" type="checkboxcolumn" truevalue="1" falsevalue="0" headeralign="center">剔除</div>
+                                                <div field="PlanCode" width="140" headeralign="center" align="center" allowSort="false" header="计划编号"></div>
+                                                <div field="MatName" width="100" headeralign="center" align="center" allowSort="false" header="物资名称"></div>
+                                                <div field="Specification" width="150" headeralign="center" align="center" allowSort="false" header="规格型号/技术参数"></div>
+                                                <div field="MatUnit" width="70" headeralign="center" align="center" allowSort="false" header="单位"></div>
+                                                <div field="Supplier" width="140" headeralign="center" align="center" allowSort="false" header="厂家/品牌/供应商"></div>
+                                                <div field="SupplyDate" width="100" headeralign="center" align="center" allowSort="false" header="供货周期"></div>
+                                                <div field="Amount" width="100" headeralign="center" align="center" allowSort="false" header="数量" numberformat="n2"></div>
+                                                <div field="FinalPrice" width="100" headeralign="center" align="right" allowSort="false" header="确认单价" numberformat="n2"></div>
+                                                <div field="FinalTotalPrice" width="100" headeralign="center" align="right" allowSort="false" header="确认总价" numberformat="n2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                        <div title="上会附件" name="attachfiles" url=""></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var IsReloadSchemeList = false;//重选向导,明细就删
+        var Companys = [];//报价供应商
+        var AllTotalPrices = [];//每行各家报价
+        var FinalTotalPrices = [];//每行物资确认价的总价
+        var MinTotalPrices = [];//每行物资最小总价
+        var MinPrices = [];//每行物资最小单价
+        var IsSelecteds = [];//是否选中
+        var IsFrozend = [];//是否冻结
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_CG_EnquiryCompanyChlid", CreateGUID());//此处修改关键词
+            if(formconfig.KeyValue){LoadChosenComData();}
+        });
+        mini.parse();
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (FormState == "add") {
+                mini.get("SF_CG_Enquiry.CurrencyType").setValue("CNY");
+            }
+        }
+
+        function IsFrozen(){
+            IsFrozend=!IsFrozend;
+            if(IsFrozend){
+                mini.get("SF_CG_EnquiryList").frozenColumns(0, 8);
+                mini.get("IsFrozens").setText("取消冻结");
+            }else{
+                mini.get("SF_CG_EnquiryList").unFrozenColumns();
+                mini.get("IsFrozens").setText("冻结");
+            }
+        }
+        function AddAdjustMat(){
+            mini.open({
+                url:"/Form/EditForm/38a22cec-6b37-4448-bc6c-1af8c68d496e/" + formconfig.KeyValue,
+                width: 850,
+                height: 700,
+                ondestroy: function () {
+                    var a = {};
+                    a.id = "SF_CG_Enquiry.Refresh";
+                    PowerForm.OnBtnRefresh(a);
+                }
+            })
+        }
+        PowerForm.EventAfterLoadRight = function (o) {
+            if (o.id == "SF_CG_Enquiry" && !(o.data["Status"] == "0")) {
+                $("#btnUpload").hide();
+                $("#getMinTotalPrice").hide();
+            }
+        }
+        function OnCellBeginEdit(e) {
+            //不给编辑的列,物资库LongCode，物资GUId,物资名称,计划编号,计划Id
+            if (e.field == "Code" || e.field == "MatId" || e.field == "MatName" || e.field == "PlanCode" || e.field == "PlanId") {
+                e.cancel = true;
+            }
+        }
+        function endedit(e) {
+            //自动求金额
+            if (e.field == "Price" || e.field == "FinalAmount") {
+                var record = e.record;
+                var sender = e.sender;
+                var FinalAmount = record.FinalAmount == null ? 0 : parseFloat(record.FinalAmount);
+                var Price = record.Price == null ? 0 : parseFloat(record.Price);
+                var TotalPrice = FinalAmount * Price;
+                sender.updateRow(record, { "TotalPrice": TotalPrice });
+            }
+            var grid = mini.get("SF_CG_EnquiryCompanyChlid");
+            var sumN = Number(0);
+            var row = grid.findRow(function (row) {
+                if (row.TotalPrice != "" && row.TotalPrice != undefined && row.TotalPrice != null) {
+                    sumN += parseFloat(row.TotalPrice);
+                }
+            })
+            if (mini.get("SF_CG_EnquiryCompany").getSelected()) {
+                if (mini.get("SF_CG_EnquiryCompany").getSelected().Company == "确认价") {
+                    mini.get("SF_CG_Enquiry.Price").setValue(sumN);
+                }
+            }
+        }
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "SF_CG_EnquiryCompany.Add1") {
+                mini.get("SF_CG_EnquiryCompany").clearSelect(true);
+            }
+            if (e.id == "SF_CG_Enquiry.SchemeCode") {
+                e.where = " 1=1 ";
+                e.where += " and (RegHumId='" + sessiondata.HumanId + "' or '" + sessiondata.HumanId + "'='ad000000-0000-0000-0000-000000000000') ";
+            }
+        }
+        PowerForm.EventWizardData = function(e, data) {
+            if(e.id=="SF_CG_Enquiry.SchemeCode"){
+                IsReloadSchemeList=true;
+            }
+        }
+        //保存前,把之前选择的采购方案状态字段(IsChosen)改成未选择(0)
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var D = mini.get("SF_CG_Enquiry.SchemeId").value;
+            var par = { "SchemeId": D, "KeyValue": formconfig.KeyValue, "KeyWord": "SF_CG_Enquiry", "Type": "Before" };
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                //debugger;
+            });
+            //保存前，把前三行以及合计去掉
+            if (!mini.get("SF_CG_EnquiryList").data || mini.get("SF_CG_EnquiryList").data.length > 0) {
+                for (var i = 0; i < 5; i++) {
+                    var row = mini.get("SF_CG_EnquiryList").findRow(function (row) {
+                        if (row.Remark == "合计" || row.Remark == "付款方式" || row.Remark == "供货周期" || row.Remark == "品牌"|| row.Remark == "小计") return true;
+                    });
+                    mini.get("SF_CG_EnquiryList").removeRow(row);
+                }
+            }
+            //保存前,给供应商加入一行 "确认价" 
+            if (e.id == "SF_CG_EnquiryCompany.Save") {
+                var hasAddFinal = false;
+                var grid = mini.get("SF_CG_EnquiryCompany");
+                //遍历查看是否已插入"确认价".
+                for (var i = 0; i < grid.data.length; i++) {
+                    if (grid.data[i].Company == "确认价") {
+                        hasAddFinal = true;
+                    }
+                }
+                //如果没找到,就插入一行
+                if (!hasAddFinal) {
+                    var rowdata = { Company: "确认价", CompanyId: "ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ", MasterId: formconfig.KeyValue, UpdDate: getNowFormatDate() };
+                    grid.addRow(rowdata, 0);
+                }
+            }
+            mini.get("SF_CG_EnquiryList").accept();
+        }
+        //保存后,选择的采购方案状态字段(IsChosen)改成已选择(1)
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            var D = mini.get("SF_CG_Enquiry.SchemeId").value;
+            var par = { "SchemeId": D, "KeyValue": formconfig.KeyValue, "KeyWord": "SF_CG_Enquiry", "Type": "After", "IsReloadSchemeList": IsReloadSchemeList };
+            FormFuns.APIExec("SF_CG_PurchaseScheme", "BO", "setChosenScheme", par, function (text) {
+                IsReloadSchemeList = false;
+            });
+        }
+        //导入报价单
+        function FileUp(keyword, keyvalue) {
+            if (keyword == "")
+                keyword = "SF_CG_EnquiryCompanyChlid";//此处修改关键词
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_CG_EnquiryCompanyChlid");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                height: "30",
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入物资明细",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        grid.reload();
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_CG_EnquiryCompany";
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {};
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    var selectedGrid = mini.get("SF_CG_EnquiryCompany");
+                    //如果未选中,弹提示,取消导入
+                    if (selectedGrid.getSelected() == undefined || selectedGrid.getSelected() == null) {
+                        Power.ui.alert("未选中供应商!");
+                        grid.reload();
+                        return;
+                    }
+                    params.Id = selectedGrid.getSelected().Id;;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }
+
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            if (e.sender.id == "SF_CG_EnquiryList") {
+                var columns = [];
+                
+                columns.push({ field: "isDel", width: 60, headeralign: "center", align: "center", allowSort: false, header: "剔除",type: "checkboxcolumn" });
+                columns.push({ field: "Remark", width: 100, headeralign: "center", align: "center", allowSort: false, header: "备注" });
+                columns.push({ field: "PlanCode", width: 130, headeralign: "center", align: "center", allowSort: false, header: "计划编号" });
+                columns.push({ field: "MatName", width: 100, headeralign: "center", align: "center", allowSort: false, header: "物资名称" });
+                columns.push({ field: "Specification", width: 150, headeralign: "center", align: "center", allowSort: false, header: "规格型号/技术参数" });
+                columns.push({ field: "MatUnit", width: 70, headeralign: "center", align: "center", allowSort: false, header: "单位" });
+                columns.push({ field: "Supplier", width: 140, headeralign: "center", align: "center", allowSort: false, header: "厂家/品牌/供应商" });
+                columns.push({ field: "SupplyDate", width: 100, headeralign: "center", align: "center", allowSort: false, header: "供货周期" });
+                columns.push({ field: "Amount", width: 100, headeralign: "center", align: "center", allowSort: false, header: "请购数量" });
+                if (data != "" && data[0].EnquiryJSON != null) {
+                    //把这几个参数初始化下
+                    Companys = []; MinTotalPrices = []; MinPrices = []; IsSelecteds = [];FinalTotalPrices=[];AllTotalPrices=[];
+
+                    for (var i = 0; i < data.length; i++) {
+                        var d = data[i];//物资
+                        var tmp = mini.decode(mini.decode(d.EnquiryJSON).values).List;//供应商报价
+
+                        //假定第一家供应商报价为最低.
+                        //-------------------------------------------------------------------------
+                        // MinTotalPrices[i] = tmp[0].TotalPrice;
+                        // MinPrices[i] = tmp[0].Price;
+                        MinTotalPrices[i] = -1;
+                        MinPrices[i] = -1;
+                        //-------------------------------------------------------------------------
+                        var IsSelectedss = [];
+                        var AllTotalPricess = [];
+                        for (var j = 0; j < tmp.length; j++) {
+
+                            d["Price" + j] = tmp[j].Price;
+                            d["TotalPrice" + j] = tmp[j].TotalPrice;
+                            d["IsSelected" + j] = tmp[j].IsSelected;
+                            
+                            //取最低报价(排除0)
+                            if (j < tmp.length - 1) {
+                                if(tmp[j].TotalPrice!=0||tmp[j].TotalPrice!="0"){
+                                    if(MinTotalPrices[i]==-1){
+                                        MinTotalPrices[i] = tmp[j].TotalPrice;
+                                    }else{
+                                      MinTotalPrices[i] = MinTotalPrices[i] < tmp[j].TotalPrice ? MinTotalPrices[i] : tmp[j].TotalPrice;
+                                    }     
+                                }
+                                if(tmp[j].Price!=0||tmp[j].Price!="0"){
+                                    if(MinPrices[i]==-1){
+                                        MinPrices[i] = tmp[j].Price;
+                                    }else{
+                                        MinPrices[i] = MinPrices[i] < tmp[j].Price ? MinPrices[i] : tmp[j].Price;
+                                    }
+                                }
+                                IsSelectedss.push(tmp[j].IsSelected);
+                            }
+                            //合计不算剔除的物资
+                            if(j < tmp.length ){
+                                if(data[i].isDel!="1"){
+                                    AllTotalPricess.push(tmp[j].TotalPrice);
+                                }else{
+                                    AllTotalPricess.push(0);
+                                }
+                            }
+                            if (j == tmp.length - 1) {
+                                IsSelecteds.push(IsSelectedss);
+                                AllTotalPrices.push(AllTotalPricess);
+                            }
+                            //如果是第一行，则还需要创建表头
+                            if (i == 0) {
+                                var columnss = [];
+                                columnss.push({ field: "Price" + j + "", width: 130, headeralign: "center", align: "right", allowSort: false, header: "元/件", numberFormat: "n2", editor: { type: "textbox" } });
+                                columnss.push({ field: "TotalPrice" + j + "", width: 130, headeralign: "center", align: "right", allowSort: false, header: "总价(元)", numberFormat: "n2", editor: { type: "textbox" } });
+                                columns.push({ columns: columnss, width: 60, headeralign: "center", allowSort: false, header: tmp[j]["Company"], editor: { type: "textbox" } });
+                                Companys.push(tmp[j]["Company"]);
+                            }
+                        }
+                        //取确认价,若剔除则为0
+                        FinalTotalPrices.push(data[i].isDel=="1"?0:tmp[tmp.length-1].TotalPrice);
+
+                    }
+                    mini.get("SF_CG_EnquiryList").set({
+                        columns: columns
+                    });
+                    //冻结前7列
+                    mini.get("SF_CG_EnquiryList").frozenColumns(0, 8);
+                }
+            }
+            return data;
+        }
+        PowerForm.EventAfterLoadData = function (e) {
+            if (e.sender.id == "SF_CG_EnquiryList") {
+                //*******加入固定的三行*******//
+                var grid = mini.get("SF_CG_EnquiryList");
+                if (e.data && e.data[0].EnquiryJSON) {
+                    var datas = mini.decode(e.data[0].EnquiryJSON).values.List;
+                    var rowdata;
+                    var cells;
+                    rowdata = { Remark:"付款方式", PlanCode: "", MatName: "", Specification: "", MatUnit: "", Amount: "", Supplier: "",SupplyDate: "" };
+                    for (var i = 0; i < datas.length; i++) {
+                        rowdata["Price" + i] = "";
+                        rowdata["TotalPrice" + i] = datas[i].Payment;
+                    }
+                    grid.addRow(rowdata, 0);
+                    rowdata = { Remark:"供货周期", PlanCode: "", MatName: "", Specification: "", MatUnit: "", Amount: "", Supplier: "",SupplyDate: "" };
+                    for (var i = 0; i < datas.length; i++) {
+                        rowdata["Price" + i] = "";
+                        rowdata["TotalPrice" + i] = "_"+datas[i].DeliveryDate;
+                    }
+                    grid.addRow(rowdata, 1);
+
+                    rowdata = { Remark:"品牌", PlanCode: "", MatName: "", Specification: "", MatUnit: "", Amount: "", Supplier: "",SupplyDate: "" };
+                    for (var i = 0; i < datas.length; i++) {
+                        rowdata["Price" + i] = "";
+                        rowdata["TotalPrice" + i] = datas[i].Brand;
+                    }
+                    grid.addRow(rowdata, 2);
+
+                    //*******最后一行加入小计*******//
+                    rowdata = { Remark:"小计", PlanCode: "", MatName: "", Specification: "", MatUnit: "", Amount: "", Supplier: "",SupplyDate: "" };
+                    //按供应商数循环,计算每个TotalPrice的合计(值取确认价),
+
+                    for (var i = 0; i < datas.length; i++) {
+                        rowdata["TotalPrice" + i] = 0;
+                        //按物资循环,选中则取确认价
+                        for (var j = 0; j < IsSelecteds.length; j++) {
+                            if (IsSelecteds[j][i] == 1) {
+                                //rowdata["TotalPrice" + i] += MinTotalPrices[j];
+                                rowdata["Price" + i] = "";
+                                rowdata["TotalPrice" + i] += FinalTotalPrices[j];
+                            }
+                        }
+                    }
+                    //确认价合计
+                    for (var i = 0; i < MinTotalPrices.length; i++) {
+                        // rowdata["TotalPrice" + (datas.length - 1)] += MinTotalPrices[i];
+                        rowdata["TotalPrice" + (datas.length - 1)] += FinalTotalPrices[i];
+                    }
+                    grid.addRow(rowdata, grid.data.length);
+
+                    rowdata = { Remark:"合计", PlanCode: "", MatName: "", Specification: "", MatUnit: "", Amount: "", Supplier: "",SupplyDate: "" };
+                    for (var i = 0; i < datas.length; i++) {
+                        rowdata["TotalPrice" + i] = 0;
+                        for (var j = 0; j < IsSelecteds.length; j++) {
+                            rowdata["Price" + i] = "";
+                            rowdata["TotalPrice" + i] += AllTotalPrices[j][i];
+                        }
+                    }
+                    
+                    grid.addRow(rowdata, grid.data.length);
+
+                    //*******合并*******//
+                    cells = [
+                        { rowIndex: 0, columnIndex: 1, rowSpan: 0, colSpan: 8 },
+                        { rowIndex: 1, columnIndex: 1, rowSpan: 0, colSpan: 8 },
+                        { rowIndex: 2, columnIndex: 1, rowSpan: 0, colSpan: 8 },
+                        { rowIndex: grid.data.length - 2, columnIndex: 1, rowSpan: 0, colSpan: 8 },
+                        { rowIndex: grid.data.length - 1, columnIndex: 1, rowSpan: 0, colSpan: 8 }
+                    ];
+                    grid.mergeCells(cells);
+                }
+            }
+            if (mini.get("SF_CG_Enquiry.Status").getValue()== "50") {
+                mini.get("AddAdjustMat").disable(true);
+                mini.get("selectAll").disable(true);
+                mini.get("unselectAll").disable(true);
+            }
+            var _KeyWord = "SF_CG_PurchasingMeeting";
+            var _KeyValue = formconfig.config.joindata.currow["MeetingId"];
+            var _tabName = "attachfiles";
+            if (_KeyValue)
+                LoadContractAttachfile(_KeyWord, _KeyValue, _tabName);
+        }
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            if (mini.get("SF_CG_EnquiryCompany").data) {
+                var data = mini.get("SF_CG_EnquiryCompany").data;
+                e.isValid = false;
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].IsPass == "是") {
+                        e.isValid = true;
+                        break;
+                    }
+                }
+                if (!e.isValid) {
+                    Power.ui.alert("请在-供应商报价-页签,勾选通过的供应商!");
+                }
+            }
+            var grid = mini.get("SF_CG_EnquiryList");
+            if (mini.get("SF_CG_Enquiry.Status").getValue() == "0") {
+                grid.reload();
+                if (grid.data.length == 0) {
+                    Power.ui.alert("物资明细不能为空，请在询比价页签中选择物资，谢谢！");
+                    e.isValid = false;
+                } else {
+                    for (var i = 0 ; i < grid.data.length; i++) {
+                        if (grid.data[i].Amount == 0 && grid.data[i].isDel==0) {
+                            Power.ui.alert("第" + (i + 1) + "行,数量不能为0!");
+                            e.isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        mini.get("SF_CG_EnquiryCompany").on("cellbeginedit", function (e) {
+            //供应商报价表,不允许修改确认价
+            if (e.record.Company == "确认价") {
+                e.cancel = true;
+            }
+        })
+        mini.get("SF_CG_EnquiryList").on("drawcell", function (e) {
+            var max = mini.get("SF_CG_EnquiryCompany").data.length - 1;
+            //单价标绿
+            if (e.field.indexOf("Price") == 0 && e.field != ("Price" + max)) {
+                if (!( e.record.Remark == "付款方式"
+                    || e.record.Remark == "品牌"
+                    || e.record.Remark == "供货周期"
+                    || e.record.Remark == "小计"
+                    || e.record.Remark == "合计")) {
+                    if (e.rowIndex >= 3) {
+                        if (e.value == MinPrices[e.rowIndex - 3] && e.record.isDel=="0" && e.value!=0) {
+                            e.cellStyle += "background:#ADFF2F;";
+                        }
+                    }
+                }
+            }
+            //选中物资标蓝
+            if (e.field.indexOf("TotalPrice") == 0 && e.field != ("TotalPrice" + max)) {
+                if (!( e.record.Remark == "付款方式"
+                    || e.record.Remark == "品牌"
+                    || e.record.Remark == "供货周期"
+                    || e.record.Remark == "小计"
+                    || e.record.Remark == "合计")) {
+                    if (e.rowIndex >= 3) {
+                        if (IsSelecteds[e.rowIndex - 3][e.field.split("TotalPrice")[1]] && e.record.isDel=="0") {
+                            e.cellStyle += "background:#00BFFF;";
+                        }
+                    }
+                }
+            }
+            if(e.field=="Supplier"||e.field=="SupplyDate"){
+                e.cellHtml = e.value?e.value:" ";
+            }
+            if(e.field == "isDel"  && e.value == 1){
+                e.rowStyle = "background:#FF7F50;";
+            }
+        })
+        mini.get("ChosenMat").on("drawcell", function (e) {
+            if(e.field == "isDel"  && e.value == 1){
+                e.rowStyle = "background:#FF7F50;";
+            }
+        })
+        mini.get("SF_CG_EnquiryCompanyChlid").on("cellbeginedit", function (e) {
+            //确认价的物资不允许选中 是否采购
+            if (e.field == "IsSelected") {
+                if ((!mini.get("SF_CG_EnquiryCompany").getSelected())
+                    || mini.get("SF_CG_EnquiryCompany").getSelected().Company == "确认价") {
+                    e.cancel = true;
+                    e.value = 0;
+                }
+            }
+        })
+        mini.get("SF_CG_EnquiryList").on("cellclick", function (e) {
+            var max = mini.get("SF_CG_EnquiryCompany").data.length - 1;
+            if (e.field.indexOf("TotalPrice") == 0 && e.field != ("TotalPrice" + max)) {
+                if (!(e.record.Remark == "付款方式"
+                    || e.record.Remark == "品牌"
+                    || e.record.Remark == "供货周期"
+                    || e.record.Remark == "小计"
+                    || e.record.Remark == "合计")) {
+                    if (mini.get("SF_CG_Enquiry.Status").getValue() != 50) {
+                        Power.ui.confirm("当前选中:</br>" + Companys[e.field.split("TotalPrice")[1]] + "</br>" + e.record.PlanCode + "</br>", function (action) {
+                            var data = { "PlanId": e.record.PlanId, "Company": e.field.split("TotalPrice")[1], "EnquiryId": formconfig.KeyValue, "IsSelected": action ? "1" : "0" };
+                            mini.get("SF_CG_EnquiryList").loading("数据加载中。。。");
+                            FormFuns.APIExec("SF_CG_Enquiry", "BO", "setSelectedTotalPrice", data, function (text) {
+                                mini.get("SF_CG_EnquiryList").unmask();
+                                mini.get("SF_CG_EnquiryList").reload();
+                            });
+                        });
+                    }
+
+                }
+            }
+        })
+        function selectAll(flag){
+            if(formconfig.FormState=="edit"){
+                var hasAddFinal = false;
+                var grid = mini.get("SF_CG_EnquiryCompany");
+                var gridchild = mini.get("SF_CG_EnquiryCompanyChlid");
+                if (grid.getSelected() && grid.getSelected().Company!="确认价") {
+                    for(var i=0;i<gridchild.data.length;i++){
+                        var Idddd = gridchild.data[i].Id;
+                        var row = gridchild.findRow(function(row){
+                            if(row.Id == Idddd) return true;
+                        });
+                        gridchild.updateRow(row,{IsSelected:flag});
+                    }
+                }else{
+                    Power.ui.alert("请选择左侧具体供应商!");
+                }
+            }else{
+                Power.ui.alert("请先保存主表!");
+            }
+        }
+        function getMinTotalPrice(){
+            if(formconfig.FormState=="edit"){
+                var hasAddFinal = false;
+                var grid = mini.get("SF_CG_EnquiryCompany");
+                //遍历查看是否已插入"确认价".
+                for (var i = 0; i < grid.data.length; i++) {
+                    if (grid.data[i].Company == "确认价") {
+                        hasAddFinal = true;
+                    }
+                }
+                //如果找到"确认家",并且至少有一家供应商
+                if ( hasAddFinal && grid.data.length > 1) {
+                    Power.ui.confirm("系统将对比各供应商报价</br>并取最低值覆盖确认价</br>确定执行吗?</br>", function (action) {
+                        var data = { "EnquiryId": formconfig.KeyValue};
+                        mini.get("SF_CG_EnquiryCompany").loading("数据加载中。。。");
+                        FormFuns.APIExec("SF_CG_Enquiry", "BO", "getMinTotalPrice", data, function (text) {
+                            mini.get("SF_CG_EnquiryCompany").unmask();
+                            mini.get("SF_CG_EnquiryCompany").reload();
+                            mini.get("SF_CG_EnquiryList").reload();
+                            if(mini.decode(text).data.value=="Success!"){
+                                Power.ui.success("匹配成功,请刷新!");
+                            }
+                        });
+                    });
+                }else{
+                    Power.ui.alert("未找到“确认价”且至少有一家供应商,请点击左侧保存或添加供应商!");
+                }
+            }else{
+                Power.ui.alert("请先保存主表,再重新打开单据!");
+            }
+        }
+        //读取中标供应商
+        function LoadChosenComData() {
+            var data = {
+                "select":"*",
+                "tableName":"SF_CG_EnquiryCompany",
+                "swhere":"MasterId='" + formconfig.KeyValue + "' and CompanyId!='ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ' and IsPass='是' ",
+                "orderby":"Id",
+                "type":"asc",
+                "index":"0",
+                "size":"100"
+            }
+            $.ajax({
+                url: "/zyx/GetGridData",
+                data: data,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("ChosenCom");
+                        var CompanyData = mini.decode(text).data.value;
+                        grid.setData(CompanyData);
+                        //默认加载第一行的物资
+                        if(grid.data.length>0)
+                            LoadChosenMatData(grid.data[0].CompanyId);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        //读取中标供应商物资
+        function LoadChosenMatData(ChosenCompanyId) {
+            var data = {
+                "select":"List.*,final.FinalPrice,final.TotalPrice FinalTotalPrice",
+                "tableName":"SF_CG_EnquiryCompanyChlid chlid  "+
+                            "left join SF_CG_EnquiryCompany com on chlid.MasterId=com.Id "+
+                            "left join SF_CG_EnquiryList List on List.PlanId= chlid.PlanId "+
+                            "left join (select PlanCode,Price FinalPrice,TotalPrice from SF_CG_EnquiryCompanyChlid  "+
+                            "          where MasterId=(select Id from SF_CG_EnquiryCompany "+
+                            "                          where MasterId='"+formconfig.KeyValue+"' and CompanyId='ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ')) final on chlid.PlanCode=final.PlanCode ",
+                "swhere":" chlid.MasterId in ( select Id from SF_CG_EnquiryCompany where MasterId='"+ formconfig.KeyValue +"' and IsPass='是' and CompanyId='"+ChosenCompanyId+"' ) "+
+                         " and IsSelected=1 ",
+                "orderby":"Left(chlid.PlanCode,Len(chlid.PlanCode)-CHARINDEX('-' ,Reverse(chlid.PlanCode))),Cast(Right(chlid.PlanCode,CHARINDEX('-' ,Reverse(chlid.PlanCode))-1) AS INT) ",
+                "type":"asc",
+                "index":"0",
+                "size":"1000"
+            }
+            $.ajax({
+                url: "/zyx/GetGridData",
+                data: data,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("ChosenMat");
+                        var MatData = mini.decode(text).data.value;
+                        grid.setData(MatData);
+                        var Sum_Amount = new Number(0); 
+                        var Sum_FinalPrice = new Number(0);
+                        var Sum_FinalTotalPrice = new Number(0);
+                        var Avg_FinalPrice = new Number(0);
+                        //加入一行总价
+                        $.each(grid.data,function(index, value, array){
+                            if(value.isDel!="1"){
+                                Sum_Amount += value.Amount;
+                                Sum_FinalPrice += value.FinalPrice;
+                                Sum_FinalTotalPrice += value.FinalTotalPrice;
+                            }
+                        });
+                        Avg_FinalPrice = Sum_FinalTotalPrice/(Sum_Amount==0?1:Sum_Amount);
+                        rowdata = { PlanCode: "合计",FinalPrice:Sum_FinalPrice,Amount:Sum_Amount,FinalPrice:Avg_FinalPrice,FinalTotalPrice:Sum_FinalTotalPrice };
+                        grid.addRow(rowdata, grid.data.length);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        mini.get("ChosenCom").on("rowclick",function(e){
+            LoadChosenMatData(e.record.CompanyId);
+        })
+
+        //获取当前日期(yyyy-MM-dd)
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+    </script>
+</body>
+
+</html>

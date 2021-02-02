@@ -1,0 +1,1105 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同变更登记
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="btnActive" style="display: none;" onclick="WorkFlowUtils.ActiveWorkFlow(this);">
+                        <i class="fa fa-save"></i>送审</a> <a class="mini-button blue" id="pm_cont_contchange.Save"
+                            onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                id="pm_cont_contchange.SaveAdd" onclick="PowerForm.OnBtnSaveAdd(this)"><i class="fa fa-save">
+                                </i>保存&amp;新增</a> <a class="mini-button blue" id="pm_cont_contchange.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                                    <i class="fa fa-refresh"></i>刷新</a> 
+                  <a class="mini-button blue" id="pm_cont_contchange.dy" onclick="dy()"><i class="fa fa-print"></i>打印</a>
+                    <a class="mini-button blue" id="pm_cont_contchange.CloseForm"
+                                            onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <!--tab 通常 -->
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="pm_cont_contchange" class="form">
+                                <table class="table table-bordered">
+                                    <tr class="row">
+                                        <td class="cell" id="selected">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目编号'
+                                                id='lbl_19' class=' mini-powerlabel design' data-options=''>
+                                                项目编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='project_id' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='project_id' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.project_id'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='状态'
+                                                id='lbl_21' class=' mini-powerlabel design' data-options=''>
+                                                状态
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='Status' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='Status' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='1000' popupminheight='30'
+                                                popupmaxheight='200' popupminwidth='50' popupmaxwidth='2000' popupwidth='100%'
+                                                popup='[object Object]' pinyinfield='tag' id="pm_cont_contchange.Status" class="mini-combobox design"
+                                                data-options=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目名称'
+                                                id='lbl_3' class=' mini-powerlabel design' data-options=''>
+                                                项目名称
+                                            </div>
+                                        </td>
+                                        <td class="cell" valign="middle" rowspan="1" colspan="3">
+                                            <input datafield='projectname' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='projectname' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.projectname'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审编号'
+                                                id='lbl_18' class=' mini-powerlabel design' data-options=''>
+                                                评审编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                         <input id="pm_cont_contchange.acc_code" name="acc_code" class="mini-buttonedit design"  textname="acc_code" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" required />
+                                         <!--   <input datafield='acc_code' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='acc_code' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' id="pm_cont_contchange.acc_code"
+                                                class="mini-buttonedit design" data-options=''>-->
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='评审名称'
+                                                id='lbl_22' class=' mini-powerlabel design' data-options=''>
+                                                评审名称
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='acc_name' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='acc_name' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.acc_name'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同编号'
+                                                id='lbl_6' class=' mini-powerlabel design' data-options=''>
+                                                合同编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='cont_code' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='cont_code' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.cont_code'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同名称'
+                                                id='lbl_7' class=' mini-powerlabel design' data-options=''>
+                                                合同名称
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='cont_name' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='cont_name' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.cont_name'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更编号'
+                                                id='lbl_8' class=' mini-powerlabel design' data-options=''>
+                                                编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='code' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true'
+                                                name='code' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.code'
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更名称'
+                                                id='lbl_9' class=' mini-powerlabel design' data-options=''>
+                                                名称
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='Title' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='Title' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='pm_cont_contchange.Title'
+                                                class="mini-textbox design" data-options=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同金额'
+                                                id='lbl_10' class=' mini-powerlabel design' data-options=''>
+                                                合同金额
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='cont_money' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='cont_money' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' text='200'
+                                                id='pm_cont_contchange.cont_money'class="mini-spinner"  numberformat="n2" format="n2" allowlimitvalue="false" data-options=''
+                                                readonly="true">
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='主 货 币'
+                                                id='lbl_11' class=' mini-powerlabel design' data-options=''>
+                                                主 货 币
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='moneytype' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='moneytype' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' maxlength='1000' popupminheight='30'
+                                                popupmaxheight='200' popupminwidth='50' popupmaxwidth='2000' popupwidth='100%'
+                                                popup='[object Object]' pinyinfield='tag' id="pm_cont_contchange.moneytype"
+                                                class="mini-textbox design" data-options='' readonly="true">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='完工日期变更'
+                                                id='lbl_12' class=' mini-powerlabel design' data-options=''>
+                                                完工日期变更
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='chfdate' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='chfdate' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' popupminheight='30'
+                                                popupmaxheight='2000' popupminwidth='50' popupmaxwidth='2000' popup='[object Object]'
+                                                showclearbutton='true' showtodaybutton='true' timeformat='H:mm' 
+                                                format='yyyy-MM-dd' id="pm_cont_contchange.chfdate" class="mini-datepicker design"
+                                                data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更金额'
+                                                id='lbl_13' class=' mini-powerlabel design' data-options=''>
+                                                变更金额
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input id="pm_cont_contchange.changemoney" name="changemoney" class="mini-spinner"  numberformat="n2" format="n2" allowlimitvalue="false" readonly="readonly"
+                                                style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='变更日期'
+                                                id='lbl_15' class=' mini-powerlabel design' data-options=''>
+                                                变更日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='chdate' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' name='chdate' requirederrortext='不能为空' errormode='icon' validateonleave='true'
+                                                validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' popupminheight='30'
+                                                popupmaxheight='2000' popupminwidth='50' popupmaxwidth='2000' popup='[object Object]'
+                                                showclearbutton='true' showtodaybutton='true' timeformat='H:mm' 
+                                                format='yyyy-MM-dd' id="pm_cont_contchange.chdate" class="mini-datepicker design"
+                                                data-options=''>
+                                        </td>
+                                        <td class="cell">
+
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='changetype' visible ="false"
+                                                enabled='true' name='changetype' rallowinput='true' id='pm_cont_contchange.changetype' onvaluechanged="onDeptChanged"
+                                                class="mini-textbox design" data-options=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='备注'
+                                                id='lbl_16' class=' mini-powerlabel design' data-options=''>
+                                                备注
+                                            </div>
+                                        </td>
+                                        <td class="cell" valign="middle" rowspan="1" colspan="3">
+                                            <textarea datafield='remark' value='							' defaultvalue='							'
+                                                loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='remark'
+                                                requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true'
+                                                isvalid='true' maxlength='10000000' allowinput='true' id='pm_cont_contchange.remark'
+                                                class='mini-textarea design' data-options=''>
+							</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录 入 人'
+                                                id='lbl_17' class=' mini-powerlabel design' data-options=''>
+                                                录 入 人
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='RegHumName' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' readonly='true' name='RegHumName' requirederrortext='不能为空' errormode='icon'
+                                                validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000'
+                                                allowinput='true' id='pm_cont_contchange.RegHumName' class="mini-textbox design"
+                                                data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录入日期'
+                                                id='lbl_18' class=' mini-powerlabel design' data-options=''>
+                                                录入日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='RegDate' loadingmsg='Loading...' allowanim='true' visible='true'
+                                                enabled='true' readonly='true' name='RegDate' requirederrortext='不能为空' errormode='icon'
+                                                validateonleave='true' validateonchanged='true' isvalid='true' allowinput='true'
+                                                maxlength='1000' popupminheight='30' popupmaxheight='2000' popupminwidth='50'
+                                                popupmaxwidth='2000' popup='[object Object]' showclearbutton='true' showtodaybutton='true'
+                                                timeformat='H:mm'  format='yyyy-MM-dd'
+                                                id="pm_cont_contchange.RegDate" class="mini-datepicker design" data-options=''>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="tab1" name="tab1" title="采购变更明细" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="div8" >
+                              <!--<a class="mini-button blue" id="pm_cont_purccontchangedtl.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a> -->   <a class="mini-button blue" id="pm_cont_purccontchangedtl.htn" onclick="PowerForm.OnBtnWizard(this)">
+                                    <i class="fa fa-plus"></i>合同内变更</a> <a class="mini-button blue" id="pm_cont_purccontchangedtl.htw" onclick="PowerForm.OnBtnWizard(this)">
+                                    <i class="fa fa-plus"></i>合同外变更</a> <a class="mini-button blue" id="pm_cont_purccontchangedtl.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_purccontchangedtl.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_purccontchangedtl"  class="mini-datagrid" allowcelledit="true" style="width: 100%;height: 100%;" visible="true" allowcellselect="true" onlycheckselection="true"
+                          multiselect="true" fitcolumns="" allowunselect="true"  oncellendedit="EidApp" showsummaryrow="true"  ondrawsummarycell="onDrawSummaryCell"   idfield="id" showpager="true" >
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="mat_code" headeralign="center">
+                                            物资编号<input property="editor" id="pm_cont_purccontchangedtl.mat_code" name="mat_code" readonly="readonly"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="mat_name" headeralign="center">
+                                            物资名称<input id="pm_cont_purccontchangedtl.mat_name" name="mat_name" property="editor" readonly="readonly"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+
+                                        <div field="unitname" headeralign="center" type="comboboxcolumn">
+                                            单位<input property="editor" id="pm_cont_purccontchangedtl.unitname" name="unitname" readonly="readonly"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="moneytype" headeralign="center" type="comboboxcolumn">
+                                            币种<input property="editor" id="pm_cont_purccontchangedtl.moneytype" name="moneytype" readonly="readonly"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                         <div field="exchangerate" headeralign="center" numberformat="n">
+                                            汇率<input property="editor" name="exchangerate" id="pm_cont_purccontchangedtl.exchangerate" class="mini-textbox" style="width: 100%;" readonly="readonly" /></div>
+                                             <div field="unitprice" headeralign="center" numberformat="n">
+                                            变更前单价<input property="editor" name="unitprice" id="pm_cont_purccontchangedtl.unitprice" class="mini-textbox" style="width: 100%;" readonly="readonly" /></div>
+                                        <div field="amount" headeralign="center" numberformat="n">
+                                            变更前数量<input property="editor" name="amount" id="pm_cont_purccontchangedtl.amount" class="mini-textbox" style="width: 100%;"  readonly="readonly"/>
+                                        </div>
+                                        <div field="moneys" headeralign="center" numberformat="n">
+                                            变更前金额<input property="editor" name="moneys" id="pm_cont_purccontchangedtl.moneys"
+                                                class="mini-textbox" style="width: 100%;" readonly="true" /></div>
+
+                                        <div field="chunitprice" headeralign="center" numberformat="n">
+                                            变更后单价<input property="editor" name="chunitprice" id="pm_cont_purccontchangedtl.chunitprice" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chdamount" headeralign="center" numberformat="n">
+                                            变更后数量<input property="editor" name="chdamount" id="pm_cont_purccontchangedtl.chdamount" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chdmoneys" headeralign="center" numberformat="n">
+                                            变更后金额<input property="editor" name="chdmoneys" id="pm_cont_purccontchangedtl.chdmoneys"
+                                                class="mini-textbox" style="width: 100%;" readonly="true" /></div>
+                                        <div field="appmoneys" headeralign="center" numberformat="n">
+                                            变更后折合主货币金额<input property="editor" readonly="true" name="appmoneys" id="pm_cont_purccontchangedtl.appmoneys" class="mini-textbox" style="width: 100%;" /></div>
+
+                                         <div field="chamount" headeralign="center" numberformat="n">
+                                            本次变更金额<input property="editor" name="chamount" id="pm_cont_purccontchangedtl.chamount" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                                <div field="feeitemcode" headeralign="center" >
+                                            费用指标编号 <input id="pm_cont_purccontchangedtl.feeitemcode"  property="editor" name="feeitemcode" class="mini-buttonedit design"  textname="feeitemcode" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" required />
+                                            </div>
+                                           <div field="feeitemname" headeralign="center"  >
+                                            费用指标名称<input property="editor" name="feeitemname" id="pm_cont_purccontchangedtl.feeitemname" class="mini-textbox"  readonly="readonly" style="width: 100%;" />
+                                               </div>
+                                        <div field="techreq" headeralign="center" >
+                                           技术标准和质量要求<input property="editor" name="techreq" id="pm_cont_purccontchangedtl.techreq" class="mini-textbox"  style="width: 100%;"  readonly="readonly"/></div>
+                                        <div field="aliassss" headeralign="center" >
+                                            特征1编码<input property="editor" name="aliassss" id="pm_cont_purccontchangedtl.aliassss" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="spec" headeralign="center"  >
+                                            特征1描述<input property="editor" name="spec" id="pm_cont_purccontchangedtl.spec" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="model" headeralign="center" >
+                                            键值1编码<input property="editor" name="model" id="pm_cont_purccontchangedtl.model" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="ConversionUnit" headeralign="center"  >
+                                            键值1描述<input property="editor" name="ConversionUnit" id="pm_cont_purccontchangedtl.ConversionUnit" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="tz2id" headeralign="center" >
+                                            特征2编码<input property="editor" name="tz2id" id="pm_cont_purccontchangedtl.tz2id" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="DrawingID" headeralign="center"  >
+                                            特征2描述<input property="editor" name="DrawingID" id="pm_cont_purccontchangedtl.DrawingID" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="mattype" headeralign="center" >
+                                            键值2编码<input property="editor" name="mattype" id="pm_cont_purccontchangedtl.mattype" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="SummaryType" headeralign="center"  >
+                                            键值2描述<input property="editor" name="SummaryType" id="pm_cont_purccontchangedtl.SummaryType" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="ImportantType" headeralign="center" >
+                                            特征3编码<input property="editor" name="ImportantType" id="pm_cont_purccontchangedtl.ImportantType" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="SourceType" headeralign="center"  >
+                                            特征3描述<input property="editor" name="SourceType" id="pm_cont_purccontchangedtl.SourceType" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="qua_rule" headeralign="center" >
+                                            键值3编码<input property="editor" name="qua_rule" id="pm_cont_purccontchangedtl.qua_rule" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="reserve_dtl_str1" headeralign="center"  >
+                                            键值3描述<input property="editor" name="reserve_dtl_str1" id="pm_cont_purccontchangedtl.reserve_dtl_str1" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="reserve_dtl_str2" headeralign="center" >
+                                            特征4编码<input property="editor" name="reserve_dtl_str2" id="pm_cont_purccontchangedtl.reserve_dtl_str2" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="reserve_dtl_str3" headeralign="center"  >
+                                            特征4描述<input property="editor" name="reserve_dtl_str3" id="pm_cont_purccontchangedtl.reserve_dtl_str3" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="reserve_dtl_str4" headeralign="center" >
+                                            键值4编码<input property="editor" name="reserve_dtl_str4" id="pm_cont_purccontchangedtl.reserve_dtl_str4" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="kks_code" headeralign="center"  >
+                                            键值4描述<input property="editor" name="kks_code" id="pm_cont_purccontchangedtl.kks_code" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                            <div field="kks_name" headeralign="center" >
+                                            特征5编码<input property="editor" name="kks_name" id="pm_cont_purccontchangedtl.kks_name" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="doc_name" headeralign="center"  >
+                                            特征5描述<input property="editor" name="doc_name" id="pm_cont_purccontchangedtl.doc_name" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="Origin" headeralign="center" >
+                                            键值5编码<input property="editor" name="Origin" id="pm_cont_purccontchangedtl.Origin" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="Manufacturers" headeralign="center"  >
+                                            键值5描述<input property="editor" name="Manufacturers" id="pm_cont_purccontchangedtl.Manufacturers" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="Qualitylevel" headeralign="center" >
+                                            特征6编码<input property="editor" name="Qualitylevel" id="pm_cont_purccontchangedtl.Qualitylevel" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="Storelevel" headeralign="center"  >
+                                            特征6描述<input property="editor" name="Storelevel" id="pm_cont_purccontchangedtl.Storelevel" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                            <div field="qualitystand" headeralign="center" >
+                                            键值6编码<input property="editor" name="qualitystand" id="pm_cont_purccontchangedtl.qualitystand" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="fromtype" headeralign="center"  >
+                                            键值6描述<input property="editor" name="fromtype" id="pm_cont_purccontchangedtl.fromtype" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                            <div field="G5NEW" headeralign="center" >
+                                            特征7编码<input property="editor" name="G5NEW" id="pm_cont_purccontchangedtl.G5NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                         <div field="G6NEW" headeralign="center"  >
+                                            特征7描述<input property="editor" name="G6NEW" id="pm_cont_purccontchangedtl.G6NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                            <div field="G7NEW" headeralign="center" >
+                                            键值7编码<input property="editor" name="G7NEW" id="pm_cont_purccontchangedtl.G7NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="G8NEW" headeralign="center"  >
+                                            键值7描述<input property="editor" name="G8NEW" id="pm_cont_purccontchangedtl.G8NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                            <div field="G9NEW" headeralign="center" >
+                                            特征8编码<input property="editor" name="G9NEW" id="pm_cont_purccontchangedtl.G9NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="G10NEW" headeralign="center"  >
+                                            特征8描述<input property="editor" name="G10NEW"id="pm_cont_purccontchangedtl.G10NEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                            <div field="f_PlanTotalNEW" headeralign="center" >
+                                            键值8编码<input property="editor" name="f_PlanTotalNEW" id="pm_cont_purccontchangedtl.f_PlanTotalNEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                         <div field="f_FactTotalNEW" headeralign="center"  >
+                                            键值8描述<input property="editor" name="f_FactTotalNEW" id="pm_cont_purccontchangedtl.f_FactTotalNEW" class="mini-textbox" style="width: 100%;"  readonly="readonly" /></div>
+                                        <div field="remark" headeralign="center">
+                                            备注<input property="editor" name="remark" id="Text12" class="mini-textarea" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab2" name="tab2" title="清单变更明细" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="Div4"> 
+                                 <!--<a class="mini-button blue" id="pm_cont_contchangedtl.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a>--> <a class="mini-button blue" id="pm_cont_contchangedtl.htn" onclick="PowerForm.OnBtnWizard(this)">
+                                    <i class="fa fa-plus"></i>合同内变更</a> <a class="mini-button blue" id="pm_cont_contchangedtl.htw" onclick="PowerForm.OnBtnWizard(this)">
+                                    <i class="fa fa-plus"></i>合同外变更</a> <a class="mini-button blue" id="pm_cont_contchangedtl.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_contchangedtl.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_contchangedtl" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" oncellendedit="EidApp1"  showsummaryrow="true"  ondrawsummarycell="onDrawSummaryCell_1"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="pi_code" headeralign="center">
+                                            清单编号<input property="editor" id="pm_cont_contchangedtl.pi_code" name="pi_code"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="pi_name" headeralign="center">
+                                            清单名称<input id="pm_cont_contchangedtl.pi_name" name="pi_name" property="editor"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="unitname" headeralign="center" type="comboboxcolumn">
+                                            单位<input property="editor" id="pm_cont_contchangedtl.unitname" name="unitname"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="characteristic" headeralign="center"  >
+                                            项目特征<input property="editor" name="characteristic" id="Text1" class="mini-textarea"
+                                                style="width: 100%;" /></div>
+                                        <div field="moneytype" headeralign="center"  type="comboboxcolumn" >
+                                            币种<input property="editor" name="moneytype" id="pm_cont_contchangedtl.moneytype"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="exchangerate" headeralign="center" numberformat="n">
+                                            汇率<input property="editor" name="exchangerate" id="Text3" class="mini-textbox" style="width: 100%;" /></div>
+
+                                        <div field="cunitprice" headeralign="center" numberformat="n">
+                                            变更前单价<input property="editor" name="cunitprice" id="Text5" class="mini-textbox" style="width: 100%;"  readonly="readonly"/></div>
+                                        <div field="camount" headeralign="center" numberformat="n">
+                                            变更前数量<input property="editor" name="camount" id="Text6" class="mini-textbox" style="width: 100%;" readonly="readonly" /></div>
+                                        <div field="attlmoney" headeralign="center" numberformat="n">
+                                            变更前金额<input property="editor" name="attlmoney" id="Text7" class="mini-textbox"  style="width: 100%;" readonly="readonly" /></div>
+                                        <div field="chunitprice" headeralign="center" numberformat="n">
+                                            变更后单价<input property="editor" name="chunitprice" id="pm_cont_contchangedtl.chunitprice" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chamount" headeralign="center" numberformat="n">
+                                            变更后数量<input property="editor" name="chamount" id="pm_cont_contchangedtl.chamount" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chmoney" headeralign="center" numberformat="n">
+                                            变更后金额<input property="editor" name="chmoney" id="pm_cont_contchangedtl.chmoney" class="mini-textbox"  style="width: 100%;"  readonly="readonly"/></div>
+                                        <div field="curmoney" headeralign="center" numberformat="n"  >
+                                            变更后折合主货币金额<input property="editor" readonly="true" name="curmoney" id="pm_cont_contchangedtl.curmoney"  
+                                                class="mini-textbox" style="width: 100%;"  /></div>
+                                         <div field="curu" headeralign="center" numberformat="n" >
+                                            本次变更金额<input property="editor" readonly="true" name="curu" id="pm_cont_contchangedtl.curu" 
+                                                class="mini-textbox" style="width: 100%;"  /></div>
+                                                <div field="feeitemcode" headeralign="center" >
+                                            费用指标编号 <input id="pm_cont_contchangedtl.feeitemcode" property="editor" name="feeitemcode" class="mini-buttonedit design"  textname="feeitemcode" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" required/>
+                                             </div>
+                                               <div field="feeitemname" headeralign="center" >
+                                            费用指标名称<input  name="feeitemname" id="pm_cont_contchangedtl.feeitemname" class="mini-textbox" readonly="true" style="width: 100%;" /></div>
+                                        <div field="remark" headeralign="center">
+                                            备注<input property="editor" name="remark" id="pm_cont_purchasecontdtl.remark" class="mini-textarea" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        <div id="tab3" name="tab3" title="合同内采购明细" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="div9" >
+                              <a class="mini-button blue" id="pm_cont_purccontchangedtl_1.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="pm_cont_purccontchangedtl_1.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_purccontchangedtl_1.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_purccontchangedtl_1" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true"  
+                                    showsummaryrow="true" >
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="mat_code" headeralign="center">
+                                            物资编号<input property="editor" id="pm_cont_purccontchangedtl_1.mat_code" name="mat_code"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="mat_name" headeralign="center">
+                                            物资名称<input id="pm_cont_purccontchangedtl_1.mat_name" name="mat_name" property="editor"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+
+                                        <div field="unitname" headeralign="center" type="comboboxcolumn">
+                                            单位<input property="editor" id="pm_cont_purccontchangedtl_1.unitname" name="unitname"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="moneytype" headeralign="center" type="comboboxcolumn">
+                                            币种<input property="editor" id="pm_cont_purccontchangedtl_1.moneytype" name="moneytype"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                         <div field="exchangerate" headeralign="center" numberformat="n">
+                                            汇率<input property="editor" name="exchangerate" id="pm_cont_purccontchangedtl_1.exchangerate" class="mini-textbox" style="width: 100%;" /></div>
+                                             <div field="unitprice" headeralign="center" numberformat="n">
+                                            变更前单价<input property="editor" name="unitprice" id="pm_cont_purccontchangedtl_1.unitprice" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="amount" headeralign="center" numberformat="n">
+                                            变更前数量<input property="editor" name="amount" id="pm_cont_purccontchangedtl_1.amount" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="moneys" headeralign="center" numberformat="n">
+                                            变更前金额<input property="editor" name="moneys" id="pm_cont_purccontchangedtl_1.moneys"
+                                                class="mini-textbox" style="width: 100%;" readonly="true" /></div>
+
+                                        <div field="chunitprice" headeralign="center" numberformat="n">
+                                            变更后单价<input property="editor" name="chunitprice" id="pm_cont_purccontchangedtl_1.chunitprice" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chdamount" headeralign="center" numberformat="n">
+                                            变更后数量<input property="editor" name="chdamount" id="pm_cont_purccontchangedtl_1.chdamount" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chdmoneys" headeralign="center" numberformat="n">
+                                            变更后金额<input property="editor" name="chdmoneys" id="pm_cont_purccontchangedtl_1.chdmoneys"
+                                                class="mini-textbox" style="width: 100%;" readonly="true" /></div>
+                                        <div field="appmoneys" headeralign="center" numberformat="n">
+                                            变更后折合主货币金额<input property="editor" readonly="true" name="appmoneys" id="pm_cont_purccontchangedtl_1.appmoneys" class="mini-textbox" style="width: 100%;" /></div>
+
+                                         <div field="chamount" headeralign="center" numberformat="n">
+                                            本次变更金额<input property="editor" name="chamount" id="pm_cont_purccontchangedtl_1.chamount" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                                <div field="feeitemcode" headeralign="center" >
+                                            费用指标编号 <input id="pm_cont_purccontchangedtl_1.feeitemcode"  property="editor" name="feeitemcode" class="mini-buttonedit design"  textname="feeitemcode" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" />
+                                            </div>
+                                               <div field="feeitemname" headeralign="center"  >
+                                            费用指标名称<input property="editor"  name="feeitemname" id="pm_cont_purccontchangedtl_1.feeitemname" class="mini-textbox" readonly="readonly"  style="width: 100%;" /></div>
+                                        <div field="techreq" headeralign="center" >
+                                           技术标准和质量要求<input property="editor" name="techreq" id="pm_cont_purccontchangedtl_1.techreq" class="mini-textbox"  style="width: 100%;" /></div>
+                                        <div field="aliassss" headeralign="center" >
+                                            特征1编码<input property="editor" name="aliassss" id="pm_cont_purccontchangedtl_1.aliassss" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="spec" headeralign="center" >
+                                            特征1描述<input property="editor" name="spec" id="pm_cont_purccontchangedtl_1.spec" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="model" headeralign="center" >
+                                            键值1编码<input property="editor" name="model" id="pm_cont_purccontchangedtl_1.model" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="ConversionUnit" headeralign="center" >
+                                            键值1描述<input property="editor" name="ConversionUnit" id="pm_cont_purccontchangedtl_1.ConversionUnit" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="tz2id" headeralign="center" >
+                                            特征2编码<input property="editor" name="tz2id" id="pm_cont_purccontchangedtl_1.tz2id" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="DrawingID" headeralign="center" >
+                                            特征2描述<input property="editor" name="DrawingID" id="pm_cont_purccontchangedtl_1.DrawingID" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="mattype" headeralign="center" >
+                                            键值2编码<input property="editor" name="mattype" id="pm_cont_purccontchangedtl_1.mattype" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="SummaryType" headeralign="center" >
+                                            键值2描述<input property="editor" name="SummaryType" id="pm_cont_purccontchangedtl_1.SummaryType" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ImportantType" headeralign="center" >
+                                            特征3编码<input property="editor" name="ImportantType" id="pm_cont_purccontchangedtl_1.ImportantType" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="SourceType" headeralign="center" >
+                                            特征3描述<input property="editor" name="SourceType" id="pm_cont_purccontchangedtl_1.SourceType" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="qua_rule" headeralign="center" >
+                                            键值3编码<input property="editor" name="qua_rule" id="pm_cont_purccontchangedtl_1.qua_rule" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="reserve_dtl_str1" headeralign="center" >
+                                            键值3描述<input property="editor" name="reserve_dtl_str1" id="pm_cont_purccontchangedtl_1.reserve_dtl_str1" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="reserve_dtl_str2" headeralign="center" >
+                                            特征4编码<input property="editor" name="reserve_dtl_str2" id="pm_cont_purccontchangedtl_1.reserve_dtl_str2" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="reserve_dtl_str3" headeralign="center" >
+                                            特征4描述<input property="editor" name="reserve_dtl_str3" id="pm_cont_purccontchangedtl_1.reserve_dtl_str3" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="reserve_dtl_str4" headeralign="center" >
+                                            键值4编码<input property="editor" name="reserve_dtl_str4" id="pm_cont_purccontchangedtl_1.reserve_dtl_str4" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="kks_code" headeralign="center" >
+                                            键值4描述<input property="editor" name="kks_code" id="pm_cont_purccontchangedtl_1.kks_code" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="kks_name" headeralign="center" >
+                                            特征5编码<input property="editor" name="kks_name" id="pm_cont_purccontchangedtl_1.kks_name" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="doc_name" headeralign="center" >
+                                            特征5描述<input property="editor" name="doc_name" id="pm_cont_purccontchangedtl_1.doc_name" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="Origin" headeralign="center" >
+                                            键值5编码<input property="editor" name="Origin" id="pm_cont_purccontchangedtl_1.Origin" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="Manufacturers" headeralign="center" >
+                                            键值5描述<input property="editor" name="Manufacturers" id="pm_cont_purccontchangedtl_1.Manufacturers" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="Qualitylevel" headeralign="center" >
+                                            特征6编码<input property="editor" name="Qualitylevel" id="pm_cont_purccontchangedtl_1.Qualitylevel" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="Storelevel" headeralign="center" >
+                                            特征6描述<input property="editor" name="Storelevel" id="pm_cont_purccontchangedtl_1.Storelevel" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="qualitystand" headeralign="center" >
+                                            键值6编码<input property="editor" name="qualitystand" id="pm_cont_purccontchangedtl_1.qualitystand" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="fromtype" headeralign="center" >
+                                            键值6描述<input property="editor" name="fromtype" id="pm_cont_purccontchangedtl_1.fromtype" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="G5NEW" headeralign="center" >
+                                            特征7编码<input property="editor" name="G5NEW" id="pm_cont_purccontchangedtl_1.G5NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="G6NEW" headeralign="center" >
+                                            特征7描述<input property="editor" name="G6NEW" id="pm_cont_purccontchangedtl_1.G6NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="G7NEW" headeralign="center" >
+                                            键值7编码<input property="editor" name="G7NEW" id="pm_cont_purccontchangedtl_1.G7NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="G8NEW" headeralign="center" >
+                                            键值7描述<input property="editor" name="G8NEW" id="pm_cont_purccontchangedtl_1.G8NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="G9NEW" headeralign="center" >
+                                            特征8编码<input property="editor" name="G9NEW" id="pm_cont_purccontchangedtl_1.G9NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="G10NEW" headeralign="center" >
+                                            特征8描述<input property="editor" name="G10NEW"id="pm_cont_purccontchangedtl_1.G10NEW" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="f_PlanTotalNEW" headeralign="center" >
+                                            键值8编码<input property="editor" name="f_PlanTotalNEW" id="pm_cont_purccontchangedtl_1.f_PlanTotalNEW" class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="f_FactTotalNEW" headeralign="center" >
+                                            键值8描述<input property="editor" name="f_FactTotalNEW" id="pm_cont_purccontchangedtl_1.f_FactTotalNEW" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="remark" headeralign="center">
+                                            备注<input property="editor" name="remark" id="Text12" class="mini-textarea" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab4" name="tab4" title="合同内清单明细" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="Div5"> 
+                                 <a class="mini-button blue" id="pm_cont_contchangedtl_1.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a><a class="mini-button blue" id="pm_cont_contchangedtl_1.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_contchangedtl_1.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_contchangedtl_1" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="pi_code" headeralign="center">
+                                            清单编号<input property="editor" id="pm_cont_contchangedtl_1.pi_code" name="pi_code"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="pi_name" headeralign="center">
+                                            清单名称<input id="pm_cont_contchangedtl_1.pi_name" name="pi_name" property="editor"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="unitname" headeralign="center" type="comboboxcolumn">
+                                            单位<input property="editor" id="pm_cont_contchangedtl_1.unitname" name="unitname"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="characteristic" headeralign="center" >
+                                            项目特征<input property="editor" name="characteristic" id="Text1" class="mini-textarea"
+                                                style="width: 100%;" /></div>
+                                        <div field="moneytype" headeralign="center"  type="comboboxcolumn">
+                                            币种<input property="editor" name="moneytype" id="pm_cont_contchangedtl_1.moneytype"
+                                                class="mini-combobox" style="width: 100%;" /></div>
+                                        <div field="exchangerate" headeralign="center" numberformat="n">
+                                            汇率<input property="editor" name="exchangerate" id="Text3" class="mini-textbox" style="width: 100%;" /></div>
+
+                                        <div field="cunitprice" headeralign="center" numberformat="n">
+                                            变更前单价<input property="editor" name="cunitprice" id="Text5" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="camount" headeralign="center" numberformat="n">
+                                            变更前数量<input property="editor" name="camount" id="Text6" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="attlmoney" headeralign="center" numberformat="n">
+                                            变更前金额<input property="editor" name="attlmoney" id="Text7" class="mini-textbox"  style="width: 100%;" /></div>
+                                        <div field="chunitprice" headeralign="center" numberformat="n">
+                                            变更后单价<input property="editor" name="chunitprice" id="pm_cont_contchangedtl_1.chunitprice" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chamount" headeralign="center" numberformat="n">
+                                            变更后数量<input property="editor" name="chamount" id="pm_cont_contchangedtl_1.chamount" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="chmoney" headeralign="center" numberformat="n">
+                                            变更后金额<input property="editor" name="chmoney" id="pm_cont_contchangedtl_1.chmoney" class="mini-textbox"  style="width: 100%;" /></div>
+                                        <div field="curmoney" headeralign="center" numberformat="n">
+                                            变更后折合主货币金额<input property="editor" readonly="true" name="curmoney" id="pm_cont_contchangedtl_1.curmoney"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                         <div field="curu" headeralign="center" numberformat="n">
+                                            本次变更金额<input property="editor" readonly="true" name="curu" id="pm_cont_contchangedtl_1.curu"
+                                                class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="feeitemcode" headeralign="center" >
+                                            费用指标编号 <input id="pm_cont_contchangedtl_1.feeitemcode" property="editor" name="feeitemcode" class="mini-buttonedit design"  textname="feeitemcode" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" />
+                                            </div>
+                                               <div field="feeitemname" headeralign="center" >
+                                            费用指标名称<input  name="feeitemname" id="pm_cont_contchangedtl_1.feeitemname" class="mini-textbox" readonly="true" style="width: 100%;" /></div>
+                                        <div field="remark" headeralign="center">
+                                            备注<input property="editor" name="remark" id="pm_cont_purchasecontdtl.remark" class="mini-textarea" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div title="其他款项" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="Div2">
+                                <a class="mini-button blue" id="pm_cont_contcother.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="pm_cont_contcother.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_contcother.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_contcother" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" oncellendedit="EidApp2"  showsummaryrow="true"  ondrawsummarycell="onDrawSummaryCell_2" 
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="feename" header="名称" allowsort="true">
+                                            名称<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                        <div type="comboboxcolumn" field="moneytype" header="币种" allowsort="true">
+                                            币种<input property="editor" class="mini-combobox" style="width: 100%;"></div>
+                                        <div field="exchangerate" header="汇率" allowsort="true" numberformat="n2" format="n2">
+                                            汇率<input property="editor" class="mini-textbox"  numberformat="n2" format="n2" style="width: 100%;"></div>
+                                        <div field="totalmoney" header="金额" allowsort="true"  numberformat="n2" format="n2">
+                                            金额<input property="editor" class="mini-textbox"  numberformat="n2" format="n2" style="width: 100%;"></div>
+                                        <div field="curmoney" header="折合主货币金额" allowsort="true"  numberformat="n2" format="n2" >
+                                            折合主货币金额<input property="editor" class="mini-textbox"  style="width: 100%;" readonly="readonly"></div>
+                                        <div field="feeitemcode" header="费用指标编号" allowsort="true">
+                                            费用指标编号<input property="editor" id="pm_cont_contcother.feeitemcode" name="feeitemcode" required
+                                                class="mini-buttonedit design" textname="feeitemcode" onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                style="width: 100%" /></div>
+                                        <div field="feeitemtitle" header="费用指标名称" allowsort="true">
+                                            费用指标名称<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="remark" header="备注" allowsort="true">
+                                            备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="收发文记录" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="pm_cont_contchangefiles.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="pm_cont_contchangefiles.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_contchangefiles.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_contchangefiles" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="code" header="编号" allowsort="true">
+                                            编号<input property="editor" id="pm_cont_contchangefiles.code" name="code" class="mini-buttonedit design"  textname="code" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" /></div>
+                                        <div field="title" header="主题" allowsort="true">
+                                            主题<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="sendcontact" header="发件方" allowsort="true">
+                                            发件方<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="sendhuman" header="发件人" allowsort="true">
+                                            发件人<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="rececontact" header="收件方" allowsort="true">
+                                            收件方<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="recehuman" header="收件人" allowsort="true">
+                                            收件人<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="recedate" header="日期" dateformat="yyyy-MM-dd" allowsort="true">
+                                            日期<input class="mini-datepicker"  dateformat="yyyy-MM-dd" style="width: 100%;"></div>
+                                        <div field="dec" header="收件说明" allowsort="true">
+                                            收件说明<input class="mini-textbox" style="width: 100%;"></div>
+                                        <div field="remark" header="备注" allowsort="true">
+                                            备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="签证单" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="Div1">
+                                <a class="mini-button blue" id="pm_cont_contchangeddtl.Add" onclick="PowerForm.OnBtnAdd(this)">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="pm_cont_contchangeddtl.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="pm_cont_contchangeddtl.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o">
+                                            </i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="pm_cont_contchangeddtl" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div type="indexcolumn" width="45">
+                                            序号</div>
+                                        <div field="code" header="签证单编号" allowsort="true">
+                                            签证单编号<input property="editor" id="pm_cont_contchangeddtl.code" name="code" class="mini-buttonedit design"  textname="code" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%" /></div>
+                                        <div field="title" header="签证单名称" allowsort="true">
+                                            签证单名称<input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div field="fcontactname" header="提出单位" allowsort="true">
+                                            提出单位<input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div field="fdate" header="提出日期" allowsort="true" dateformat="yyyy-MM-dd" >
+                                            提出日期<input property="editor"  class="mini-datepicker"  dateformat="yyyy-MM-dd"  style="width: 100%;" readonly="readonly"></div>
+                                        <div field="contexts" header="签证内容" allowsort="true">
+                                            签证内容<input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div field="qdepends" header="签证依据" allowsort="true">
+                                            签证依据<input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div field="remark" header="备注" allowsort="true">
+                                            备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventBeforeLoadData = function (e) {
+               onTypeChanged()
+               // mini.get("pm_cont_contchange.Title").set({ Value: "变更结果" }); 
+        }
+
+
+        PowerForm.EventAfterLoadData = function (e) {
+            oninfo();
+             if (e.sender.id == "pm_cont_contchangedtl") {// 字表
+                 var btnadd = mini.get("pm_cont_contchangedtl.Save").getEnabled();//获取字表保存按钮状态
+                 mini.get("pm_cont_contchangedtl.htn").setEnabled(btnadd); //给自己加的按钮拿到保存按钮的状态
+                 mini.get("pm_cont_contchangedtl.htw").setEnabled(btnadd);
+            }
+             if (e.sender.id == "pm_cont_purccontchangedtl") {// 字表
+                 var btnadd = mini.get("pm_cont_purccontchangedtl.Save").getEnabled();//获取字表保存按钮状态
+                 mini.get("pm_cont_purccontchangedtl.htn").setEnabled(btnadd); //给自己加的按钮拿到保存按钮的状态
+                 mini.get("pm_cont_purccontchangedtl.htw").setEnabled(btnadd);
+             }
+
+
+        }
+        function EidApp(e) {
+            var record = e.record;
+            var grid = mini.get("pm_cont_purccontchangedtl");
+            if (e.field == "unitprice" || e.field == "amount" || e.field == "chunitprice" || e.field == "chdamount" || e.field == "exchangerate" || e.field == "chdmoneys") {
+                if (record.chunitprice == undefined)
+                    record.chunitprice = 0;
+                if (record.chdamount == undefined)
+                    record.chdamount = 0;
+                if (record.exchangerate == undefined)
+                    record.exchangerate = 0;
+                if (record.chdmoneys == undefined)
+                    record.chdmoneys = 0;
+                grid.updateRow(record, {
+                    moneys: record.unitprice * record.amount,
+                    chdmoneys: record.chunitprice * record.chdamount,
+                    appmoneys: record.chdmoneys * record.exchangerate,
+                    chamount: (record.chunitprice * record.chdamount) - (record.unitprice * record.amount)
+                });
+            }
+        };
+      
+        function onDrawSummaryCell(e) {
+            var result = e.result;
+            var grid = e.sender;
+            var rows = e.data;
+
+            if (e.field == "chamount") {
+                var ttlmoney = 0;
+                for (var i = 0, l = rows.length; i < l; i++) {
+                    var row = rows[i];
+                    var t = row.chamount * 1;
+                    if (isNaN(t)) continue;
+                    ttlmoney += t;
+                }
+
+                e.cellHtml = "总计: " + ttlmoney;
+            }
+        };
+      
+
+
+        function EidApp1(e) {
+            var record = e.record;
+            var grid = mini.get("pm_cont_purccontchangedtl");
+            if (e.field == "cunitprice" || e.field == "camount" || e.field == "chunitprice" || e.field == "chamount" || e.field == "exchangerate" || e.field == "chmoney") {
+                if (record.chunitprice == undefined)
+                    record.chunitprice = 0;
+                if (record.chamount == undefined)
+                    record.chamount = 0;
+                if (record.exchangerate == undefined)
+                    record.exchangerate = 0;
+                if (record.chmoney == undefined)
+                    record.chmoney = 0;
+                grid.updateRow(record, {
+                    attlmoney: record.cunitprice * record.camount,
+                    chmoney: record.chunitprice * record.chamount,
+                    curmoney: record.chmoney * record.exchangerate,
+                    curu: (record.chunitprice * record.chamount) - (record.cunitprice * record.camount)
+                });
+            }
+        };
+        function onDrawSummaryCell_1(e) {
+            var result = e.result;
+            var grid = e.sender;
+            var rows = e.data;
+
+            if (e.field == "curu") {
+                var ttlmoney = 0;
+                for (var i = 0, l = rows.length; i < l; i++) {
+                    var row = rows[i];
+                    var t = row.curu * 1;
+                    if (isNaN(t)) continue;
+                    ttlmoney += t;
+                }
+
+                e.cellHtml = "总计: " + ttlmoney;
+            }
+        };
+
+        //PowerForm.EventAfterFormLoad = function (e, date) {
+        //    oninfo();
+
+        //    if (e.sender.id == "pm_cont_contchangedtl") {// 字表
+        //        var btnadd = mini.get("pm_cont_contchangedtl.Delete").getEnabled();//获取字表保存按钮状态
+        //        mini.get("pm_cont_contchangedtl.htn").setEnabled(btnadd); //给自己加的按钮拿到保存按钮的状态
+        //    }
+
+        //}
+
+        //根据下拉框选择控制 显示与隐藏
+
+        function onDeptChanged(e) {
+            oninfo();
+            
+        }
+
+        function oninfo() {
+
+            var cid = mini.get("pm_cont_contchange.changetype").getValue();
+
+
+            if (cid == "P") {
+                //alert("1");
+
+                showTab("tab1");
+                hideTab("tab2");
+  
+
+            }
+            else if (cid != "P") {
+                //alert(cid)
+                //alert("2");
+                showTab("tab2");
+                hideTab("tab1");
+            }
+
+        }
+        //div页显示
+        function showTab(tabname) {
+            var tabs = mini.get("maintabs");
+            var tab = tabs.getTab(tabname);
+            if (tab) {
+                tabs.updateTab(tab, { visible: true });
+            }
+
+        }
+        //div页隐藏
+        function hideTab(tabname) {
+            var tabs = mini.get("maintabs");
+            var tab = tabs.getTab(tabname);
+            if (tab) {
+                tabs.updateTab(tab, { visible: false });
+            }
+
+        }
+
+        function EidApp2(e) {
+            var record = e.record;
+            var grid = mini.get("pm_cont_contcother");
+            if (e.field == "exchangerate" || e.field == "totalmoney") {
+                if (record.exchangerate == undefined)
+                    record.exchangerate = 0;
+                if (record.totalmoney == undefined)
+                    record.totalmoney = 0;
+                grid.updateRow(record, {
+                    curmoney: record.totalmoney * record.exchangerate
+
+                });
+            }
+        };
+
+
+        function onDrawSummaryCell_2(e) {
+            var result = e.result;
+            var grid = e.sender;
+            var rows = e.data;
+
+            if (e.field == "totalmoney") {
+                var ttlmoney = 0;
+                for (var i = 0, l = rows.length; i < l; i++) {
+                    var row = rows[i];
+                    var t = row.totalmoney * 1;
+                    if (isNaN(t)) continue;
+                    ttlmoney += t;
+                }
+
+                e.cellHtml = "总计: " + ttlmoney;
+            }
+        };
+
+
+
+        function OnBtntx() {
+
+            var id = formconfig.KeyValue;//获取主表主键值
+
+            var exec = {};  //对象
+            
+            exec.KeyWord = "pm_cont_contchange";
+            //bo的KeyWord
+
+            exec.MethodName = "getDataacquisition";
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.id = id; //方法参数，参数名称区分大小写
+
+            //方法名称
+
+            var txt = mini.encode(exec);
+            //对象转换成字符串
+
+            var tmpdata = '';
+
+            $.ajax({
+
+                url: "/API/Exec",
+
+                type: "POST",
+
+                data: { jsonData: txt }, //对象字符串传递给 jsonData 变量
+
+                cache: false,
+
+                success: function (text) {
+
+                    tmpdata = mini.decode(text);
+
+                    if (tmpdata.success) {
+                        if (tmpdata.data.value) {
+                            //alert("成功！", "提示");
+                            var sender = FormFuns.GetMiniFormGrid("pm_cont_contchange");
+                            if (!sender) return;
+                            FormFuns.ReLoadData(sender);
+                        }
+                        else {
+                            alert("请填写合同信息！", "提示");
+                            return;
+                        }
+
+                    }
+                    else {
+                        alert("后台方法执行过程出现错误！", "警告");
+                        return;
+                    }
+
+                }
+            });
+        }
+
+        function onTypeChanged(e) {
+            var KeyValue = formconfig.config.joindata.currow["id"];
+            if (KeyValue != '') {
+                mini.get("pm_cont_contchange.dy").show();
+            }            else mini.get("pm_cont_contchange.dy").hide();
+
+        }
+
+
+        function dy() {
+
+            var KeyValue = formconfig.config.joindata.currow["id"];
+            var conttype = mini.get("pm_cont_contchange.changetype").getValue();
+
+            //alert(conttype);
+            if (conttype == "P" ) {
+
+                var url = bootPATH + "../powerplat/formxml/reportview.aspx?rid=3af6b656-5021-46f2-8849-1ab5a6039e7f&KeyValue=" + KeyValue;
+                window.open(url);
+            }
+            if (conttype != "P" ) {
+
+                var url = bootPATH + "../powerplat/formxml/reportview.aspx?rid=d1208e16-7b0e-407c-98e7-98dfef73a21e&KeyValue=" + KeyValue;
+                window.open(url);
+            }
+        }
+
+    </script>
+</body>
+</html>

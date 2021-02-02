@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>请示
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <div id="btnPrint" class="btn-group"></div>
+
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_HSE_Instruction.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_Instruction.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_Instruction.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_HSE_Instruction" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_Instruction.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>                                       
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            请示人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.InstructionHuman" name="InstructionHuman" textname="InstructionHuman" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true"/>
+                                        </td>
+                                        <td>
+                                            请示时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.InstructionDate" name="InstructionDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>-->
+
+                                    <tr>
+                                        <td>
+                                            请示内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_Instruction.InstructionContent" name="InstructionContent" class="mini-textarea" height="200"/>
+                                        </td>                                      
+                                    </tr>                                                  
+                                    <tr>
+                                        <td>
+                                            请示人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            请示时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_Instruction.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        //PowerForm.EventAfterLoadRight = function (o) {
+        //    var aa = mini.get("SF_HSE_MonthReport.OwnerDept").getValue();
+        //    if (aa == "" || aa == null || aa == undefined) {
+        //        mini.get("SF_HSE_MonthReport.OwnerDept").setValue(sessiondata.DeptName);
+        //        mini.get("SF_HSE_MonthReport.OwnerDeptId").setValue(sessiondata.DeptId);
+        //        //借调部门
+        //        $.ajax({
+        //           url:"/zyx/GetHumSecondDept" ,
+        //           type:"POST" ,
+        //           data:{HumId:sessiondata.DeptId},
+        //           cache:false,
+        //           success:function(text){
+        //               debugger;
+        //               result=mini.decode(text);
+        //               if(result.data.Message!="Not Find!"){
+        //                    mini.get("SF_HSE_MonthReport.OwnerDept").setValue(result.data.Message.split(",")[0]);
+        //                    mini.get("SF_HSE_MonthReport.OwnerDeptId").setValue(result.data.Message.split(",")[1]);
+        //               }
+        //           }
+        //        });
+
+        //    }
+        //}
+    </script>
+</body>
+</html>

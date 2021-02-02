@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+		var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";//
+		 var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+		<div class="row  row-hd row-hd-responsive" style="height: 50%">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+							<span>管理层级</span>
+							<input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="150px" />
+                             <a class="mini-button blue" id="V_PS_HSE_CorrectNotice.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>                   
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_HSE_CorrectNotice" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" borderstyle="border-width:0;"
+                             allowcelledit="false" multiselect="true" allowcellselect="true" idfield="Id" pagesize="20"
+                             showpager="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div name="Subcontractor" field="Subcontractor" >
+                                            名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--编码-->
+                                        <div field="SumNum" headeralign="center">
+                                            不合格总数
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--名称-->
+                                        
+                                        <div field="UntreatedNum" headeralign="center">
+                                            处理中
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--其他信息-->
+										<div field="CloseNum" headeralign="center">
+                                            已经关闭
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--其他信息-->
+										<div field="MultipleNum" headeralign="center">
+                                            多次整改次数
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div><!--其他信息-->
+										<div field="UnPassratio" headeralign="center" numberFormat="p">
+                                            多次整改率
+                                            <input property="editor"  class="mini-spinner" increment="0.01"  minValue="0" maxValue="1" format="p2"style="width: 100%;" />
+                                        </div>
+                                    </div>
+                            </div>
+
+                    </div>
+                </div>
+        </div>
+        <div class="row  row-hd row-hd-responsive" style="height: 50%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>起始日期</span>
+                            <input id="QStartDate" class="mini-datepicker" format="yyyy-MM-dd" width="120px"></input>
+                            <span>起始日期</span>
+                            <input id="QEndDate" class="mini-datepicker" format="yyyy-MM-dd" width="120px"></input>
+                           <a class="mini-button yellow" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+	 var PowerForm = new SingleForm();
+        mini.parse(); 
+		var currenttask,currentplan;		
+        $(function () {
+			 PowerForm.Init();
+            var firstDate = new Date();
+            var StartDate = new Date(firstDate);
+            var EndDate = new Date(firstDate);
+            EndDate.setMonth(firstDate.getMonth() + 1);
+            EndDate.setDate(0);
+            firstDate.setDate(1);
+            StartDate.setMonth(firstDate.getMonth() - 11);
+            StartDate.setDate(1);
+            mini.get("QStartDate").setValue(StartDate);
+            mini.get("QEndDate").setValue(EndDate);
+			 currenttask=currentproj; 
+			 currentplan=longcode;
+			 SetBtnEditValue("txtPlanName", EpsProjName);
+            LoadData();
+        });
+		 PowerForm.EventBeforeLoadData = function (e) {
+		 if (e.sender.id == "V_PS_HSE_CorrectNotice") {
+			
+				  e.params.swhere =" EpsProjId in(select project_guid from PLN_project where LongCode like '"+currentplan+"%')";
+			
+		 }
+		 }
+		 function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        mini.get("btnSearch").on("click", function (e) {  
+            LoadData();
+        })
+		 mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+		});
+		 function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+		   function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + longcode + ".%' or LongCode='" + longcode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].project_guid;
+				currentplan=data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+				mini.get("V_PS_HSE_CorrectNotice").reload();
+				LoadData();
+            })
+        }
+     
+
+        function LoadData() {
+            var p = {};
+            p.EpsProjId = currenttask;
+            p.stratData = mini.get("QStartDate").getFormValue();
+            p.EndData = mini.get("QEndDate").getFormValue();
+            $.ajax({
+                url: "/HSE/GetHSE_CorrectNoticeChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart(o.list);
+                    }
+                },
+				 error:function(XMLResponse){alert(XMLResponse.responseText)}
+
+            });
+        }
+
+
+        //加载图表
+        function LoadChart(data) {
+            //标题 
+            var xaxis = { type: 'category', data: [] };
+            var actcur = { "name": "每期次数", type: 'bar', yAxisIndex: 1, data: [] };
+            var actsum = { "name": "每期次数累计", type: 'line', data: [] };
+            
+            var curmax = 0;
+            $.each(data, function () {
+                xaxis.data.push(this.StratData);
+                actcur.data.push(this.Num);
+                actsum.data.push(this.SumNum);               
+                if (this.SumNum > curmax) curmax = this.SumNum;              
+               
+
+            })
+            var opt = {};
+            //opt.calculable = true;
+            opt.title = { text: "不合格统计图" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["每期次数", "每期次数累计"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '次数', min: 0, max: curmax }, { type: 'value', name: '次数', min: 0, max: curmax }];
+            opt.series = [actcur, actsum];
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

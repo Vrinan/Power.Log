@@ -1,0 +1,272 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>售后服务工作单
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <a class="mini-button blue" id="SF_ZZ_Completion.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存</a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Completion.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新</a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="SF_ZZ_Completion.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭</a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Completion" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.Status" name="Status" class="mini-combobox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Completion.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+
+
+                                        <td>
+                                            项目信息
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.ProjectCode" name="ProjectInformation" textname="ProjectInformation" class="mini-buttonedit"
+                                                allowinput="false" emptytext="请选择项目名称..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                            />
+
+                                        </td>
+                                        <td>
+                                            项目合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.ContractInformation" name="ContractCode" textname="ContractCode" class="mini-buttonedit" allowinput="false"
+                                                emptytext="请选择合同编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+
+                                        </td>
+                                        <tr>
+                                            <td>
+                                                现场联系人
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZZ_Completion.MaintenanceMan" name="MaintenanceMan" class="mini-textbox" />
+                                            </td>
+
+
+                                            <td>
+                                                联系人电话
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZZ_Completion.Phone" name="Phone" class="mini-textbox">
+                                            </td>
+                                        </tr>
+                                        <td>
+                                            投放时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.ApprDate" name="ApprDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>
+                                            项目开工时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.StarTime" name="StarTime" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            项目结束时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.EedTime" name="EedTime" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>
+                                            工程验收内容
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.Memo" name="Memo" class="mini-TextArea" />
+                                        </td> -->
+
+                                        <td>
+                                            工程验收结果
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.Results" name="Results" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程验收标准
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Completion.AcceptanceCriteria" name="AcceptanceCriteria" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>
+                                            工程验收标准
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.AcceptanceCriteria" name="AcceptanceCriteria" class="mini-TextArea" />
+                                        </td> -->
+
+                                        <td>
+                                            工程供货范围
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Completion.Supply" name="Supply" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程验收内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Completion.Memo" name="Memo" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>
+                                            服务内容
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.Memo" name="Memo" class="mini-TextArea" />
+                                        </td> -->
+
+                                        <td>
+                                        工程验收结果
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Completion.Results" name="Results" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            甲方单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.UnitA" name="UnitA" class="mini-textbox">
+                                        </td>
+                                        <td>
+                                            甲方日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.UnitADate" name="ApprDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            乙方单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.UnitB" name="UnitB" class="mini-textbox">
+                                        </td>
+                                        <td>
+                                            乙方日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.UnitBDate" name="ApprDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+
+
+
+
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Completion.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        })
+
+    </script>
+</body>
+
+</html>

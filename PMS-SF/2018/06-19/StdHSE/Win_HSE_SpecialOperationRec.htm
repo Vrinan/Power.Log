@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+		var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+	<style type="text/css">
+      
+    </style>
+
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换EPS/项目</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" />
+                             <span>报验年月</span>
+                            <input id="txtStart" class="mini-datepicker" shownullitem="true" width="120px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="search()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width:100%;height:100%;" vertical="true">
+                            <div size="60%" showCollapseButton="true">
+                                <div id="HSESpecialOperationRec" class="mini-datagrid" style="width: 100%; height: 100%" idfield="Id" 
+                                     allowresize="true" expandonload="true" virtualScroll="true" 
+                                     showpager="false">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+										<div field="tmonth" width="60" headerAlign="center">月份</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div showCollapseButton="true">
+                                <div id="charthere" style="width:100%;height:100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var newLongCode = "";
+        var newstrEpsProjId = "";
+        $(function () {
+            SetBtnEditValue("txtPlanName", EpsProjName);
+            GetOperationTypeHeader();
+            LoadChart();
+        });
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+        function search() {
+            
+            LoadChart();
+        }
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                newstrEpsProjId = data[0].project_guid;
+                newLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        var grid = mini.get("HSESpecialOperationRec");
+        function GetOperationTypeHeader() {
+            //动态增加列
+                var cols = [];
+                var taskprocTitle = [];
+                    $.ajax({
+                        url: "/HSE/GetOperationTypeHeader",
+                        data: {},
+                        async: false,
+                        dataType: "JSON",
+                        success: function (headerData) {
+                            taskprocTitle = headerData.list;
+                        }
+                    });
+
+                    var columns = grid.getColumns();
+                    $.each(taskprocTitle, function () {
+                        var thistaskproc = this;
+                        var filterCols = $.grep(columns, function (item) {
+                            return item.field == "hh";
+                        });
+                        if (filterCols.length == 0) {
+                            colm = {
+                                header: this.Name,
+                                headerAlign: "center",
+                                align: "center",
+                                field: this.Code,
+                                width: 100
+                            }
+                            cols.push(colm);
+                        }
+                    });
+
+                    columns.push({ header: "许    可    证    类    型", headerAlign: "center", field: "hh", columns: cols })
+                    columns.push({
+                        header: "合计",
+                        headerAlign: "center",
+                        align: "center",
+                        field: "Ssum",
+                        width: 100
+                    })
+                    grid.setColumns(columns);
+                    LoadData();
+            }
+        function LoadData() {
+		    var startDate = "";
+			var endDate = "";
+			var ContractName="";
+			startDate = new Date();
+			if (mini.get("txtStart").getValue() == "") {
+			    mini.get("txtStart").setValue(startDate);
+			}
+            $.ajax({
+                url: "/HSE/GetSpecialOperationRec",
+				data: {
+                        Nd: mini.get("txtStart").getFormValue()==""?startDate:mini.get("txtStart").getFormValue(),
+                        epsProjId: newstrEpsProjId == "" ? strEpsProjId : newstrEpsProjId
+                    },
+                type: "POST",
+                success: function (text) { 
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("HSESpecialOperationRec");
+                        debugger
+                        grid.loadData(o.data.value);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        //加载图表
+        function LoadChart() {
+            $.ajax({
+                url: "/HSE/GetSpecialOperationRecChar",
+                data: {
+                    epsProjId: newstrEpsProjId == "" ? strEpsProjId : newstrEpsProjId,
+                },
+                type: "POST",
+                success: function (text) {
+
+                    var result = text;
+                    var s = result.split("|");
+                    var sname = s[0];
+                    var snum = s[1];
+
+                    var name = {};
+                    var num = {};
+                    name = sname.split(",");
+                    num = snum.split(",");
+
+                    var opt = {};
+                    opt.title = { text: "安全作业票情况" };
+                    opt.calculable = false;
+                    opt.tooltip = { trigger: 'axis' };
+                    opt.legend = { data: [] },
+                    opt.toolbox = { show: false };
+                    //opt.xAxis = [xaxis];
+                    opt.xAxis = [{ type: 'category', data: ['许可类型'] }];
+                    opt.yAxis = [{ type: 'value', name: '数量',axisLabel: { formatter: '{value}' } }];
+                    opt.series = [];
+					opt.grid= {x: 150,x2:150};
+					for (var i = name.length - 1; i > -1 ; i--) {
+					    //opt.xAxis[0].data.push(name[i]);
+					    opt.legend.data.push(name[i])
+					    opt.series.push({name:name[i],type: 'bar', data: [num[i]]});
+                       
+                    }
+
+                    InitEChart("charthere", opt);
+
+                }
+            });
+
+        }
+		
+		
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

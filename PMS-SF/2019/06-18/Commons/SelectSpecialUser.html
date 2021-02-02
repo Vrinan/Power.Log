@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script> 
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>特殊人员选择模式
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onOK">确定</a><!--确定-->
+                    <a class="mini-button blue" id="btnClose" onclick="CloseWindow('close')" iconcls="fa-power-off">取消</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                     <div align="right">
+                        <a class="mini-button" id="btnAddRow" iconcls="fa-plus" onclick="addSpecialRow()">$Helper.GetResource("g_add")</a><!--新增-->
+                    </div>
+                    <div class="mini-fit">
+                        <div id="gdSpecialList" class="mini-datagrid" idfield="Id" iconfield="icon" showPager="false" showcheckbox="true" allowcelledit="true" allowcellselect="true" showemptytext="true" expandonload="true" style="height:100%;" oncellbeginedit="onSpecialCellBeginEdit" oncellendedit="onSpecialCellEndEdit">
+                            <div property="columns">
+                                <div type="indexcolumn">#</div>
+                                <div name="BaseID" field="BaseID" width="120" headeralign="center" renderer="onSpecialRenderer">
+                                    基础岗位/部门
+                                    <input property="editor" class="mini-treeselect" style="width:100%;" valueField="Id" textField="Name" parentfield="ParentId" resultastree="false"/>
+                                </div><!--部门/岗位-->
+                                <div width="50" headeralign="center" field="UseParent" renderer="onUseParentRenderer">
+                                    本级/上级
+                                    <input property="editor" class="mini-combobox" style="width:100%;" valueField="Code" textField="Text" data="[{'Code':'Current','Text':'本级'},{'Code':'Parent','Text':'上级'}]" />
+                                </div>
+                                <div name="ParentType" field="ParentType" width="120" headeralign="center" renderer="onSpecialRenderer">
+                                    管理组织
+                                    <input property="editor" class="mini-combobox" style="width:100%;" valueField="Code" textField="Name" />
+                                </div><!--名称-->
+                                <div width="50" headeralign="center" renderer="onEditSpecialRenderer">删除</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+
+        var gdSpecialList = mini.get("gdSpecialList");
+
+        var BD_DeptPositionList = null; 
+        var BD_EpsProjTypeList = null;
+
+        var onOK = function (e) {
+
+            var lst = gdSpecialList.getData();
+            var result = [];
+            for (var irow = 0; irow < lst.length; irow++) {
+                if (!lst[irow].BaseID) continue;
+                if (!lst[irow].UseParent) continue;
+                if (lst[irow].UseParent == "Parent" && !lst[irow].ParentType) {
+                    Power.ui.error("选择了[上级]，则必须选择[管理组织]");
+                    return;
+                }
+                result.push(lst[irow]);
+            }
+            if (result.length == 0) {
+                Power.ui.error("请重新设置");
+                return;
+            }
+            CloseWindow("ok");   //确定操作
+        }
+        var addSpecialRow = function (e) {
+            var row = { UseParent: 'Current' };
+            gdSpecialList.addRow(row);
+        }
+        var onDeleteUser = function (grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            curGrid.removeRow(row);
+        }
+        var onEditSpecialRenderer = function (e) {
+            var record = e.record;
+            var s = "";
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDeleteUser(\'' + e.sender.id + '\')")">' + app_global["g_delete"] + '</a>';//删除
+            return s;
+        }
+        var onSpecialCellBeginEdit = function (e) {
+            var node = e.record;
+            switch (e.field) {
+                case "BaseID": 
+                    //e.editor.setData(BD_DeptPositionList);
+                    e.editor.loadList(BD_DeptPositionList, "Id", "ParentId");
+                    break;
+                case "ParentType":   //阶段
+                    if (node.UseParent == "Current") {
+                        e.cancel = true;
+                        return;
+                    }
+                    e.editor.setData(BD_EpsProjTypeList);
+                    break;
+            }
+        }
+        var onSpecialCellEndEdit = function (e) {
+            var node = e.row;
+            var grid = e.sender;
+             
+           
+            switch (e.field) {
+                case "BaseID":
+                    var baseID =   node.BaseID; 
+                    var baseName = ""; 
+                    var baseDataList =  BD_DeptPositionList; 
+                    for (var irow = 0; irow < baseDataList.length; irow++) {
+                        if (baseDataList[irow].Id != baseID) continue;
+                        baseName = baseDataList[irow].Name;
+                        break;
+                    }
+                    grid.updateRow(node, { "BaseID": baseID, "BaseName": baseName });
+                    break; 
+                case "UseParent":  //本级上级(本机的话，parenTType 无需选择了
+                    var UseParent = node.UseParent;
+                    var UseParentName = "";
+                    if (node.UseParent == "Current") {
+                        grid.updateRow(node, { "ParentType": "", "ParentTypeName": "" });
+                        break;
+                    }
+                    switch (node.UseParent) {
+                        case "Current":
+                            UseParentName = '本级';
+                        default:
+                            UseParentName = '上级';
+                    } 
+                  
+                    grid.updateRow(node, { "UseParent": UseParent, "UseParentName": UseParentName });
+                    break;
+                case "ParentType":
+                    var ParentType = node.ParentType;
+                    var ParentTypeName = "";
+                    var parentList = BD_EpsProjTypeList;
+                    for (var irow = 0; irow < parentList.length; irow++) {
+                        if (parentList[irow].Code != ParentType) continue;
+                        ParentTypeName = parentList[irow].Name;
+                        break;
+                    }
+                    grid.updateRow(node, { "ParentType": ParentType, "ParentTypeName": ParentTypeName });
+                    break;
+                default:
+                    return;
+            }
+
+        }
+        var onSpecialRenderer = function (e) {
+            var s = ' ';
+            var row = e.record;
+
+            var baseDataList = [];
+            switch (e.field) {
+                case "BaseID":
+                    if (row.BaseName) return row.BaseName;
+                    break;
+                case "ParentType":
+                    if (row.ParentTypeName) return row.ParentTypeName;
+                    break;
+                default:
+                    return;
+            }
+
+            return s;
+        }
+        var onUseParentRenderer = function (e) {
+            var s = ' ';
+            var row = e.record;
+            switch (row.UseParent) {
+                case "Current":
+                    return '本级';
+                default:
+                    return '上级';
+            }
+            return s;
+        }
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        var onLoadSpecialList = function (sourceMode, canSendUsers) {
+
+            Power.App.loading.show();
+             
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadSpecialBaseInfo";   //子指令集,加载岗位部门树 
+            CurrentInfo.SourceMode = sourceMode;
+            var data = {};
+            CurrentInfo.Current = data;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) {
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    var tmpData = mini.decode(result.data);
+                    BD_DeptPositionList = mini.decode( tmpData.BD_DeptPositionList);
+                    BD_EpsProjTypeList = mini.decode(tmpData.BD_EpsProjTypeList);
+
+                    if (canSendUsers) gdSpecialList.setData(canSendUsers);
+
+                    Power.App.loading.hide();
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+        function SetData(node, canSendUsers) {
+            var sourceMode = node.SourceMode;
+            if (!sourceMode) sourceMode = "PositionAndUser";  //如果是第一次，则默认为 岗位+用户 
+
+            onLoadSpecialList(sourceMode, canSendUsers);
+        }
+        function GetData() {
+            var lst = gdSpecialList.getData(); 
+            var result = [];
+            for (var irow = 0; irow < lst.length; irow++) {
+                if (!lst[irow].BaseID) continue;
+                if (!lst[irow].UseParent) continue;
+                if (lst[irow].UseParent == "Parent" && !lst[irow].ParentType) continue;
+                result.push(lst[irow]);
+            }
+            return result;
+        }
+
+    </script>
+
+</body>
+</html>

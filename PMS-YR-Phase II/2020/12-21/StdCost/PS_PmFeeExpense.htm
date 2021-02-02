@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+        var userangelist = [{ id: "0", text: "新增" }, { id: "20", text: "审批中" }, { id: "35", text: "生效" }, { id: "40", text: "终止" }, { id: "50", text: "批准" }];
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目管理费用报销
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_PmFeeExpense.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_PmFeeExpense.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!-- <div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_PmFeeExpense.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_PmFeeExpense" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="PS_PmFeeExpense.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" /></td>
+                                        <td>状态</td>
+                                        <td><input id="PS_PmFeeExpense.Status" name="Status" class="mini-combobox" data="userangelist" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>报销说明</td>
+                                        <td colspan="3"><input id="PS_PmFeeExpense.Title" name="Title" class="mini-textbox" required="true" requirederrortext="报销说明不能为空" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>年度</td>
+                                        <td><input id="PS_PmFeeExpense.Year" name="Year" class="mini-ComboBox" textfield="text" valuefield="id" url="/Data/ComboxGetYear/2/5/1" > </td>
+                                        <td>月份</td>
+                                        <td><input id="PS_PmFeeExpense.Month" name="Month" class="mini-ComboBox" textfield="text" valuefield="id" url="/Data/ComboxGetMonth/1" > </td>
+                                    </tr>
+                                    <tr>
+                                        <td>申报金额</td>
+                                        <td><input id="PS_PmFeeExpense.ApplyAmount" name="ApplyAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false"/></td>
+                                        <td>实报金额</td>
+                                        <td><input id="PS_PmFeeExpense.ActualAmount" name="ActualAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            批准人
+                                        </td>
+                                        <td>
+                                            <input id="PS_PmFeeExpense.ApprHumName" name="ApprHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            批准时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_PmFeeExpense.ApprDate" name="ApprDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_PmFeeExpense.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_PmFeeExpense.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='报销明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="Ps_PmFeeExpense_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)" >选择CBS</a> <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="Ps_PmFeeExpense_Dtl.Add1" onclick="PowerForm.OnBtnWizard(this)" >选择WBS</a> <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="Ps_PmFeeExpense_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="Ps_PmFeeExpense_Dtl" class="mini-datagrid" style="height: 100%;"
+                                    idfield="Id" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" onDrawcell="onDrawcell" onDrawSummaryCell="onDrawSummaryCell" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" name="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="ExpenseTitle" headeralign="center">
+                                            费用类型
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApplyAmount"  headeralign="center" align="center">
+                                            申报金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="ActualAmount" headeralign="center" align="center">
+                                            实报金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="WbsName" headeralign="center">
+                                            wbs名称
+                                        </div>
+                                        <div field="CbsName" headeralign="center">
+                                            cbs名称
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();            
+        });
+        mini.parse();
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (formconfig.FormState == "add") {
+                var myDate = new Date();
+                var t1 = mini.get("PS_PmFeeExpense.Year");
+                t1.setValue(myDate.getFullYear());
+                var t2 = mini.get("PS_PmFeeExpense.Month");
+                t2.setValue(myDate.getMonth() + 1);
+            }
+        }        function onDrawcell(e) {
+            var sumA = 0;
+            var sumB = 0;
+            $.ajax({
+                url: "/Cost/CostAllocationSumAmount",
+                data: {
+                    Sid: KeyValue,
+                },
+                type: "POST",
+                success: function (text) {
+                    var result = text;
+                    var s = result.split("|");
+                    sumA = s[0];
+                    sumB = s[1];                    mini.get("PS_PmFeeExpense.ApplyAmount").setValue(sumA);
+                    mini.get("PS_PmFeeExpense.ActualAmount").setValue(sumB);
+                }
+            });
+        }
+        function onDrawSummaryCell(e) {
+            //debugger;
+            //var sumA = 0;
+            //var sumB = 0;
+            //    $.ajax({
+            //        url: "/Cost/CostAllocationSumAmount",
+            //        data: {
+            //            Sid: KeyValue,
+            //        },
+            //        type: "POST",
+            //        success: function (text) {
+            //            var result = text;
+            //            var s = result.split("|");
+            //            sumA = s[0];
+            //            sumB = s[1];            //            mini.get("PS_PmFeeExpense.ApplyAmount").setValue(sumA);
+            //            mini.get("PS_PmFeeExpense.ActualAmount").setValue(sumB);                        
+            //        }
+            //    });
+            //    sumA = mini.get("PS_PmFeeExpense.ApplyAmount").getValue();
+            //    sumB = mini.get("PS_PmFeeExpense.ActualAmount").getValue();
+                if (e.id = "Ps_PmFeeExpense_Dtl") {
+                    var Grid = mini.get("Ps_PmFeeExpense_Dtl");
+                    var a = e.field;
+                    if (e.field == "ApplyAmount") {
+                        e.cellHtml = "申报金额合计:" + mini.get("PS_PmFeeExpense.ApplyAmount").getValue();
+                    }
+                    if (e.field == "ActualAmount") {
+                        e.cellHtml = " 实报金额合计:" + mini.get("PS_PmFeeExpense.ActualAmount").getValue();
+                    }
+                }
+            }
+       
+    </script>
+</body>
+</html>

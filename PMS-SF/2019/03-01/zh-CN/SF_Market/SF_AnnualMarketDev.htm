@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>月度计划
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_AnnualMarketDev.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_AnnualMarketDev.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_AnnualMarketDev.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_AnnualMarketDev" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            月份
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.Years" name="Years" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            年度指标金额
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.Amount" name="Amount" class="mini-spinner"  maxvalue="999999999" minvalue="0"/>
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_AnnualMarketDev.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            开始日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.TenderBegin" name="TenderBegin" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            截至日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.TenderEnd" name="TenderEnd" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                    </tr>-->
+                                    <!--<tr>
+                                        <td>
+                                            招标地点
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.TenderPlace" name="TenderPlace" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            是否使用招标代理
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.isTenderAgent" name="isTenderAgent" truevalue="1" falsevalue="0" class="mini-checkbox" text="代理" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_AnnualMarketDev.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                            <td>
+                                                    填报部门
+                                                </td>
+                                                <td>
+                                                    <input id="SF_AnnualMarketDev.DeptName" class="mini-textbox" name="DeptName" readonly/>
+                                                </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_AnnualMarketDev_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_AnnualMarketDev_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_AnnualMarketDev_dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" " allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="Name" headeralign="center" type="comboboxcolumn">
+                                            工作名称
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Content" headeralign="center">
+                                            计划内容
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Complate" headeralign="center">
+                                            完成情况
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterFormLoad = function (e) {
+            var today = new Date();//获得当前日期
+            var year = today.getFullYear();//获得年份
+            var month = today.getMonth() + 1;//此方法获得的月份是从0---11，所以要加1才是当前月份
+            if (IsEmpty(mini.get("SF_AnnualMarketDev.Years").getValue())) {
+                mini.get("SF_AnnualMarketDev.Years").setValue(month);
+            }
+            if (IsEmpty(mini.get("SF_AnnualMarketDev.Title").getValue())) {
+                mini.get("SF_AnnualMarketDev.Title").setValue(year.toString() + "年" + month + "月 月度计划");
+            }
+        }
+    </script>
+</body>
+</html>

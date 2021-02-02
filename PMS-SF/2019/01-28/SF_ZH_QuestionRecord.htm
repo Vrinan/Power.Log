@@ -1,0 +1,173 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>问题反馈
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_ZH_QuestionRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_ZH_QuestionRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ZH_QuestionRecord.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_ZH_QuestionRecord" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_QuestionRecord.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_QuestionRecord.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            反馈人员
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.Sender" name="Sender" textname="Sender" class="mini-buttonedit"
+                                                   emptytext="请选择反馈人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required />
+                                            <input id="SF_ZH_QuestionRecord.SenderId" name="SenderId" class="mini-textbox" readonly="readonly" visible="fasle" />
+                                        </td>
+                                        <td>
+                                            反馈人员部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.SenderDept" name="SenderDept" class="mini-textbox" readonly="readonly" required />
+                                            <input id="SF_ZH_QuestionRecord.SenderDeptId" name="SenderDeptId" class="mini-textbox" readonly="readonly" visible="fasle" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            是否已解决
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.IsAlreadyReply" name="IsAlreadyReply" truevalue="1" falsevalue="0" class="mini-checkbox" readonly/>
+                                            <!-- <a class="mini-button mini-button-info" onclick="OnbtnViewReply()"><label style="color:blue">点击查看回复</label></a> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            问题描述
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_QuestionRecord.MenuName" name="MenuName" class="mini-textarea" height="200" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_QuestionRecord.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (mini.get("SF_ZH_QuestionRecord.Sender").getValue("") == "") {
+                mini.get("SF_ZH_QuestionRecord.Sender").setValue(sessiondata.HumanName);
+                mini.get("SF_ZH_QuestionRecord.SenderId").setValue(sessiondata.HumanId);
+                mini.get("SF_ZH_QuestionRecord.SenderDept").setValue(sessiondata.DeptName);
+                mini.get("SF_ZH_QuestionRecord.SenderDeptId").setValue(sessiondata.DeptId);
+            }
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_ZH_QuestionRecord";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (o) {
+            if(sessiondata.HumanName =="Admin")
+            {
+                mini.get("SF_ZH_QuestionRecord.IsAlreadyReply").setReadOnly(false);
+            }
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_ZH_QuestionRecord";
+                var mkeyvalue = KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

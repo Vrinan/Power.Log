@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>委托申请单（其他部门临时监测）
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="ToMonitorIssued" onclick="ToMonitorIssued()"><i class="fa fa-apple"></i>生成监测报告</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_DelegateOAppy.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_DelegateOAppy.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_DelegateOAppy.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_HSE_DelegateOAppy" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            委托时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.DelegateDate" name="DelegateDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检测单位
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_DelegateOAppy.TestingUnit" name="TestingUnit" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            选择说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_DelegateOAppy.ChoiceExplain" name="ChoiceExplain" class="mini-textarea" height="100" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            委托部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.DelegateDept" name="DelegateDept" textname="DelegateDept" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            委托项目
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.DelegateEPS" name="DelegateEPS" textname="DelegateEPS" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择EPS..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_DelegateOAppy.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_DelegateOAppy.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title='监测明细' name="SF_HSE_DelegateOAppy_dtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_HSE_DelegateOAppy_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_HSE_DelegateOAppy_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" id="GEDI_Cont_Records_SubContract.Export" onclick="PowerForm.OnExportDataToXls('SF_HSE_DelegateOAppy_dtl', '委托申请单（其他部门临时监测）')"><i class="fa fa-sign-out"></i>导出</a>
+
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_HSE_DelegateOAppy_dtl" class="mini-datagrid" style="height:100%;" showsummaryrow="true" multiselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" data-options="{canImport:true}" allowCellWrap="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="30"></div>
+                                        <div type="indexcolumn" width="30">序号</div>
+                                        <div field="MonitorSite" headeralign="center">
+                                            监测点
+                                            <!--<input id="SF_HSE_WeekReport_dtl.OwnerDept" name="OwnerDept" textname="OwnerDept" class="mini-buttonedit" property="editor"
+                               emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" />-->
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MonitorPurpose" headeralign="center">
+                                            监测目的
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MonitorWay" headeralign="center">
+                                            监测方式
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MonitorFrequency" headeralign="center">
+                                            监测频次
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MonitorAmount" headeralign="center">
+                                            监测数量
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MonitorIndex" headeralign="center">
+                                            监测指标
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function ToMonitorIssued()
+        {
+            //Power.ui.loading("生成中……");
+            var par = { "id": KeyValue };
+            FormFuns.APIExec("SF_HSE_DelegateOAppy", "BO", "CreateMonitorIssued", par, function (text) {
+                //Power.ui.loading.close();
+                //Power.ui.success(text);
+                //mini.get("SF_HSE_DelegateYAppy.Refresh").doClick();
+                if(text.indexOf("已存在") > -1)
+                {
+                    //Power.ui.warning("已存在该监测报告");
+                    str = text.replace('已存在', '')
+                    str = mini.decode(str).data.value;
+                    Power.ui.confirm("已存在该检测报告,是否查看？", function (ret) {
+                    if (ret) {
+                            ViewForm(str);
+                        }
+                    });
+                }
+                else
+                {
+                    str = text.replace('新生成', '');
+                    str = mini.decode(str).data.value;
+                    ViewForm(str);
+                }
+            });
+        }
+
+        function ViewForm(e) {
+            var url = "/Form/ValidForm/" + "fbe1b53a-a452-48be-a20a-bed30b9ac199" + "/" + "/view/" + e;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_HSE_DelegateOAppy_dtl");
+            if (mini.get("SF_HSE_DelegateOAppy.Status").getValue() == "0") {
+                if (grid.data.length == 0) {
+                    Power.ui.alert("监测明细 不能为空!");
+                    e.isValid = false;
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("ahb") > -1) {
+                mini.get("SF_HSE_DelegateOAppy.TestingUnit").setReadOnly(false);
+                mini.get("SF_HSE_DelegateOAppy.ChoiceExplain").setReadOnly(false);
+                mini.get("SF_HSE_DelegateOAppy.Save").enable();
+            }
+
+            $("#ToMonitorIssued").hide();
+            if(formconfig.config.joindata.currow.Status == "50")
+            {
+                $("#ToMonitorIssued").show();
+            }
+        }
+    </script>
+</body>
+</html>

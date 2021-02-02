@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>    
+    <script src="/PowerPlat/WorkFlows/Design/js/Configure.js?v=$AppVersion" type="text/javascript"></script>     
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    <form id="frmMain" method="post" style="height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>
+                        <span>$Helper.GetResource("workflow_node_porperty")</span><!--节点属性-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave" enabled="false">$Helper.GetResource("g_ok")</a><!--确定-->
+                        <a class="mini-button blue" iconcls="fa-times" onclick="CloseWindow">$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-tabs" id="tabMain" activeindex="0" tabposition="left" tabalign="left" style="height: 100%;">
+                           <div title="子流程定义" name="tabSubNode" style="display:none">
+                                <!--子流程-->
+                                <table class="table table-bordered mt5">
+                                    <tr> 
+                                        <td> 
+                                              节点模式：
+                                        </td>
+                                        <td  >
+                                            <div id="rdoSubNodeMode" name="SubNodeMode" class="mini-radiobuttonlist" onvaluechanged="onSubNodeModeChanged" repeatitems="1" repeatlayout="table" required="true" repeatdirection="vertical" textfield="Text" valuefield="Code" value="ProcessMode"  data="[{'Code':'ThreadMode' ,'Text':'线程模式' },{'Code':'ProcessMode' ,'Text':'进程模式'} ]">
+                                          </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="mini-checkbox" id="chkIsAsync" name="IsAsync" text="是否异步运行" value="false" />
+                                        </td>
+                                        <td>
+                                            异步运行，则创建子流程后，主流程依旧可以流转，无须等候子流程完结。
+                                        </td>
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            <div class="mini-checkbox" id="chkSubIsMultiUser" name="IsMultiUser" text="是否允许选择多人发送" value="false" />
+                                        </td>
+                                        <td>
+                                            类似于子流程的群发功能。
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="mini-checkbox" id="chkIsRemote" name="IsRemote" text="是否跨域流转" value="false" onvaluechanged="onIsRemoteChanged" />
+                                        </td>
+                                        <td>
+                                            跨域流转，既子流程是在第三方系统中继续流转.<font color="red">此场景该节点必须定义[标签]</font>
+                                        </td>
+                                    </tr>
+                                    <tr id="trFormId">
+                                        <td>对应表单ID(pb_widget.Id值)</td>
+                                        <td>
+                                            <div id="txtFormId" name="FormId" class="mini-textbox" style="width:250px" />
+                                        </td>
+                                    </tr>
+                                    <tr id="trFormName">
+                                        <td>对应表单名称(pb_widget.Name值)</td>
+                                        <td><div id="txtFormName" name="FormName" class="mini-textbox" style="width:250px" />  </td>
+                                    </tr>
+                                    <tr id="trKeyWord">
+                                        <td>对应关键词(pb_widget.KeyWord值)</td>
+                                        <td>
+                                            <div id="txtSubKeyWord" name="SubKeyWord" class="mini-textbox" style="width:250px" />
+                                        </td>
+                                    </tr>
+                                </table> 
+                                <legend>通知模板</legend>
+                                <input id="txtSubContent" name="SubContent" class="mini-textarea" style="height: 100px" />
+
+                                <p></p>
+                                <p style="color:red">
+                                    说明：子流程通知模版中，现支持以下变量：<br />
+                                    [@ToHumanName]：接收人名称<br />
+                                    [@Title]：标题<br />
+                                    [@EpsName]：所属项目名称<br />
+                                    [@EpsCode]：所属项目编号<br />
+                                    [@FromHumanName]：发送者名称<br />
+                                    [@FromDate]：发送日期<br />
+                                    [@CreateOrEditReport]：附加一个点击后可以自动创建的表单的链接<br />
+                                    以及所有session中的参数
+                                </p>
+                            </div>
+                             
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            mini.parse();
+           
+            var form = new mini.Form("frmMain");
+            var tabMain = mini.get("tabMain");
+                 
+          
+            //---------------------end投票系列-----------------------
+
+            var onSave = function () {
+                var subNodeMode = mini.get("rdoSubNodeMode").getValue();
+
+                if (!subNodeMode) {
+                    Power.ui.error("请先选择节点模式");
+                    return;
+                }
+                CloseWindow("ok");
+            }
+
+            var onSubNodeModeChanged = function (e) {
+                setSubNodeInfo(e.value);
+            }
+
+           
+            var setSubNodeInfo = function (subNodeMode) {
+               
+                switch (subNodeMode) {
+                    case ESubNodeMode.ThreadMode:  //线程模式 ,线程模式下，没有异步概念
+                        mini.get("chkIsAsync").setValue(false);
+                        mini.get("chkIsAsync").setEnabled(false);
+
+                        document.getElementById("trFormId").style.display = "none";
+                        document.getElementById("trFormName").style.display = "none";
+                        document.getElementById("trKeyWord").style.display = "none";
+
+                       // mini.get("txtFormId").setValue("");
+                       // mini.get("txtFormName").setValue("");
+                       // mini.get("txtKeyWord").setValue("");
+                        break;
+                    case ESubNodeMode.ProcessMode:  //进程模式下，可以有异步概念
+                        mini.get("chkIsAsync").setEnabled(true);
+                        document.getElementById("trFormId").style.display = "";
+                        document.getElementById("trFormName").style.display = "";
+                        document.getElementById("trKeyWord").style.display = "";
+                        break;
+                    default:
+                        alert("无法识别的节点模式");
+                        break;
+                }
+            }
+            var onIsRemoteChanged = function (e) {
+                 
+                if (e.value == "true") {
+                    mini.get("chkSubIsMultiUser").setValue(false);
+                    mini.get("chkSubIsMultiUser").setEnabled(false);
+                }
+                else {
+                    mini.get("chkSubIsMultiUser").setEnabled(true);
+                } 
+            }
+            //////////////////////////////////
+            function CloseWindow(action) {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }
+        
+            //标准方法接口定义
+            function SetData(node, title, workFlowData, WorkFlowMode) {
+                
+                //动态定义模式下， 来自模板的节点，不允许编辑里面内容
+                if (WorkFlowMode == "WorkingDesign") {
+                    mini.get("btnSave").setEnabled((node.IsFromInstance == true && node.IsInstanced == false));   //动态定义模式下，只有 来自实例的，且未走实例的，才可编辑
+                }
+
+                //------------子流程系列---------------------
+                //子流程系列
+                var subInfo = node.SubInfo; 
+               
+                if (!subInfo) { mini.get("btnSave").setEnabled(true); return; }
+                if (subInfo.SubNodeMode) {
+                    mini.get("rdoSubNodeMode").setValue(subInfo.SubNodeMode);
+                    setSubNodeInfo(subInfo.SubNodeMode);
+                }
+                mini.get("chkIsAsync").setValue(subInfo.IsAsync); 
+                mini.get("chkSubIsMultiUser").setValue(subInfo.IsMultiUser);
+                mini.get("chkIsRemote").setValue(subInfo.IsRemote);
+
+                if (mini.get("chkIsRemote").getValue()=="true") {
+                    mini.get("chkSubIsMultiUser").setValue(false);
+                    mini.get("chkSubIsMultiUser").setEnabled(false);
+                }
+                else {
+                    mini.get("chkSubIsMultiUser").setEnabled(true);
+                }
+                 
+                var sContent = "";
+                if (!subInfo.Content || subInfo.Content == "") {
+                    sContent = " <a href='[@CreateOrEditReport]'>点击可打开 [@FromHumanName] 于 [@FromDate] 所发送的表单: [@Title]</a>";
+                }
+                else
+                    sContent = Base64.decode(subInfo.Content);
+
+                mini.get("txtSubContent").setValue(sContent);
+                mini.get("txtFormId").setValue(subInfo.FormId);
+                mini.get("txtFormName").setValue(subInfo.FormName);
+                mini.get("txtSubKeyWord").setValue(subInfo.KeyWord);
+                 
+
+                mini.get("btnSave").setEnabled(true);
+            }
+
+
+            function GetData(node) {
+                var result = {};
+                //----------------------子流程系列---------------------------------
+                result.SubInfo = {};
+
+                result.SubInfo.SubNodeMode = mini.get("rdoSubNodeMode").getValue();
+                result.SubInfo.IsAsync = mini.get("chkIsAsync").getValue(); 
+                result.SubInfo.IsMultiUser = mini.get("chkSubIsMultiUser").getValue();
+                result.SubInfo.IsRemote = mini.get("chkIsRemote").getValue();
+                
+               
+                result.SubInfo.Content = Base64.encode(mini.get("txtSubContent").getValue());
+
+                result.SubInfo.FormId = mini.get("txtFormId").getValue();
+                result.SubInfo.FormName = mini.get("txtFormName").getValue();
+                result.SubInfo.KeyWord = mini.get("txtSubKeyWord").getValue();
+
+                return result.SubInfo;
+            } 
+        </script>
+    </form>
+</body>
+</html>
+

@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="view_BOM_All_Report.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+
+                            <div id="view_BOM_All_Report-Export" class="btn-group"></div>
+                            <div class="btn-group customcolumn" gridid="view_BOM_All_Report">栏位</div>
+                            <div class="btn-group customfilter" gridid="view_BOM_All_Report">过滤</div>
+							<a class="mini-button blue" id="view_BOM_All_Report.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="view_BOM_All_Report" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                             showpager="true" pagesize="50" sizelist="[50,100,200,500]" allowcellselect="true" ondrawcell="DrawCell" multiselect="true" allowalternating="true">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <div type="indexcolumn" width="45">序号</div>
+                                <div field="Code" width="150" allowsort="true">需求编号</div>
+                                <div field="Title" width="150" allowsort="true">需求名称</div>
+                                <div field="RegHumName" width="80" allowsort="true">需求人</div>
+                                <div field="MatCode" width="150" allowsort="true">物料编码</div>
+                                <div field="MatName" width="150" allowsort="true">物料名称</div>
+                                <div field="MatBsCode" width="150" allowsort="true">分类编号</div>
+                                <div field="RequestCode" width="150" allowsort="true">请购编号</div>
+                                <div field="RequestTitle" width="150" allowsort="true">请购名称</div>
+                                <div field="MatUnit" width="80" allowsort="true">单位</div>
+                                <div field="MatDescription" width="200" allowsort="true">物资描述</div>
+                                <div field="DeviceName" width="100" allowsort="true">装置</div>
+                                <div field="CBS_Name" width="100" allowsort="true">费用科目</div>
+                                <div field="RequestDate" width="100" allowsort="true" dateformat="yyyy-MM-dd">请购日期</div>
+                                <div field="IsUrgency" width="50" allowsort="true">紧急</div>
+                                <div field="Qty_Req" width="150" allowsort="true">请购数量</div>
+                                <div field="Qty_Order" width="100" allowsort="true">采购数量</div>
+                                <div field="Qty_Inquiry" width="100" allowsort="true">询价数量</div>
+                                <div field="MatAmount_FA" width="100" allowsort="true">竞价方案数量</div>
+                                <div field="MatAmount_BG" width="100" allowsort="true">竞价报告数量</div>
+                                <div field="MatAmount_HT" width="100" allowsort="true">采购合同数量</div>
+                                <div field="ArrivalNum" width="100" allowsort="true">已到货数量</div>
+                                <div field="InStoreNum" width="100" allowsort="true">入库数量</div>
+                                <div field="ActualNum" width="100" allowsort="true">领用数量</div>
+                                <div field="OutStoreNum" width="100" allowsort="true">出库数量</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            var grid = mini.get("view_BOM_All_Report");
+            grid.frozenColumns(0, 5);
+        });
+        function DrawCell(e) {
+            var record = e.record;
+            if (e.field == "Code") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('9963eeb2-03c5-4620-bce4-e09782d27db1', '" + record.BOMFileId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "RequestCode" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('52599d7a-5f45-4ff1-8031-f90b365c6b37', '" + record.RequestId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "Qty_Order" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('ee1bd339-8009-49dd-9593-e6c4aedbde53', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "Qty_Inquiry" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('7369edff-8d73-4e34-b46f-c8036567154d', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "MatAmount_FA" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('56ea0a00-e92f-4592-8571-d60df25197cd', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "MatAmount_BG" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('2a0d2e8a-b7ff-44bb-9abf-50816af668da', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "MatAmount_HT" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('e15183cd-0b33-48fc-92ab-0020612aecbd', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "ArrivalNum" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('dbbbb02c-0132-4f9b-a3a3-619edcbf2a0f', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "InStoreNum" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('fcbcb531-09c4-4b17-9524-057782cff011', '" + record.RequestListId + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "ActualNum" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('832b8efa-1cc6-4a6f-9b58-00b58a076be3', '" + record.Id + "');\">" + e.value + "</a>";
+
+            }
+            else if (e.field == "OutStoreNum" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenSingle('5243bebc-150b-415e-8cd2-f01b5897b707', '" + record.Id + "');\">" + e.value + "</a>";
+
+            }
+        }
+        //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 560
+            })
+        }
+        function OpenSingle(formid, value) {
+
+            var url = "/Form/ViewForm/" + formid +"/?requestid="+value;
+            var t=mini.open({
+                url: url,
+                width: 900,
+                height: 560
+            })
+            t.max();
+        }
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="Report_SF_WaterQulity.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="Report_SF_WaterQulity-Export" title="水质指标" class="btn-group"></div>
+
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+                            <span>运行站</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                    </div>
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="Report_SF_WaterQulity" class="mini-datagrid" style="width: 100%; height: 100%;" width="917" height="601" onload="OnBeforeLoad"
+                             allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Date" name="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                    填报时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" format="yyyy-MM-dd" />
+                                </div>
+                                <div field="Department" name="Department" headeralign="center" header="运行站">
+                                    运行站
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+
+                                <div header="调节池出水" headeralign="center">
+                                    <div property="columns">
+                                        <div field="A1" headeralign="center">
+                                            COD(mg/L)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="A2" headeralign="center">
+                                            氨氮(mg/L)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div header="UASB池出水" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="B1" headeralign="center">
+                                                    MLSS(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="B2" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="B3" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="B4" headeralign="center">
+                                                    MLSS(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="B5" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="B6" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div header="反硝化池出水" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="C1" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="C2" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="C3" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="C4" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div header="硝化池出水" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="D1" headeralign="center">
+                                                    MLSS(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D2" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D3" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D4" headeralign="center">
+                                                    温度（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="D5" headeralign="center">
+                                                    MLSS(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D6" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D7" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="D8" headeralign="center">
+                                                    温度（℃）
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div header="STRO" headeralign="center">
+                                    <div property="columns">
+                                        <div header="1#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="E1" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="E2" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div header="2#" headeralign="center">
+                                            <div property="columns">
+                                                <div field="E3" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="E4" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div header="总排" headeralign="center">
+                                    <div property="columns">
+                                        <div field="F1" headeralign="center">
+                                            COD(mg/L)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="F2" headeralign="center">
+                                            氨氮(mg/L)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="F3" headeralign="center">
+                                            总氮(mg/L)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            //firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(firstDate);
+            var grid = mini.get("Report_SF_WaterQulity");
+            grid.frozenColumns(0, 1);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            //var grid = mini.get("View_SF_ZH_MatRequisitions");
+
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            //mini.get("View_SF_SJ_Overview").mergeColumns(["xmbhCode"], ["ProjectLeader"], ["DesignStage"], ["tdzjTitle"], ["ggspsTitle"]);
+            mini.get("Report_SF_WaterQulity").mergeColumns(["Date", "Department"]);
+        }
+
+
+        function search() {
+            mini.get('Report_SF_WaterQulity').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "Report_SF_WaterQulity") {
+                var StartMonth = mini.get("QStartDate").getFormValue();
+                var EndMonth = mini.get("QEndDate").getFormValue();
+                var QDepartment = mini.get("QDepartment").getFormValue();
+                var month = new Date(StartMonth).getMonth() + 1;
+                var month2 = new Date(EndMonth).getMonth() + 1;
+                if (month == month2) {
+                    debugger;
+
+                    if (e.params.swhere == "") {
+                        e.params.swhere = " Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "'  and Department like '%" + QDepartment + "%' ";
+                    }
+                    else {
+                        e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' and Department like '%" + QDepartment + "%' ";
+                    }
+                }
+                else {
+                    Power.ui.alert("不可跨月查询！");
+                }
+            }
+        }
+
+
+        PowerForm.EventAfterLoadData = function (e) {
+            var data = e.data;
+            var a1 = 0;
+            var a2 = 0;
+
+            var b1 = 0;
+            var b2 = 0;
+            var b3 = 0;
+            var b4 = 0;
+            var b5 = 0;
+            var b6 = 0;
+
+            var c1 = 0;
+            var c2 = 0;
+            var c3 = 0;
+            var c4 = 0;
+
+            var d1 = 0;
+            var d2 = 0;
+            var d3 = 0;
+            var d4 = 0;
+            var d5 = 0;
+            var d6 = 0;
+            var d7 = 0;
+            var d8 = 0;
+
+            var e1 = 0;
+            var e2 = 0;
+            var e3 = 0;
+            var e4 = 0;
+
+            var f1 = 0;
+            var f2 = 0;
+            var f3 = 0;
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                a1 += d.A1 || 0;
+                a2 += d.A2 || 0;
+                b1 += d.B1 || 0;
+                b2 += d.B2 || 0;
+                b3 += d.B3 || 0;
+                b4 += d.B4 || 0;
+                b5 += d.B5 || 0;
+                b6 += d.B6 || 0;
+                c1 += d.C1 || 0;
+                c2 += d.C2 || 0;
+                c3 += d.C3 || 0;
+                c4 += d.C4 || 0;
+                d1 += d.D1 || 0;
+                d2 += d.D2 || 0;
+                d3 += d.D3 || 0;
+                d4 += d.D4 || 0;
+                d5 += d.D5 || 0;
+                d6 += d.D6 || 0;
+                d7 += d.D7 || 0;
+                d8 += d.D8 || 0;
+                e1 += d.E1 || 0;
+                e2 += d.E2 || 0;
+                e3 += d.E3 || 0;
+                e4 += d.E4 || 0;
+                f1 += d.F1 || 0;
+                f2 += d.F2 || 0;
+                f3 += d.F3 || 0;
+            }
+            var len = data.length;
+            if (len == 0) {
+                len = 1
+            }
+            var x = {};
+            x.Date = "合计";
+            x.A1 = a1;
+            x.A2 = a2;
+
+            x.B1 = b1;
+            x.B2 = b2;
+            x.B3 = b3;
+            x.B4 = b4;
+            x.B5 = b5;
+            x.B6 = b6;
+
+            x.C1 = c1;
+            x.C2 = c2;
+            x.C3 = c3;
+            x.C4 = c4;
+
+            x.D1 = d1;
+            x.D2 = d2;
+            x.D3 = d3;
+            x.D4 = d4;
+            x.D5 = d5;
+            x.D6 = d6;
+            x.D7 = d7;
+            x.D8 = d8;
+
+            x.E1 = e1;
+            x.E2 = e2;
+            x.E3 = e3;
+            x.E4 = e4;
+
+            x.F1 = f1;
+            x.F2 = f2;
+            x.F3 = f3;
+
+            data.push(x);
+
+            if (len != 0) {
+                var y = {};
+                y.Date = "平均";
+                y.A1 = (a1 / len).toFixed(2);
+                y.A2 = (a2 / len).toFixed(2);
+
+                y.B1 = (b1 / len).toFixed(2);
+                y.B2 = (b2 / len).toFixed(2);
+                y.B3 = (b3 / len).toFixed(2);
+                y.B4 = (b4 / len).toFixed(2);
+                y.B5 = (b5 / len).toFixed(2);
+                y.B6 = (b6 / len).toFixed(2);
+
+                y.C1 = (c1 / len).toFixed(2);
+                y.C2 = (c2 / len).toFixed(2);
+                y.C3 = (c3 / len).toFixed(2);
+                y.C4 = (c4 / len).toFixed(2);
+
+                y.D1 = (d1 / len).toFixed(2);
+                y.D2 = (d2 / len).toFixed(2);
+                y.D3 = (d3 / len).toFixed(2);
+                y.D4 = (d4 / len).toFixed(2);
+                y.D5 = (d5 / len).toFixed(2);
+                y.D6 = (d6 / len).toFixed(2);
+                y.D7 = (d7 / len).toFixed(2);
+                y.D8 = (d8 / len).toFixed(2);
+
+                y.E1 = (e1 / len).toFixed(2);
+                y.E2 = (e2 / len).toFixed(2);
+                y.E3 = (e3 / len).toFixed(2);
+                y.E4 = (e4 / len).toFixed(2);
+
+                y.F1 = (f1 / len).toFixed(2);
+                y.F2 = (f2 / len).toFixed(2);
+                y.F3 = (f3 / len).toFixed(2);
+                data.push(y);
+            }
+
+            mini.get("Report_SF_WaterQulity").setData(data);
+
+        }
+
+
+    </script>
+</body>
+</html>

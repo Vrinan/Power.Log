@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>采购策划</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_CG_PurchasePackage.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="SF_CG_PurchasePackage.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_CG_PurchasePackage.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="基本数据">
+                            <div id="SF_CG_PurchasePackage" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="SF_CG_PurchasePackage.Code" name="Code" class="mini-textbox" required="false" readonly="readonly" /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_PurchasePackage.Status" name="Status" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td><input id="SF_CG_PurchasePackage.Title" name="Title" class="mini-textbox" required="false" /></td>
+                                        <td>采购员</td>
+                                        <td><input id="SF_CG_PurchasePackage.PurchaserName" name="PurchaserName" textname="PurchaserName" class="mini-buttonedit" emptytext="请选择采购员..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" required="required" /></td>
+                                        <input id="SF_CG_PurchasePackage.PurchaserId" name="PurchaserId" textname="PurchaserId" class="mini-hidden" allowInput="false" />   
+                                    </tr>
+                                        
+                                        <!-- <td>采购类型</td>
+                                        <td><input id="SF_CG_PurchasePackage.PurchaseType" name="PurchaseType" class="mini-combobox" allowInput="false" /></td> -->
+                                        <!-- <td>订单类型</td>
+                                        <td><input id="SF_CG_PurchasePackage.PackageType" name="PackageType" class="mini-combobox" allowInput="false" /></td> -->
+                                        
+                                    <!-- <tr>  
+                                        <td>请购类型</td>
+                                        <td><input id="SF_CG_PurchasePackage.PurchaseMajor" name="PurchaseMajor" class="mini-combobox" required="true" allowInput="false" /></td>
+                                        <td>项目名称</td>
+                                        <td><input id="SF_CG_PurchasePackage.ProjName" name="ProjName" textname="ProjName" class="mini-buttonedit" emptytext="请选择项目..." 
+                                            onbuttonclick="PowerForm.OnBtnWizard(this)" allowInput="false" required="required"/>
+                                            <input id="SF_CG_PurchasePackage.ProjId" name="ProjId" textname="ProjId" class="mini-hidden" required="false" />
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>计划类型</td>
+                                        <td><input id="SF_CG_PurchasePackage.PlanType" name="PlanType" class="mini-combobox" allowInput="false" required="required"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>备注说明</td>
+                                        <td colspan="3"><input id="SF_CG_PurchasePackage.Remark" name="Remark" class="mini-textarea" height="150" /></td>       
+                                    </tr>
+                                    <tr>
+                                        <td><label>下发人</label></td>
+                                        <td><input id="ApprHumName" name="ApprHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>下发日期</label></td>
+                                        <td><input id="ApprDate" name="ApprDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>接收人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>接收日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物资明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_PurchasePackageList.Add1" onclick="PowerForm.OnBtnWizard(this)">从请购计划选择</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_PurchasePackageList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_CG_PurchasePackageList-Print" class="btn-group"></div>
+                                <div id="SF_CG_PurchasePackageList-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_PurchasePackageList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true" 
+                                     editNextOnEnterKey="true" data-options="{canImport:true}" oncellbeginedit="OnCellBeginEdit" oncellendedit="Oncellendedit" sortField="sequ" >
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35">序号</div><!--序号-->
+                                        <div field="Code" width="0" allowSort="true" >物资编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanId" width="0" allowSort="true"  >物资计划Id<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanCode" width="130" allowSort="true"  >计划编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatId" width="0" allowSort="true"  >物资库编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="100" allowSort="true" >物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Specification" width="100" allowSort="true" >规格型号/技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <!-- <div field="Model" width="100" allowSort="true" >技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div> -->
+                                        <div field="PID" width="100" allowSort="true" >PID编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatUnit" width="100" allowSort="true" >单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Amount" width="100" allowSort="true" numberformat="0" >请购数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n" style="width: 100%;" /></div>
+                                        <div field="Price" width="100" allowSort="true" >预估单价<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="TotalPrice" width="100" allowSort="true" >预估总价<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="ArrivalDate" width="100" allowSort="true" dateFormat="yyyy-MM-dd" >到货日期<input property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false" dateFormat="yyyy-MM-dd"/></div>
+                                        <div field="ArrivalAddress" width="100" allowSort="true" >到货地点<input property="editor" class="mini-textbox" style="width: 100%;" allowInput="false"/></div>
+                                        <div field="Supplier" width="100" allowSort="true" >厂家/品牌/供应商<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Remark" width="150" allowSort="true" >备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function OnCellBeginEdit(e) {
+            //自动计算预估总价,不给编辑,同理，物资库LongCode，物资GUId,物资名称,计划编号
+            // if(e.field=="TotalPrice"||e.field=="Code"||e.field=="MatId"||e.field=="MatName"||e.field=="PlanCode"){
+                if(e.field=="TotalPrice"||e.field=="Code"||e.field=="MatId"||e.field=="MatName"){
+                e.cancel = true;
+            }
+        }
+        function Oncellendedit(e){
+            //自动求金额
+            if(e.field=="Amount"||e.field=="Price"){
+                var record = e.record;
+                var sender = e.sender;
+                var Amount = record.Amount == null ? 0 : parseFloat(record.Amount);
+                var Price = record.Price == null ? 0 : parseFloat(record.Price);
+                var TotalPrice = Amount * Price;
+                sender.updateRow(record, { "TotalPrice": TotalPrice });
+            }
+        }
+        //物资选完后,后台把状态字段(IsChosen)改成已选择(1)
+        PowerForm.EventWizardData  = function (e,data) {
+            var D ="";
+            for(var i=0;i<data.length;i++){
+                D+=data[i].Id+",";
+            }
+            debugger;
+            var par = { "MaterialsId": D };
+            FormFuns.APIExec("SF_CG_PurchasePackage", "BO", "setChosenMaterilas", par, function (text) {
+                //返回的所有字符串
+                var data = mini.decode(text).data.value;
+                //转成JSON格式
+                var JSONData = JSON.parse(mini.decode(text).data.value).data.values;
+                debugger;
+            });
+
+        }
+        //打开向导前,根据请购类型(PurchaseMajor)过滤下,以及 选择采购员做人员过滤,只显示采购部
+        PowerForm.EventWizardWhere = function (e) {
+            debugger;
+            if (e.id == "SF_CG_PurchasePackageList.Add1") {
+                if (formconfig.FormState == "add" && mini.get("SF_CG_PurchasePackage.PurchaseMajor").value==null) {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表.");
+                    return;
+                }
+                var PurchaseMajor = mini.get("SF_CG_PurchasePackage.PurchaseMajor").value;
+                var ProjId = mini.get("SF_CG_PurchasePackage.ProjId").value;
+                var PlanType = mini.get("SF_CG_PurchasePackage.PlanType").value;
+                e.where = "1=1 and a.IsChosen=0 and a.PurchaseMajor='" + PurchaseMajor+"'" 
+                        //   + "and ProjId='"+ProjId+"'"
+                          +" and a.PlanType='"+PlanType+"'";
+            }
+            if (e.id == "SF_CG_PurchasePackage.PurchaserName") {
+                e.where = "1=1 and DeptName like '%采购%'";
+            }
+        }
+    </script>
+</body>
+</html>

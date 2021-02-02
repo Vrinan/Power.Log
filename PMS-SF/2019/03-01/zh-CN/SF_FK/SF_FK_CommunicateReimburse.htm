@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <!-- <script src="/Scripts/KindEditor/kindeditorboot.js?v=541" type="text/javascript"></script> -->
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>交通通讯费用报销
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_FK_CommunicateReimburse.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存
+                    </a>
+                    <!--保存-->
+                    <a class="mini-button blue" id="SF_FK_CommunicateReimburse.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新
+                    </a>
+                    <!--刷新-->
+                    <a class="mini-button blue" id="SF_FK_CommunicateReimburse.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭
+                    </a>
+                    <!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+
+                        <div title='基本信息'>
+                            <div style="height:100%;" showcollapsebutton="false">
+                                <div class="mini-fit">
+                                    <div id="SF_FK_CommunicateReimburse" class="form">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    编号
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.Code" name="Code" class="mini-textbox" required/>
+                                                </td>
+                                                <td>
+                                                    状态
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.Status" name="Status" class="mini-combobox" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    标题
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_FK_CommunicateReimburse.Title" name="Title" class="mini-textbox" required/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>
+                                                    申请人
+                                                </td>
+                                                <td>
+
+                                                    <input id="SF_FK_CommunicateReimburse.ApplicationHuman" name="ApplicationHuman"
+                                                           class="mini-textbox" readonly="readonly" />
+                                                    <input id="SF_FK_CommunicateReimburse.ApplicationHumanId" name="ApplicationHumanId"
+                                                           class="mini-textbox" readonly="readonly" visible="false" />
+                                                </td>
+                                                <td>
+                                                    申请部门
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.DeptName" name="DeptName" class="mini-textbox"
+                                                           readonly />
+                                                    <input id="SF_FK_CommunicateReimburse.DeptId" name="DeptId" class="mini-textbox"
+                                                           readonly visible="false" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    申请交通金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.ApplicationTrafficAmount" name="ApplicationTrafficAmount" format="n2"
+                                                           class="mini-spinner" allowlimitvalue="false" readonly />
+                                                </td>
+                                                <td>
+                                                    申请通讯金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.ApplicationComAmount" name="ApplicationComAmount" class="mini-spinner" format="n2"
+                                                           allowlimitvalue="false"  readonly />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    审定交通金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.ApproveTrafficAmount" name="ApproveTrafficAmount" format="n2"
+                                                           class="mini-spinner" allowlimitvalue="false" readonly />
+                                                </td>
+                                                <td>
+                                                    审定通讯金额
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.ApproveComAmount" name="ApproveComAmount" class="mini-spinner" format="n2"
+                                                           allowlimitvalue="false"  readonly />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    填报日期
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.AddYearMonth" name="AddYearMonth" class="mini-monthpicker" required/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    事项说明
+                                                </td>
+                                                <td colspan="3">
+                                                    <input id="SF_FK_CommunicateReimburse.Memo" name="Memo" class="mini-textarea" height="100" required />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    录入人
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.RegHumName" name="RegHumName" class="mini-textbox"
+                                                           readonly="readonly" />
+                                                </td>
+                                                <td>
+                                                    录入时间
+                                                </td>
+                                                <td>
+                                                    <input id="SF_FK_CommunicateReimburse.RegDate" name="RegDate" class="mini-datepicker"
+                                                           readonly="readonly" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='明细' name="SF_FK_CommunicateReimburse_dtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_FK_CommunicateReimburse_dtl.Add"
+                                   onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_FK_CommunicateReimburse_dtl.Delete"
+                                   onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                                <div id="SF_FK_CommunicateReimburse_dtl-Export" title="交通通讯费用报销" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_FK_CommunicateReimburse_dtl" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     multiselect="true" oncellbeginedit="beginedit" oncellendedit="endedit" idfield="Id" allowresize="true" pagesize="100"
+                                     allowcelledit="true" allowcellselect="true" sortField="DeptName,HumanCode">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="HumanCode" headeralign="center">
+                                            工号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="HumanName" headeralign="center">
+                                            姓名
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DeptName" headeralign="center">
+                                            所属部门
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="CardBank" headeralign="center">
+                                            开户行名称
+                                            <input property="editor" allowlimitvalue="false" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="CardNum" headeralign="center">
+                                            开户行账号
+                                            <input property="editor" allowlimitvalue="false" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="AllTrafficAmount" headeralign="center" numberformat="n2">
+                                            可报销交通费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="AllComAmount" headeralign="center">
+                                            可报销通讯费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="UsedTrafficAmount" headeralign="center" numberformat="n2">
+                                            已报销交通费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="UsedComAmount" headeralign="center" numberformat="n2">
+                                            已报销通讯费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="RemainTrafficAmount" headeralign="center" numberformat="n2">
+                                            剩余可报交通费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="RemainComAmount" headeralign="center" numberformat="n2">
+                                            剩余可报通讯费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApplicationTrafficAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            申报交通费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApplicationComAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            申报通讯费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApproveTrafficAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            审定交通费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApproveComAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            审定通讯费
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        <div field="SumApprove" headeralign="center" numberformat="n2" summarytype="sum">
+                                            合计
+                                            <input property="editor" allowlimitvalue="false" class="mini-spinner" style="width: 100%;" />
+                                        </div>
+                                        
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            var grid = mini.get("SF_FK_CommunicateReimburse_dtl");
+            grid.frozenColumns(0,6);
+        });
+
+        function changed() {
+            var a = mini.get("SF_FK_CommunicateReimburse.AuthorizedAmount").getValue();
+            mini.get("SF_FK_CommunicateReimburse.Amount").setValue(a);
+        }
+
+        function beginedit(e) {
+            e.cancel = true;
+            if (e.field == "ApplicationTrafficAmount" || e.field == "ApplicationComAmount" || e.field == "Remark" || e.field == "CardNum" || e.field == "CardBank" || e.field == "CardNum" ) {
+                e.cancel = false;
+            }
+            if((workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "cwjb") && (e.field =="ApproveTrafficAmount" || e.field=="ApproveComAmount")){
+                e.cancel = false;
+            }
+        }
+
+        function endedit(e){
+            var record = e.record;
+            var grid = mini.get("SF_FK_CommunicateReimburse_dtl");
+            if(e.field =="ApplicationTrafficAmount" || e.field=="ApplicationComAmount")
+            {
+                grid.updateRow(record, { "ApproveTrafficAmount": parseFloat(record.ApplicationTrafficAmount) });
+                grid.updateRow(record, { "ApproveComAmount": parseFloat(record.ApplicationComAmount) });
+                var s = parseFloat(record.ApplicationTrafficAmount) + parseFloat(record.ApplicationComAmount);
+                grid.updateRow(record, { "SumApprove": s });
+            }
+            if(e.field =="ApproveTrafficAmount" || e.field=="ApproveComAmount")
+            {
+                var sum = parseFloat(record.ApproveTrafficAmount) + parseFloat(record.ApproveComAmount);
+                grid.updateRow(record, { "SumApprove": sum });
+            }
+        }
+
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var sum1 = Number(0);
+            var sum2 = Number(0);
+            var sum3 = Number(0);
+            var sum4 = Number(0);
+            var gd = mini.get("SF_FK_CommunicateReimburse_dtl");
+            var row = gd.findRow(function (row) {
+                sum1 += parseFloat(row.ApplicationTrafficAmount);
+                sum2 += parseFloat(row.ApplicationComAmount);
+                sum3 += parseFloat(row.ApproveTrafficAmount);
+                sum4 += parseFloat(row.ApproveComAmount);
+                mini.get("SF_FK_CommunicateReimburse.ApplicationTrafficAmount").setValue(sum1);
+                mini.get("SF_FK_CommunicateReimburse.ApplicationComAmount").setValue(sum2);
+                mini.get("SF_FK_CommunicateReimburse.ApproveTrafficAmount").setValue(sum3);
+                mini.get("SF_FK_CommunicateReimburse.ApproveComAmount").setValue(sum4);
+            })
+        }
+
+        // mini.get("SF_FK_CommunicateReimburse_dtl").on("drawcell", function (e) {
+        //     e.cellStyle = "background:#D7F5D9";
+        //     var field = e.field;
+        //     if (field == "Code") {
+        //         e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('dc42c961-fbc6-4344-a3e3-4f6602be1684', '" + e.record.TravelId + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+        //     }
+        // });
+        // function OpenForm(formid, value) {
+        //     var url = "/Form/ValidForm/" + formid + "/view/" + value;
+        //     mini.open({
+        //         url: url,
+        //         width: 850,
+        //         height: 530
+        //     })
+        // }
+
+
+
+        PowerForm.EventWizardWhere = function (e) {
+            var yearmonth = mini.get("SF_FK_CommunicateReimburse.AddYearMonth").getValue().format("yyyyMM");
+            if (e.id == "SF_FK_CommunicateReimburse_dtl.Add") {//计划
+                e.where = " convert(nvarchar(6),a.Month,112) ='"+yearmonth+"' and status = 50 ";
+            }
+            var deptid = mini.get("SF_FK_CommunicateReimburse.DeptId").getValue();
+            var deptname = mini.get("SF_FK_CommunicateReimburse.DeptName").getValue();
+            if(!IsEmpty(deptid))
+            {
+                switch(deptname)
+                {
+                    case "综合部":
+                    e.where+=" AND (DeptId ='"+deptid+"' or DeptId ='6DAC8FAA-DF4C-4377-A9D6-018F7FD9B5C3') ";
+                    break;
+                    case "项目部办公室":
+                    e.where+=" AND (DeptId ='BB3EC90C-C456-4449-BA2B-43EDF3C25D3B' or DeptId in (select id from PB_Department where ParentId='BB3EC90C-C456-4449-BA2B-43EDF3C25D3B'))";
+                    break;
+                    default:
+                    e.where += "  AND DeptId ='"+deptid+"'";
+                }
+               
+            }
+        }
+
+        // PowerForm.EventWizardData = function (e, data) {
+        //     if (e.id == "SF_FK_CommunicateReimburse_dtl.Add") {
+        //         var record = e.record;
+        //     }
+        // }
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            var human = mini.get("SF_FK_CommunicateReimburse.ApplicationHuman").getValue();
+            if (IsEmpty(human)) {
+                mini.get("SF_FK_CommunicateReimburse.ApplicationHuman").setValue(sessiondata.HumanName);
+                mini.get("SF_FK_CommunicateReimburse.ApplicationHumanId").setValue(sessiondata.HumanId);
+                mini.get("SF_FK_CommunicateReimburse.DeptName").setValue(sessiondata.DeptName);
+                mini.get("SF_FK_CommunicateReimburse.DeptId").setValue(sessiondata.DeptId);
+            }
+            var month = mini.get("SF_FK_CommunicateReimburse.AddYearMonth").getValue();
+            if(IsEmpty(month))
+            {
+                var dt = new Date().format("yyyy-MM");
+                mini.get("SF_FK_CommunicateReimburse.AddYearMonth").setValue(dt);
+            }
+        };
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "cwjb") {
+                mini.get("SF_FK_CommunicateReimburse.Save").enable();
+                var g = mini.get("SF_FK_CommunicateReimburse_dtl");
+                if (g && g.columns.length > 0) {
+                    var columns = [];
+                    funsself.GetTreeGridAllHeaders(g.columns, columns);
+                    for (var i = 0; i < columns.length; i++) {
+                        columns[i].readOnly = false;
+                    }
+                }
+            }
+        }
+        //送审前,检查下子表,必须有一行且 对方单位名称、开户行、帐号 不能为空
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("SF_FK_CommunicateReimburse_dtl");
+            //只对新增单据做判断(考虑历史送审中数据很多未填)
+            if (mini.get("SF_FK_CommunicateReimburse.Status").getValue() == 0) {
+                if (grid.data.length == 0) {
+                    Power.ui.alert("明细不能为空");
+                    e.isValid = false;
+                } else {
+                    for (var i = 0; i < grid.data.length; i++) {
+                        if (grid.data[i].CardNum == null ? true : (grid.data[i].CardNum.trim().length == 0 ? true : false)) {
+                            Power.ui.alert("明细第" + (i + 1) + "行,开户行帐号不能为空!");
+                            e.isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

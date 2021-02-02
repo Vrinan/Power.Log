@@ -1,0 +1,99 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <!--<a class="mini-button blue" id="V_PS_DM_WBSDesigner.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>-->
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <!--<a class="mini-button blue" id="V_PS_DM_WBSDesigner.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                            <a class="mini-button blue" id="V_PS_DM_WBSDesigner.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>-->
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+
+                        <div id="V_PS_DM_WBSDesigner" idfield="wbs_guid" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                             treecolumn="text" parentfield="parent_wbs_guid" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true" oncellendedit="V_PS_DM_WBSDesigner_EndEdit">
+
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div name="text" field="wbs_short_name" headeralign="center" header="WBS编号" allowsort="true">WBS编号</div>
+
+                                <div field="wbs_name" headeralign="center" header="WBS名称" allowsort="true">WBS名称</div>
+
+                                <div field="obs_name" headeralign="center" header="责任人" allowsort="true">责任人<input property="editor" id="V_PS_DM_WBSDesigner.obs_name" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" style="width: 100%;" allowinput="false" /></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+       function V_PS_DM_WBSDesigner_EndEdit(e) {
+            if (e.field != "wbs_short_name") {
+                  FormFuns.ComboboxValueChanged(e) ;
+            }
+        }
+
+
+    </script>
+</body>
+</html>

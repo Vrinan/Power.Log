@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+     <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+</head>
+<body>
+    <div class="row-wrap" >
+    <div class="row  row-hd row-hd-responsive" style="height: 100%">
+         <div class="col-md-12 col-hd-12" >
+               <div id="tabHistoryList"  class="mini-tabs" style="width:97%;height:100%" activeIndex="0">
+                    <div title="当前步骤" id="divInboxList">
+                         <div id="gdInboxList"   class="mini-datagrid"    style="width: 100%; height:150px;"  showPager="fase"  visible="true"  width="917"  height="544"  pageSize="15"     >
+                             <div property="columns">
+                                <div  field="SequeID"    allowSort="true"  header="步骤号"  align="center" ></div>
+                                <div  field="ActName"  allowSort="true"    header="步骤名"   align="center" ></div> 
+                                <div  field="UserName"  allowSort="true"    header="签收人"   align="center" ></div> 
+                                <div  field="RecvDate" dataType=""  allowSort="true"    header="接收时间"  dateformat="yyyy-MM-dd"  align="center" > </div>
+                                <div  field="ReadDate" dataType=""  allowSort="true"    header="签收时间"  dateformat="yyyy-MM-dd"  align="center" > </div> 
+                                <div  field="InboxStatus"  allowSort="true"    header="状态"   align="center" renderer="onInBoxStatusRenderer" > </div> 
+                                <div  field="FlowOperate"  allowSort="true"    header="操作"  align="center"  renderer="onFlowOperateRenderer"> </div> 
+                                <div    header="管理"  align="center"  renderer="onInboxActionRenderer"> </div> 
+                             </div>
+                         </div>
+                    </div>
+              </div>
+
+         </div>
+    </div>
+    </div>
+
+    <script>
+        mini.parse();
+         
+        var gdInboxList = mini.get("gdInboxList"); 
+        var tabHistoryList = mini.get("tabHistoryList");
+        var InboxStatus = mini.decode("[{'id':'10','text':'空'},{'id':'20','text':'正常'},{'id':'30','text':'隐藏中'},{'id':'40','text':'等候签收'},{'id':'50','text':'等候解锁'},{'id':'60','text':'本线路结束'}]");
+        var FlowOperates = mini.decode("[{'id':'None','text':'空'},{'id':'Insert','text':'保存'},{'id':'Update','text':'修改'},{'id':'Delete','text':'删除'},{'id':'Send','text':'发送'},{'id':'Return','text':'回退'},{'id':'EndFlow','text':'办结'},{'id':'GetBack','text':'回收'},{'id':'CheckOut','text':'签收'},{'id':'Delegate','text':'直接委办'},{'id':'DelegateAndReturn','text':'委办且返还'},{'id':'Stop','text':'终止'},{'id':'Active','text':'激活'},{'id':'ShowFlowMonitor','text':'监控'},{'id':'ShowStopedFlowMonitor','text':'监控历史'} ]");
+        
+       
+         
+        function onSelectUser(grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            row.Mulit = "false";  //只能单选一个
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlow/SelectUser.html?SelectMode=DeptOrPosition",
+                title: "人员选择", width: "800px", height: "600px",
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = mini.clone(row);
+                    tmpNode.SourceMode = row.SourceMode;
+                    iframe.contentWindow.SetData(tmpNode);
+
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                     
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    if (data == "1")
+                        return;
+                    if (!data) {
+                        Power.ui.alert("操作异常，未捕获到信息，请重新选择"); return;
+                    }
+                    if (!data.DeptPositionID) {
+                        Power.ui.alert("操作异常，未捕获到信息，请重新选择"); return;
+                    }
+                    data = mini.clone(data);
+                   
+                    Power.ui.confirm("您是否确定要修改经手人？", function (action) {
+                        if (!action) { CloseWindow("ok"); return; }
+                        $.ajax({
+                            url: "/WorkFlow/UpdateInboxUser",
+                            data: { "WorkInfoID": row.WorkInfoID, "SequeID": row.SequeID, "json": mini.encode(data) },
+                            success: function (text) {
+                                var result = mini.decode(text);
+                                if (result.success == false) {
+                                    Power.ui.error(result.message);
+                                    return;
+                                }
+                                curGrid.updateRow(row, { "SourceMode": data.SourceMode, "UserName": data.ShowUserInfo, "DeptPositionID": data.DeptPositionID, "DeptPositionName": data.DeptPositionName, "UserID": data.UserID });
+
+                            }
+                        });
+
+                    });
+                  
+                }
+            });
+
+        }
+        function onInboxActionRenderer(e) {
+            var s = "";
+            s = '<a class="New_Button" href="javascript:onSelectUser(\'' + e.sender.id + '\')">修改审核人</a>';
+            return s;
+        }
+
+        function onInBoxStatusRenderer(e) {
+            for (var i = 0, l = InboxStatus.length; i < l; i++) {
+                var tmp = InboxStatus[i];
+                if (tmp.id == e.value) return tmp.text;
+            }
+            return "";
+        }
+        function onFlowOperateRenderer(e) {
+            for (var i = 0, l = FlowOperates.length; i < l; i++) {
+                var tmp = FlowOperates[i];
+                if (tmp.id == e.value) return tmp.text;
+            }
+            return "";
+        }
+
+        function SetData(workInfoID) {
+            $.ajax({
+                url: "/WorkFlow/ShowWorkInfoList/" + workInfoID,
+                success: function (text) {
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                     
+                    gdInboxList.setData(result.data.InboxList); 
+                    
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

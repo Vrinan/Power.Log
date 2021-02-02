@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_EachWeekCheck.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <!--<div id="View_SF_EachWeekCheck-Export" title="设备检修周计划汇总" class="btn-group"></div>-->
+                            <a class="mini-button blue" id="View_SF_EachWeekCheck.Export" onclick="PowerForm.AlExport('View_SF_EachWeekCheck', '设备检修周计划汇总', 'RunStation,CheckType')"><i class="fa fa-sign-out"></i>导出</a>
+                            <label style="font-size:14px">填报类型：</label>
+                            <input property="editor" class="mini-combobox" id="AType" onvaluechanged="Changed" style="width:140px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'sc',text:'生产'},{Id:'hb',text:'环保'},{Id:'jx',text:'检修'},{Id:'xz',text:'协助解决'}]" />
+
+                            <label style="font-size:14px">本/下周：</label>
+                            <input property="editor" class="mini-combobox" id="BType" onvaluechanged="Changed" style="width:140px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'1',text:'本周总结'},{Id:'2',text:'下周计划'}]"  />
+
+                            <label style="font-size:14px">运行站：</label>
+                            <input id="dept" name="dept" class="mini-textbox" width="150px" />
+
+                            &nbsp;&nbsp;&nbsp;
+                            <span>开始日期</span>
+                            <input id="start" name="start" class="mini-datepicker" width="150px" />
+                            <input id="end" name="end" class="mini-datepicker" width="150px"/>
+                            <a class="mini-button yellow" onclick="Query">查询</a>
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_EachWeekCheck" class="mini-datagrid" onload="onLoad" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id" showPager="false">
+                            <div property="columns">
+                                <!--<div type="indexcolumn">序号</div>-->
+                                <div field="RunStation" name="RunStation" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="运行站/运行部" align="left">
+                                    运行站/运行部
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="CheckType" name="CheckType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="填报类型" align="left">
+                                    填报类型
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="StartDate" name="StartDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="开始时间" align="left"  dateformat="yyyy-MM-dd">
+                                    开始时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="EndDate" name="EndDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="结束时间" align="left" dateformat="yyyy-MM-dd">
+                                    结束时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+
+                                
+                                <div field="Content" name="Content" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="检修内容" align="left">
+                                    工作内容
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                              
+                                <div field="DtlMemo" headeralign="center" header="备注">
+                                    备注
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+
+            mini.get("start").setValue(firstDate);
+            mini.get("end").setValue(endDate);
+            mini.get("BType").setValue(1);
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function Changed() {
+            mini.get('View_SF_EachWeekCheck').reload();
+        }
+
+        function onLoad(e) {
+            mini.get('View_SF_EachWeekCheck').mergeColumns(["RunStation","CheckType"]);
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            var start = mini.get("start").getValue().format("yyyy-MM-dd");
+            var end = mini.get("end").getValue().format("yyyy-MM-dd");
+            var dept = mini.get("dept").getValue();
+            var AType = mini.get("AType").getText();
+            var BType = mini.get("BType").getValue();
+
+            if (e.params.swhere == "") {
+                e.params.swhere = " StartDate between '" + start + "' and '" + end + "'  and RunStation like '%" + dept + "%' and CheckType like '%" + AType + "%' and Type like '%" + BType + "%' ";
+            }
+            else {
+                e.params.swhere += "and StartDate between '" + start + "' and '" + end + "'  and RunStation like '%" + dept + "%' and CheckType like '%" + AType + "%' and Type like '%" + BType + "%' ";
+            }
+
+        }
+
+        function Query()
+        {
+            mini.get('View_SF_EachWeekCheck').reload();
+        }
+    </script>
+</body>
+</html>

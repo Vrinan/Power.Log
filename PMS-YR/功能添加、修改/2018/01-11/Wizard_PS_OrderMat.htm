@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid';
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <!-- 选择管理单位、供应商 短名单 -->   
+    <div class="row-wrap" style="height: 100%">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <label>$Helper.GetResource("g_name")：</label><!--名称-->
+                        <input id="txtname" class="mini-textbox" style="width: 150px;" onenter="onKeyEnter" />
+                        <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                        <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 85%; ">
+                    <div id="gridright" class="mini-treegrid" style="width: 100%; height: 100%;" allowresize="true"
+                         allowcelledit="true" multiselect="true" showpager="true" virtualScroll="true"
+                         idfield="Id" autoload="true" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad"
+                         url="/Form/GridPageLoadEx">
+                        <div property="columns">
+                            <div type="indexcolumn" width="30"></div>
+                            <div type="checkcolumn" name="checkcolumn"></div>
+                            <div field="RequestCode" width="160">请购单号</div>
+                            <div field="RequestProMajor" width="90">请购专业</div>
+                            <div field="RequestDate" width="90">请购日期</div>
+                            <div field="IsUrgency" width="60">紧急</div>
+                            <div field="MatCode" width="160">物资编码</div>
+							<div field="MatName" width="160">物资名称 </div>
+                            <div field="Model" width="160">物资描述</div>
+                            <div field="MatUnit">单位 </div>
+                            <div field="Qty_Req">数量</div>
+                            <div field="DeviceName">装置</div>
+                            <div field="UnitName">位号</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+            mini.parse();
+            var gridright = mini.get("gridright");
+            //重定向Select的GetData方法
+            Select.GetData = GetData;
+
+            $(function () {
+                var multi = getParameter("multi");
+                var bmulti = (multi == "1");
+                gridright.multiSelect = bmulti;
+                if (bmulti)
+                    gridright.showColumn("checkcolumn");
+                else
+                    gridright.hideColumn("checkcolumn");
+            });
+
+            function GetData() {
+                if (gridright.multiSelect) {
+                    return gridright.getSelecteds();
+                }
+                else {
+                    var result = new Array();
+                    var node = gridright.getSelected();
+                    result.push(node);
+                    return result;
+                }
+            }
+
+            function OnBeforeLoad(e) {
+                var BId = getParameter("BId");
+                //var conId = getParameter("conId");
+                var sender = e.sender;    //树控件
+                var node = e.node;      //当前节点
+                var params = e.params;  //参数对象
+                params.KeyWord = "View_CPL_OrderMat";
+                //params.KeyWordType = "BO";
+                params.KeyWordType = "ViewEntity";
+                params.select = WizardParams.select || "";
+                if (WizardParams.filter && WizardParams.filter.length > 0)
+                    params.swhere = base64decode(WizardParams.filter);
+                else
+                    params.swhere = " 1=1 and BOMId in(select c.id from PS_PUR_BOM c where c.MasterId in (select d.Id from PS_PUR_BOMFile d where d.PurchashHumanId='" + BId + "')) and Id not in (select InquiryMatList_Id from xlx_pur_order_list)"
+                params.sort = "RequestCode ";
+                params.index = 0;
+                params.size = 0;
+                //拼与主表关联的where条件
+                var txtname = mini.get("txtname");
+                if (txtname.value.length > 0)
+                    params.swhere = params.swhere + " and RequestCode like '%" + txtname.value + "%'";
+
+                if (sender.showPager) {//使用自带的Pager
+                    params.index = params.pageIndex;
+                    params.size = params.pageSize;
+                }
+                FormFuns.EncodeGridPageLoadswhere(params);
+            }
+            //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+            function OnPreLoad(e) {
+                var tmpdata = mini.decode(e.text);
+                if (tmpdata.success == false) {
+                    Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                    return;
+                }
+                var data = mini.decode(tmpdata.data.value);
+                e.data = data;
+                e.sender.setTotalCount(tmpdata.data.totalcount);
+            }
+
+            function OnSearchClick(e) {
+                gridright.reload();
+            }
+            function OnOK() {
+                ComToolsCloseWindow("ok", null);
+            }
+            function OnCancel() {
+                ComToolsCloseWindow("cancel", null);
+            }
+        </script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>不合格品处理
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_NonConformProduct.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_NonConformProduct.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_NonConformProduct.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_NonConformProduct" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_NonConformProduct.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            物料名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_NonConformProduct.MatName" name="MatName" class="mini-textbox" required="true" requirederrortext="物料名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_NonConformProduct.ContractName" name="ContractName" textname="ContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            到货单编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.ArrivalCode" name="ArrivalCode" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            到货单名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.ArrivalTitle" name="ArrivalTitle" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            供应商
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_NonConformProduct.Supplier" name="Supplier" class="mini-textbox" readonly />
+                                        </td>
+                                        <!--<td>
+                                            检查结果
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.CheckResult" name="CheckResult" class="mini-combobox" />
+                                        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_NonConformProduct.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='不合格项明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_NonConformProduct_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_NonConformProduct_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_NonConformProduct_Dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="MatCode" headeralign="center">
+                                            物资编号
+                                        </div>
+                                        <div field="MatName" headeralign="center">
+                                            物资名称
+                                        </div>
+                                        <div field="MatDescription" headeralign="center">
+                                            物资描述
+                                        </div>
+										<div field="MatSpec" headeralign="center">
+                                            装置
+                                        </div>
+										<div field="TagNumber" headeralign="center">
+                                            位号
+                                        </div>
+                                        <!--单位-->
+                                        <div field="MatUnit" headeralign="center">
+                                            单位
+                                        </div>
+                                        <!--数量-->
+                                        <div field="ContractNum" headeralign="center">
+                                            合同数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="ArrivalNum" headeralign="center">
+                                            合格数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="NonConfromNum" headeralign="center">
+                                            不合格数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;"  readonly />
+                                        </div>
+                                        <div field="HandleWay" type="comboboxcolumn" headeralign="center">
+                                            处理方式
+                                            <input property="editor" id="PS_NonConformProduct_Dtl.HandleWay" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="HandleDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                            处理日期
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventWizardWhere = function (e) {
+            e.canOpen=true;
+            if (e.id == "PS_NonConformProduct_Dtl.Add") {
+                if(formconfig.config.joindata.currow.Arrival_Guid==null||
+                    formconfig.config.joindata.currow.Arrival_Guid == "00000000-0000-0000-0000-000000000000") {
+                    Power.ui.warning("请选择到货检查");
+                    e.canOpen = false;
+                    return;
+                }
+                e.where = "MasterId='" + formconfig.config.joindata.currow.Arrival_Guid + "' and Id not in(select isnull(x1.CheckId,'00000000-0000-0000-0000-000000000000') from PS_PUR_NonComformProduct_Dtl x1)";
+            }
+        }
+    </script>
+</body>
+</html>

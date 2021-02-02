@@ -1,0 +1,2 @@
+--alter table XLX_PUR_SupplieHeGe add InquiryHumanName nvarchar(max) null
+--alter table XLX_PUR_SupplieHeGe add InquiryHumanId uniqueidentifier null

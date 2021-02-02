@@ -1,0 +1,1074 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID="$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+        var NowDate=getdate();	//ComTools 获取当前日期 2013-01-02
+        var now = new Date();
+        var NYear = now.getFullYear();
+        var NMonth = now.getMonth()+1;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>采购审批单</span>
+                </div>
+                <div class="actions">
+                    $!WorkFlowButtons
+                    <!--<a class="mini-button blue" id="XLX_PUR_Inquiry.Send" onclick="PMS_Send()" style="display: none"><i class="fa fa-plus"></i>发起询价</a>-->
+                    <a class="mini-button blue" id="XLX_PUR_Inquiry.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="XLX_PUR_Inquiry.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="XLX_PUR_Inquiry.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="XLX_PUR_Inquiry" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>采购审批单号</td>
+                                        <td><input id="InquiryCode" name="InquiryCode" class="mini-textbox" /></td>
+                                        <td>状态</td>
+                                        <td><input id="XLX_PUR_Inquiry.Status" name="Status" class="mini-combobox" readonly="readonly"/></td>
+                                        <!--<td>计划单号</td>
+                                        <td><input id="PlanCode" name="PlanCode" class="mini-textbox"/></td>
+                                        -->
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td><input id="Title" name="Title" class="mini-textbox" required="true" /></td>
+                                        <td>询价日期</td>
+                                        <td><input id="InquiryDate" name="InquiryDate" class="mini-datepicker" format="yyyy-MM-dd" valuetype="String" allowinput="false" required="true" /></td>
+                                    </tr>
+                                      <tr>
+                                        <td>是否境外合同</td>
+                                        <td><input id="XLX_PUR_Inquiry.Overseas" name="Overseas" class="mini-combobox" required="true" /></td>
+                                        <td>类别</td>
+                                        <td><input id="XLX_PUR_Inquiry.BuyerType" name="BuyerType" class="mini-combobox" /></td>
+                                    </tr>
+                                      <tr>
+                                        <td>议价合计金额</td>
+                                        <td><input id="TotalPrice" name="TotalPrice" class="mini-spinner" minValue="0" maxValue="999999999999"  format="n2"/></td>
+                                        <td>是否有合同</td>
+                                        <td><input id="XLX_PUR_Inquiry.Virtual" name="Virtual" class="mini-combobox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>合同编号/协议号/订单号</td>
+                                        <td >
+                                            <input id="ContractCode" name="ContractCode" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>报价供应商</td>
+                                        <td>
+                                            <input id="XLX_PUR_Inquiry.SupplieName" name="SupplieName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>业务员姓名</td>
+                                        <td>
+                                            <input id="BuyerId" name="BuyerId" class="mini-textbox" style="display:none" />
+                                            <input id="XLX_PUR_Inquiry.BuyerName" name="BuyerName" textname="BuyerName" class="mini-buttonedit" allowinput="false" onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                        </td>
+                                        <td>联系电话</td>
+                                        <td><input id="Phone" name="Phone" class="mini-textbox" required="true" /></td>
+                                    <tr>
+                                    <tr>
+                                        <td>备注说明</td>
+                                        <td colspan="3"><textarea class="mini-textarea" id="Memo" name="Memo" height="100px"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>录入人</td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td>录入日期</td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>是否发起询价单</td>
+                                        <td><input id="InquirySupplieStatus" name="InquirySupplieStatus" class="mini-textbox" readonly="readonly" /></td>
+                                        <td>询价单发起时间</td>
+                                        <td><input id="InquirySupplieTime" name="InquirySupplieTime" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>-->
+                                </table>
+                            </div>
+                        </div>
+                        <div title="物料明细">
+                            <div class="mini-toolbar">
+								<a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_Inquiry_MatList.Add" onclick="AddMat(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_Inquiry_MatList.Add1" onclick="PowerForm.OnBtnWizard(this)">选择补录数据</a>
+								<a class="mini-button blue" iconcls="fa-trash-o" id="XLX_PUR_Inquiry_MatList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="XLX_PUR_Inquiry_MatList-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_PUR_Inquiry_MatList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowcellselect="true" allowcelledit="true" multiselect="true" allowcellvalid="true" allowalternating="true"
+                                     editnextonenterkey="true" data-options="{canImport:true}" showsummaryrow="true" virtualScroll="true">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--复选框组-->
+                                        <div type="indexcolumn" width="45">序号</div>
+                                        <!--
+                                        <div field="MatBS_Code" width="100" headerAlign="center" allowSort="true">物资类别编码</div>
+                                        -->
+                                        <div field="MatBS_Name" width="100" headerAlign="center" allowSort="true">物资类别名称</div>
+                                        <div field="MatCode" width="100" headerAlign="center" allowSort="true">物料编码</div>
+										<div field="RequestCode" width="150" headerAlign="center" allowSort="true" summarytype="count">请购编号</div>
+										<div field="Request_Id" width="0" headerAlign="center" allowSort="true">请购主键</div>
+                                        <div field="MatName" width="100" headerAlign="center" allowSort="true">物料名称</div>
+                                        <div field="Model" width="200" headerAlign="center" allowSort="true">物资描述</div>
+                                        <div field="Specifi" width="160" headerAlign="center" allowSort="true">规格型号</div>     
+                                <div field="Standard" width="100" headerAlign="center" allowSort="true">制造标准</div>
+                                <div field="Texture" width="100" headerAlign="center" allowSort="true">材质</div>
+                                <div field="Pattern"  width="100" headerAlign="center" allowSort="true">型式</div>
+                                        <div field="MatUnit" width="100" headerAlign="center" allowSort="true">单位</div>
+                                        <!--<div field="Standard" width="100" headerAlign="center" allowSort="true">标准或图号</div>-->
+                                        <!--<div field="Texture" width="100" headerAlign="center" allowSort="true">材料性能等级</div>
+                                       
+                                        <div field="MatUnit2" width="100" headerAlign="center" allowSort="true">辅助计量单位</div>
+                                        <div field="Equ" width="100" headerAlign="center" allowSort="true">换算率</div>
+                                        <div field="Pressure" width="100" headerAlign="center" allowSort="true">压力等级壁厚</div>
+                                        <div field="TaxRate" width="100" headerAlign="center" allowSort="true">税率</div>-->
+                                        <div field="Qty_Request" width="100" headerAlign="center" allowSort="true" summarytype="sum">
+                                            请购数量
+                                        </div>
+                                        <div field="Qty_Inquiry" width="100" headerAlign="center" allowSort="true" summarytype="sum">
+                                            询价数量
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minValue="0" maxValue="999999999999" />
+                                        </div>
+                                        <div field="InquiryUnit" width="80" headerAlign="center" allowSort="true" vtype="required">
+                                            询价单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MatSpec" width="80" headerAlign="center" allowSort="true" >
+                                            装置
+                                        </div>
+                                        <div field="TagNumber" width="80" headerAlign="center" allowSort="true">
+                                            位号
+                                        </div>
+                                        <div field="Remark" width="120" headerAlign="center" allowSort="true">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width:100%;" minWidth="200" minHeight="50" />
+                                        </div>
+										<!--<div field="RequestCode" width="150" headerAlign="center" allowSort="true">请购编号</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="供应商名单">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_Inquiry_SupplieList.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增(向导)-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XLX_PUR_Inquiry_SupplieList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="XLX_PUR_Inquiry_SupplieList-Print" class="btn-group"></div>
+                                <div id="XLX_PUR_Inquiry_SupplieList-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_PUR_Inquiry_SupplieList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowcellselect="true" allowcelledit="true" multiselect="true" allowcellvalid="true" allowalternating="true"
+                                     editnextonenterkey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--复选框组-->
+                                        <div type="indexcolumn" width="45">序号</div><!--序号-->
+                                        <div field="Code" width="100" allowsort="true">供应商编码</div>
+                                        <div field="Name" width="200" allowsort="true">供应商名称</div>
+                                        <div field="EName" width="100" allowsort="true">英文名称</div>
+                                        <div field="ShortName" width="100" allowsort="true">供应商简称</div>
+                                        <div field="TypeName" width="100" allowsort="true">供应商性质</div>
+                                        <div field="ClassName" width="160" allowsort="true">供应商分类</div>
+                                        <div field="Address" width="200" allowsort="true">地址</div>
+                                        <div field="PostCode" width="100" allowsort="true">邮政编码</div>
+                                        <div field="Linkman" width="100" allowsort="true">联系人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Phone" width="160" allowsort="true">电话<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Email" width="80" allowsort="true">EMail地址<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                        <div title="报价明细">
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" id="View_XLX_InquirySupplie.CreateContract" onclick="PMS_CreateContract()" style="display:none;"><i class="fa fa-pencil"></i>生成采购合同</a>-->
+                                <a class="mini-button blue" id="View_XLX_InquirySupplie.CreateOrder" style="display:none;" onclick="PMS_CreateOrder()"><i class="fa fa-pencil"></i>生成采购订单</a>
+
+                                <div id="btnUpload">  </div>
+                                <!--<div id="View_XLX_InquirySupplie-Export" class="btn-group"></div>-->
+                                <a class="mini-button blue" id="View_XLX_InquirySupplie.Export" sort= ="Name DESC" onclick="PowerForm.OnExportDataToXls('View_XLX_InquirySupplie',DaoChu, fz)"><i class="fa fa-sign-out"></i>导出</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="View_XLX_InquirySupplie.Expand" onclick="PMS_Expand()">展开</a>
+                                <a class="mini-button blue" iconcls="fa-minus" id="View_XLX_InquirySupplie.Collapse" onclick="PMS_Collapse()">折叠</a>
+                                <button class="btn blue" id="btnSave">
+                                    <i class="fa fa-save"></i>保存<!--保存-->
+                                </button>
+                                <!--<a class="mini-button blue" iconcls="fa-newspaper-o" id="View_XLX_InquirySupplie.GroupBySupplie" onclick="PMS_Group('Name')">按供应商分组</a>
+                                <a class="mini-button blue" iconcls="fa-barcode" id="View_XLX_InquirySupplie.GroupByMat" onclick="PMS_Group('MatCode')">按物料分组</a>-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="View_XLX_InquirySupplie" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ListId"
+                                     showpager="false" allowcellselect="true" allowcelledit="true" multiselect="true" allowcellvalid="true"
+                                     allowalternating="true" ondrawgroup="onDrawGroup" oncellendedit="oncellendedit" virtualScroll="true">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="indexcolumn" field="ListId" width="45">序号</div><!--序号-->
+
+                                          <div field="ListId" width="0" allowsort="true">主键</div>
+										  <div field="RequestCode1" headeralign="center" width="160" summarytype="count">
+                                            请购编号
+                                        </div>
+										<div field="Request_Id1" headeralign="center" width="0">
+                                            请购主键
+                                        </div>
+                                          <div field="Code" width="80" allowsort="true">供应商编码</div>
+                                        <!--<div type="checkcolumn"></div>
+                                        <div field="EName" width="80" allowSort="true" vtype="required">英文名称</div>
+                                        <div field="ShortName" width="80" allowSort="true" vtype="required">供应商简称</div>
+                                        <div field="TypeName" width="80" allowSort="true" vtype="required">供应商性质</div>
+                                        <div field="ClassName" width="80" allowSort="true" vtype="required">供应商分类</div>
+                                        <div field="Address" width="80" allowSort="true" vtype="required">地址</div>
+                                        <div field="PostCode" width="80" allowSort="true" vtype="required">邮政编码</div>
+                                        <div field="Email" width="80" allowSort="true" vtype="required">EMail地址<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">标准或图号</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材料性能等级</div>
+                                        <div field="MatUnit" width="100" headerAlign="center" allowSort="true">基本计量单位</div>
+                                        <div field="MatUnit2" width="100" headerAlign="center" allowSort="true">辅助计量单位</div>
+                                        <div field="Equ" width="100" headerAlign="center" allowSort="true">换算率</div>
+                                        <div field="Pressure" width="100" headerAlign="center" allowSort="true">压力等级壁厚</div>
+                                        <div field="TaxRate" width="100" headerAlign="center" allowSort="true">税率</div>
+                                        -->
+                                        <div field="Name" width="140" allowsort="true">供应商名称</div>
+                                        <div field="MatCode" width="100" headeralign="center" allowsort="true">物料编码</div>
+                                        <div field="MatName" width="100" headeralign="center" allowsort="true">物料名称</div>
+                                      
+                                        <div field="Model" width="200" headerAlign="center" allowSort="true">物资描述</div>
+                                        <div field="Specifi" width="160" headerAlign="center" allowSort="true">规格型号</div>     
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">制造标准</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材质</div>                                      
+                                        <div field="Qty_Inquiry" width="100" headeralign="center" allowsort="true">
+                                            询价数量                                 
+                                        </div>
+                                        <div field="MatUnit" width="100" headeralign="center" allowsort="true">询价单位</div>
+                                        <div field="MatPrice" width="100" headeralign="center" allowsort="true">
+                                            报价
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minValue="0" maxValue="999999999999" format="n2"/>
+                                        </div>
+                                        <div field="MatMoney" width="100" headeralign="center" allowsort="true">
+                                            报价总额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minValue="0" maxValue="999999999999" format="n2"/>
+                                        </div>
+                                        <div field="GoodsMatPrice" width="100" headeralign="center" allowsort="true">
+                                            议价
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minValue="0" maxValue="999999999999" format="n2"/>
+                                        </div>
+                                        <div field="GoodsMatMoney" width="100" headeralign="center" allowsort="true">
+                                            议价总额
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minValue="0" maxValue="999999999999" format="n2"/>
+                                        </div>
+                                        <div field="DeliveryDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true">交货期</div>
+                                        <div field="Pattern" width="100" headerAlign="center" allowSort="true">型式</div>
+                                        <div field="MatSpec" width="80" headerAlign="center" allowSort="true">
+                                            装置
+                                        </div>
+                                        <div field="TagNumber" width="80" headerAlign="center" allowSort="true">
+                                            位号
+                                        </div>
+                                        <div field="PartyBName" width="80" headerAlign="center" allowSort="true">
+                                            请购单位
+                                        </div>
+                                        <div field="Remark" width="120" headeralign="center" allowsort="true">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"/>
+                                        </div>
+                                        <div field="Linkman" width="80" allowsort="true">联系人</div>
+                                        <div field="Phone" width="180" allowsort="true">电话</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						<div title="物资编码分组">
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" id="View_XLX_PUR_InquirySupplie.CreateContract" onclick="PMS_CreateContract()" style="display:none;"><i class="fa fa-pencil"></i>生成采购合同</a>-->
+                                <a class="mini-button blue" id="View_XLX_PUR_InquiryMatCode.CreateOrder" style="display:none;" onclick="PMS_CreateOrder()"><i class="fa fa-pencil"></i>生成采购订单</a>
+
+                                <!--<div id="btnUpload">  </div>-->
+                                <!--<div id="View_XLX_PUR_InquirySupplie-Export" class="btn-group"></div>-->
+                                <a class="mini-button blue" id="View_XLX_PUR_InquiryMatCode.Export" onclick="PowerForm.OnExportDataToXls('View_XLX_PUR_InquiryMatCode', '供应商报价',fz1)"><i class="fa fa-sign-out"></i>导出</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="View_XLX_PUR_InquiryMatCode.Expand" onclick="PMS_Expand1()">展开</a>
+                                <a class="mini-button blue" iconcls="fa-minus" id="View_XLX_PUR_InquiryMatCode.Collapse" onclick="PMS_Collapse1()">折叠</a>
+                                <!--<a class="mini-button blue" iconcls="fa-newspaper-o" id="View_XLX_PUR_InquirySupplie.GroupBySupplie" onclick="PMS_Group('Name')">按供应商分组</a>
+                                <a class="mini-button blue" iconcls="fa-barcode" id="View_XLX_PUR_InquiryMatCode.GroupByMat" onclick="PMS_Group('MatCode')">按物料分组</a>-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="View_XLX_PUR_InquiryMatCode" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ListId"
+                                     showpager="false" allowcellselect="true" allowcelledit="false" multiselect="true" allowcellvalid="true"
+                                     allowalternating="true" ondrawgroup="onDrawGroup1" >
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="indexcolumn" width="45">序号</div><!--序号-->
+
+                                          <div field="ListId" width="0" allowsort="true">主键</div>
+                                          <div field="Code" width="80" allowsort="true">供应商编码</div>
+                                        <!--<div type="checkcolumn"></div>
+                                        <div field="EName" width="80" allowSort="true" vtype="required">英文名称</div>
+                                        <div field="ShortName" width="80" allowSort="true" vtype="required">供应商简称</div>
+                                        <div field="TypeName" width="80" allowSort="true" vtype="required">供应商性质</div>
+                                        <div field="ClassName" width="80" allowSort="true" vtype="required">供应商分类</div>
+                                        <div field="Address" width="80" allowSort="true" vtype="required">地址</div>
+                                        <div field="PostCode" width="80" allowSort="true" vtype="required">邮政编码</div>
+                                        <div field="Email" width="80" allowSort="true" vtype="required">EMail地址<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">标准或图号</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材料性能等级</div>
+                                        <div field="MatUnit" width="100" headerAlign="center" allowSort="true">基本计量单位</div>
+                                        <div field="MatUnit2" width="100" headerAlign="center" allowSort="true">辅助计量单位</div>
+                                        <div field="Equ" width="100" headerAlign="center" allowSort="true">换算率</div>
+                                        <div field="Pressure" width="100" headerAlign="center" allowSort="true">压力等级壁厚</div>
+                                        <div field="TaxRate" width="100" headerAlign="center" allowSort="true">税率</div>
+                                        -->
+                                        <div field="Name" width="140" allowsort="true">供应商名称</div>
+                                        <div field="MatCode" width="100" headeralign="center" allowsort="true">物料编码</div>
+                                        <div field="MatName" width="100" headeralign="center" allowsort="true">物料名称</div>
+                                        <div field="Model" width="100" headeralign="center" allowsort="true">规格型号</div>
+                                        <div field="Qty_Inquiry" width="100" headeralign="center" allowsort="true">询价数量</div>
+                                        <div field="MatUnit" width="100" headeralign="center" allowsort="true">询价单位</div>
+                                        <div field="MatPrice" width="100" headeralign="center" allowsort="true">报价</div>
+                                        <div field="MatMoney" width="100" headeralign="center" allowsort="true">报价总额</div>
+                                        <div field="GoodsMatPrice" width="100" headeralign="center" allowsort="true">订货价</div>
+                                        <div field="GoodsMatMoney" width="100" headeralign="center" allowsort="true">订货总额</div>
+                                        <div field="DeliveryDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true">交货期</div>
+                                        <div field="Remark" width="120" headeralign="center" allowsort="true">备注</div>
+                                        <div field="Linkman" width="80" allowsort="true">联系人</div>
+                                        <div field="Phone" width="180" allowsort="true">电话</div>
+                                        <div field="PartyBName" width="80" headerAlign="center" allowSort="true">
+                                            请购单位
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        var PowerForm = new WebForm();
+        var fz = "";
+        var fz1 = "";
+        var DaoChu = "";
+        $(function () {
+            PowerForm.Init();
+            FileUp("XLX_PUR_Inquiry_SupplieList", CreateGUID())//此处修改关键词
+            //冻结列
+            var grid = mini.get("XLX_PUR_Inquiry_MatList");
+            grid.frozenColumns(0,4);
+            var grid2 = mini.get("XLX_PUR_Inquiry_SupplieList");
+            grid2.frozenColumns(0,3);
+
+            var grid3 = mini.get("View_XLX_InquirySupplie");
+            grid3.groupBy("Name", "ASC");
+            fz = "供应商";
+			
+			var grid3 = mini.get("View_XLX_PUR_InquiryMatCode");
+            grid3.groupBy("MatCode", "ASC");
+            fz1 = "物资编码";
+			
+			PowerForm.EventWizardWhere = function (e) {
+				//alert(e.id);
+				//通过判断向导ID,分别控制向导的尺寸
+				if(e.id=='XLX_PUR_Inquiry_MatList.Add')
+				{
+				//e.iwidth=1000;
+				//e.iheight=800;
+				 if( formconfig.config.joindata.currow.BuyerId!=null&&
+				 formconfig.config.joindata.currow.BuyerId != "00000000-0000-0000-0000-000000000000")
+					e.where = " 1=1 and (BuyWay = '03' or BuyWay = '02') and BuyerId='" + formconfig.config.joindata.currow.BuyerId + "'" ;
+				}
+			}
+            //绑定字段事件
+            mini.get('XLX_PUR_Inquiry_MatList').on("drawcell", function (e) {
+                if (e.column.field == "RequestCode") {
+                    if (!e.value) return false;
+                    var record = e.record;
+                    var sender = e.sender;
+                    var id = record.Request_Id;
+                    e.cellHtml = "<a href='javascript:void(0);' onclick=\"OpenFrom1('" + id + "')\">" + e.value + "</a>";
+                }
+				if (e.column.field == "RequestCode1") {
+                    if (!e.value) return false;
+                    var record = e.record;
+                    var sender = e.sender;
+                    var id = record.Request_Id1;
+                    e.cellHtml = "<a href='javascript:void(0);' onclick=\"OpenFrom2('" + id + "')\">" + e.value + "</a>";
+                }
+            });			
+
+        });
+        function oncellendedit(e) {
+            if (e.field == "MatPrice") {//当这个字段编辑结束后，触发以下事件
+                var record = e.record;//当前行的数据
+                var sender = e.sender;//当前子表对象
+                var Price = record.MatPrice == null ? 0 : parseFloat(record.MatPrice);//单价
+                var Amount = record.Qty_Inquiry == null ? 0 : parseFloat(record.Qty_Inquiry);//数量
+                var MatMoney = Price * Amount;
+                sender.updateRow(record, { MatMoney: MatMoney });//修改sender对象的record行的Money列
+            }            if (e.field == "GoodsMatPrice") {//当这个字段编辑结束后，触发以下事件
+                var record = e.record;//当前行的数据
+                var sender = e.sender;//当前子表对象
+                var Price = record.GoodsMatPrice == null ? 0 : parseFloat(record.GoodsMatPrice);//单价
+                var Amount = record.Qty_Inquiry == null ? 0 : parseFloat(record.Qty_Inquiry);//数量
+                var MatMoney = Price * Amount;
+                sender.updateRow(record, { GoodsMatMoney: MatMoney });//修改sender对象的record行的Money列
+            }
+        }
+		function OpenFrom1(id) {
+            mini.open({
+                url: '/Form/ViewForm/52599d7a-5f45-4ff1-8031-f90b365c6b37/' + id,
+                width: 900,
+                height: 550
+            });
+
+        }
+		function OpenFrom2(id) {
+            mini.open({
+                url: '/Form/ViewForm/52599d7a-5f45-4ff1-8031-f90b365c6b37/' + id,
+                width: 900,
+                height: 550
+            });
+
+        }
+        mini.parse();
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "XLX_PUR_Inquiry_SupplieList";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("View_XLX_InquirySupplie");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入报价",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "XLX_PUR_Inquiry_SupplieList";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+
+        }
+        PowerForm.EventAfterFormLoad = function (e) {
+            //if (FormState == "add") 	//新增时设置默认值
+            //{
+            //    mini.get("Title").setValue(NowDate+"_采购审批单");
+            //    mini.get("InquiryCode").setValue(NowDate);
+            //    //mini.get("XLX_PUR_Inquiry.DeptName").getValue(DeptName);
+            //    //mini.get("XLX_PUR_Inquiry.DeptName").setValue(DeptName);
+            //    mini.get("InquiryDate").setValue(NowDate);
+            //    mini.get("XLX_PUR_Inquiry.BuyerName").setValue(HumanName);
+            //    mini.get("BuyerId").setValue(HumanId); 
+            //}
+            DaoChu = "采购审批" + mini.get("Title").value + "询价单";
+            InCode = mini.get("InquiryCode").value;
+            if (InCode == '') {
+                var config = formconfig.config.joindata;
+
+                FormFuns.LoadCode(config, e);
+            }
+            if(mini.get("XLX_PUR_Inquiry.Status").getValue()=="50")
+            {
+                //mini.get("XLX_PUR_Inquiry.Send").setVisible(true);
+                //mini.get("View_XLX_PUR_InquirySupplie.CreateContract").setVisible(true);
+            }
+        };
+        PowerForm.EventAfterLoadData = function (e) {
+            if (e.sender.id == "XLX_PUR_Inquiry_SupplieList")
+                mini.get("View_XLX_InquirySupplie").reload(); 
+        }
+        //控制表单中向导的尺寸   
+
+        //发起流程前检查数据正确性
+        function PMS_WorkFlow(e) {
+            var ID = formconfig.KeyValue;
+            if (ID != '') {
+                var par = {"ID": ID};
+                FormFuns.APIExec("XLX_PUR_Inquiry","BO","Proc_XLX_PUR_Inquiry_ResetList", par, function(text){
+                    if (mini.decode(text).data.value == "") {
+                        WorkFlowUtils.ActiveWorkFlow(e);
+                    }
+                    else {
+                        //Power.ui.info(mini.decode(text).data.value);
+                        Power.ui.alert(mini.decode(text).data.value);
+                        //Power.ui.warning("内容");    //黄色小方块,自动消失.
+                        //Power.ui.error("sfsdf");    //bug提示.
+                        //Power.ui.info( '您点击了"确定"' );
+                    }
+                });
+            }
+            else {
+                Power.ui.error("错误!");
+            }
+        }
+
+        //执行后台代码
+        function PMS_ResetHumList(e)
+        {
+            var ID = formconfig.KeyValue;
+            if (ID!='')
+            {
+                var par = {"ID": ID};
+                FormFuns.APIExec("XLX_PUR_Inquiry","BO","Proc_XLX_PUR_Inquiry_ResetList", par, function(text){
+                    Power.ui.alert(mini.decode(text).data.value);
+                    mini.get("XLX_PUR_Inquiry.Refresh").doClick();
+                });
+            }
+            else
+            {
+                Power.ui.error("错误!");
+            }
+        }
+
+        //送审前判断子表是否有数据
+        PowerForm.EventBeforeOnBtnFlow = function (e)
+        {
+            e.isValid = true;
+            var grid = mini.get("XLX_PUR_Inquiry_MatList");
+            if (grid) {
+                if (grid.data.length == 0 || grid.data.length == undefined) {
+                    Power.ui.alert("无明细内容,请填报后再审批!");
+                    e.isValid = false;
+                }
+                else {
+                }
+            }
+            var gridSupplie = mini.get("XLX_PUR_Inquiry_SupplieList");
+            if (gridSupplie) {
+                if (gridSupplie.data.length == 0 || gridSupplie.data.length == undefined) {
+                    Power.ui.alert("无供应商明细,请填报后发起!");
+                    e.isValid = false;
+                }
+                else {
+                }
+            }
+			if(formconfig.config.joindata.currow.SupplieId == undefined || formconfig.config.joindata.currow.SupplieId == ""){
+				    Power.ui.alert("请在[报价明细]里选择唯一的供应商!");
+                    e.isValid = false;
+			}
+               
+        }
+
+        //发起询价任务
+        function PMS_Send()
+        {
+            var gridMat = mini.get("XLX_PUR_Inquiry_MatList");
+            if (gridMat) {
+                if (gridMat.data.length == 0 || gridMat.data.length == undefined) {
+                    Power.ui.alert("无物料明细,请填报后发起!");
+                    return false;
+                }
+                else {
+                }
+            }
+
+            var gridSupplie = mini.get("XLX_PUR_Inquiry_SupplieList");
+            if (gridSupplie) {
+                if (gridSupplie.data.length == 0 || gridSupplie.data.length == undefined) {
+                    Power.ui.alert("无供应商明细,请填报后发起!");
+                    return false;
+                }
+                else {
+                }
+            }
+
+            var par = {"Type":"发起询价","Id":formconfig.KeyValue,"HumanId":HumanId,"HumanName":HumanName};
+            FormFuns.APIExec("XLX_PUR_Inquiry","BO","Proc_XLX_PUR_Inquiry", par, function(text){
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("XLX_PUR_Inquiry.Refresh").doClick();
+            });
+        }
+
+        //切换分组显示方式
+        function PMS_Group(Field)
+        {
+            var grid4 = mini.get("View_XLX_PUR_InquiryMatCode");
+            grid4.groupBy(Field, "ASC");
+            if (Field = "Name")
+                fz1 = "供应商";
+            else
+                fz1 = "物料编码";
+        }
+
+        //分组显示
+        function onDrawGroup(e) {
+            if(e.field=="MatCode")
+            {
+                e.cellHtml = "物料编码:"+e.value +"（最低价:"+ getGenderText1(e.value,e.field)+")";
+            }
+
+            if(e.field=="Name")
+            { 
+                var radioHtml = '<input name="1"   type="radio" onclick="check(\'' + e.rows[0].SupplieId + '\',\''+e.rows[0].Name+'\')"';
+                var style = "";
+                if (formconfig.config.joindata.currow.SupplieId == e.rows[0].SupplieId){
+                    radioHtml += ' checked';
+                    style = " style=\"color:#008800\"";
+                    mini.get("TotalPrice").setValue(getGenderText2(e.value, e.field))
+                }
+                radioHtml += " />";
+                e.cellHtml = "<span  "+style+">供应商:" + e.value + "（报价合计:" + getGenderText(e.value, e.field) + ") </span>" + radioHtml;
+            }
+        }
+		function onDrawGroup1(e) {
+            if(e.field=="MatCode")
+            {
+                e.cellHtml = "物料编码:"+e.value +"";
+            }
+
+            if(e.field=="Name")
+            { 
+                var radioHtml = '<input name="1"   type="radio" onclick="check(\'' + e.rows[0].SupplieId + '\',\''+e.rows[0].Name+'\')"';
+                var style = "";
+                if (formconfig.config.joindata.currow.SupplieId == e.rows[0].SupplieId){
+                    radioHtml += ' checked';
+                    style = " style=\"color:#008800\"";
+                    mini.get("TotalPrice").setValue(getGenderText(e.value, e.field))
+                }
+                radioHtml += " />";
+                e.cellHtml = "<span  "+style+">供应商:" + e.value + "（报价合计:" + getGenderText(e.value, e.field) + ") </span>" + radioHtml;
+            }
+		}
+		//组合分组报价汇总金额
+		function getGenderText2(id, Type) {
+		    var grid3 = mini.get("View_XLX_InquirySupplie");
+		    var TotalMoney = 0;
+		    var MinPrice = 0;
+		    var SupplieName = "";
+		    var ReturnValue = "";
+
+		    if (Type == "Name") {
+		        for (var i = 0; i < grid3.data.length; i++) {
+		            if (id == grid3.data[i].Name) {
+		                TotalMoney = TotalMoney + parseFloat(grid3.data[i].GoodsMatMoney);
+		                TotalMoney = fomatFloat(TotalMoney, 2);
+		            }
+		        }
+		        ReturnValue = TotalMoney;
+		    }
+		    if (ReturnValue == 0) {
+		        for (var i = 0; i < grid3.data.length; i++) {
+		            if (id == grid3.data[i].Name) {
+		                TotalMoney = TotalMoney + parseFloat(grid3.data[i].MatMoney);
+		                TotalMoney = fomatFloat(TotalMoney, 2);
+		            }
+		        }
+		        ReturnValue = TotalMoney;
+		    }
+		    return ReturnValue;
+		}
+        //组合分组报价汇总金额
+        function getGenderText(id,Type)
+        {
+            var grid3 = mini.get("View_XLX_InquirySupplie");
+            var TotalMoney=0;
+            var MinPrice=0;
+            var SupplieName="";
+            var ReturnValue="";
+
+            if(Type=="MatCode")
+            {
+                var rows = grid3.findRows(function(row){
+                    if(id == row.MatCode) return true;
+                });
+
+                for (var i = 0; i < rows.length; i++)
+                {
+                    if(i==0)
+                    {
+                        MinPrice=rows[i].MatPrice;
+                        SupplieName=rows[i].Name;
+                    }
+                    if(parseFloat(MinPrice)>parseFloat(rows[i].MatPrice))
+                    {
+                        MinPrice=rows[i].MatPrice;
+                        SupplieName=rows[i].Name;
+                    }
+                }
+                ReturnValue = MinPrice+"--"+SupplieName;
+            }
+
+            if(Type=="Name")
+            {
+                for (var i = 0; i < grid3.data.length; i++)
+                {
+                    if(id == grid3.data[i].Name)
+                    {
+                        TotalMoney=TotalMoney+parseFloat(grid3.data[i].MatMoney);
+                        TotalMoney = fomatFloat(TotalMoney, 2);
+                    }
+                }
+                ReturnValue = TotalMoney;
+            }
+
+            return ReturnValue;
+        } 
+        function fomatFloat(src, pos) {
+            return Math.round(src * Math.pow(10, pos)) / Math.pow(10, pos);
+        }
+        function check(supid,supname) { 
+            if (supid != formconfig.config.joindata.currow.SupplieId) {
+                formconfig.config.joindata.currow.SupplieId = supid;
+                //formconfig.config.joindata.currow.SupplieName = supname;
+                mini.get("XLX_PUR_Inquiry.SupplieName").setValue(supname);
+            }
+        } 
+         //组合分组报价汇总金额
+        function getGenderText1(id,Type)
+        {
+            var grid4 = mini.get("View_XLX_PUR_InquiryMatCode");
+            var TotalMoney=0;
+            var MinPrice=0;
+            var SupplieName="";
+            var ReturnValue="";
+
+            if(Type=="MatCode")
+            {
+                var rows = grid4.findRows(function(row){
+                    if(id == row.MatCode) return true;
+                });
+
+                for (var i = 0; i < rows.length; i++)
+                {
+                    if(i==0)
+                    {
+                        MinPrice=rows[i].MatPrice;
+                        SupplieName=rows[i].Name;
+                    }
+                    if(parseFloat(MinPrice)>parseFloat(rows[i].MatPrice))
+                    {
+                        MinPrice=rows[i].MatPrice;
+                        SupplieName=rows[i].Name;
+                    }
+                }
+                ReturnValue = MinPrice+"--"+SupplieName;
+            }
+		}
+ 
+        //展开分组
+        function PMS_Expand()
+        {
+            var grid3 = mini.get("View_XLX_InquirySupplie");
+            grid3.expandGroups();
+        }
+        //折叠分组
+        function PMS_Collapse()
+        {
+            var grid3 = mini.get("View_XLX_InquirySupplie");
+            grid3.collapseGroups();
+        }
+		
+		//展开分组
+        function PMS_Expand1()
+        {
+            var grid4 = mini.get("View_XLX_PUR_InquiryMatCode");
+            grid4.expandGroups();
+        }
+        //折叠分组
+        function PMS_Collapse1()
+        {
+            var grid4 = mini.get("View_XLX_PUR_InquiryMatCode");
+            grid4.collapseGroups();
+        }
+
+        //生成采购订单
+        function PMS_CreateOrder()
+        {
+            var InquirySupplie = mini.get("View_XLX_InquirySupplie");
+            if (InquirySupplie) {
+                if (InquirySupplie.data.length == 0 || InquirySupplie.data.length == undefined) {
+                    Power.ui.alert("无供应商询价,请询价后发起!");
+                    e.isValid = false;
+                }
+                else {
+                    var SelMatList = $(":radio:checked").map(function(index,elem) {
+                        return $(elem).val();
+                    }).get().join("#");
+                    //SelMatList = "'"+SelMatList+"'";
+                    //alert(SelMatList);
+                    //var grid3 = mini.get("View_XLX_InquirySupplie");
+                    //var Supplie = $("input[name='Supplie']:checked").val();
+                    //var SupplieId;
+                    if(SelMatList !=undefined)
+                    {
+                        if(confirm("确定生成采购订单吗？"))
+                        {
+                            //var row = grid3.findRow(function(row){
+                            //	if(row.Name == Supplie)
+                            //	{
+                            //		SupplieId = row.MainId;
+                            //	}
+                            //});
+                            //alert(SupplieId);
+                            var par = {"Type":"发起采购订单","Id":formconfig.KeyValue,"HumanId":HumanId,"HumanName":HumanName,"SupplieId":SelMatList};
+                            FormFuns.APIExec("XLX_PUR_Inquiry","BO","Proc_XLX_PUR_Inquiry", par, function(text){
+                                var R = mini.decode(text).data.value.split("！");
+                                Power.ui.warning(R[0]);
+                                if(R[1] != undefined & R[1] !='')
+                                {
+                                    OpenFrom(R[1]);
+                                }
+                                //mini.get("XLX_PUR_Inquiry.Refresh").doClick();
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Power.ui.warning("请选择物料编码！");
+                    }
+                }
+            }
+
+        }
+        function PMS_CreateContract() {
+            var InquirySupplie = mini.get("View_XLX_InquirySupplie");
+            if (InquirySupplie) {
+                if (InquirySupplie.data.length == 0 || InquirySupplie.data.length == undefined) {
+                    Power.ui.alert("无供应商询价,请询价后发起!");
+                    e.isValid = false;
+                }
+                else {
+                    var SelMatList = $(":radio:checked").map(function (index, elem) {
+                        return $(elem).val();
+                    }).get().join("#");
+                    //SelMatList = "'"+SelMatList+"'";
+                    //alert(SelMatList);
+                    //var grid3 = mini.get("View_XLX_InquirySupplie");
+                    //var Supplie = $("input[name='Supplie']:checked").val();
+                    //var SupplieId;
+                    if (SelMatList != undefined) {
+                        if (confirm("确定生成采购合同吗？")) {
+                            //var row = grid3.findRow(function(row){
+                            //	if(row.Name == Supplie)
+                            //	{
+                            //		SupplieId = row.MainId;
+                            //	}
+                            //});
+                            //alert(SupplieId);
+                            var par = { "Type": "生成采购合同", "Id": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName, "SupplieId": SelMatList };
+                            FormFuns.APIExec("XLX_PUR_Inquiry", "BO", "Proc_XLX_PUR_Inquiry", par, function (text) {
+                                var R = mini.decode(text).data.value.split("！");
+                                Power.ui.alert(R[0]);
+                                if (R[1] != undefined & R[1] != '') {
+                                    OpenFrom(R[1]);
+                                }
+                                //mini.get("XLX_PUR_Inquiry.Refresh").doClick();
+                            });
+                        }
+                    }
+                    else {
+                        Power.ui.warning("请选择物料编码！");
+                    }
+                }
+            }
+        }
+        //显示技术规格书表单
+        function OpenFrom(id) {
+            mini.open({
+                url: '/Form/EditForm/a282f668-a395-4a9f-823e-61a2909aa10e/' + id,
+                width: 900,
+                height: 550
+            });
+        }
+		function AddMat(e) {
+            if (e.id == "XLX_PUR_Inquiry_MatList.Add") {
+                if (formconfig.FormState == "add") {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表");
+                    return;
+                }
+            }
+            var Grid = mini.get("XLX_PUR_Inquiry_MatList");
+            var Fid = formconfig.KeyValue;
+            var BuyerId = formconfig.config.joindata.currow["BuyerId"];;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXML/zh-CN/XLX_PUR/Wizard_XLX_PUR_Order.html&multi=1&Fid=" + Fid+"&BuyerId="+BuyerId,
+                showMaxButton: true,
+                width: 1200,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    //debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.FK = formconfig.KeyValue;
+                        row.MatBS_Guid = data[i].MatBS_Guid;
+                        row.MatBS_Name = data[i].MatBS_Name;
+						row.MatBS_Code = data[i].MatBS_Code;
+                        row.RequestList_Id = data[i].ListId;
+                        row.MatId = data[i].MatId;
+                        row.MatCode = data[i].MatCode;
+                        row.MatName = data[i].MatName;
+						row.Model = data[i].Model;
+                        row.Qty_Request = data[i].Qty_Req;
+						row.Specifi = data[i].Specifi;
+						row.Standard = data[i].Standard;
+						row.Texture = data[i].Texture;
+						row.Pattern = data[i].Pattern;
+						row.MatSpec = data[i].DeviceName;
+						row.TagNumber = data[i].UnitName;
+                        row.Qty_Inquiry = data[i].Qty_Req;
+						row.InquiryUnit = data[i].MatUnit;
+						row.MatUnit = data[i].MatUnit;
+						row.Remark = data[i].Remark;
+                        row.RequestCode = data[i].RequestCode;
+                        row.Request_Id = data[i].MainId;						
+						row.RequestHumId = "";
+						row.RequestHumName = "";  						
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "XLX_PUR_Inquiry.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+		}
+
+		$("#btnSave").click(function () {
+		    Save();
+		});
+		function Save(fnback) {
+
+		    var rows = mini.get("View_XLX_InquirySupplie").getChanges(null, false); //获取所有修改行及其字段
+		    if (!rows || rows.length == 0) {
+		        if (fnback) fnback(true);//【Ronnie】?干什么用
+		    }
+		    //else {
+		    //    var result = { DocFile: { data: rows } };
+		    //    var jdata = { formId: "" };
+		    //    jdata.jsonData = mini.encode(result);
+		    //    $.ajax({
+		    //        url: "/Form/SaveWebForm",//【Ronnie】保存
+		    //        type: "POST",
+		    //        data: jdata,
+		    //        cache: false,
+		    //        success: function (text) {
+		    //            var tmp = mini.decode(text);
+		    //            if (tmp.success == false) {
+		    //                parent.Power.ui.error(tmp.message, { timeout: 0, position: "center center", closeable: true });
+		    //            }
+		    //            else {
+		    //                mini.get("View_XLX_InquirySupplie").accept();
+		    //            }
+		    //            if (fnback) fnback(tmp.success);
+		    //        }
+		    //    });
+		    //}
+		    else {
+		        for (var i = 0; rows.length > i; i++) {
+		            var ListId = rows[i].ListId; //主键
+		            var MatMoney = rows[i].MatMoney;//报价
+		            var MatPrice = rows[i].MatPrice;//报价总额
+		            var GoodsMatMoney = rows[i].GoodsMatMoney;//议价
+		            var GoodsMatPrice = rows[i].GoodsMatPrice;//议价总额
+		            var Remark = rows[i].Remark;//报价明细备注
+
+		            var P = { "ListId": ListId, "MatMoney": MatMoney, "MatPrice": MatPrice, "GoodsMatMoney": GoodsMatMoney, "GoodsMatPrice": GoodsMatPrice, "Remark": Remark };
+		            FormFuns.APIExec("XLX_PUR_InquirySupplie", "BO", "UpdateSupplieList", P, function (text) {
+		                var R = mini.decode(text).data.value;
+		              
+		            });
+		        }
+		        mini.get("XLX_PUR_Inquiry.Refresh").doClick();
+		    }
+		}
+    </script>
+</body>
+</html>

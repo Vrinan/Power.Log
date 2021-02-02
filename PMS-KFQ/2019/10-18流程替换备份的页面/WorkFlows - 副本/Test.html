@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>流程跟踪</title>
+    <!--[if lt IE 9]>
+        <?import namespace="v" implementation="#default#VML" ?>
+    <![endif]-->
+    <script src="/scripts/boot.js" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+    <!--<link href="/PowerPlat/WorkFlows/Design/css/jquery.contextmenu.css" rel="stylesheet" type="text/css" />-->
+    <!--<link href="/PowerPlat/WorkFlows/Design/css/bootstrap.contextmenu.css" rel="stylesheet" type="text/css" />-->
+    <link href="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow2.css" rel="stylesheet" type="text/css" />
+    <script src="/PowerPlat/WorkFlows/Design/js/workflowdesigner.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFunc.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/json2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/PowerPlat/WorkFlows/Design/js/GooFlow/default.css" />
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow_color.js"></script>
+    <!--<script src="/PowerPlat/WorkFlows/Design/js/jquery.contextmenu.js" type="text/javascript"></script>-->
+    <script src="/PowerPlat/WorkFlows/Design/js/bootstrap.contextmenu.js" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript">
+        var flowObject = null;
+        $(document).ready(function () {
+            mini.parse();
+            var regionObject = mini.get("LayoutMain").getRegionBodyEl("center");
+            var optioinObject = mini.get("LayoutMain").getRegionBodyEl("south");
+            var lastHeight = $(regionObject).height();
+            flowObject = $.createGooFlow($("#flowContextBody"), {
+                width: $(regionObject).width(),
+                height: lastHeight,
+                toolBtns: ["start round", "end round", "task round", "node", /*"chat", "state", "plug",*/"join", "fork"/*, "complex mix"*/],
+                haveHead: false,
+                haveTool: false,
+                useOperStack: true
+            });
+            $(window).resize(function () {
+                flowObject.reinitSize($(regionObject).width(), $(regionObject).height());
+            });
+            setInterval(function () {
+                if ($(regionObject).height() != lastHeight) {
+                    lastHeight = $(regionObject).height();
+                    flowObject.reinitSize($(regionObject).width(), lastHeight);
+                }
+            }, 500);
+        });
+    </script>
+    <style type="text/css">
+        .media-object {
+            border-radius: 32px; /*border: 1px solid #ccc;*/
+            line-height: 32px;
+            text-align: center;
+            margin: 5px;
+        }
+
+        .media {
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .media-heading {
+            margin: 5px 0 5px; /*border-bottom: 1px dotted #ccc;*/
+            font-weight: bold;
+        }
+
+        .tooltip-user {
+        }
+
+        .mini-layout-region-body {
+            overflow: hidden;
+        }
+
+        .myrow {
+            background: #fceee2;
+        }
+
+        .myHidden {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body id="body">
+    <div style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>$Helper.GetResource("workflow_monitor")</span>&nbsp;&nbsp;&nbsp;<span id="spnWorkFlowName"></span>
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="CloseWindow('cancel')">
+                        <i class="fa fa-power-off"></i>$Helper.GetResource("g_off")
+                    </a>
+                    <!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%">
+                    <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" tabposition="left">
+                        <div title="流程图" name="tabWorkFlowPicture">
+
+                            <!--流程图-->
+                            <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 100%;">
+                                <div region="center" title="$Helper.GetResource('workflow_plot')" id="contextBody"
+                                    class="mapContext">
+                                    <div id="flowContextBody">
+                                    </div>
+                                </div>
+                                <!--绘图区-->
+                                
+                            </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+            <!--portlet box-->
+        </div>
+    </div>
+    <script language="javascript">
+        GooFlow.prototype.color.mark = "blue";
+        GooFlow.prototype.color.line = "#cccccc";
+        mini.parse();
+
+      
+        var MindData = null;
+        var SelectData = null;
+ 
+        Array.prototype.contains = function (obj) {
+            var i = this.length;
+            while (i--) {
+                if (this[i] === obj) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+      
+
+
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        function SetData(data) {
+            var workInfoID = data.WorkInfoID;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadConfig";   //加载流程图指令
+            CurrentInfo.Current = {};
+            CurrentInfo.Current.WorkInfoID = workInfoID;
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.ShowMonitor;    //流程监控
+
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                dataType: "text",
+                cache: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    var data = mini.decode(result.data.ResultInfo);
+
+                    document.getElementById("spnWorkFlowName").innerHTML = data.WorkFlowName + "   " + data.Version + "    [" + data.RecordStatusName + "]";
+                    SelectData = mini.decode(data.SelectData);
+                    var flowData = mini.decode(data.JsonInfo);
+ 
+                    $.each(flowData.NodeList, function () {
+                        this.id = this.NodeCode;
+                        this.name = this.NodeName;
+                        this.title = this.NodeName;
+                        this.type = this.NodeType;
+                        this.allowDraggable = true;//允许拖曳
+                        if (this.type == "StartNode") this.type = "start round";
+                        if (this.type == "EndNode") this.type = "end round";
+                    });
+
+                    $.each(flowData.LineList, function () {
+                        this.id = this.LineCode;
+                        this.name = this.NodeName;
+                        this.title = this.name;
+                        this.from = this.FromNode;
+                        this.to = this.ToNode; 
+                    });
+
+                    flowObject.loadData(flowData);
+                    // GooFlow.prototype.color.mark = "green";
+
+
+                    //---------------描绘流程图-------------------------
+                    var historyNodeList = mini.decode(data.HistoryNodeList);
+                    $.each(historyNodeList, function () {
+                        var fromNodeCode = (this + "").split(":")[1];
+                        var nodeCode = (this + "").split(":")[0];
+                        if (fromNodeCode) {
+                            flowObject.markItem(fromNodeCode, "node", true);
+                        }
+                        //结束节点也应该标红
+                        if (nodeCode && nodeCode != "" && flowObject.$nodeData[nodeCode] && flowObject.$nodeData[nodeCode]["NodeType"] == "EndNode") {
+                            flowObject.markItem(nodeCode, "node", true);
+                        }
+                    });
+                    var currentNodeList = mini.decode(data.CurrentNodeList);
+                    $.each(currentNodeList, function () {
+                        var fromNodeCode = (this + "").split(":")[0];
+                        if (!fromNodeCode) return;
+
+                        flowObject.markItem(fromNodeCode, "node", true);
+                        $(flowObject.$nodeDom[fromNodeCode]).css({ "border": "3px red double" });
+
+                    });
+
+                    for (var iTmp = 0; iTmp < historyNodeList.length; iTmp++) {
+                        var str = historyNodeList[iTmp];
+                        var lineCode = (str + "").split(":")[2];
+                        if (!lineCode) continue;
+                        flowObject.markItem(lineCode, "line", true);
+                    }
+                    
+                },
+                error: function (e, r, h) {
+                    mini.unmask(document.body);
+                    Power.ui.error(app_global["workflow_error"] + ":" + e.responseText);
+                    //alert("消息", "错误！:" + e.responseText, "info");
+                }
+            });
+
+        }
+       
+
+     
+        $(document).ready(function () {
+            var workInfoID = "23A53262-9842-4E31-9B33-DFA60D1141A8";
+            if (!workInfoID) return;
+            var data = {};
+            data.WorkInfoID = workInfoID;
+            
+            SetData(data);
+        });
+    </script>
+</body>
+</html>

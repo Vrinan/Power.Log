@@ -1,0 +1,268 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+	<script src="/Resource/Get/zh-CN?v=$AppVersion" type="text/javascript"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-4 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <a class="mini-button blue" id="WBS.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="WBS" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="wbs_guid" treecolumn="text" width="890" allowcelledit="false" fitcolumns=""
+                             parentfield="parent_wbs_guid" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true"
+                             data-options="{lazyload:true}">
+
+                            <div property="columns">
+                                <div name="text" field="wbs_short_name" header="编号" headeralign="center" allowsort="true">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                <div field="wbs_name" header="名称" headeralign="center" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-8 col-hd-12">
+                <div class="portlet blue box" style="height: 50%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--<a class="mini-button blue" id="V_PS_DM_DrawList.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="V_PS_DM_DrawList.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="V_PS_DM_DrawList.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="V_PS_DM_DrawList.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="V_PS_DM_DrawList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>-->
+                            <a class="mini-button blue" id="V_PS_DM_DrawList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_DM_DrawList" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                             allowcelledit="false" allowcellselect="true" multiselect="true" pagesize="20" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+
+                                <div type="checkboxcolumn" field="isAttach" truevalue="1" falsevalue="0" headeralign="center" width="40">有附件</div><!--生效-->
+                                <div field="DrawingCode" width="60" headeralign="center">
+                                    图纸编号
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="DrawingName" width="80" headeralign="center">
+                                    图纸名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Designer" width="60" headeralign="center">
+                                    设计人
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="portlet blue box" style="height: 50%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <div id="btnUpload"></div>
+                            <button class="btn blue" id="btnShow">
+                                <i class="fa fa-eye"></i>    查看
+                            </button><!--查看-->
+                            <button class="btn blue" id="btnDownLoad">
+                                <i class="fa fa-download"></i>  下载
+                            </button><!--下载-->
+                            
+                            <button class="btn blue" id="btnDel">
+                                <i class="fa fa-trash-o"></i> 删除
+                            </button><!--删除-->
+
+                            <a class="mini-button blue" id="DocFile.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body" style="height:100%">
+                        <div id="DocFile" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" allowresize="true" showpager="false" allowcelledit="false" allowcellselect="true" onbuttonclick="FileUp" onrowdblclick="ViewSign">
+                            <div property="columns">
+                                <div type="indexcolumn">序号</div>
+                                <div field="Code" width="60" headeralign="center" header="编号">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div><!--编号-->
+                                <div field="Name" width="60" headeralign="center" header="名称">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div><!--名称-->
+                                <div field="FileExt" width="60" headeralign="center" header="拓展名">拓展名<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="FileVersion" width="60" headeralign="center" header="文件版本">文件版本<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="RegHumName" width="60" headeralign="center" header="上传人">上传人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="RegDate" width="60" headeralign="center" dateformat="yyyy-MM-dd" header="上传日期">上传日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" >
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+		var formData = {};
+
+        $(function () {
+            PowerForm.Init();
+			 var FileOperate = mini.get("DocFile");
+
+            $("#btnShow").click(function () {
+                var sel = FileOperate.getSelected();
+                var Id = sel["Id"];
+                var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + Id;
+                window.open(url);
+            });
+            $("#btnDownLoad").click(function () {
+                var sel = FileOperate.getSelected();
+                var Id = sel["Id"];
+                var url = "/File/Download/ftp/" + Id;
+                window.open(url);
+            });
+            
+            $("#btnDel").click(function () {
+                var sel = FileOperate.getSelecteds();
+
+                //var Id = sel["Id"];
+                var yes = app_global['docfile_yes'];//是
+                var no = app_global['docfile_no'];//否
+                if (sel.length > 0) {
+                    var buttonOption = {};
+                    buttonOption[yes] = {
+                        theme: 'primary',
+                        handler: function () {
+                            var s = 0;
+                            var ss = false;
+                            for (var i = 0; i < sel.length; i++) {
+                                var Id = sel[i].Id;
+
+                                if (sel[i].SourceFileId != null) {
+                                    ss = true;
+                                    continue;
+                                }
+                                $.getJSON('/PowerPlat/Control/File.ashx?_type=ftp&action=delete&_fileid=' + Id, function (data) {
+                                    s++;
+                                    if (ss)
+                                        Power.ui.alert(app_global['archive_ed_not_delete']);//已归档文件不能删除
+                                    if (s == sel.length)
+                                        FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("DocFile"));
+                                });
+                            }
+
+                        }
+                    };
+                    buttonOption[no] = function () { };
+                    Power.ui.confirm(app_global['docfile_confirmdelete'], { button: buttonOption });//是否删除该文件?
+                }
+                return false;
+            });
+
+            $("#btnUpload").uploadify({
+                height: 30,
+                width: 56,
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                buttonText: "<i class=\"fa fa-upload\"></i> " + app_global['docfile_up'],//上传
+                swf: '/Scripts/plugins/uploadify/uploadify.swf',
+                uploader: '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: formData,
+                onUploadComplete: function () {
+                    FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("DocFile"));
+                },
+                onDialogClose: function () {
+                    //$(".uploadify-queue")
+                    //var messageid = mini.loading("Loading, Please wait ...", "Loading");
+                },
+                dragzone: "#V_PS_DM_DrawList"
+            });
+
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+		 PowerForm.EventAfterNodeSeleted = function (e) {
+            if (e.sender.id == "V_PS_DM_DrawList")
+				FileUp( "V_PS_DM_DrawList",e.record.Id)
+				//alert("选中节点");
+        }
+
+		function FileUp(keyword, keyvalue) {
+
+
+            if (keyword == "")
+                keyword = "DocFile";
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+           
+            formData.KeyWord = keyword;
+            formData.KeyValue = keyvalue;
+            FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("DocFile"));
+        }
+		function ViewSign(e){
+		 var url='/Form/ValidForm/33679895-1748-468d-84b4-451c5a62d3a9/edit/'+e.record.Id;
+			 mini.open({
+					url: url,
+					showMaxButton: true,
+					width: 800,
+					height: 600,
+					ondestroy: function (action) { 
+						FormFuns.ReLoadData(FormFuns.GetMiniFormGrid("DocFile"));
+					} 
+				})
+             return false;
+		}
+
+    
+    </script>
+</body>
+</html>

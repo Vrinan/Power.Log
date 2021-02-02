@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <!--end col-md-3-->
+            <div class="mini-splitter" vertical="true" style="width: 100%; height: 100%">
+                <div size="100%" showcollapsebutton="true">
+                    <div class="portlet box blue" style="height: 100%">
+                        <div class="portlet-title">
+                            <div class="captiontools">
+                                <div class="captiontools">
+                                    <!--<span>EPS层级</span>
+                                    <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="120px" />
+                                    <span>状态</span>
+                                    <input id="QStatus" class="mini-combobox" shownullitem="true" width="120px"></input>
+                                    <span>送审时间</span>
+                                    <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                                    <span>——</span>
+                                    <input id="QEndDate" class="mini-datepicker" width="120px"></input>-->
+
+                                    <span>项目编号</span>
+                                    <input id="QTitle" class="mini-textbox" shownullitem="true" width="120px"></input>
+                                    <span>设计阶段</span>
+                                    <input id="QStatus" class="mini-combobox" shownullitem="true" width="120px"></input>
+                                    <!--<span>项目负责人</span>
+                                    <input id="QUserName" class="mini-textbox" shownullitem="true" width="120px"></input>-->
+                                    <!--<span>批准日期</span>
+                                    <input id="QFinish" class="mini-datepicker" width="120px"></input>-->
+                                    <a class="mini-button yellow" onclick="mini.get('View_SF_SJ_Overview').reload();">查询</a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div id="View_SF_SJ_Overview-Export" title="设计总览" class="btn-group"></div>
+                                    <a class="mini-button blue" id="View_SF_SJ_Overview.Export" onclick="PowerForm.OnExportDataToXls('View_SF_SJ_Overview', '原样导出')"><i class="fa fa-sign-out"></i>原样导出</a>
+                                    <a class="mini-button blue" id="View_SF_SJ_Overview.Export" onclick="PowerForm.AlExport('View_SF_SJ_Overview', '1111', 'xmbhCode,ProjectLeader')"><i class="fa fa-sign-out"></i>AlExport</a>
+                                </div>
+                                <!--通用查询，不可用-->
+                                <!--<div class="tools">
+                                    <input id="View_SF_SJ_Overview-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="PowerForm.ColseCombobox" onvaluechanged="PowerForm.GroupChanged(this)" style="width: 150px;" />
+                                    <input id="View_SF_SJ_Overview-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                                    <span id="View_SF_SJ_Overview-search"><input id="View_SF_SJ_Overview-search-value" class="mini-textbox" style="width: 150px;" /></span>
+                                    <a class="mini-button blue" id="View_SF_SJ_Overview-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>
+                                </div>-->
+                            </div>
+                        </div>
+                        <div class="portlet-body" style="height: 100%;padding-bottom: 45px;">
+                            <div id="View_SF_SJ_Overview" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" onload="OnBeforeLoad" ondrawcell="ondrawcell" data-options="{merge:'xmbhCode,ProjectLeader'}"
+                                 allowresize="true" showPager="true" pagesize="50">
+                                <div property="columns">
+                                    <div type="indexcolumn">
+                                    </div>
+                                    <div header="设计启动" headeralign="center">
+                                        <div property="columns">
+                                            <div name="xmbhCode" field="xmbhCode" headeralign="center" width="60">
+                                                项目编号
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="ProjectLeader" field="ProjectLeader" headeralign="center" width="60">
+                                                项目负责人
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="DesignStage" field="DesignStage" headeralign="center" width="60">
+                                                设计阶段
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="tdzjTitle" field="tdzjTitle" headeralign="center">
+                                                团队组建
+                                                <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div header="设计策划" headeralign="center">
+                                        <div property="columns">
+                                            <div name="ggspsTitle" field="ggspsTitle" headeralign="center">
+                                                技术规格书评审
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="jsxyTitle" field="jsxyTitle" headeralign="center">
+                                                技术协议编制
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div field="sjtzTitle" headeralign="center">
+                                        设计提资
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div header="设计评审" headeralign="center">
+                                        <div property="columns">
+                                            <div name="wjjsTitle" field="wjjsTitle" headeralign="center">
+                                                设计文件校审
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="wjhsTitle" field="wjhsTitle" headeralign="center">
+                                                技术文件会审
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div header="成品管理" headeralign="center">
+                                        <div property="columns">
+                                            <div name="cpTitle" field="cpTitle" headeralign="center">
+                                                设计成品管理
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div name="sjcgTitle" field="sjcgTitle" headeralign="center">
+                                                发出设计成果
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div name="sjzjTitle" field="sjzjTitle" headeralign="center">
+                                        项目设计总结
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var PowerForm = new SingleForm();
+            var currenttask;
+            $(function () {
+                //var firstDate = new Date();
+                //firstDate.setDate(1); //第一天
+                //var endDate = new Date(firstDate);
+                //endDate.setMonth(firstDate.getMonth() + 1);
+                //endDate.setDate(0);
+                //mini.get("QStartDate").setValue(firstDate);
+                //mini.get("QEndDate").setValue(endDate);
+                //默认是查看审批中
+                //mini.get("QStatus").setValue(20);
+
+                //SetBtnEditValue("txtPlanName", EpsProjName);
+                PowerForm.Init();
+                //mini.get("txtPlanName").on("buttonclick", function (e) {
+                //    OnWiardPlan();
+                //});
+                mini.get("View_SF_SJ_Overview").load();
+                //var grid = mini.get("View_SF_SJ_Overview");
+                //grid.frozenColumns(0, 3);
+            });
+            mini.parse();
+            var grid = mini.get("View_SF_SJ_Overview");
+            //grid.groupBy("Title", "asc");
+            //grid.load();
+
+            function OnBeforeLoad(e) {
+                //mini.get("View_SF_SJ_Overview").mergeColumns(["xmbhCode"], ["ProjectLeader"], ["DesignStage"], ["tdzjTitle"], ["ggspsTitle"]);
+                mini.get("View_SF_SJ_Overview").mergeColumns(["xmbhCode", "ProjectLeader", "DesignStage", "tdzjTitle", "ggspsTitle", "jsxyTitle", "sjtzTitle", "wjjsTitle", "wjhsTitle", "cpTitle", "sjcgTitle", "sjzjTitle"]);
+            }
+
+            function ondrawcell(e) {
+                if (e.field == "xmbhCode") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('ec389b6b-5e7f-4364-b51f-1920ca81a1c4','" + e.record.xmbhId + "')\">" + e.record.xmbhCode + "</a>";
+                }
+                //if (e.field == "ProjectLeader") {
+                //    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('f841338e-293c-4819-b11a-e399f5d58dca','" + e.record.ProjectLeaderId + "')\">" + e.record.ProjectLeader + "</a>";
+                //}
+                if (e.field == "tdzjTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('6271cc3f-a34b-441c-bec3-ceec9db0a094','" + e.record.tdzjId + "')\">" + e.record.tdzjTitle + "</a>";
+                }
+                if (e.field == "ggspsTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('8c59bb23-3ec7-4cbd-a11e-aababfa42475','" + e.record.ggspsId + "')\">" + e.record.ggspsTitle + "</a>";
+                }
+                if (e.field == "jsxyTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('27c7e4cc-61b9-443e-9465-fed2c91cdf55','" + e.record.jsxyId + "')\">" + e.record.jsxyTitle + "</a>";
+                }
+                if (e.field == "sjtzTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('b9fc1dd8-ec04-4ef8-bcbc-1ee8a48cdbb3','" + e.record.sjtzId + "')\">" + e.record.sjtzTitle + "</a>";
+                }
+                if (e.field == "wjjsTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('14433179-9495-4e82-ac44-4e3975c11572','" + e.record.wjjsId + "')\">" + e.record.wjjsTitle + "</a>";
+                }
+                if (e.field == "wjhsTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('ead38bac-c0ad-4415-abd1-6ea82ff53774','" + e.record.wjhsId + "')\">" + e.record.wjhsTitle + "</a>";
+                }
+                if (e.field == "cpTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('8b7dcd69-d7f6-4cb6-84c7-20ea8d446e0b','" + e.record.cpId + "')\">" + e.record.cpTitle + "</a>";
+                }
+                if (e.field == "sjcgTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('d0035dca-989d-4dd1-a220-73445bad1759','" + e.record.sjcgId + "')\">" + e.record.sjcgTitle + "</a>";
+                }
+                if (e.field == "sjzjTitle") {
+                    e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('61f53cb9-16f8-4908-aef4-fd46e845c898','" + e.record.sjzjId + "')\">" + e.record.sjzjTitle + "</a>";
+                }
+
+            }
+            function OnViewForm(formid, keyvalue) {
+                mini.open({
+                    url: '/Form/ViewForm/' + formid + '/' + keyvalue,
+                    showMaxButton: true,
+                    width: 800,
+                    height: 600
+                })
+            }
+
+
+            function OpenWizard(e, callback) {
+                mini.open({
+                    url: e.url,
+                    width: "80%", height: "80%", title: e.title,
+                    showMaxButton: true,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        var winpar = iframe.contentWindow.WizardParams;
+                        if (winpar && e.multi) {
+                            winpar.multi = e.multi;
+                        }
+                        var selobj = iframe.contentWindow.Select;
+                        if (selobj) {
+                            if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                            if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                        }
+                    },
+                    ondestroy: function (action) {
+                        if (action != "ok") return;
+                        var iframe = this.getIFrameEl();
+                        var data = null;
+                        if (iframe.contentWindow.Select)
+                            data = iframe.contentWindow.Select.GetData();
+                        else {
+                            if (iframe.contentWindow.GetData)
+                                data = iframe.contentWindow.GetData();
+                        }
+                        data = mini.clone(data);
+                        if (data) {
+                            if (callback) callback(data);
+                        }
+                    }
+                });
+            }
+            function OnWiardPlan() {
+                var p = { title: "选择项目计划", multi: "0" };
+                p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+                //p.swhere = " LongCode Like '" + longcode + ".%' or LongCode='" + longcode + "'";
+                p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+                OpenWizard(p, function (data) {
+                    currenttask = data[0].LongCode;
+                    SetBtnEditValue("txtPlanName", data[0].project_name);
+                })
+            }
+
+            function SetBtnEditValue(id, value) {
+                var btn = mini.get(id);
+                btn.setText(value);
+                btn.setValue(value);
+            }
+
+            PowerForm.EventBeforeLoadData = function (e) {
+                var humId = sessiondata.HumanId;
+                var posiName = sessiondata.PosiName == "" ? '' : sessiondata.PosiName;
+                if (e.sender.id == "View_SF_SJ_Overview") {
+                    //不是管理员或者设计部长
+                    if (humId != 'ad000000-0000-0000-0000-000000000000' && posiName.indexOf("设计_部长") < 0) {
+                        e.params.swhere += "ProjectLeaderId = '" + humId + "'";
+                    }
+                    //e.params.swhere+="1=1"
+                    //项目编号
+                    if (mini.get("QTitle").getValue() != "") {
+                        if (e.params.swhere != "") {
+                            e.params.swhere += "and xmbhCode like '%" + mini.get("QTitle").getValue() + "%'";
+                        }
+                        else {
+                            e.params.swhere += "xmbhCode like '%" + mini.get("QTitle").getValue() + "%'";
+                        }
+                    }
+                    //设计阶段
+                    if (mini.get("QStatus").getValue() != "") {
+                        if (e.params.swhere != "")
+                        {
+                            e.params.swhere += "and DesignStage like '%" + mini.get("QStatus").getText() + "%'";
+                        }
+                        else
+                        {
+                            e.params.swhere += "DesignStage like '%" + mini.get("QStatus").getText() + "%'";
+                        }
+                    }
+                }
+            }
+        </script>
+</body>
+</html>

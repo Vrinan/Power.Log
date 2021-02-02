@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_FileContact.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_FileContact.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="PS_FileContact.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="PS_FileContact.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            
+                            <a class="mini-button blue" id="PS_FileContact.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>录入时间:</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>——</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>   
+                        </div>
+                        <div class="tools">
+                            <input id="PS_FileContact-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="PS_FileContact-search">
+                                <input id="PS_FileContact-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="PS_FileContact-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_FileContact" class="mini-datagrid" height="723" style="width: 100%; height: 100%;" visible="true" SummaryColumns="" width="974" pageSize="20" fitColumns="" idField="Id">
+                            <div property="columns">
+                                <div type="indexcolumn" width="40">序号</div>
+                                
+                                <!-- style="padding-top: 4px;padding-bottom: 3px;color: #fff !important;background-color: #eca22e !important; background: 0;" -->
+                                <div type="comboboxcolumn" width="50" headeralign="center" field="Status" header="状态" width="50" guideid="" allowsort="true">状态<input  property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div width="150" field="Code" header="文件编号" headeralign="center" width="150" guideid="" allowsort="true">文件编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="200" field="Title" header="文件名称" headeralign="center" width="200" guideid="" allowsort="true">文件名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div type="comboboxcolumn" headeralign="center" field="FileType" header="文件类型" width="50" guideid="" allowsort="true">文件类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div width="80" field="ToDept" headeralign="center" header="来文部门" width="80" guideid="" allowsort="true">来文部门<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="60" field="ProposedDate" headeralign="center" header="来文日期" width="60" GuideID="" allowSort="true" dateformat="yyyy-MM-dd">来文日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                <div width="80" field="RegHumName" headeralign="center" header="录入人" guideid="" allowsort="true">录入人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="60" field="RegDate" headeralign="center" header="录入日期" GuideID="" allowSort="true" dateformat="yyyy-MM-dd">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var type = getParameter("type");
+            if(!IsEmpty(type))
+            {
+                formconfig.config.joindata.swhere = " FileType='"+ type +"'";
+            }
+            if(
+                (sessiondata.HumanName =="系统管理员" || sessiondata.PosiName.indexOf("办公室")>-1 
+                || sessiondata.PosiName.indexOf("董事长")>-1
+                || sessiondata.PosiName.indexOf("总经理")>-1
+                || sessiondata.PosiName.indexOf("分管副总")>-1)  && IsEmpty(type)){
+                formconfig.config.joindata.swhere = " 1=1 ";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if(!IsEmpty(mini.get("QStartDate").getFormValue()) && !IsEmpty(mini.get("QEndDate").getFormValue()))
+            {
+                var enddate = mini.get("QEndDate").getFormValue();
+                enddate+=' 23:59:59.999';
+                if (e.params.swhere == "") {
+                    e.params.swhere = " RegDate >='" + mini.get("QStartDate").getFormValue() + "' and RegDate<='" + enddate + "'";
+                }
+                else { 
+                    e.params.swhere += " and RegDate>='" + mini.get("QStartDate").getFormValue() + "' and RegDate<='" + enddate + "'";
+                }
+            }
+           
+        }
+
+
+    </script>
+</body>
+</html>

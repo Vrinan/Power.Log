@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>现场签证单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="PS_ProjectInfo.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_SiteVisaSingle.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_SiteVisaSingle.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_SiteVisaSingle.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_SiteVisaSingle" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            单据编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.Code" name="Code" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            现场签证审批单
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.VisaSiteApprovalSheet" name="VisaSiteApprovalSheet" textname="VisaSiteApprovalSheet" class="mini-buttonedit"
+                                                   emptytext="关联现场签证审批单..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            工程名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.EngineeringName" name="EngineeringName" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            工程类别
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.EngineeringType" name="EngineeringType" class="mini-combobox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.CompactCode" name="CompactCode" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            施工单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.ConstructionUnit" name="ConstructionUnit" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            签证内容(由施工单位填写)
+                                        </td>
+                                    </tr>                                 
+                                    <tr>                                       
+                                        <td>
+                                            签证理由
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.VisaReason" name="VisaReason" class="mini-textarea" height="120"/>
+                                        </td>                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程量计算式
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.CalculatedMode" name="CalculatedMode" class="mini-textarea" height="120"/>
+                                        </td>                                     
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程起止时间
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.StartStopTime" name="StartStopTime" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            施工单位(签章)
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_SiteVisaSingle.Signature" name="Signature" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_SiteVisaSingle.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            
+        });
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_WeekCheck_dtl2.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_WeekCheck_dtl2-Export" title="设备检修周计划汇总" class="btn-group"></div>
+
+                            <span>开始时间：</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>-</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+                            <span>所属运行站：</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <label style="font-size:14px">上/本周：</label>
+                            <!--<input property="editor" class="mini-combobox" id="QWeekType" onvaluechanged="Changed" style="width:140px;" textfield="text" valuefield="Id"
+                                   data="[{Id:'next',text:'下周计划'},{Id:'now',text:'本周总结'}]" />-->
+
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_WeekCheck_dtl2" class="mini-datagrid" style="width: 100%; height: 100%;" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id" onload="onLoad">
+                            <div property="columns">
+                                <div field="Code" name="Code" headeralign="center" dateformat="yyyy-MM-dd" width="0">
+                                    编号
+                                </div>
+                                <div field="Title" name="Title" headeralign="center" header="名称" width="0">
+                                    名称
+                                </div>
+                                <div field="RunStation" name="RunStation" headeralign="center">
+                                    所属运行站
+                                </div>
+                                <div field="StartDate" name="StartDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                    开始时间
+                                </div>
+                                <div field="EndDate" name="EndDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                    结束时间
+                                </div>
+                                <div field="Description" headeralign="center">
+                                    检修内容
+                                    <input property="editor" name="Description" class="mini-textbox" />
+                                </div>
+                                <div field="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                    计划开始时间
+                                    <input property="editor" name="Date" class="mini-datepicker" />
+                                </div>
+                                <div field="EndDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                    计划完成时间
+                                    <input property="editor" name="EndDate" class="mini-datepicker" />
+                                </div>
+                                <!--<div field="Type" headeralign="center" type="comboboxcolumn">
+                                    检修方式
+                                    <input property="editor" name="Type" class="mini-combobox" />
+                                </div>-->
+                                <div field="Station" headeralign="center">
+                                    检修部门
+                                    <input property="editor" name="Station" class="mini-textbox" />
+                                </div>
+                                <div field="Remark" headeralign="center">
+                                    备注
+                                    <input property="editor" name="Remark" class="mini-textbox" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            //mini.get("QWeekType").setValue();
+        });
+        mini.parse();
+
+        function onLoad() {
+            mini.get("View_SF_WeekCheck_dtl2").mergeColumns(["Code", "Title", "RunStation", "StartDate", "EndDate"]);
+        }
+        function Changed() {
+            mini.get('View_SF_WeekCheck_dtl2').reload();
+        }
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_WeekCheck_dtl2').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_WeekCheck_dtl2") {
+                var StartMonth = mini.get("QStartDate").getValue().format("yyyy-MM-dd");
+                var EndMonth = mini.get("QEndDate").getValue().format("yyyy-MM-dd");
+                var QDepartment = mini.get("QDepartment").getFormValue();
+                //var type = mini.get("QWeekType").getValue();
+
+                if (e.params.swhere == "") {
+                    e.params.swhere = " StartDate between '" + StartMonth + "' and '" + EndMonth + "'  and RunStation like '%" + QDepartment + "%'  ";
+                }
+                else {
+                    e.params.swhere += "and StartDate between '" + StartMonth + "' and '" + EndMonth + "'  and RunStation like '%" + QDepartment + "%'";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

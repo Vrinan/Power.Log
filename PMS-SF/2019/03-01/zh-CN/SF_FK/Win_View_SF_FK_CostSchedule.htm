@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_FK_CostSchedule.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            
+                            <!--<span>月份</span>
+                            <input id="QStartDate" class="mini-monthpicker" width="120"></input>
+                            <span>部门/运行站</span>
+                            <input id="Department" class="mini-textbox" width="120"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>-->
+
+                            <!--<div id="View_SF_FK_CostSchedule-Export" title="加班统计台账" class="btn-group"></div>-->
+                        </div>
+						 <div class="tools">
+                            <!--<input id="View_SF_FK_CostSchedule-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_FK_CostSchedule-search">
+                            <input id="View_SF_FK_CostSchedule-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_FK_CostSchedule-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a>--><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_FK_CostSchedule" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" onload="OnLoad" sortField="EpsCode,RegDate ASC" ondrawcell="DrawCell"
+                             showpager="true" pagesize="10" sizelist="[10,20,50]" allowcellselect="true" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+
+                                <div field="EpsCode" name="EpsCode" width="80" allowsort="true">项目编号</div>
+                                <div field="EpsName" name="EpsName" width="80" allowsort="true">项目名称</div>
+                                <div field="Code" name="Code" width="80" allowsort="true">编号</div>
+                                <div field="Titile" name="Titile" width="80" allowsort="true">标题</div>
+                                <div field="SceduleType" headeralign="center" header="费用科目类型" type="comboboxcolumn">费用科目类型<input property="editor" name="OverType" class="mini-combobox" /></div>
+                                <div field="Total" width="80" allowsort="true" numberformat="n2">合计总额</div>
+                                <div field="RegHumName" width="80" allowsort="true">录入人</div>
+                                <div field="RegDate" name="RegDate" headeralign="center" header="录入时间" dateformat="yyyy-MM-dd">录入时间<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_FK_CostSchedule').reload();
+        }
+        function OnLoad(e) {
+            var grid = e.sender;
+            mini.get("View_SF_FK_CostSchedule").mergeColumns(["EpsCode", "EpsName"]);
+        }
+
+        function DrawCell(e) {
+            if (e.field == "Code") {
+                var SceduleType = e.record.SceduleType;
+                switch (SceduleType) {
+                    case "1"://设备
+                        e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('3c15ffe5-4b0a-4e21-bd92-84f4aa001b72', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                        break;
+                    case "2"://安装
+                        e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('48160ed1-5eb5-40ee-abcf-0b226914cb14', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                        break;
+                    case "3"://建筑
+                        e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('40c3b3b6-fd65-4b91-b5f9-f18961af4be3', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                        break;
+                    case "4"://管理
+                        e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('72782d3a-7f73-45a6-95d7-ea79932c8701', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                        break;
+                    case "5"://其他
+                        e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('f1f2ecd7-270d-4d8d-a5ef-5f2d8beadc20', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                        break;
+                }
+            }
+        }
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }        var EpsId = getParameter("EpsId");        PowerForm.EventBeforeLoadData = function (e) {
+            debugger;
+            if (e.params.swhere != "")
+                e.params.swhere += " and EpsId='" + EpsId + "'";
+            else
+                e.params.swhere = "  EpsId='" + EpsId + "'";
+        }
+    </script>
+</body>
+</html>

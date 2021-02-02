@@ -1,0 +1,282 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link rel="stylesheet" href="/Scripts/calendar/jquery-ui-1.10.3.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/jquery.webui-popover.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/calendar/fullcalendar.print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap.min.css">
+    <link rel="stylesheet" href="/Scripts/calendar/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="/Scripts/calendar/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/jquery.webui-popover.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/moment.min.js"></script>
+    <script type="text/javascript" src="/Scripts/calendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+    <style>
+        .fc-day-header.fc-widget-header,
+        .fc-toolbar {
+            display: none;
+        }
+        .fc-content a[role='dismiss-sm'] {
+            text-decoration: none;
+            position: absolute;
+            top: -3px;
+            right: 0;
+            color: white;
+            font-size: 14px;
+            padding: 0 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12" style="padding-left: 5px; padding-right: 5px;">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" onclick="addWeekReport()">
+                                <i class="fa fa-plus"></i>新增会议</a>
+                            <a class="mini-button blue" id="Prev" onclick="Prev()">
+                                <i class="fa fa-arrow-left"></i>
+                                上月
+                            </a>
+                            <a class="mini-button blue" id="Today" onclick="Today()">
+                                <i class="fa fa-align-justify">
+                                </i>当月
+                            </a>
+                            <a class="mini-button blue" id="Next" onclick="Next()">
+                                <i class="fa fa-arrow-right">
+                                </i>下月
+                            </a>
+                            <a class="mini-button blue" onclick="weeksum()">
+                                </i>会议统计
+                            </a>
+                            <span id="CalendarStr" style="font-size: 20px; font-weight: bold; margin-left: 230px;
+                                    vertical-align: bottom;"></span>
+                        </div>
+                    </div>
+                    <div class="mini-fit">
+                        <div class="content" style="height: 100%">
+                            <div class="container" style="width: 100%">
+                                <div class="row" style="height: 100%">
+                                    <div class="col-md-12">
+                                        <div class="portlet-body" style="height: 500px" id="RoomList">
+                                            <div id="calendar" style="margin-top:40px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var today = new Date();
+        var month = today.getMonth() + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var day = parseInt(today.getDate(), 10) < 10 ? "0" + parseInt(today.getDate(), 10) : parseInt(today.getDate(), 10);
+        var todaystr = today.getFullYear() + "-" + month + "-" + day;
+
+        var RoomList = null;
+        var PowerForm = new SingleForm();
+        $(function () {
+
+            $("#calendar").fullCalendar({
+                lang: 'zh-cn',
+                aspectRatio: 1.6,
+                forceEventDuration: true,
+                droppable: true,
+                editable: true,
+                eventOverlap: false,
+                allDayDefault: false,
+                timeFormat: "HH:mm",
+                axisFormat: "HH:mm",
+                minTime: '6:00',
+                maxTime: '20:00',
+                allDaySlot: false,
+                events: [],
+                eventColor: '#4b8df8',   // an option!
+                textColor: 'black',
+                header: {
+                    left: '', //prev today next
+                    center: '', //title
+                    right: ""//month,agendaWeek,agendaDay
+                },
+                dayClick: DayClick,
+                eventClick: EventClick,
+                eventMouseover: EventMouseOver,
+                eventMouseOut: EventMouseOut,
+                eventAfterRender: EventAfterRender,
+                viewRender: EventViewRender
+            });
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+
+             $('[id^=calendar]').on('click', '[role^="dismiss"]', function (e) {
+                 e.preventDefault();
+                 var tarId = $(this).attr("data-target");
+                 var result = DeleteLog(tarId);
+                 if (result) {
+                     $(this).parents("[id^=calendar]").fullCalendar("removeEvents", tarId);
+                 }
+             });
+            RenderCalendar();
+        });
+
+        
+        
+        function RenderCalendar() {
+            var LogList = [];
+            var candelete = true;
+            LogList.push({id:"1",title:"123test",start:"2019-11-20 08:00",description:"111111111",hasright:"true"});
+            var dt = new Date();
+            dt = dt.format("yyyy-MM-dd HH:mm");
+            var log1 = { id: "29fdc682-e2de-42a6-8690-21a43c1a5c31", state: "50", title: "标题1", start: "2019-11-25 15:00", end: "2019-11-25 18:00", description: "描述1描述1描述1描述1描述1描述1描述1"};
+            var log2 = { id: "5995fa95-e976-4019-b1a0-02fcc66130f4", state: "30", title: "标题2", start: "2019-11-20 03:00", end: "2019-11-20 04:00", description: "描述2描述2描述2描述2描述2描述2"};
+            $("#calendar").fullCalendar("renderEvent",log1, true);
+            $("#calendar").fullCalendar("renderEvent",log2, true);
+        }
+        
+        function addWeekReport() {
+            var win = mini.open({
+                url: "/Form/AddForm/55c8f0e7-3ad9-4a73-9c45-c3d10b934bb6/",
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                ondestroy: function () {
+                    $('#calendar').fullCalendar('removeEvents');
+                    RenderCalendar();
+                }
+            });
+        }
+
+        function DeleteLog(Id) {
+            var a = confirm("是否删除该会议");
+            if(a == false)
+                return;
+        }
+        
+        // 月切换
+        function Prev() {
+            var currDate = $("#calendar").fullCalendar("getDate");
+            $("#calendar").fullCalendar("gotoDate", currDate.subtract(1, "month"));
+
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+            $("#CalendarStr").html(today);
+        }
+
+        function Next() {
+            var currDate = $("#calendar").fullCalendar("getDate");
+            $("#calendar").fullCalendar("gotoDate", currDate.add(1, "month"));
+
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+        }
+
+        function Today() {
+            $("#calendar").fullCalendar("today");
+            var today = $("#calendar").fullCalendar("getDate").format("YYYY-MM");
+
+            $("#CalendarStr").html(today);
+        }
+
+        function weeksum(){
+            window.open('/Form/EditForm/9a89a805-b616-4945-86c0-8b614fe714dd/','_blank')
+        }
+
+        //单机某一天等，
+        function DayClick(date, jsEvent, view) {
+            return;
+            var row = mini.get("EPSProject").getSelectedNode();
+            if (row != undefined) {
+                myaddform(date.format("YYYY-MM-DD"), row);
+                $("#modal-day-click").data("data-date", date);
+            }
+        }
+
+        function EventClick(calevent, jsEvent, view) {
+            if (typeof jsEvent.target.getAttribute("role") === 'string')
+                if (jsEvent.target.getAttribute("role").indexOf("dismiss") !== -1)
+                    return;
+            var url = "/Form/ValidForm/55c8f0e7-3ad9-4a73-9c45-c3d10b934bb6/edit/" + calevent.id;
+            var win = mini.open({
+                url: url,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                ondestroy: function () {
+                    if (fnback != undefined)
+                        fnback();
+                }
+            });
+        }
+
+        function EventMouseOver(calevent, jsEvent, view) {
+            if (view.name === "agendaDay" || view.name === "agendaWeek") {
+                //console.log("agenda");
+                return;
+            }
+            var title = calevent.title;
+            var desc = calevent.description;
+            var content = "<table><tr><td>会议时间：</td><td>" + calevent.start._i.slice(0, 10) + "  " + calevent.start._i.slice(11, 16) + "-" + calevent.end._i.slice(11, 16) + "</td></tr><tr><td>会议内容：</td><td>" + desc + "</td></tr></table>";
+            $(this).attr("data-title", title)
+                .attr("data-content", content);
+            $(this).webuiPopover({
+                title: 'Title',
+                content: 'Content',
+                trigger: 'hover',
+                placement: 'auto',
+                width: 'auto',
+                height: 'auto'
+            });
+        }
+
+        function EventMouseOut(calevent, jsEvent, view) {
+            $(this).attr("data-title", "")
+                .attr("data-content", "");
+        }
+
+        function EventAfterRender(event, element, view) {
+            $(element).find(".fc-content").css("position", "relative")
+                .append("<a href='#' data-target='" + event.id + "' title='删除' role='dismiss-sm'>×<a>");
+            if (event.hasright == false) {
+                $(element).find("[role^=dismiss]").css("display", "none");
+            }
+        }
+
+        function EventViewRender(view, element) {
+            var roomId = $(element).parents("div[id^='calendar']").attr("data-roomid");
+            view.roomId = roomId;
+        }
+        
+    </script>
+</body>
+
+</html>

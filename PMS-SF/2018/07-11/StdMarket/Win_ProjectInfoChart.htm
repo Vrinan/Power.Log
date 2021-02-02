@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script type="text/javascript" src="/Scripts/plugins/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/Scripts/plugins/highcharts/highcharts-more.js"></script>
+	<script type="text/javascript" src="/Scripts/plugins/highcharts/funnel.js"></script>
+	<script type="text/javascript" src="/Scripts/plugins/highcharts/themes/grid-light.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";//
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换计划 / 项目</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="150px" />
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="Managecharts" class="row" >
+								<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div  id="Charts1" style="height:380px;"></div>
+										</div>
+									</div>
+								</div>
+								<div  class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div  id="Charts2" style="height: 380px;"></div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var currentplan, currenttask;
+        $(function () {
+            currenttask = longcode;
+             SetBtnEditValue("txtPlanName", EpsProjName);
+            LoadData();
+        });
+
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + longcode + "%' and project_type=0";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+                LoadData();
+            })
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+
+        function LoadData() {
+            var p = {};
+            p.LongCode = currenttask;
+            $.ajax({
+                url: "/Market/GetProjectInfoChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart(o.list,o.detail);
+                    }
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(list,detail) {
+            //标题 
+			var data1=[];
+			var data2=[];
+			var datas = mini.decode(detail);
+			  $.each(datas,function(){
+			  
+				var Ids=this.id;
+				var IdsNum=Ids+"Num";
+				var Texts=this.text;
+			
+				 $.each(list, function () {
+				  for (var key in this){
+					 if (key==Ids){
+						var item=[Texts,this[key]];					   
+						data1.push(item);
+					  }
+					  if(key==IdsNum){
+						var Num=Math.round(this[key] / 10000 * 100) / 100;
+					
+						 var item=[Texts,Num];
+						data2.push(item);
+					  }
+				  }
+				})
+			})
+			 $('#Charts1').highcharts({
+				chart: {
+					type: 'funnel',
+					marginRight: 100
+				},
+				title: {
+					text: '市场开发数量',
+					x: -50
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true,
+							format: '<b>{point.name}</b> ({point.y:,.0f} )',
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+							softConnector: true
+						},
+						neckWidth: '30%',
+						neckHeight: '25%',
+						point: {
+						events: {
+                        click: function () {
+								var Name= this.name; 
+								  $.each(datas,function(){
+								    if (this.text==Name){
+									var url='/Form/EditForm/a17c434e-ed29-45fc-ad54-228dc5f87501/?FollowStatus='+this.id+'&Nofilter=true';
+									window.open(url);
+									return false;									
+									}
+								  
+								  })
+									
+								  
+								}
+							}
+						}
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				series: [{
+					name: '数量',
+					data: data1
+				}]
+			});
+			 $('#Charts2').highcharts({
+				chart: {
+					type: 'funnel',
+					marginRight: 100
+				},
+				title: {
+					text: '市场开发金额',
+					x: -50
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true,
+							format: '<b>{point.name}</b> ({point.y:,.0f} 万元)',
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+							softConnector: true
+						},
+						neckWidth: '30%',
+						neckHeight: '25%',
+						point: {
+						events: {
+                        click: function () {
+								var Name= this.name; 
+								  $.each(datas,function(){
+								    if (this.text==Name){
+									var url='/Form/EditForm/a17c434e-ed29-45fc-ad54-228dc5f87501/?FollowStatus='+this.id+'&Nofilter=true';
+									window.open(url);
+									return false;									
+									}
+								  
+								  })
+									
+								  
+								}
+							}
+						}
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				series: [{
+					name: '金额',
+					data: data2
+				}]
+			});
+
+        }
+        //渲染图表
+       
+    </script>
+</body>
+</html>

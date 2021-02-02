@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        //var OpenFormId = "$Model.data.OpenFormId";
+        //var FormId = "$Model.data.FormId";
+        //var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换EPS/项目</span>
+                            <input id="txtPlanName" name="txtPlanName" class="mini-buttonEdit" allowinput="false" onclick="OnWiardPlan()" shownullitem="true" width="300px" />
+                            <a class="mini-button blue" id="Refresh" onclick="Search()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width: 100%; height: 100%">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var currentplan, currenttask, currentcolhead = "yyyy.MM", curincludewbs2 = 0;
+        var currgirdheight = "165px"; var mychart = null;
+        var fl = "month";
+        var Measure;
+        $(function () {
+            $.ajax({
+                url: "/Cost/GetPeriod",
+                data: { EpsProjId: newstrEpsProjId == "" ? strEpsProjId : newstrEpsProjId },
+                type: "POST",
+                success: function (text) {
+                    debugger;
+                    if (text == "月")
+                        fl = "month";
+                    else
+                        fl = "week";
+                }
+
+            });
+            SetBtnEditValue("txtPlanName", EpsProjName);
+            LoadData();
+        });
+
+        var newLongCode = "";
+        var newstrEpsProjId = "";
+
+        function Search() {
+            LoadData();
+        }
+
+        function LoadData() {
+            $.ajax({
+                url: "/Cost/GetEVM",
+                data: { EpsProjId: newstrEpsProjId == "" ? strEpsProjId : newstrEpsProjId, fl: fl },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success)
+                        return;
+                    else
+                        LoadChart(o.data.value);
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            //标题
+            var charttitle = "";//"进度:" + mini.get("txtPlanName").text;
+            //if (mini.get("txtTaskName").text.length != 0) {
+            //    charttitle += ("/" + mini.get("txtTaskName").text);
+            //}
+            var xaxis = { type: 'category', data: [] };
+            var actsum = { "name": "BCWP", type: 'line', data: [] };
+            var plnsum = { "name": "BCWS", type: 'line', data: [] };
+            var ACWP = { "name": "ACWP", type: 'line', data: [] };
+            var actsumwbs2 = { "name": "累计实际2", type: 'line', data: [] };
+            $.each(data, function () {
+
+                var md = mini.formatDate(this.enddate, "yyyy-MM-dd");
+                xaxis.data.push(md);
+                actsum.data.push(Math.round(this.plnsumpct * 100) / 100);
+                plnsum.data.push(Math.round(this.actsumpct * 100) / 100);
+                ACWP.data.push(Math.round(this.ACWP * 100) / 100);
+                if (this.actsumwbs2)
+                    actsumwbs2.data.push(Math.round(this.actsumpct * 100) / 100);
+                else
+                    actsumwbs2.data.push(0);
+            })
+            var opt = {};
+            //opt.calculable = true;
+            opt.title = { text: charttitle };
+            opt.dataZoom = { show: true, realtime: true, start: 0, end: 100 }
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '累计', axisLabel: { formatter: '{value}' } }];
+            opt.legend = { data: [plnsum.name, actsum.name, ACWP.name] };
+            opt.series = [plnsum, actsum, ACWP];
+            if (curincludewbs2 == "1") {
+                opt.legend.data.push(actsumwbs2.name);
+                opt.series.push(actsumwbs2);
+            }
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                mychart = ec.init(document.getElementById(chartid), theme);
+                mychart.setOption(option);
+            })
+        }
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                newstrEpsProjId = data[0].project_guid;
+                newLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

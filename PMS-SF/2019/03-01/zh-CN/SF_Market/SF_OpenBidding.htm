@@ -1,0 +1,405 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=77" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=77" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=77" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=77" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=77" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=77 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=77 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=77 "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "";
+        var FormId = "0e2baf3c-d2b4-4f5d-829e-9d206c0b956b";
+        var FormState = "add";
+        var currentproj = "00000000-0000-0000-0000-0000000000a4";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>开标情况登记
+                </div>
+                <!--基础数据定义-->
+                <div style="float: left;">
+    &nbsp;&nbsp;
+    <div id="txtCurrentWorkInfoID" class="mini-textbox" style="display: none"></div>
+    <div id="txtCurrentSequeID" class="mini-textbox" enabled="false" style="display: none"></div>
+    <div id="btnActive" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Active');" enabled="false" style="display: none" visible="false"><i class="fa fa-paper-plane"></i>送审</div><!--送审-->
+    <div id="btnGetBack" class="mini-button flowbuttoncolor" onclick="onExecute(this,'GetBack');" enabled="false" style="display: none" visible="false"><i class="fa fa-trash-o"></i>回收</div><!--回收-->
+    <div id="btnSend" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Send');" enabled="false" style="display: none" visible="false"><i class="fa fa-thumbs-up"></i>审批</div><!--同意-->
+    <div id="btnBatchSends" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,BatchSends');" enabled="false" style="display: none" visible="false"><i class="fa fa-thumbs-up"></i>批量同意</div><!--批量同意-->
+    <div id="btnReturn" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Return');" enabled="false" style="display: none" visible="false"><i class="fa fa-mail-reply"></i>驳回</div><!--驳回-->
+    <div id="btnStop" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Stop');" enabled="false" style="display: none" visible="false"><i class="fa fa-pause"></i>终止</div><!--终止-->
+    <div id="btnScrap" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,Scrap');" enabled="false" style="display: none" visible="false"><i class="fa fa-pause"></i>作废</div><!--作废-->
+    <div id="btnDelegate" class="mini-button flowbuttoncolor" enabled="false" onclick="onExecute(this,'Delegate');" style="display: none" visible="false"><i class="fa fa-graduation-cap"></i>委派</div><!--委派-->
+    <div id="btnShowMonitor" class="mini-button flowbuttoncolor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>监控</div><!--old监控-->
+    <div id="btnShowMonitorVIS" class="mini-button flowbuttoncolor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>监控 </div><!--监控-->
+    <div id="btnShowHistoryMonitor" class="mini-menubutton  flowbuttoncolor" menu="#popupHistoryMonitor" enabled="false" style="display: none" visible="false"><i class="fa fa-eye"></i>审批历史</div><!--历史-->
+    <div id="btnHangUp" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,HangUp');" enabled="false" style="display: none" visible="false"><i class="fa fa-arrow-up"></i>挂起</div><!--挂起-->
+    <div id="btnUnHangUp" class="mini-button flowbuttoncolor" onclick="onExecute(this,'UnHangUp');" enabled="false" style="display: none" visible="false"><i class="fa fa-arrow-down"></i>撤销挂起</div><!--撤销挂起-->
+    <div id="btnDelayDate" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Update,DelayDate');" enabled="false" style="display: none" visible="false"><i class="fa fa-calendar"></i></div><!--延期-->
+    <div id="btnUnEndFlow" class="mini-button flowbuttoncolor" onclick="onExecute(this,'UnEndFlow');" enabled="false" style="display: none" visible="false"><i class="fa fa-trash-o"></i></div><!--撤销办结-->
+ <div id="btnForward" class="mini-button flowbuttoncolor" onclick="onExecute(this,'Forward');" enabled="false" style="display: none" visible="false" title="历史经手人，打开已结束的单据，还能添加人员做额外的抄送"><i class="fa fa-arrow-down"></i>转发</div>
+   
+       <div id="btnExportRecord" class="mini-button flowbuttoncolor" onclick="PowerWorkFlowUtil.TransRecord('ExportInstance');" style="display:none" visible="false" enabled="false"    ><i class="fa fa-trash-o"></i>导出</div><!--导出记录-->
+       <div id="btnImportRecord" class="mini-button flowbuttoncolor" onclick="PowerWorkFlowUtil.TransRecord('ImportInstance');"   style="display:none" visible="false" enabled="false"   ><i class="fa fa-trash-o"></i>导入</div><!--导入记录-->
+
+</div>
+<ul id="popupHistoryMonitor" class="mini-menu" style="display: none;">
+    <li></li>
+</ul>
+
+
+<style type="text/css">
+    .mini-button.flowbuttoncolor {        
+          border-radius:6px;            /* W3C syntax */
+        background-color: rgb(67, 108, 241);
+        color: white;
+    }
+
+    .flowbuttoncolor i {
+        color: #fff;
+    }
+
+</style> 
+
+                <div class="actions">
+                    <div class="btn-group">
+                        
+                    <a class="mini-button blue" id="SF_OpenBidding.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_OpenBidding.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_OpenBidding.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_OpenBidding.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_OpenBidding.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_OpenBidding" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.ProjCode" name="ProjCode" textname="ProjCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.ProjName" name="ProjName" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            开标日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.OpenBiddingDate" name="OpenBiddingDate" class="mini-datepicker" dateformat="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.ProjectType" name="ProjectType" class="mini-combobox" readonly />
+                                        </td>
+                                        <td>
+                                            项目规模
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.ProjectSize" name="ProjectSize" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+            招标编号
+        </td>
+        <td>
+            <input id="SF_OpenBidding.BiddingCode" name="BiddingCode" class="mini-textbox" />
+        </td>-->
+                                        <td>
+                                            招标人
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.BiddingHuman" name="BiddingHuman" class="mini-textbox" />
+                                            <!--<input id="SF_OpenBidding.BiddingHuman" name="BiddingHuman" textname="BiddingHuman" class="mini-buttonedit" allowinput="false"
+                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />-->
+                                        </td>
+                                        <td>
+                                            代理机构
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.Agencies" name="Agencies" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <!--<td>
+            投标保证金金额
+        </td>
+        <td>
+            <input id="SF_OpenBidding.BiddingAamount" name="BiddingAamount" class="mini-spinner" maxvalue="999999999" minvalue="0" />
+        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.BiddingType" name="BiddingType" class="mini-combobox" readonly />
+                                        </td>
+                                        <td>
+                                            本单位是否中标
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.radiobuttoncolumn" name="radiobuttoncolumn" class="mini-combobox"   required/>
+                                        </td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            价格评分标准
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.PriceRating" name="PriceRating" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            中标单位（明细项选取）
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.BidCompanyName" name="BidCompanyName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    <td>
+                                        规模（吨/天）
+                                    </td>
+                                    <td>
+                                        <input id="SF_OpenBidding.scale" name="scale" class="mini-spinner" maxvalue="999999999" minvalue="0" />
+                                    </td>
+                                    <td>
+                                        填报部门
+                                    </td>
+                                    <td>
+                                        <input id="SF_OpenBidding.DeptName" class="mini-textbox" name="DeptName" readonly/>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_OpenBidding.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_OpenBidding.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='报价明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_OpenBidding_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_OpenBidding_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_OpenBidding_dtl" class="mini-datagrid" style="height: 100%;" multiselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" oncellendedit="endedit">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div type="checkcolumn"></div>
+                                        <div type="radiobuttoncolumn" field="IsBid" truevalue="1" falsevalue="0" headeralign="center" >是否中标</div>
+
+                                        <div field="BiddingHuman" headeralign="center">
+                                            投标人/单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            <!--<input property="editor" id="SF_OpenBidding_dtl.BiddingHuman" name="BiddingHuman" textname="BiddingHuman" class="mini-buttonedit"
+                                                   emptytext="请选择投标人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />-->
+                                        </div>
+                                        <!-- <div field="Score" headeralign="center">
+                                            得分
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="BiddingRank" headeralign="center">
+                                            排名
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div> -->
+                                        <div field="TotalQuotation" headeralign="center" numberformat="n2">
+                                            总报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0"  />
+                                        </div>
+                                        <div field="EquipmentQuotation" headeralign="center" numberformat="n2">
+                                            设备报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="InstallationQuotation" headeralign="center" numberformat="n2">
+                                            安装报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="BuildingQuotation" headeralign="center" numberformat="n2">
+                                            建筑报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="DesignQuotation" headeralign="center" numberformat="n2">
+                                            设计报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="TestQuotation" headeralign="center" numberformat="n2">
+                                            调试报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="OperationsQuotation" headeralign="center" numberformat="n2">
+                                            运行报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="SelfQuotation" headeralign="center" numberformat="n2">
+                                            自定义报价（万元）
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" maxvalue="999999999" minvalue="0" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+ 
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (btnid == "SF_OpenBidding.ProjCode") {
+                mini.get("SF_OpenBidding.Save").doClick();
+            }
+        }
+
+          
+        //PowerForm.EventAfterOnBtnSave = function (e) {
+        //    var gd = mini.get("SF_OpenBidding_dtl");
+        //    var row = gd.findRow(function (row) {
+        //        var sum = parseFloat(row.EquipmentQuotation) + parseFloat(row.InstallationQuotation) + parseFloat(row.BuildingQuotation) + parseFloat(row.DesignQuotation) + parseFloat(row.TestQuotation) + parseFloat(row.OperationsQuotation);
+        //        gd.updateRow(row, { "TotalQuotation": sum });
+        //    });
+        //}
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            var grid = mini.get("SF_OpenBidding_dtl");
+            var a = "";
+            var row = grid.findRow(function (row) {
+                if (row.IsBid == "1" ) {
+                     a = row.BiddingHuman;
+                }
+            })
+            mini.get("SF_OpenBidding.BidCompanyName").setValue(a);        
+
+            var name = mini.get("SF_OpenBidding.BidCompanyName").getValue();
+            if(IsEmpty(name))
+            {
+                Power.ui.warning("未选择中标单位");
+            }
+        }
+
+        function endedit(e) {
+            var sender = e.sender;
+            var record = e.record;
+            //编辑结束后，需要将编辑的分数，存到ScoreInfo中
+            if (e.field == "EquipmentQuotation" || e.field == "InstallationQuotation" || e.field == "BuildingQuotation" || e.field == "DesignQuotation" || e.field == "TestQuotation" || e.field == "OperationsQuotation") {
+                var sum = parseFloat(record.EquipmentQuotation) + parseFloat(record.InstallationQuotation) + parseFloat(record.BuildingQuotation) + parseFloat(record.DesignQuotation) + parseFloat(record.TestQuotation) + parseFloat(record.OperationsQuotation)+ parseFloat(record.SelfQuotation);
+                //var Scores = mini.decode(sum);
+                //var sumfs = 0;
+                //for (var i = 0; i < Scores.length; i++) {
+                //    if (Scores[i]["id"] == e.field)
+                //        Scores[i]["value"] = e.value;
+                //    sumfs += parseFloat(Scores[i]["value"]);
+                //}
+                //var AvgScore = parseFloat(sumfs / Scores.length).toFixed(2);
+
+                sender.updateRow(record, { TotalQuotation: sum });
+            }
+            if(e.field == "IsBid")
+            {
+                var name = record.BiddingHuman;
+                mini.get("SF_OpenBidding.BidCompanyName").setValue(name);
+            }
+        }
+
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            var grid = mini.get("SF_OpenBidding_dtl");
+            data.EquipmentQuotation = "0";
+            data.InstallationQuotation = "0";
+            data.BuildingQuotation = "0";
+            data.DesignQuotation = "0";
+            data.TestQuotation = "0";
+            data.OperationsQuotation = "0";
+            data.SelfQuotation="0";
+        }
+
+
+
+    </script>
+</body>
+</html>

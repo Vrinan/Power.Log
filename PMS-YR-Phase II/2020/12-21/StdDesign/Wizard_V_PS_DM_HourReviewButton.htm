@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid';
+
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtname" class="mini-textbox" style="width: 240px;" emptytext="请输入名称,回车开始查询" onenter="OnSearchClick" /><!--请输入名称-->
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div id="gridright" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                         allowcelledit="true" multiselect="false" showpager="true"
+                         idfield="wbs_guid" autoload="true" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad"
+                         url="/Form/GridPageLoadEx">
+                        <div property="columns">
+                            <div type="indexcolumn" width="20"></div>
+                            <div type="checkcolumn" name="checkcolumn"></div>
+                            <div field="wbs_name">专业名称 </div>
+                            <div field="finalbudgetHour">最终预算工时 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var gridright = mini.get("gridright");
+        //重定向Select的GetData方法visible
+        Select.GetData = GetData;
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            gridright.multiSelect = bmulti;
+            if (bmulti)
+                gridright.showColumn("checkcolumn");
+            else
+                gridright.hideColumn("checkcolumn");
+        });
+
+        function GetData() {
+            if (gridright.multiSelect) {
+                return gridright.getSelecteds();
+            }
+            else {
+                var result = new Array();
+                var node = gridright.getSelected();
+                result.push(node);
+                return result;
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            params.KeyWord = "V_PS_DM_HourReviewButton";
+            params.KeyWordType = "ViewEntity";
+            params.select = WizardParams.select || "";
+            if (WizardParams.filter && WizardParams.filter.length > 0)
+                params.swhere = base64decode(WizardParams.filter);
+            else
+                params.swhere = " 1=1 ";
+            params.sort = "wbs_name desc";
+            params.index = 0;
+            params.size = 0;
+            //拼与主表关联的where条件
+            var txtname = mini.get("txtname");
+            if (txtname.value.length > 0)
+                params.swhere = params.swhere + " and wbs_name like '%" + txtname.value + "%'";
+            if (sender.showPager) {//使用自带的Pager
+                params.index = params.pageIndex;
+                params.size = params.pageSize;
+            }
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            e.data = data;
+            e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+
+        function OnSearchClick(e) {
+            gridright.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+
+</html>

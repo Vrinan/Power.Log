@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/TreeManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script> 
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+</head>
+
+<body>
+    <form id="frmMain" runat="server" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设置期望完成时间					
+                </div>  
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; background-color: #fafafa;">
+                    <div id="gdPlanDateList" class="mini-datagrid"  showPager="false" style="height:150px"  >
+                        <div property="columns">
+                            <div type="indexcolumn"></div>
+                            <div name="UserName" field="NodeName" width="70" headeralign="center">人员名称</div><!--名称-->     
+                            <div name="DeptPositionName" field="DeptPositionName" width="70" headeralign="center">所属岗位部门</div><!--名称-->    
+                            <div name="NodeName" field="NodeName" width="70" headeralign="center">所属节点</div><!--名称-->                         
+                            <div name="PlanEndDate" field="PlanEndDate" width="50" headeralign="center" dataType="date" dateFormat="yyyy-MM-dd">期望完成时间</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+            mini.parse();
+
+            var gdPlanDateList = mini.get("gdPlanDateList");
+             
+          
+            var onWorkRenderer = function (e) {
+                var s = '';
+                s = '<a class="New_Button" href="javascript:onSelectedRow()">选择</a>';
+                return s;
+            }
+            //////////////////////////////////
+            function CloseWindow(action) {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }
+
+            var SetData = function (data) {
+                gdPlanDateList.setData(data.SelectUserList);
+            }
+
+            //对外方法
+            var GetData = function() {
+                var row = gdPlanDateList.getSelected();
+                return row;
+            }            
+
+        </script>
+    </form>
+</body>
+</html>

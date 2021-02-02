@@ -1,0 +1,134 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-5 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="V_PS_DM_WBSDesigner" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="wbs_guid" treecolumn="text" width="890" allowcelledit="false" fitcolumns=""
+                             parentfield="parent_wbs_guid" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div>
+                                <div name="text" field="wbs_short_name" headeralign="center" header="WBS编号" allowsort="true">WBS编号</div>
+                                <div field="wbs_name" headeralign="center" header="WBS名称" allowsort="true">WBS名称</div>
+                                <div field="obs_name" headeralign="center">
+                                    设计人
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-7 col-hd-12">
+                <div class="portlet blue box" style="height: 100%0%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" iconcls="fa-plus" id="PS_UnitDesignerAppoint_DrawingList.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                            <a class="mini-button blue" iconcls="fa-trash-o" id="PS_UnitDesignerAppoint_DrawingList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            <!--<a class="mini-button blue" id="PS_UnitDesignerAppoint_DrawingList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>-->
+                            <a class="mini-button blue" id="PS_UnitDesignerAppoint_DrawingList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                            <a class="mini-button blue" id="PS_UnitDesignerAppoint_DrawingList.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="PS_UnitDesignerAppoint_DrawingList" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" title="编号、名称不能为空"
+                             allowcelledit="true" allowcellselect="true" multiselect="true" pagesize="20" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div field="DrawingCode" header="图纸编号" allowsort="true" headeralign="center" vtype="required">
+                                    图纸编号
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+
+                                <div field="DrawingName" header="图纸名称" allowsort="true" headeralign="center" vtype="required">
+                                    图纸名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div type="checkboxcolumn" field="IsConfirm" truevalue="1" falsevalue="0" headeralign="center">是否确认</div><!--生效-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+
+
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        PowerForm.EventBeforeSave = function (e) {
+            e.isValid = true;
+            if (e.id == "PS_UnitDesignerAppoint_DrawingList.Save") {
+                mini.get("PS_UnitDesignerAppoint_DrawingList").validate()
+                if (mini.get("PS_UnitDesignerAppoint_DrawingList").isValid() == false) {
+                    Power.ui.alert("编号和名称不能为空");
+                    e.isValid = false;
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

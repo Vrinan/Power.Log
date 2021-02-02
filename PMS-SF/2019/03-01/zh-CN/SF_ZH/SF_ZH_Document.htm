@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+					<i class="fa fa-reorder"></i>档案移交
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_Document.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_Document.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_Document.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_Document.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_Document.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_Document" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Document.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_Document.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Document.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZH_Document.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>                                     
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            移交人员
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_ZH_Document.HumName" name="HumName" textname="HumName" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />-->
+                                            <input id="SF_ZH_Document.HumName" name="HumName" class="mini-textbox" readonly />
+                                            <input id="SF_ZH_Document.HumId" name="HumId" class="mini-textbox" readonly  style="display:none"/>
+                                        </td>
+                                        <td>
+                                            移交部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Document.Department" name="Department" class="mini-textbox" readonly />
+                                            <input id="SF_ZH_Document.DeptId" name="DeptId" class="mini-textbox" readonly style="display:none"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           移交说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="Memo" name="Memo" class="mini-textarea" style="height:60px;"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Document.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_Document.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>     
+                        <div title="科技档案">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_Technology.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_Document_Technology.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_Document_Technology-Print" class="btn-group"></div>
+                                <div id="SF_ZH_Document_Technology-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_Document_Technology" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="Code" width="100" allowSort="true" >
+                                            文件编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Name" width="100" allowSort="true">
+                                            文件名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Number" width="100" allowSort="true">
+                                            份数
+                                            <input property="editor" class="mini-spinner" minvalue="0" maxvalue="999999" style="width: 100%;" />
+                                        </div>
+                                        <div field="Pages" width="100" allowSort="true">
+                                            页数
+                                            <input property="editor" class="mini-spinner" minvalue="0" maxvalue="999999" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" width="100" allowSort="true" >
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                        <div title="实物档案">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_Entity.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_Document_Entity.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_Document_Entity-Print" class="btn-group"></div>
+                                <div id="SF_ZH_Document_Entity-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_Document_Entity" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="Type" width="60" allowSort="true">
+                                            类别
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Year" width="60" allowSort="true">
+                                            所属年代
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" width="100" allowSort="true">
+                                            内容摘要
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="PartyB" width="100" allowSort="true">
+                                            单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Number" width="100" allowSort="true">
+                                            数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="AwardPartyB" width="100" allowSort="true">
+                                            颁发单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="RewardPartyB" width="100" allowSort="true">
+                                            获奖单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Date" width="100" allowSort="true" dateformat="yyyy-MM-dd">
+                                            接收时间
+                                            <input property="editor" class="mini-datepicker" dateformat="yyyy-MM-dd" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" width="100" allowSort="true">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div title="电子档案">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_Electronics.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_Document_Electronics.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_Document_Electronics-Print" class="btn-group"></div>
+                                <div id="SF_ZH_Document_Electronics-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_Document_Electronics" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="Type" width="40" allowSort="true">
+                                            电子载体
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" width="100" allowSort="true">
+                                            电子文件内容
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Format" width="40" allowSort="true">
+                                            文件格式
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Date" width="100" allowSort="true" dateformat="yyyy-MM-dd">
+                                            形成时间
+                                            <input property="editor" class="mini-datepicker" dateformat="yyyy-MM-dd" style="width: 100%;" />
+                                        </div>
+                                        <div field="HumName" width="100" allowSort="true">
+                                            责任人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Number" width="40" allowSort="true">
+                                            载体数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>                                      
+                                        <div field="Remark" width="100" allowSort="true">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div title="会计档案">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_Accounting.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_Document_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_Document_Accounting.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_ZH_Document_Accounting-Print" class="btn-group"></div>
+                                <div id="SF_ZH_Document_Accounting-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_Document_Accounting" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="35"></div><!--序号-->
+                                        <div field="Type" width="40" allowSort="true">
+                                            类别
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Code" width="100" allowSort="true">
+                                            档案编号
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Name" width="100" allowSort="true">
+                                            题名
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                        <div field="Date" width="100" allowSort="true" dateformat="yyyy-MM-dd">
+                                            形成时间
+                                            <input property="editor" class="mini-datepicker" dateformat="yyyy-MM-dd" style="width: 100%;" />
+                                        </div>
+                                        <div field="HumName" width="40" allowSort="true">
+                                            责任人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Number" width="40" allowSort="true">
+                                            卷数
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Pages" width="40" allowSort="true">
+                                            页数
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" width="100" allowSort="true">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>               
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_ZH_Document.Department").value == '') {
+                var DeptId = sessiondata.DeptId;
+                var Department = sessiondata.DeptName;
+                mini.get("SF_ZH_Document.DeptId").setValue(DeptId);
+                mini.get("SF_ZH_Document.Department").setValue(Department);
+                var HumanId = sessiondata.HumanId;
+                var HumanName = sessiondata.HumanName;
+                mini.get("SF_ZH_Document.HumId").setValue(HumanId);
+                mini.get("SF_ZH_Document.HumName").setValue(HumanName);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title bottom">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>年度投资计划
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="ViewContract"
+                    onclick="ViewForm('2e2723c3-7719-4dcf-aef2-7871b5ce62ce',currow.ContractId)">
+                    <i class="fa fa-eye"></i>查看合同</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.Save"
+                        onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="ZDelta_CM_AnnualInvestmentPlan.CloseForm"
+                        onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit scroll">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb0')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>基本信息
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb0">
+                            <div id="ZDelta_CM_AnnualInvestmentPlan" name="ZDelta_CM_AnnualInvestmentPlan" class="form">
+                                <table id="ZDelta_CM_AnnualInvestmentPlan_table" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.Code" name="Code" readonly
+                                                    type="text" emptyText="如果没有，则填无" class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">状态</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.Status" name="Status" readonly
+                                                    class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>标题</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.Title" name="Title" required
+                                                    type="text" class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.ContractCode"
+                                                    name="ContractCode" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>合同名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.ContractName"
+                                                    name="ContractName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>年度</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.Year" name="Year" required
+                                                    class="design mini-combobox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">年度投资额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.AnnualInvestmentAmount"
+                                                    name="AnnualInvestmentAmount" readonly allowLimitValue="false"
+                                                    class="design mini-spinner" format="n2" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label ActiveShow">
+                                                <label class="design mini-powerlabel">预付款比例</label>
+                                            </td>
+                                            <td class="cell td-ctrl ActiveShow">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.PrepaymentRatio"
+                                                    name="PrepaymentRatio" changeOnMouseWheel="false" minValue="0"
+                                                    maxValue="100" class="mini-spinner" format="p2" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">年度预付款金额(元)</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.YearPrepaymentAmount"
+                                                    name="YearPrepaymentAmount" readonly allowLimitValue="false"
+                                                    class="design mini-spinner" format="n2" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label ActiveShow">
+                                                <label class="design mini-powerlabel">合同金额</label>
+                                            </td>
+                                            <td class="cell td-ctrl ActiveShow">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.ContractAmount"
+                                                    name="ContractAmount" readonly allowLimitValue="false"
+                                                    class="design mini-spinner" format="n2" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">备注</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.Memo" name="Memo"
+                                                    class="design mini-textarea" height="80" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName">录入人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.RegHumName" name="RegHumName"
+                                                    readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate">录入日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_AnnualInvestmentPlan.RegDate" name="RegDate"
+                                                    readonly class="design mini-datepicker" timeformat="yyyy-MM-dd" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" title="年度投资计划明细" id="Section_ZDelta_CM_AnnualInvestmentPlanDtl"
+                        name="ZDelta_CM_AnnualInvestmentPlanDtl">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>年度投资计划明细
+                            </div>
+                        </div>
+                        <div class="section-content-notool" id="tb1">
+                            <div id="ZDelta_CM_AnnualInvestmentPlanDtl" class="mini-datagrid"
+                                style="width: 100%; height: 400px;" allowresize="true" sortField="Sequ"
+                                showsummaryrow="true" multiSelect="true" allowcellselect="true" allowcelledit="true"
+                                pageSize="50" sortField="Sequ" sortOrder="asc" showPager="true"
+                                data-options="{canImport:true}">
+                                <div property="columns">
+                                    <!-- <div type="checkcolumn" width="15"></div> -->
+                                    <div type="indexcolumn" width="30" header="序号" headerAlign="center"></div>
+                                    <div field="Name" name="Name" header="名称" width="120" headerAlign="center"
+                                        align="left">
+                                        <input property="editor" class="mini-textbox" />
+                                    </div>
+                                    <div field="Unit" name="Unit" header="单位" width="60" headerAlign="center"
+                                        align="left">
+                                        <input property="editor" class="mini-textbox" />
+                                    </div>
+                                    <div field="UnitPrice" name="UnitPrice" header="单价(元)" width="90"
+                                        headerAlign="center" align="right" numberFormat="n2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false"
+                                            class="mini-spinner" />
+                                    </div>
+                                    <div field="Quantity" name="Quantity" header="数量" width="90" headerAlign="center"
+                                        align="right" numberFormat="n2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false"
+                                            class="mini-spinner" />
+                                    </div>
+                                    <div field="TotalPrice" summarytype="sum" name="TotalPrice" header="总价(元)"
+                                        width="110" headerAlign="center" align="right" numberFormat="n2"></div>
+
+                                    <div field="Remarks" name="Remarks" header="备注" width="120" headerAlign="center"
+                                        align="left">
+                                        <input property="editor" class="mini-textarea" minHeight="80" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb3')" style="cursor:pointer;"><i
+                                    class="fa fa-folder-open"></i>附件</div>
+                        </div>
+                        <div class="section-content" id="tb3">
+                            <iframe id="attachfile" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="WorkFlowSection" style="display: none;">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb5')" style="cursor:pointer;"><i
+                                    class="fa fa-folder-open"></i>流程</div>
+                        </div>
+                        <div class="section-content" id="tb5" style="height:400px;">
+                            <iframe id="workflow" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+
+        /********************************************开始：变量定义********************************************/
+
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var dtGrid = mini.get("ZDelta_CM_AnnualInvestmentPlanDtl");//子表
+        var code = mini.get("ZDelta_CM_AnnualInvestmentPlan.Code")//编号
+        var title = mini.get("ZDelta_CM_AnnualInvestmentPlan.Title")//标题
+        var year = mini.get("ZDelta_CM_AnnualInvestmentPlan.Year") //年度
+        var contractCode = mini.get("ZDelta_CM_AnnualInvestmentPlan.ContractCode")//合同编号
+        var contractName = mini.get("ZDelta_CM_AnnualInvestmentPlan.ContractName")//合同标题
+        var annualInvestmentAmount = mini.get("ZDelta_CM_AnnualInvestmentPlan.AnnualInvestmentAmount")//年度投资额
+        var prepaymentRatio = mini.get("ZDelta_CM_AnnualInvestmentPlan.PrepaymentRatio")//预付款比例
+        var yearPrepaymentAmount = mini.get("ZDelta_CM_AnnualInvestmentPlan.YearPrepaymentAmount");//年度预付款金额
+        var contractAmount = mini.get("ZDelta_CM_AnnualInvestmentPlan.ContractAmount");//合同金额
+        var myDate = new Date();
+        var tYear = myDate.getFullYear();
+
+        var isCanEdit = false;//是否允许编辑
+        var WFRight = { "ZDelta_CM_AnnualInvestmentPlan": [{ "BookMarkCode": "FinallyCon", "Btn": ["Save"] }] };
+        var activeFlowCheck = false;
+
+
+        /********************************************结束：变量定义********************************************/
+
+        /********************************************开始：平台事件重写********************************************/
+
+        //表单加载后事件
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+            if (FormState == 'add') {
+                debugger;
+                //比率
+                oldcurrow.PrepaymentRatio = "0.2";
+                prepaymentRatio.setValue(0.2);
+                //年度
+                oldcurrow.year = tYear;
+                year.setValue(tYear);
+                year.setText(tYear);
+                //标题
+                oldcurrow.Title = "" + contractName.getValue() + "" + tYear + "年度投资计划";
+                title.setValue("" + contractName.getValue() + "" + tYear + "年度投资计划");
+                //删除掉编码规则和向导赋值的currow
+                delete oldcurrow.Code;
+                delete oldcurrow.ContractAmount;
+                delete oldcurrow.ContractCode;
+                delete oldcurrow.ContractName;
+            }
+
+            SetFileFrame();
+        }
+
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            if (parseFloat(annualInvestmentAmount.value) > parseFloat(contractAmount.value)) {
+                e.isValid = false;//满足条件时，不允许点击送审或同意
+                Power.ui.warning("年度投资金额不能大于合同金额");
+            }
+        }
+
+        /********************************************结束：平台事件重写********************************************/
+
+        /********************************************开始：miniui拦截事件********************************************/
+
+        // 子表单元格编辑
+        dtGrid.on("cellbeginedit", function (e) {
+            if (e.field == "Name" || e.field == "Unit") {
+                e.cancel = true//取消，禁止编辑
+            }
+        });
+        dtGrid.on("cellendedit", function (e) {
+            var record = e.record;
+            if (e.field == "UnitPrice" || e.field == "Quantity" || e.field == "TotalPrice") {
+                if (!IsEmpty(record.UnitPrice) || !IsEmpty(record.Quantity)) {
+                    var toTPrice = Number(record.UnitPrice * record.Quantity).toFixed(2);
+                    dtGrid.updateRow(record, { "TotalPrice": toTPrice });
+                }
+            }
+        });
+
+        mini.get("ZDelta_CM_AnnualInvestmentPlanDtl").on("drawsummarycell", function (e) {
+            if (e.field == "TotalPrice") {
+                e.cellStyle = "text-align:right;"
+                e.cellHtml = "合计：" + e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+        })
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+        /********************************************开始：自定义事件********************************************/
+
+        prepaymentRatio.on("valuechanged", function (e) {
+            prepaymentRatio.setValue(e.value / 100.0);
+            yearPrepaymentAmount.setValue(Number(prepaymentRatio.value) * Number(annualInvestmentAmount.value)).toFixed(2);
+        });
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+
+</html>

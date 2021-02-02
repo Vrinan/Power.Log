@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>客户满意度调查
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_CustomerSatisfaction.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_CustomerSatisfaction.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="SF_CustomerSatisfaction.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_CustomerSatisfaction" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.ProjCode" name="ProjCode" textname="ProjCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.ProjName" name="ProjName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            客户编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.ClientCode" name="ClientCode" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            业主单位
+                                        </td>
+                                        <!--<td>
+                                            <input id="SF_CustomerSatisfaction.ClientName" name="ClientName" class="mini-textbox" readonly />
+                                        </td>-->
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.ClientName" name="ClientName" textname="ClientName" class="mini-buttonedit" emptytext="请选择客户..."
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            承接单位
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.PartyAName" name="PartyAName" textname="PartyAName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择承接单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            填报部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.DeptName" class="mini-textbox" name="DeptName" readonly/>
+                                        </td>
+                                        <!--<td>
+                                          
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.PartyBName" name="PartyBName" textname="PartyBName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择业主单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.DesignMemo" name="DesignMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设备
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.EquipmentMemo" name="EquipmentMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            运行
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.RunMemo" name="RunMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            指标
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.IndexMemo" name="IndexMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            要求
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.AskMemo" name="AskMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            承接单位回复意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.ReplyMemo" name="ReplyMemo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_CustomerSatisfaction.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_CustomerSatisfaction.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (btnid == "SF_CustomerSatisfaction.ProjCode") {
+                mini.get("SF_CustomerSatisfaction.Save").doClick();
+            }
+        }
+    </script>
+</body>
+</html>

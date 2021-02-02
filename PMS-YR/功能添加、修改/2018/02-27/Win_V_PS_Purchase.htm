@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_PS_Purchase.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" id="View_PS_Purchase.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <div id="View_PS_Purchase-Print" class="btn-group"></div>
+                            <div id="View_PS_Purchase-Export" class="btn-group"></div>
+                            <div class="btn-group customcolumn" gridid="View_PS_Purchase">栏位</div>
+                            <div class="btn-group customfilter" gridid="View_PS_Purchase">过滤</div>
+                            <a class="mini-button blue" id="View_PS_Purchase.ContractFinished" onclick="Finished(this)"><i class="fa fa-search"></i>出库编号为1的</a>
+                            <!--<a class="mini-button blue" id="View_PS_Purchase.Send" onclick="PMS_Send()"><i class="fa fa-plus"></i>下发</a>
+                            <a class="mini-button blue" id="View_PS_Purchase.Back" onclick="PMS_Back()"><i class="fa fa-eye"></i>回收</a>-->
+                        </div>
+                        <div class="tools">
+                            <input id="View_PS_Purchase-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="PowerForm.ColseCombobox" onvaluechanged="PowerForm.GroupChanged(this)" style="width: 150px;" />
+                            
+                            <input id="View_PS_Purchase-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)"
+                                   style="width: 150px;" />
+                            <span id="View_PS_Purchase-search">
+                                <input id="View_PS_Purchase-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span><a class="mini-button blue" id="View_PS_Purchase-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                                <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_PS_Purchase" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ListId" ondrawcell="DrawCell"
+                             showpager="true" pagesize="50" sizeList="[50,100,200,500]" allowCellSelect="true" allowCellEdit="false" multiSelect="true" showSummaryRow="true" allowAlternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <!--<div type="checkcolumn"></div>多选框-->
+                                <div type="indexcolumn" width="45">序号</div>
+                                <div field="PurchaseStatus" width="100" allowSort="true">状态</div>
+                                <div field="Bomfile_Code" header="物资计划编号" width="150" allowSort="true">物资计划编号</div>
+                                <div field="Bomfile_Title" header="物资计划名称" width="100" allowSort="true">物资计划名称</div>
+                                <div field="Bom_MatCode" width="100" allowSort="true">物资编码</div>
+                                <div field="Bom_MatName" width="100" allowSort="true">物资名称</div>
+                                <div field="Bom_MatDescription" width="100" allowSort="true">物资描述</div>
+                                <div field="Request_Code" width="100" allowSort="true">请购单编号</div>
+                                <div field="Request_Name" width="100" allowSort="true">请购单名称</div>
+                                <!--<div field="Request_listMatName" width="160" allowSort="true">请购单明细名称</div>
+                                <div field="Request_listModel" width="100" allowSort="true">请购单明细描述</div>-->
+                                <div field="Order_Code" width="100" allowSort="true">采购分包编号</div>
+                                <div field="Order_Name" width="100" allowSort="true">采购分包分包名称</div>
+                                <div field="Order_RegHuman" width="100" allowSort="true">分包录入人</div>
+                                <!--<div field="Order_listId" width="100" allowSort="true">分包明细Id</div>-->
+                                <div field="Inquiry_Code" width="100" allowSort="true">采购审批单编号</div>
+                                <div field="Inquiry_Name" width="100" allowSort="true">采购审批单名称</div>
+                                <!--<div field="Inquiry_listId" width="100" allowSort="true">采购审批单明细Id</div>-->
+                                <div field="PSInquiry_Code" width="100" allowSort="true">竞价方案编号</div>
+                                <div field="PSInquiry_Name" width="100" allowSort="true">竞价方案名称</div>
+                                <!--<div field="PSInquiry_listId" width="100" allowSort="true">竞价方案明细Id</div>-->
+                                <div field="XLXBidInquiry_Code" width="100" allowSort="true">竞价报告编号</div>
+                                <div field="XLXBidInquiry_Name" width="100" allowSort="true">竞价报告名称</div>
+                                <!--<div field="XLXBidInquiry_listId" width="100" allowSort="true">竞价报告明细Id</div>-->
+                                <div field="Subcontract_Code" width="100" allowSort="true">合同编号</div>
+                                <div field="Subcontract_Name" width="100" allowSort="true">合同名称</div>
+                                <!--<div field="Subcontract_listId" width="100" allowSort="true">合同明细Id</div>-->
+                                <div field="ArrivalCheck_Code" width="100" allowSort="true">到货检查编号</div>
+                                <div field="ArrivalCheck_Name" width="100" allowSort="true">到货检查名称</div>
+                                <!--<div field="Subcontract_listId" width="100" allowSort="true">到货明细Id</div>-->
+                                <div field="MatInStore_Code" width="100" allowSort="true">物资入库编号</div>
+                                <div field="MatInStore_Name" width="100" allowSort="true">物资入库名称</div>
+                                <!--<div field="Subcontract_listId" width="100" allowSort="true">入库明细Id</div>-->
+                                <div field="MatRequisitions_Code" width="100" allowSort="true">领料申请编号</div>
+                                <div field="MatRequisitions_Name" width="100" allowSort="true">领料申请名称</div>
+                                <!--<div field="Subcontract_listId" width="100" allowSort="true">领料明细Id</div>-->
+                                <div field="MatOutStore_Code" width="100" allowSort="true">物资出库编号</div>
+                                <div field="MatOutStore_Name" width="100" allowSort="true">物资出库名称</div>
+                                <!--<div field="Subcontract_listId" width="100" allowSort="true">出库明细Id</div>-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 340px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 245px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;">
+                <tr>
+                    <td>年度</td>
+                    <td><input class="mini-textbox" id="Year" name="Year" /></td>
+                </tr>
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="editWindow" class="mini-window" title="下发" style="width:400px;" showmodal="true" allowresize="true" allowdrag="true">
+        <div id="editform" class="form">
+            <table class="table table-bordered">
+                <tr>
+                    <td>
+                        <a class="mini-button blue" id="btnSel" onclick="OnBtnWizard(this)"><i class="fa fa-plus"></i>选择业务员</a>
+                    </td>
+                    <td>
+                        <input id="BuyerId" name="BuyerId" class="mini-textbox" readonly="readonly" style="display:none" />
+                        <input id="BuyerName" name="BuyerName" class="mini-textbox" readonly="readonly" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <a class="mini-button blue" id="SendOK" onclick="PMS_SendOK()"><i class="fa fa-save"></i>下发</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            //formconfig.config.joindata.swhere = " MatOutStore_Name='1' ";
+            PowerForm.Init();
+
+            var grid = mini.get("View_PS_Purchase");
+            grid.frozenColumns(0,3);
+        });
+        function Finished(btn)
+        {
+            formconfig.config.joindata.swhere = " MatOutStore_Name='1' ";
+            var sender = mini.get("View_PS_Purchase");
+            if (sender.showPager)
+                sender.gotoPage(0);
+            else
+                FormFuns.ReLoadData(sender);
+        }
+        function DrawCell(e) {
+            var record = e.record;
+            if (e.field == "Bomfile_Code") {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('9963eeb2-03c5-4620-bce4-e09782d27db1', '" + record.Bomfile_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "Request_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('52599d7a-5f45-4ff1-8031-f90b365c6b37', '" + record.Request_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "Order_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('a282f668-a395-4a9f-823e-61a2909aa10e', '" + record.Order_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "Inquiry_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('4b140dee-6936-46e8-bfc0-d37bc9478c69', '" + record.Inquiry_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "PSInquiry_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('699b9a08-e6e9-43b2-a5dc-6d5a6cb2ae77', '" + record.PSInquiry_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "XLXBidInquiry_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('4f689b2b-b518-4a6d-b8c3-0ec98f04cf38', '" + record.XLXBidInquiry_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "Subcontract_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('0172ef6c-e0e9-497a-bab6-1eb81a298f82', '" + record.Subcontract_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "ArrivalCheck_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('273dea71-73a1-4e45-89d9-e35ff8fc6105', '" + record.ArrivalCheck_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "MatInStore_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('7fb0df68-6adc-4b77-b8f9-3977f3291170', '" + record.MatInStore_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "MatRequisitions_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('7dacb7ef-7156-452b-b1ac-0182a4ab14a7', '" + record.MatRequisitions_Id + "');\">" + e.value + "</a>";
+            }
+            else if (e.field == "MatOutStore_Code" && e.value) {
+                e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('943e1066-f8d0-4227-b2e1-55329b237ef2', '" + record.MatOutStore_Id + "');\">" + e.value + "</a>";
+            }
+        }
+        //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 560
+            })
+        }
+        function OpenSingle(formid, value) {
+
+            var url = "/Form/ViewForm/" + formid + "/?requestid=" + value;
+            var t = mini.open({
+                url: url,
+                width: 900,
+                height: 560
+            })
+            t.max();
+        }
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        //下发功能-打开选人窗体
+        function PMS_Send() {
+            var grid = mini.get("View_PS_Purchase");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            if (Rows.length > 0) {
+                var editWindow = mini.get("editWindow");
+                editWindow.show();
+            }
+        }
+
+        function PMS_SendOK() {
+            var BuyerId = mini.get("BuyerId").getValue();
+            var BuyerName = mini.get("BuyerName").getValue();
+            var ListIds = "";
+            if (BuyerId == "") {
+                Power.ui.error("请选择业务员！");
+                return;
+            }
+            var grid = mini.get("View_PS_Purchase");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            for (var i = 0; i < Rows.length; i++) {
+                ListIds = ListIds + Rows[i].ListId + ",";
+            }
+            ListIds = ListIds.substr(0, ListIds.length - 1);
+            var par = { "Type": "下发", "HumanId": HumanId, "HumanName": HumanName, "ListIds": ListIds, "BuyerId": BuyerId, "BuyerName": BuyerName };
+            //alert("Proc_XLX_PUR_Request '"+Type+"','"+HumanId+"','"+HumanName+"','"+ListIds+"','"+BuyerId+"','"+BuyerName+"' ");
+            FormFuns.APIExec("View_PS_Purchase", "BO", "Proc_XLX_PUR_Request", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("View_PS_Purchase.Refresh").doClick();
+            });
+        }
+
+        //回收功能
+        function PMS_Back() {
+            var ListIds = "";
+            var grid = mini.get("View_PS_Purchase");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            for (var i = 0; i < Rows.length; i++) {
+                ListIds = ListIds + Rows[i].ListId + ",";
+            }
+            ListIds = ListIds.substr(0, ListIds.length - 1);
+            var par = { "Type": "回收", "HumanId": HumanId, "HumanName": HumanName, "ListIds": ListIds, "BuyerId": "", "BuyerName": "" };
+            FormFuns.APIExec("View_PS_Purchase", "BO", "Proc_XLX_PUR_Request", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("View_PS_Purchase.Refresh").doClick();
+            });
+        }
+
+        //选择人员按钮
+        function OnBtnWizard() {
+
+            var url = "/Form/Wizard?wizardid=FE2169C8-72EF-4965-A152-12848CC8A383&formid=&btnid=";	//选择人员(列表)
+            //var url = "/Form/Wizard?wizardid=5421fb3a-c5be-4d46-aba4-21629f9ff53d&formid=&btnid=";		//选择人员(部门人员),常用向导，只能选择本本项目人员
+            //var url = "/Form/Wizard?wizardid=b79f928a-e86a-4cbd-b338-7368de63d0af&formid=&btnid=";	//选择人员（企业/项目部门人员） 不存在这个向导
+            mini.open({
+                url: url, title: "选择人员",
+                width: "80%",
+                height: "80%",
+                showMaxButton: true,
+                onload: function () {
+                    var cwin = this.getIFrameEl().contentWindow;
+                    if (cwin.Select) {
+                        //cwin.HideMajorFilter();
+                        //cwin.SetDefaultMajor(dftdata);
+                        if (cwin.WizardParams) cwin.WizardParams.multi = 0;
+                        if (cwin.Select.LoadStepFirst) cwin.Select.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    if (!data || data.length == 0) {
+                        alert("未选择数据");
+                        return;
+                    }
+                    data = mini.clone(data);
+
+                    mini.get("BuyerId").setValue(data[0].Id);
+                    mini.get("BuyerName").setValue(data[0].Name);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

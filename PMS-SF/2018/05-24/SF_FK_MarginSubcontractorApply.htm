@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>保证金(保函)（分包）登记
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_FK_MarginSubcontractorApply.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_FK_MarginSubcontractorApply.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_FK_MarginSubcontractorApply.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_FK_MarginSubcontractorApply" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            保证金类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.MarginType" name="MarginType" class="mini-combobox" required="true" onvaluechanged="valuechange()" />
+                                        </td>
+                                    </tr>
+                                    <tr id="a">
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.ContractCode" name="ContractCode" textname="ContractCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.ContractName" name="ContractName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            对方单位名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.PartyBName" name="PartyBName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            联系人
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.PartyBHuman" name="PartyBHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系电话
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.PartyBPhone" name="PartyBPhone" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            退还日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.Returndate" name="Returndate" class="mini-datepicker" dateformat="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            退还金额
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_MarginSubcontractorApply.ReturnAmount" name="ReturnAmount" class="mini-spinner" allowlimitvalue="false" format="n2" />
+                                        </td>                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_FK_MarginSubcontractorApply.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_FK_MarginSubcontractorApply.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function valuechange()
+        {
+            var i = mini.get("SF_FK_MarginSubcontractorApply.MarginType").getValue();
+            if(i==1)
+            {
+                $("#a").hide();
+            }
+            else
+            {
+                $("#a").show();
+            }
+        }
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            var i = mini.get("SF_FK_MarginSubcontractorApply.MarginType").getValue();
+            if(i==1 || i==0)
+            {
+                $("#a").hide();
+            }
+            else
+            {
+                $("#a").show();
+            }
+        }
+    </script>
+</body>
+</html>

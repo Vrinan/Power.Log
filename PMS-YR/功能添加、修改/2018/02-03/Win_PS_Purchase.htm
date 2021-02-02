@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_PS_Purchase.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+
+                        </div>
+                        <div class="tools"></div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+
+                        <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title="通常" iconcls="fa fa-h-square">
+                                <div id="View_PS_Purchase" class="form">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>物资计划编号</td>
+                                            <td><input id="Bomfile_Code" name="Bomfile_Code" class="mini-textbox" /></td>
+                                            <td>物资计划名称</td>
+                                            <td><input id="Bomfile_Title" name="Status" class="mini-textbox" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>物资计划明细名称</td>
+                                            <td><input id="Bom_MatName" name="Bom_MatName" class="mini-textbox" /></td>
+                                            <td>物资计划明细描述</td>
+                                            <td><input id="Bom_MatDescription" name="Bom_MatDescription" class="mini-textbox" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <a class="mini-button blue" id="BaseData.ViewForm" onclick="PowerForm.OnBtnViewForm(this, '771601d1-7ca7-49a6-8885-d4742610a59d')"><i class="fa fa-eye"></i> 查看</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        //打开查看窗体操作
+        //function OnBtnViewForm(e, formid, params) {
+        //    FormFuns.EventCLoseEditViewForm = singleself.EventCLoseEditViewForm;
+        //    formid = '771601d1-7ca7-49a6-8885-d4742610a59d';
+        //    params = '';
+        //    FormFuns.OnEditViewForm(e, formid, "view", params);
+        //}
+
+        //function onbuttonclick(e) {
+        //    if (e.name == "close") {
+        //        var win = mini.get("win_search");
+        //        win.hide();
+        //    }
+        //}
+
+        //PowerForm.EventBeforeLoadData = function (e) {
+        //    if (e.sender.id == "PS_QARecord") {
+        //        var Nofilter = getParameter("Nofilter");
+
+        //        if (Nofilter) {
+        //            var exp = { defaultright: false };
+        //            var str = mini.encode(exp);
+        //            str = base64encode(str);
+        //            e.params.extparams = str;
+        //            var Eps = getParameter("EpsId");
+        //            var where = " EpsProjId = '" + Eps + "'";
+        //            if (e.params.swhere != "")
+        //                e.params.swhere += " and " + where;
+        //            else
+        //                e.params.swhere = where;
+
+        //        }
+        //    }
+        //}
+
+
+
+    </script>
+</body>
+</html>

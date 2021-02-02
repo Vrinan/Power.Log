@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        //var currentproj = "$!CurrentSession.EpsProjId";
+        var currentproj =  "4b5d4678-5f00-4eb6-b14d-61e6bfc01674";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换项目</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="300px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width:100%;height:100%;" vertical="true">
+                            <div title="设备季度反馈" size="50%" showCollapseButton="true">
+                                <!--设备-->
+                                <div id="View_SF_EquipmentCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns=""
+                                     idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="建筑季度反馈" size="50%" showCollapseButton="true">
+                                <!--建筑-->
+                                <div id="View_SF_EstablishCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns=""
+                                     idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="安装季度反馈" size="50%" showCollapseButton="true">
+                                <!--安装-->
+                                <div id="View_SF_InstallCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns=""
+                                     idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="管理季度反馈" size="50%" showCollapseButton="true">
+                                <!--管理-->
+                                <div id="View_SF_ManageCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns=""
+                                     idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="其他季度反馈" size="50%" showCollapseButton="true">
+                                <!--其他-->
+                                <div id="View_SF_OtherCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns=""
+                                     idfield="Id" parentfield="ParentId" showtreeicon="true" treecolumn="Code" resultastree="false" expandonload="false" onload="onLoad" ondrawcell="drawcell">
+                                    <div property="columns">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div showCollapseButton="true">
+                                <div id="charthere" style="width:100%;height:100%">
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        var txtLongCode, txtGuid;
+        mini.parse();
+        $(function () {
+            txtGuid = '4b5d4678-5f00-4eb6-b14d-61e6bfc01674';
+            SetBtnEditValue("txtPlanName", "公司项目");
+            LoadData();
+            mini.get("txtPlanName").on("buttonclick", function (e) {
+                OnWiardPlan();
+            })        });
+            //超链接？不需要吧
+            //合计行
+            //mini.get("View_SF_InContractAnalyse").on("drawsummarycell", function (e) {
+            //    if (e.field == "InContractAmount" || e.field == "InvoiceAmount" || e.field == "InApplyAmount" || e.field == "InReceiveAmount") {
+            //        e.cellStyle = "text-align:right;"
+            //        e.cellHtml = e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            //    }
+            //    if (e.field == "Incount" || e.field == "InvoiceCount" || e.field == "InApplyCount" || e.field == "InReceiveCount")
+            //    {
+            //        e.cellStyle = "text-align:right;"
+            //    }
+            //    if(e.field =="project_name")
+            //    {
+            //        e.cellHtml = "合计";
+            //    }
+            //})
+
+        function LoadData() {
+            Power.ui.loading("加载中");
+            var startDate = "";
+            var endDate = "";
+            //当前年的1-1到当前天
+            startDate = new Date().getFullYear() + "-1-1";
+            endDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+            if (mini.get("txtStart").getValue() == "" && mini.get("txtFinish").getValue() == "") {
+                mini.get("txtStart").setValue(startDate);
+                mini.get("txtFinish").setValue(endDate);
+            }
+            //Power.ui.loading("加载中..");
+            $.ajax({
+                url: "/Al/InContractAnalyse",
+                data: {
+                    startTime: mini.get("txtStart").getValue().format("yyyy-MM-dd"),
+                    endTime: mini.get("txtFinish").getValue().format("yyyy-MM-dd")
+                },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("View_SF_InContractAnalyse");
+                        grid.setData(o.data.value);
+                        LoadChart(o.data.chart);
+                        Power.ui.loading.close();
+                    }
+                    else
+                    {
+                        var grid = mini.get("View_SF_InContractAnalyse");
+                        grid.clearRows();
+                        Power.ui.loading.close();
+                    }
+                }
+            });
+        }
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + LongCode + "%' and project_type=0"
+                + " and A.project_guid in (select id from dbo.returnEPSChildrenTreeIds('4b5d4678-5f00-4eb6-b14d-61e6bfc01674')) "
+            p.select = " project_guid,parent_guid,project_shortname,project_name,LongCode ";
+            OpenWizard(p, function (data) {
+                txtGuid = data[0].project_guid;
+                txtLongCode = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+                LoadCharts();
+            })
+        }        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,736 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/Apps/js/TouchSlide.1.1.js"></script>
+    <script src="/Apps/js/jquery-1.8.3.min.js"></script>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileWebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/Apps2.0/assets/global/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/Apps2.0/assets//global/plugins/icon-font-alibaba/iconfont.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjLongCode = "$!CurrentSession.EpsProjLongCode"
+    </script>
+    <style>
+        .send-head {
+            border: 1px solid;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        
+        .send-head .left {
+            width: 50%;
+            float: left;
+            text-indent: 10px;
+            vertical-align: middle;
+            color: #fff;
+            padding: 15px 0px;
+            border-top-left-radius: 5px;
+        }
+        
+        .send-head .right {
+            width: 50%;
+            float: left;
+            text-align: right;
+            padding-right: 15px;
+            padding: 15px 0px;
+            border-top-right-radius: 5px;
+        }
+        
+        .send-head .right h3 {
+            font-size: 3rem;
+            line-height: 34px;
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head .right h4 {
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head .right span {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head p {
+            clear: both;
+            background-color: #fff;
+            line-height: 30px;
+            text-indent: 15px;
+            font-size: 1.4rem;
+            color: #2a6496;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            margin-bottom: 0px;
+        }
+        
+        .send-head p span {
+            float: right;
+            margin-right: 15px;
+        }
+        
+        .send {
+            border: 1px solid #ddd;
+            margin: 10px;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .sendline {
+            border: 1px solid #ddd;
+            margin: 10px;
+            height: 250px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .send h3 {
+            font-size: 1.6rem;
+            margin: 10px 0 0 0;
+            padding-left: 10px;
+            color: grey;
+        }
+        
+        .send .left {
+            width: 50%;
+            float: left;
+            text-align: center;
+            vertical-align: middle;
+            margin-top: 8px;
+        }
+        
+        .send .left span {
+            display: block;
+        }
+        
+        .send .left .num {
+            font-size: 4.5rem;
+            color: #f00;
+        }
+        
+        .send .left .solve {
+            font-size: 1.6rem;
+            color: #f00;
+        }
+        
+        .send .right {
+            width: 50%;
+            float: left;
+            text-align: center;
+            margin: 10px 0px;
+        }
+        
+        .send .right a {
+            display: block;
+            line-height: 30px;
+            width: 80px;
+            border: 1px solid #ddd;
+            margin: 7px 30px;
+            background-color: #f4f4f4;
+            font-size: 1.4rem;
+        }
+        
+        .send .right a span {
+            padding-left: 5px;
+            color: #f00;
+        }
+        
+        .send .right a .b {
+            color: green;
+        }
+        
+        .panel-green {
+            border-color: #5cb85c !important;
+            background-color: #5cb85c !important;
+        }
+        
+        .panel-blue {
+            border-color: #428bca !important;
+            background-color: #428bca !important;
+        }
+        
+        .send .read span {
+            float: right;
+        }
+        
+        .plansend {
+            border: 1px solid #ddd;
+            margin: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .plansend h3 {
+            font-size: 1.6rem;
+            margin: 5px 0px;
+            padding-left: 10px;
+            color: grey;
+        }
+        
+        .sendlist-title {
+            line-height: 40px;
+            font-size: 1.6rem;
+            background-color: #fff;
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            color: #666;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        .sendlist-content {
+            margin-top: 5px;
+            height: 200px;
+        }
+        
+        .sendlist {
+            border: 1px solid #ddd;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        
+        .sendlist h3 {
+            margin: 0px 10px;
+            line-height: 40px;
+            font-size: 1.6rem;
+        }
+        
+        .sendlist p {
+            margin: 0px 10px;
+            line-height: 30px;
+        }
+        
+        .sendlist .date {
+            font-size: 1.2rem;
+        }
+        
+        .sendlist .time {
+            font-size: 1.4rem;
+        }
+        
+        .sendlist .read {
+            font-size: 1.4rem;
+            line-height: 35px;
+            margin-top: 10px;
+            border-top: 1px solid #dedede;
+            font-weight: bold;
+        }
+        
+        .sendlist-lists {
+            padding: 0;
+            margin-top: 10px;
+            width: 100%;
+            list-style: none;
+            height: auto;
+        }
+        
+        .sendlist-lists li {
+            padding: 7px 10px;
+            float: left;
+            font-size: 1.26rem;
+            color: #6C736B;
+        }
+        
+        .sendlist-lists li:nth-child(odd) {
+            width: 35%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        .sendlist-lists li:nth-child(even) {
+            width: 65%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        input[type='text'][readonly],
+        select[readonly],
+        textarea[readonly] {
+            cursor: default !important;
+            background-color: #FFF !important;
+            padding: 5px 10px 5px 15px;
+            color: blue;
+        }
+        
+        .mini-buttonedit-border {
+            border: none;
+        }
+        
+        .sendlist .read span {
+            float: right;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="plansend " onclick="OpenWizard()">
+        <h3>
+            <span class="font-color-blue">
+                <i class="icon iconfont icon-search  font-color-blue"></i>
+                <span>选择计划</span>
+            </span>
+        </h3>
+        <input id="plan_name" name="plan_name" textname="plan_name" class="mini-buttonedit" emptytext="请选择计划..." allowinput="false" />
+
+    </div>
+    <div class="send sendlist-content">
+        <h3>
+            <span class="font-color-blue">
+                <i class="icon iconfont icon-kongzhibing font-color-blue"></i>
+                <span>项目概况</span>
+            </span>
+        </h3>
+        <ul class="sendlist-lists clearfix" id="content">
+
+        </ul>
+    </div>
+    <div class="send sendline">
+        <h3>
+            <span class="font-color-blue">
+                <i class="icon iconfont icon-shigong font-color-blue"></i>
+                <span>形象进度曲线</span>
+            </span>
+        </h3>
+        <div id="line1" style="height:200px;width:100%;">
+
+        </div>
+
+    </div>
+    <div class="send sendline">
+        <h3>
+            <span class="font-color-blue">
+                <i class="icon iconfont icon-dianchangweihu font-color-blue"></i>
+                <span>产值汇总对比</span>
+            </span>
+        </h3>
+        <div id="line2" style="height:200px;width:100%;">
+
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        var currentplan;
+        var EpsProjId = '';
+        var act = '';
+        var pln = '';
+        var PowerForm = new MobileWebForm();
+        $(function() {
+
+            $(".mini-buttonedit-icon")
+                .addClass("icon iconfont icon-icon-yxj-all  font-color-blue")
+                .removeClass("mini-buttonedit-icon");
+
+            EpsProjId = getParameter("EpsProjId");
+
+            if (EpsProjId == "") {
+                alert("没有传入必要数据");
+                return;
+            }
+
+            var p = {
+                KeyWord: "ProjectPlan",
+                select: "proj_plan_guid,plan_name",
+                sort: "proj_plan_id",
+                size: "1"
+            };
+            var exp = {
+                defaultright: false
+            };
+            var str = mini.encode(exp);
+            str = base64encode(str);
+            p.extparams = str;
+            p.swhere = "proj_guid='" + EpsProjId + "' and parent_plan_id=0";
+            FormFuns.GridPageLoad(p, function(o) {
+                var data = mini.decode(o.data.value);
+                if (data.length > 0) {
+                    currentplan = data[0].proj_plan_guid;
+                    SetBtnEditValue("plan_name", data[0].plan_name);
+                    loadData(currentplan);
+                    loadChard1(currentplan);
+                    loadChard2(currentplan);
+                }
+            })
+
+
+        });
+
+        function loadData(plan_guid) {
+
+            var p = {
+                KeyWord: "V_PlanOverallProgress",
+                KeyWordType: "viewentity",
+                select: "",
+                sort: "plan_short_name",
+                size: "1"
+            };
+            var exp = {
+                defaultright: false
+            };
+            var str = mini.encode(exp);
+            str = base64encode(str);
+            p.extparams = str;
+            p.swhere = " proj_plan_guid='" + plan_guid + "'";
+            FormFuns.GridPageLoad(p, function(o) {
+                var data = mini.decode(o.data.value);
+                if (data.length > 0) {
+                    BuildHTML(data);
+                }
+            })
+        }
+
+        function BuildHTML(data) {
+            var html = "";
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+                var plan_complete_pct = 0;
+                var act_complete_pct = 0;
+                var bcws_cost = 0;
+                var bswp = 0;
+                var bsws = 0;
+                var sv = 0;
+                if (row.plan_complete_pct != plan_complete_pct && row.plan_complete_pct != null)
+                    plan_complete_pct = row.plan_complete_pct.toFixed(2);
+                if (row.act_complete_pct != act_complete_pct && row.act_complete_pct != null)
+                    act_complete_pct = row.act_complete_pct.toFixed(2);
+                if (row.bcws_cost != bcws_cost && row.bcws_cost != null)
+                    bcws_cost = row.bcws_cost.toFixed(2);
+                if (row.bswp != bswp && row.bswp != null)
+                    bswp = row.bswp.toFixed(2);
+                if (row.bsws != bsws && row.bsws != null)
+                    bsws = row.bsws.toFixed(2);
+                if (row.sv != sv && row.sv != null)
+                    sv = row.sv.toFixed(2);
+
+                html += '<li>计划完成</li>' + '<li class="font-color-red">：' + plan_complete_pct + " %" + '</li>' +
+                    '<li>实际完成</li>' + '<li class="font-color-red">：' + act_complete_pct + " %" + '</li>' +
+                    '<li>进度差值</li>' + '<li class="font-color-red">：' + sv + " 万元" + ' </li>' +
+                    '<li>预算值</li>' + '<li class="font-color-red">：' + bcws_cost + " 万元" + '</li>' +
+                    '<li>赢得值</li>' + '<li class="font-color-red">：' + bswp + " 万元" + ' </li>';
+            }
+            $("#content").html(html);
+
+        }
+
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+        PowerForm.EventWizardData = function(e, data) {
+            e.Next = false;
+            SetBtnEditValue("plan_name", data[0].plan_name);
+            currentplan = data[0].proj_plan_guid;
+            loadData(currentplan);
+            loadChard1(currentplan);
+            loadChard2(currentplan);
+        }
+
+        function OpenWizard() {
+            var where = " proj_guid='" + EpsProjId + "'";
+            var url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdPlan/WizardProjectPlanList.htm.pho?EpsProjId=" + EpsProjId;
+
+            CallAppFunction("appOpenWizard", '{"url":"' + url + '","where":"' + where + '","btnid":"plan_name","pullUp":"true","pullDown":"true","showTabbar":"false","title":"选择计划"}', url);
+        }
+
+        function loadChard2(plan_guid) {
+            $.ajax({
+                url: "/Plan/GetWBSEVMProgress",
+                data: {
+                    plan_guid: plan_guid
+                },
+                type: "POST",
+                success: function(text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart2(o.list)
+
+                    }
+                }
+            });
+        }
+        //加载图表
+        function LoadChart2(data) {
+            //标题
+            var charttitle = "";
+            var xaxis = {
+                type: 'category',
+                data: []
+            };
+            var actcur = {
+                "name": "实际",
+                type: 'bar',
+                barWidth: 20,
+                yAxisIndex: 1,
+                data: []
+            };
+            var actsum = {
+                "name": "实际累计",
+                type: 'line',
+                data: []
+            };
+            var plncur = {
+                "name": "计划",
+                type: 'bar',
+                barWidth: 20,
+                yAxisIndex: 1,
+                data: []
+            };
+            var plnsum = {
+                "name": "计划累计",
+                type: 'line',
+                data: []
+            };
+            var curmax = 0,
+                summax = 0;
+            $.each(data, function() {
+                var md = mini.formatDate(this.enddate, "yyyy-MM-dd");
+                xaxis.data.push(md);
+                actcur.data.push(Math.round(this.actcurpct * 100 / 100));
+                actsum.data.push(Math.round(this.actsumpct * 100 / 100));
+                plncur.data.push(Math.round(this.plncurpct * 100 / 100));
+                plnsum.data.push(Math.round(this.plnsumpct * 100 / 100));
+                if (this.actcurpct > curmax) curmax = this.actcurpct;
+                if (this.plncurpct > curmax) curmax = this.plncurpct;
+                if (this.plnsumpct > summax) summax = this.plnsumpct;
+            })
+            curmax = Math.ceil(curmax * 1.1);
+            var opt = {};
+            opt.title = {
+                text: charttitle
+            };
+            opt.tooltip = {
+                trigger: 'axis'
+            };
+            opt.toolbox = {
+                show: false
+            };
+            opt.legend = {
+                data: ["计划", "实际", "计划累计", "实际累计"]
+            };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{
+                type: 'value',
+                name: '累计(万元)',
+                min: 0,
+                max: summax,
+                axisLabel: {
+                    formatter: function(value, index) {
+                        return value.toFixed(1);
+                    }
+                }
+            }, {
+                type: 'value',
+                scale: true,
+                precision: 0,
+                name: '当期(万元)',
+                min: 0,
+                max: curmax,
+                axisLabel: {
+                    formatter: function(value, index) {
+                        return value.toFixed(1);
+                    }
+                }
+            }];
+            opt.grid = {
+                x: 30,
+                x2: 30,
+                y: 40,
+                y2: 40
+            };
+
+            opt.dataZoom = {
+                show: true,
+                realtime: true,
+                start: 0,
+                end: 100,
+                height: 15,
+                backgroundColor: '#BDDDCE',
+                handleColor: '#295AA6'
+            }
+
+            opt.series = [plncur, actcur, plnsum, actsum];
+            opt.color = ['#009D8C', '#0094AF', '#3AA45A', '#BE211A'];
+
+            InitEChart("line2", opt);
+        }
+
+        function loadChard1(plan_guid) {
+            $.ajax({
+                url: "/Plan/GetWBSEVM",
+                data: {
+                    plan_guid: plan_guid,
+                    task_guid: plan_guid
+                },
+                type: "POST",
+                success: function(text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart1(o.list);
+                    }
+                }
+            })
+
+        }
+
+        function LoadChart1(data) {
+            //标题
+            var charttitle = "";
+            var xaxis = {
+                type: 'category',
+                data: []
+            };
+            var actcur = {
+                "name": "实际",
+                type: 'bar',
+                barWidth: 20,
+                yAxisIndex: 1,
+                data: []
+            };
+            var actsum = {
+                "name": "累计实际",
+                type: 'line',
+                data: []
+            };
+            var plncur = {
+                "name": "计划",
+                type: 'bar',
+                barWidth: 20,
+                yAxisIndex: 1,
+                data: []
+            };
+            var plnsum = {
+                "name": "累计计划",
+                type: 'line',
+                data: []
+            };
+            var actsumwbs2 = {
+                "name": "累计实际2",
+                type: 'line',
+                data: []
+            };
+            var imax = 0;
+            $.each(data, function() {
+
+                var md = mini.formatDate(this.enddate, "yyyy-MM-dd");
+                xaxis.data.push(md);
+                actcur.data.push(Math.round(this.actcurpct * 100) / 100);
+                actsum.data.push(Math.round(this.actsumpct * 100) / 100);
+                plncur.data.push(Math.round(this.plncurpct * 100) / 100);
+                plnsum.data.push(Math.round(this.plnsumpct * 100) / 100);
+                if (this.actsumwbs2)
+                    actsumwbs2.data.push(Math.round(this.actsumwbs2 * 100) / 100);
+                else
+                    actsumwbs2.data.push(0);
+                if (this.actcurpct > imax) imax = this.actcurpct;
+                if (this.plncurpct > imax) imax = this.plncurpct;
+            })
+            imax = (imax % 10 == 0) ? (imax + 5) : Math.ceil(imax / 10) * 10;
+            var opt = {};
+            //opt.calculable = true;
+            opt.title = {
+                text: charttitle
+            };
+            opt.dataZoom = {
+                show: true,
+                realtime: true,
+                start: 0,
+                end: 100,
+                height: 15,
+                backgroundColor: '#BDDDCE',
+                handleColor: '#295AA6'
+            }
+            opt.tooltip = {
+                trigger: 'axis'
+            };
+            opt.toolbox = {
+                show: false
+            };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{
+                type: 'value',
+                name: '累计',
+                min: 0,
+                max: 100
+            }, {
+                type: 'value',
+                name: '当期',
+                min: 0,
+                max: imax
+            }];
+            opt.legend = {
+                data: [plncur.name, actcur.name, plnsum.name, actsum.name]
+            };
+            opt.series = [plncur, actcur, plnsum, actsum];
+            opt.grid = {
+                x: 30,
+                x2: 30,
+                y: 40,
+                y2: 40
+            };
+            opt.color = ['#009D8C', '#0094AF', '#3AA45A', '#BE211A'];
+
+            InitEChart("line1", opt);
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line', // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+                'echarts/chart/bar',
+                'echarts/chart/pie',
+                'echarts/chart/gauge',
+                'echarts/chart/scatter'
+            ], function(ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+
+                window.addEventListener("resize", function() {
+                    myChart.resize();
+                });
+            })
+        }
+    </script>
+</body>
+
+</html>

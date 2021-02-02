@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-3 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i> 部门
+                        </div><!--部门-->
+                        <div class="tools">
+                            <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="Department" class="mini-tree" style="width: 100%; height: 100%;" showtreeicon="true" textfield="Name"
+                             idfield="Id" parentfield="ParentId" resultastree="false" expandonload="true" data-options="{lazyload:true}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-3-->
+
+            <div class="col-md-9  col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <!--<div class="portlet-body" style="height: 40%">
+                    <div class="tools" style="height:100%">
+                        <div id="calendar" class="mini-calendar" value="2011-12-11" style="width:100%; height:100%;" onvaluechanged="valueChanged"></div>
+                    </div>
+                </div>-->
+                <div class="portlet box blue" style="height: 100%">
+
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="SF_YX_EquRecord.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                            <a class="mini-button blue" id="SF_YX_EquRecord.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                        <!--<div class="tools">
+                            <input id="SF_YX_EquRecord-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="SF_YX_EquRecord-search">
+                                <input id="SF_YX_EquRecord-search-value" class="mini-textbox" style="width: 120px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_YX_EquRecord-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>查询
+                        </div>-->
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_YX_EquRecord" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="Id" treecolumn="text" allowcelledit="true" fitcolumns="" multiselect="true"
+                             parentfield="ParentId" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" sortField="RegDate Desc">
+                            <div property="columns">
+                                <!--<div type="checkcolumn" width="10"></div>-->
+                                <div type="indexcolumn" width="40">序号</div>
+                                <div name="text" field="Code" header="编号" allowsort="true" width="120">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <!--<div field="RunStation" header="站点" allowsort="true">站点<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>-->
+                                <div field="EquCode" header="设备出厂编号" allowsort="true">设备出厂编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="FileCode" header="附件出厂编号" allowsort="true">附件出厂编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="Name" header="名称" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="SafeCode" header="安监编号" allowsort="true">安监编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                <div field="Model" header="型号" allowsort="true">型号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="CbsClassName" header="使用地点" allowsort="true">使用地点<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="ProduceDate" header="生产日期" allowsort="true" dateformat="yyyy-MM-dd">生产日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                <div field="UseDate" header="投用日期" allowsort="true" dateformat="yyyy-MM-dd">投用日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                <div field="Deadline" header="推荐使用期限(年)" allowsort="true">推荐使用期限(年)<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="TestDate" header="检验日期" allowsort="true" dateformat="yyyy-MM-dd">检验日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                <div field="TestDeadline" header="检验周期(月)" allowsort="true">检验周期(月)<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="CheckDate" header="应检日期" allowsort="true" dateformat="yyyy-MM-dd">应检日期<input property="editor" class="mini-datepicker" style="width: 100%;" /> </div>
+                                <div field="Memo" header="备注" allowsort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+            <!--end col-md-9-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            debugger;
+            //根据登录人,过滤树,如果没部门Id（比如管理员）,就显示全部
+            //如果是运行部办公室站,可以看到运行部全部的
+            if (sessiondata.DeptId == "" || sessiondata.DeptId == undefined || sessiondata.DeptId == null) {
+                formconfig.config.joindata.swhere = " 1=1 ";
+            } else if (sessiondata.DeptId == "c08b71bb-83d8-4e27-bbf5-55f487a93669") {
+                formconfig.config.joindata.swhere = " ParentId='D045F0D9-C9F2-4DC8-B5AB-15EEE958A186' "
+                                                 + " or (Id=(select e.ParentId from PB_Department e where e.Id='" + sessiondata.DeptId + "'))  ";
+            } else {
+                formconfig.config.joindata.swhere = " Id='" + sessiondata.DeptId + "' "
+                                                 + " or (Id=(select e.ParentId from PB_Department e where e.Id='" + sessiondata.DeptId + "'))  ";
+            }
+
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+    </script>
+</body>
+</html>

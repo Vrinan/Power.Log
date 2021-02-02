@@ -1,0 +1,221 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>工程联系单
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_ContactNotes.Send" onclick="OnSendPaper()"><i class="fa fa-reply"></i>回复</a><!--回复-->
+                    <a class="mini-button blue" id="PS_ContactNotes.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="PS_ContactNotes.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_ContactNotes.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="PS_ContactNotes" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            联系单编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.Code" name="Code" class="mini-textbox" required="true" requirederrortext="联系单编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContactNotes.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系单主题
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.Title" name="Title" class="mini-textbox" required="true" requirederrortext="联系单主题不能为空"/>
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContactNotes.ContactType">联系单类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.ContactType" name="ContactType" class="mini-combobox" required="true" requirederrortext="联系单类型不能为空"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系单内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContactNotes.ContactContent" name="ContactContent" class="mini-textarea" height="80px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            发送单位
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.SendDept" name="SendDept" textname="SendDept" class="mini-buttonedit"
+                                                   emptytext="请选择发送单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            签发人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.Sender" name="Sender" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            接收单位
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.ReceiveDept" name="ReceiveDept" textname="ReceiveDept" class="mini-buttonedit"
+                                                   emptytext="请选择接收单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            接收人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.Receiver" name="Receiver" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            抄送单位
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.CCDept" name="CCDept" textname="CCDept" class="mini-buttonedit"
+                                                   emptytext="请选择抄送单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            抄送人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.CCHuman" name="CCHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系单状态
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.ContactStatus" name="ContactStatus" class="mini-combobox"/>
+                                        </td>
+                                        <td>
+                                            是否有签证
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.isvisa" name="isvisa" class="mini-checkbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            是否需要回复
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.isReply" name="isReply" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td>
+                                        <td>
+                                            是否引起费用变更
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.isCostChange" name="isCostChange" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContactNotes.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var first = getParameter("first");
+        $(function () {
+            PowerForm.Init();
+            if (first == '0') {
+                mini.get("PS_ContactNotes.Send").setEnabled(false);
+                mini.get("PS_ContactNotes.isReply").disable();
+            }
+        });
+        
+        
+        function OnSendPaper() {
+            var id = formconfig.config.joindata.currow["Id"];
+            if (formconfig.FormState == "add" || mini.get("PS_ContactNotes.isReply").value == 0) {
+                Power.ui.alert("不需要回复");
+            }
+            else {
+                if (mini.get("PS_ContactNotes.isReply").value == 1 && mini.get("PS_ContactNotes.Status").value == 50) {
+                    var url = "/Form/AddForm/86273c3f-2c1c-4938-9a92-052bd99bb072/?first=0&ReplyId=" + id;
+                    mini.open({
+                        url: url,
+                        width: 900,
+                        height: 550,
+                        ondestroy: function (action) {
+                            if (this.getIFrameEl().contentWindow.formconfig.FormState == "edit")
+                                mini.get("PS_ContactNotes.ContactStatus").setValue("C3");
+                        }
+
+                    });
+                }
+                else {
+                    Power.ui.alert("请先批准后再回复！");
+                }
+            }
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            if (parent && parent.mini.get("PS_ContactNotes.ContactStatus")) {
+                parent.mini.get("PS_ContactNotes.ContactStatus").setValue("C3");
+            }
+        }
+
+    </script>
+</body>
+</html>

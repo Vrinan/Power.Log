@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_YX_RunFlyingDust.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_YX_RunFlyingDust-Export" title="运行站飞灰统计表" class="btn-group"></div>
+
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+                            <span>运行站</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                    </div>
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_YX_RunFlyingDust" class="mini-datagrid" style="width: 100%; height: 100%;" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="Date" headeralign="center" dateformat="yyyy-MM-dd">
+                                    填报时间
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" format="yyyy-MM-dd" />
+                                </div>
+                                <div field="Department" headeralign="center" header="运行站">
+                                    运行站
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="YHCLL" headeralign="center">
+                                    原灰处理量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div header="螯合剂" headeralign="center">
+                                    <div property="columns">
+                                        <div field="ZHJ_Use" headeralign="center">
+                                            使用量(t)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                        <div field="ZHJ_Lave" headeralign="center">
+                                            剩余量(t)
+                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div field="UseWater" headeralign="center">
+                                    用水量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="UsaeDian" headeralign="center">
+                                    用电量(kwh)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="SNweight" headeralign="center">
+                                    水泥用量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="GHWCL" headeralign="center">
+                                    固话物产量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="ZDL" headeralign="center">
+                                    装袋量(包)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="WYL" headeralign="center">
+                                    外运量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="KCL" headeralign="center">
+                                    库存量(包)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="QXH" headeralign="center">
+                                    检修灰(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="CPHGL" headeralign="center">
+                                    产品合格率(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            //firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(firstDate);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            //var grid = mini.get("View_SF_ZH_MatRequisitions");
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function search() {
+            mini.get('View_SF_YX_RunFlyingDust').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_YX_RunFlyingDust") {
+                var StartMonth = mini.get("QStartDate").getFormValue();
+                var EndMonth = mini.get("QEndDate").getFormValue();
+                var QDepartment = mini.get("QDepartment").getFormValue();
+                var month = new Date(StartMonth).getMonth() + 1;
+                var month2 = new Date(EndMonth).getMonth() + 1;
+                if (month == month2) {
+                    debugger;
+                    if (e.params.swhere == "") {
+                        e.params.swhere = " Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "'  and Department like '%" + QDepartment + "%' ";
+                    }
+                    else {
+                        e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' ";
+                    }
+                }
+                else {
+                    Power.ui.alert("不可跨月查询！");
+                }
+            }
+        }        PowerForm.EventAfterLoadData = function (e) {
+            var data = e.data;
+            var YHCLL = 0;
+            var ZHJ_Use = 0;
+            var ZHJ_Lave = 0;
+            var UseWater = 0;
+            var UsaeDian = 0;
+            var SNweight = 0;
+            var GHWCL = 0;
+            var ZDL = 0;
+            var WYL = 0;
+            var KCL = 0;
+            var QXH = 0;
+            var CPHGL = 0;
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                YHCLL += d.YHCLL || 0;
+                ZHJ_Use += d.ZHJ_Use || 0;
+                ZHJ_Lave += d.ZHJ_Lave || 0;
+                UseWater += d.UseWater || 0;
+                UsaeDian += d.UsaeDian || 0;
+                SNweight += d.SNweight || 0;
+                GHWCL += d.GHWCL || 0;
+                ZDL += d.ZDL || 0;
+                WYL += d.WYL || 0;
+                KCL += d.KCL || 0;
+                QXH += d.QXH || 0;
+                CPHGL += d.CPHGL || 0;
+            }
+            var len = data.length;
+            if (len == 0) {
+                len = 1
+            }
+            var x = {};
+            x.Date = "合计";
+            x.YHCLL = YHCLL.toFixed(2);
+            x.ZHJ_Use = ZHJ_Use.toFixed(2);
+            x.ZHJ_Lave = ZHJ_Lave.toFixed(2);
+            x.UseWater = UseWater.toFixed(2);
+            x.UsaeDian = UsaeDian.toFixed(2);
+            x.SNweight = SNweight.toFixed(2);
+            x.GHWCL = GHWCL.toFixed(2);
+            x.ZDL = ZDL.toFixed(2);
+            x.WYL = WYL.toFixed(2);
+            x.KCL = KCL.toFixed(2);
+            x.QXH = QXH.toFixed(2);
+            x.CPHGL = CPHGL.toFixed(2);
+            data.push(x);
+
+            if (len != 0) {
+                var y = {};
+                y.Date = "平均";
+                y.YHCLL = (YHCLL / len).toFixed(2);
+                y.ZHJ_Use = (ZHJ_Use / len).toFixed(2);
+                y.ZHJ_Lave = (ZHJ_Lave / len).toFixed(2);
+                y.UseWater = (UseWater / len).toFixed(2);
+                y.UsaeDian = (UsaeDian / len).toFixed(2);
+                y.SNweight = (SNweight / len).toFixed(2);
+                y.GHWCL = (GHWCL / len).toFixed(2);
+                y.ZDL = (ZDL / len).toFixed(2);
+                y.WYL = (WYL / len).toFixed(2);
+                y.KCL = (KCL / len).toFixed(2);
+                y.QXH = (QXH / len).toFixed(2);
+                y.CPHGL = (CPHGL / len).toFixed(2);
+                data.push(y);
+            }
+
+            mini.get("View_SF_YX_RunFlyingDust").setData(data);
+
+        }
+
+    </script>
+</body>
+</html>

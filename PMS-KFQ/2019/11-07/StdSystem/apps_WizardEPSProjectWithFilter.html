@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <link href="/Apps/js/mui/css/mui.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/js/mui/css/mui.picker.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/AppCommon.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+
+
+    <style>
+        html, body {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .mui-wizard-content {
+            display: block;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mui-wizard-content .header-nav-content {
+            flex: 0 0 95px;
+            height: 95px;
+            width: 100%;
+        }
+
+        .header-nav-content .title-content {
+            width: 100%;
+            height: 40px;
+            display: flex;
+        }
+
+        .title-content .close, .title-content .finish {
+            flex: 0 0 40px;
+            width: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            color: #007aff;
+            text-align: center;
+        }
+
+        .title-content .text {
+            flex: 1;
+            line-height: 40px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .header-nav-content .search-wrap {
+            padding: 8px 5px;
+        }
+
+        .mui-wizard-content .mui-indexed-list {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            width: 100%;
+        }
+
+        .mui-scroll .mui-table-view {
+            background-color: #fff;
+            padding-top: 0;
+        }
+
+        .mui-scroll .mui-media-object.mui-pull-left {
+            width: 40px;
+            position: relative;
+        }
+
+        .mui-scroll .mui-media-object.mui-pull-left input {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .mui-table-view .mui-table-view-cell {
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+
+        .mui-table-view .mui-table-view-cell .mui-media-body {
+            padding-left: 5px;
+        }
+
+        .mui-media-body .name {
+            font-size: 12px;
+            color: #000000;
+            width: 20em;
+            height: auto;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .mui-media-body .mui-ellipsis {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mui-wizard-content">
+        <header class="header-nav-content bottom-line">
+            <div class="title-content bottom-line">
+                <div class="close">取消</div>
+                <div class="text">选择项目</div>
+                <div class="finish">完成</div>
+            </div>
+            <div class="search-wrap">
+                <div class="mui-input-row mui-search">
+                    <input type="search" class="mui-input" placeholder="项目名称">
+                </div>
+            </div>
+        </header>
+        <div class="mui-indexed-list">
+            <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <!--数据列表-->
+                    <ul id="list_content" class="mui-table-view"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="/Apps/js/jquery-1.8.3.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/js/mui/js/mui.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/js/mui/js/mui.picker.min.js?v=$AppVersion" type="text/javascript"></script>
+<script src="/Apps/newAppjs/appUtils.js?v=$AppVersion"></script>
+<script type="text/javascript">
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var strEpsProjId = GetQueryString("EpsProjId");
+    (function (mui, $) {
+        $(function () {
+            var load_wizard = {
+                data: {
+                    lists: [],
+                    query: {},
+                    formconfig: {},
+                    wizardOption: {}
+                },
+                getData: function (key) {
+                    return this.data[key];
+                },
+                setData: function (key, value) {
+                    var obj = {}; obj[key] = value;
+                    this.data = $.extend(this.data, obj);
+                },
+                //GridPageLoad加载数据
+                gridPageLoad: function (p, callback) {
+                    var that = this;
+
+                    var url = p.url || "/Form/GridPageLoad";
+                    p.KeyWordType = p.KeyWordType || "BO";
+                    p.select = p.select || "";
+                    p.sort = p.sort || "";
+                    p.index = p.index || "0";
+                    p.size = p.size || "0";
+                    p.swhere = p.swhere || "";
+                    var _async = typeof (p.async) == "undefined" ? true : p.async;
+                    delete p.async;
+
+                    if (p.swhere) {
+                        var tmp = {};
+                        if (p.extparams) {
+                            var str = Util.Base64Decode(p.extparams);
+                            tmp = JSON.parse(str);
+                        }
+                        tmp.encodeswhere = "r4";
+                        p.extparams = Util.Base64Encode(JSON.stringify(tmp));
+                        p.swhere = Util.Base64Swhere(p.swhere);
+                    }
+
+                    Util._ajax(url, p, "post", false, function (data) {
+                        var getData = JSON.parse(data);
+                        if (callback) {
+                            callback(getData);
+                        }
+                    });
+                },
+                // 获取向导的数据
+                getWizardList: function (searchKey, callback) {
+                    var that = this;
+                    var wizardOption = that.getData("wizardOption");
+                    var searchKey = searchKey || $.trim( $(".search-wrap input").val() );
+
+                    var obj = {
+                        url: "/Form/GridPageLoad",
+                        select: "",
+                        KeyWord: "EPSProject", //此处修改KeyWord
+                        KeyWordType: "BO", //此处修改KeyWordType
+                        size: "1000",
+                        index: "0",
+                        order: "",
+                         swhere: "  1=1 "
+                        // swhere: "  EpsProjId='" + strEpsProjId + "'   "
+                    };
+
+                    if (wizardOption && wizardOption.filter) {
+                        obj.swhere += " and " + wizardOption.filter;
+                    }
+                    //只选项目
+                    // obj.swhere +="and project_type = 1"
+
+                    //针对app，只选对应项目
+                    obj.swhere +=" and project_guid in(select MasterId from KFQ_QX_ClassifyTreeLimit where IsAppShow =1 and  Human_Id ='"+window.parent.sessiondata.HumanId+"' )"
+
+                    if (searchKey && searchKey != "") {
+                        obj.swhere += " and project_name like '%" + searchKey + "%' ";
+                    }
+
+                    that.gridPageLoad(obj, function (data) {
+                        var getData = [];
+                        if (data.data.value) {
+                            getData = JSON.parse(data.data.value);
+                        }
+                        if (callback) {
+                            callback(getData);
+                        }
+                    });
+                },
+                // 获取向导的配置
+                getWizardOption: function () {
+                    var that = this;
+                    var query = that.getData("query");
+                    var WizardKey = query.KeyWord + "." + query.Name;
+                    var option = that.getData("formconfig")[WizardKey];
+
+                    $(".title-content .text").text(option.ComponentName);
+
+                    that.setData("wizardOption", option);
+                },
+                // 渲染数据 
+                renderWizardList: function (data) {
+                    var list = data || [];
+                    var html = '', that = this;
+                    var list_content = $("#list_content");
+                    var wizardOption = that.getData("wizardOption");
+                    var multi = wizardOption.multi;
+
+                    list.forEach(function (item, index) {
+                        html += '<li data-id="'+ item.project_guid +'" class="mui-table-view-cell mui-media bottom-line">'+
+                            '<a href="javascript:;">'+
+                                '<div class="mui-media-object mui-checkbox mui-pull-left">'+
+                                    '<input class="checkbox" name="checkbox" value="'+ item.project_guid +'" type="checkbox" >'+
+                                '</div>'+
+                                '<div class="mui-media-body">'+
+                                    '<div class="name">'+ item.project_name +'</div>'+
+                                    '<p class="mui-ellipsis">编号: '+ item.project_shortname +'</p>'+
+                                '</div>'+
+                            '</a>'+
+                        '</li>';
+                    });
+                    
+                    list_content.html(html);
+
+                    // 添加选中事件
+                    list_content.find("li.mui-table-view-cell").on("tap", function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        var $this = $(this);
+                        var checkbox = $this.find("input.checkbox");
+                        var checked = checkbox.prop("checked");
+                        checkbox.prop("checked", !checked);
+
+                        if ((multi + "") === "0") {
+                            $this.siblings().find("input.checkbox").prop("checked", false);
+                        }
+                    });
+
+                    // 给input选择框添加事件
+                    list_content.find("input.checkbox").on("tap", function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        var $this = $(this);
+                        var row = $this.closest("li.mui-table-view-cell");
+                        row.trigger("tap");
+                    });
+                },
+                // 组织选中完成后的数据
+                selectAfter: function () {
+                    var that = this;
+                    var inputs = $("input:checked");
+                    var res = [], lists = that.getData("lists");
+                    var wizardOption = that.getData("wizardOption");
+                    var fields = wizardOption.fields;
+                    var query = that.getData("query");
+
+                    inputs.each(function () {
+                        var $this = $(this), Id = $this.val();
+                        var item = lists.filter(function (list) {
+                            if (list.project_guid== Id) {
+                                return list;
+                            }
+                        })[0];
+
+                        var obj = {};
+                        for (var key in fields) {
+                            obj[key] = item[fields[key]]
+                        }
+
+                        res.push(obj);
+                    });
+
+                    
+                    return {
+                        res: res,
+                        query: query,
+                        option: that.getData("wizardOption")
+                    };
+                },
+                UIInit: function () {
+                    var that = this;
+
+                    // 取消事件
+                    $(".title-content .close").on("tap", function () {
+                        if (window.parent.closeWizardWrap) {
+                            window.parent.closeWizardWrap();
+                        }
+                    });
+
+                    // 完成事件
+                    $(".title-content .finish").on("tap", function () {
+                        var data = that.selectAfter();
+                        if (window.parent.closeWizardWrap) {
+                            window.parent.closeWizardWrap(data);
+                        }
+                    });
+
+                    // 添加touch事件 增加搜索框blur事件的灵敏度
+                    $("body").on("touchstart", function () {
+                        $(".search-wrap input").blur();
+                    });
+
+                    // 搜索框的的change事件
+                    $(".search-wrap input").on("change", function () {
+                        that.getWizardList(null, function (data) {
+                            that.setData("lists", data);
+                            that.renderWizardList(data);
+                        });
+                    });
+
+                    if ( window.parent&& window.parent.formconfig) {
+                        that.setData("formconfig", window.parent.formconfig)
+                    }
+
+                    mui.init({
+                        pullRefresh: {
+                            container: '#pullrefresh',
+                            down: {
+                                callback: function () {
+                                    that.getWizardList(null, function (data) {
+                                        that.setData("lists", data);
+                                        that.renderWizardList(data);
+
+                                        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                                    });
+                                }
+                            },
+                            up: {
+                                contentrefresh: '',
+                                callback: function () {
+                                    mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+                                }
+                            }
+                        }
+                    });
+                },
+                init: function () {
+                    this.UIInit();
+                    this.event();
+                },
+                event: function (callback) {
+                    var that = this;
+                    var query = Util.getQuery();
+
+                    that.setData("query", query);
+                    that.getWizardOption();
+
+                    that.getWizardList(null, function (data) {
+                        that.setData("lists", data);
+                        that.renderWizardList(data);
+                    });
+                }
+            };
+
+            load_wizard.init();
+        });
+    })(mui, jQuery);
+
+
+</script>
+
+</html>

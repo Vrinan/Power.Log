@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<!--project_guid in(select id from dbo.[returnEPSChildrenTreeIds]('82bef379-1d68-4681-baf0-42924ca6b2b7'))-->
+<body>
+    <div class="row  row-hd row-hd-responsive" style="height: 100%">
+        <div class="col-md-3 col-hd-12">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>EPS/项目<!--EPS/项目-->
+                    </div>
+                    <div class="tools">
+                        <input id="EPSProjectSearch" class="mini-textbox" style="width: 80px;" onenter="Search()" />
+                        <a class="mini-button blue" id="BtnEPSProjectSearch" onclick="Search()"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 100%">
+                    <div id="EPSProject" class="mini-tree" style="width: 100%; height: 100%" showtreeicon="true" textfield="project_name"
+                         idfield="project_guid" parentfield="parent_guid" resultastree="false" expandonload="true" virtualscroll="true" ondrawnode="onDrawNode">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-hd-12">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="View_FK_BudgetCost.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        <div id="View_FK_BudgetCost-Export" title="成本预算对比" class="btn-group"></div>
+                        <!--<span>建筑成本编号</span>
+                        <input id="Qestablishcode" class="mini-textbox" width="120">
+                        <span>建筑成本标题</span>
+                        <input id="Qestablishname" class="mini-textbox" width="120">
+                        <span>项目编号</span>
+                        <input id="QepsCode" class="mini-textbox" width="120">
+                        <span>项目名称</span>
+                        <input id="Qepsname" class="mini-textbox" width="120">
+                        <a class="mini-button yellow" onclick="search();">查询</a>-->
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: 100%">
+                    <div id="View_FK_BudgetCost" class="mini-treegrid" style="height:100%;" showsummaryrow="true" idfield="Id" showCheckBox="false" checkRecursive="true"
+                         showtreeicon="true" treecolumn="Code" parentfield="ParentId" resultastree="false" expandonload="true" allowresize="true" allowcelledit="true" allowcellselect="true">
+                        <!--<div id="View_FK_BudgetCost" class="mini-datagrid" style="height:100%;" showsummaryrow="true" multiselect="true" idfield="ListId" showCheckBox="false" checkRecursive="true" pagesize="50" sizeList="[10,20,50,100,200,500]" showpager="true"
+                         allowresize="true" allowcelledit="true" allowcellselect="true">-->
+                        <!--ondrawgroup="onDrawGroup"-->
+                        <div property="columns">
+                            <div type="indexcolumn" width="30">序号</div>
+                            <!--<div field="EstablishCode" headeralign="center">建筑成本编号</div>
+                            <div field="EstablishName" headeralign="center" width="180">建筑成本标题</div>
+                            <div field="EpsCode" headeralign="center">项目编号</div>
+                            <div field="EpsName" headeralign="center" width="180">项目名称</div>-->
+                            <div name="Code" field="Code" headeralign="center" width="80">编号</div>
+                            <div field="Name" headeralign="center">名称</div>
+                            <div field="Specifications" headeralign="center">规格型号</div>
+                            <div field="unit" headeralign="center">单位</div>
+                            <div field="Quantity" headeralign="center" numberformat="n2">目标数量</div>
+                            <div field="UnitPrice" headeralign="center" numberformat="n2">目标单价</div>
+                            <div field="Price" headeralign="center" numberformat="n2" summarytype="sum">目标合价</div>
+                            <div field="allPrce" headeralign="center" numberformat="n2" summarytype="sum">预算合价</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var grid = mini.get("View_FK_BudgetCost");
+            //grid.frozenColumns(0, 1);
+            //grid.groupBy("EstablishName");
+        });
+
+        function onDrawGroup(e) {
+            if (e.field == "EstablishName") {
+                e.cellHtml = "<span style='color:green;font-size:16px;'>" + e.value + "</span>";
+            }
+        }
+
+        function onDrawNode(e) {
+            e.iconCls = e.node.project_type == "0" ? "fa fa-folder item-folder" : "fa fa-cube item-project";
+        }
+
+        function Search() {
+            var value = mini.get("EPSProjectSearch").getValue();
+            var tree = mini.get("EPSProject");
+            if (value == "")
+                tree.filter(function (node) {
+                    return true;
+                });
+            else
+                tree.filter(function (node) {
+                    if (!IsEmpty(node.project_name)) {
+                        if (node.project_name.indexOf(value) != -1) return true;
+                    }
+                });
+        }
+
+
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function search() {
+            mini.get('View_FK_BudgetCost').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_FK_BudgetCost") {
+                if (e.params.swhere == "") {
+                    e.params.swhere = " EstablishCode like '%" + mini.get("Qestablishcode").getFormValue() + "%' and EstablishName like '%" + mini.get("Qestablishname").getFormValue() + "%'  and EpsCode like '%" + mini.get("QepsCode").getFormValue() + "%' and EpsName like '%" + mini.get("Qepsname").getFormValue() + "%' ";
+                }
+                else {
+                    //e.params.swhere += "and Date>='" + mini.get("QStartDate").getFormValue() + "' and Date<='" + mini.get("QEndDate").getFormValue() + "' ";
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

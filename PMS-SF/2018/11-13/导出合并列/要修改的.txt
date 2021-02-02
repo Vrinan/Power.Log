@@ -1,0 +1,139 @@
+webconfig：
+<add key="AlExport" value="Power.Al.AlExport,Power.Al" />
+
+html：
+<a class="mini-button blue" id="View_SF_EachWeekCheck.Export" onclick="PowerForm.AlExport('View_SF_EachWeekCheck', '设备检修周计划汇总', 'RunStation,CheckType')"><i class="fa fa-sign-out"></i>和并列导出</a>
+
+singleform：
+        AlExport: function (gridid, filename, MergeColumns, groupfield, fnonbeforeload, headercolor, headerfontcolor) {
+            FormFuns.AlExportDataToXls(gridid, filename, MergeColumns, groupfield, fnonbeforeload, headercolor, headerfontcolor);
+        },
+
+formfuns：
+        //AlEdit 2018年11月12日 14:19:28
+        //导出到excel, grid固定data的数据
+        AlExportDataToXls: function (gridid, filename, MergeColumns, groupfield, fnonbeforeload, headercolor, headerfontcolor, exporttype) {
+            var tab = mini.get(gridid);
+            if (tab == undefined) {
+                Power.ui.warning("通过" + gridid + "没有找到Grid");
+                return;
+            }
+            var p = { sender: tab };
+            if (fnonbeforeload) fnonbeforeload(p);
+
+            //获取表头信息（兼容多表头）
+            //var columns = grid.getColumns();
+            //columns已经被使用，此处更换成 columnsinfo;前面没有定义过grid，只有p.sender xuzhimin 2015-07-03 09:17:03
+            //将列头信息转换成导出excel需要的格式，统一到 formfuns 中，webform.js也用到
+            var excelColumns = funsself.GetExportXlsCol(p.sender.getColumns());
+            var columns = "";
+            var cols = tab.getBottomColumns();
+            for (var i = 0; i < cols.length; i++) {
+                if (cols[i].field != undefined) {
+                    if (cols[i].header != undefined) {
+                        var header = cols[i].header.replace("\\n", "").replace(/ /g, "").replace(/<br>/g, "");
+                        columns += cols[i].field + " as '" + $.trim(header) + "',";
+                    }
+                    else
+                        columns += cols[i].field + ",";
+                }
+            }
+            if (columns.length > 0)
+                columns = columns.substring(0, columns.length - 1);
+
+            var data = tab.data;//默认获取grid的data
+
+            if (funsself.IsMiniTree(tab)) {
+
+                //如果是treegrid，按顺序获取treegrid中的全部子节点
+                data = tab.getAllChildNodes();
+                var newd = [];
+                for (var i = 0; i < data.length; i++) {
+
+                    var d = data[i];
+                    var nd = {};
+                    for (var item in d) {
+                        if (item !== "children")
+                            nd[item] = d[item];
+                    }
+                    newd.push(nd);
+
+                }
+                data = newd;
+            }
+            //如果有分组
+            if (tab.getGroupingView() && tab.getGroupingView().length > 0) {
+                var gd = tab.getGroupingView();
+                var ds = [];
+                var groupColumns = {};
+                groupColumns.ID = "0";
+                groupColumns.Name = "分组";
+                groupColumns.ParentID = "-1";
+                groupColumns.field = "SystemGroupField";
+                excelColumns.unshift(groupColumns);//将分组列加到标题中
+                //循环分组的数据
+                for (var i = 0; i < gd.length; i++) {
+                    var g = gd[i];
+                    //得到分组的文字比如： 状态：新增
+                    var d = comboboxdata[gridid + "." + g.field];
+                    var fzl = "";
+                    if (mini.get(gridid + "-group-fields"))
+                        groupfield = mini.get(gridid + "-group-fields").getText();
+                    var text = groupfield;
+                    if (d) {
+                        fzl = text + ":" + funsself.GetGroupText(g, d);
+                    }
+                    else if (mini.formatDate(g.value, "yyyy-MM-dd") != "") {
+                        fzl = text + ":" + mini.formatDate(g.value, "yyyy-MM-dd");
+                    }
+                    else
+                        fzl = text + ":" + g.value;
+
+                    //将当前分组文字，插入第一行的分组列
+                    var fz = g.rows[0];
+                    fz["SystemGroupField"] = fzl;
+                    ds.push(fz);
+                    for (var j = 1; j < g.rows.length; j++) {
+
+                        var gr = g.rows[j];
+                        gr["SystemGroupField"] = "";//去掉原来的分组
+                        ds.push(gr);
+                    }
+                }
+                data = ds;
+            }
+            //检查每一列，看是否有汇总
+            var SummaryColumns = null;
+            for (var i = 0; i < cols.length; i++) {
+                var c = cols[i];
+                if (c.summaryType && c.summaryType != "") {
+                    var s = tab.getSummaryCellEl(c.field);
+                    var txt = $(s).text();
+                    if (SummaryColumns == null) SummaryColumns = {};
+                    SummaryColumns[c["name"]] = txt;
+                }
+            }
+            if (SummaryColumns != null)
+                data.push(SummaryColumns);
+            //由于返回的值有Dirtys:{}导致导出失败，这里去掉
+            for (var i = 0; i < data.length; i++) {
+                data[i]["Dirtys"] = "";
+            }
+            var json = { datatable: data, Columns: columns };
+            json.fileName = (filename && filename.length > 0) ? filename : "ExportPageData";
+            json.headcolor = (headercolor && headercolor.length > 0) ? headercolor : "";
+            json.headfontcolor = (headerfontcolor && headerfontcolor.length > 0) ? headerfontcolor : "";
+            //传入类型为string[]
+            var mergeColumns = (MergeColumns && MergeColumns.length > 0) ? MergeColumns : "";
+            json.mergeColumns = mergeColumns.split(',');
+            //json.GroupField = p.params.swhere;
+            //json.SummaryColumns = p.params.extparams;  
+            if (exporttype == "pdf")
+                json.PDF = "1";
+            json.excelColumns = JSON.stringify(excelColumns);
+
+            json.menuid = Power.cookie.get("menuids") == null ? "" : Power.cookie.get("menuids");
+            json.ispdf = false;
+            var jsonPar = JSON.stringify(json);
+            //调用Controller            postDataToServer("/AlExport/DataTableToExcel", { json: jsonPar }, "_blank");
+        },

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>转正考察表
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <div id="btnPrint" class="btn-group"></div>
+                        <a class="mini-button blue" id="PMS_BeStaff.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="PMS_BeStaff.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        <a class="mini-button blue" id="PMS_BeStaff.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PMS_BeStaff" class="form">
+                                <table class="table table-bordered" >
+                                    <tbody>
+                                        <tr>
+                                            <td>人员编号</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Code" name="Code" class="mini-textbox" required readonly>
+                                            </td>
+                                            <td>状态</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Status" class="mini-combobox" name="Status" >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>标题</td>
+                                            <td colspan="3">
+                                                <input name="Title" class="mini-textbox" id="PMS_BeStaff.Title" required="required">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>姓名</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Name" name="Name" class="mini-textbox" required readonly>
+                                            </td>
+                                            <td>性别</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Sex1" name="Sex1" class="mini-combobox"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>出生年月</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Birthday" name="Birthday" class="mini-datepicker" allowInput="false">
+                                            </td>
+                                            <td>学历</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Degree" name="Degree" class="mini-combobox"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>政治面貌</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.Political" name="Political" class="mini-combobox"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>参加工作时间</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.WorkStart" name="WorkStart" class="mini-monthpicker" allowInput="false"/>
+                                            </td>
+                                            <td>入职时间</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.JoinStart" name="JoinStart" class="mini-datepicker" allowInput="false"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>所属公司</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.RoleSourceName" name="RoleSourceName" textname="RoleSourceName" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required>
+                                                <input id="PMS_BeStaff.RoleType" name="RoleType" textname="RoleType" class="mini-hidden"/>
+                                                <input id="PMS_BeStaff.RoleSourceId" name="RoleSourceId" textname="RoleSourceId" class="mini-hidden"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>派驻部门</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.DeptName" name="DeptName" textname="DeptName" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required>
+                                                <input id="PMS_BeStaff.DeptId" name="DeptId" textname="DeptId" class="mini-hidden"/>
+                                            </td>
+                                            <td>岗位</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.PosiName" name="PosiName" textname="PosiName" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required>
+                                                <input id="PMS_BeStaff.PosiId" name="PosiId" textname="PosiId" class="mini-hidden"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>试用期</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.ProbationPeriod" name="ProbationPeriod" class="mini-textbox"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>试用期</br>工作总结</td>
+                                            <td colspan="3">
+                                                <input id="PMS_BeStaff.Remark" name="Remark" class="mini-textarea" height="120"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>录入人</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                            </td>
+                                            <td>录入时间</td>
+                                            <td>
+                                                <input id="PMS_BeStaff.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });    
+        //此处用于，打开向导时第一步带查询条件
+        PowerForm.EventWizardWhere = function (e) {
+            if(e.id=="PMS_BeStaff.DeptName")
+                if(mini.get("PMS_BeStaff.RoleSourceId").getValue())
+                    e.where = "1=1 and OrgId='"+ mini.get("PMS_BeStaff.RoleSourceId").getValue() + "'";
+        }
+    </script>
+</body>
+</html>

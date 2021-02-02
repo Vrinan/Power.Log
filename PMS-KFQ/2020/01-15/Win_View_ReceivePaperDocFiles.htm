@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_LZ_FilesContent.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <button class="btn blue" id="btnDownLoads">
+                                <i class="fa fa-download"></i>批量下载
+                            </button>
+                            <span>录入日期:</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>——</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>   
+                            <input id="IsShow" name="IsShow" truevalue="1" falsevalue="0" class="mini-checkbox" text="只显示留存档案"  onvaluechanged="mini.get('View_LZ_FilesContent').reload();"/>
+
+                            <a class="mini-button blue" id="CreateAttachment" onclick="CreateAttachment()"><i class="fa fa-save"></i>留存档案</a>
+                        </div>
+                        <div class="tools">
+                            <input id="View_LZ_FilesContent-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_LZ_FilesContent-search">
+                                <input id="View_LZ_FilesContent-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_LZ_FilesContent-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>查询</a>
+                            
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_LZ_FilesContent" class="mini-datagrid" multiselect="true" height="723" style="width: 100%; height: 100%;" visible="true" SummaryColumns="" width="974" pageSize="20" fitColumns="" idField="Id">
+                            <div property="columns">
+                                <div type="indexcolumn" width="40">序号</div>
+                                <div type="checkcolumn" width="30" name="check">
+                                </div>
+                                <div name="action" headeralign="center">操作</div><!--模板文件-->
+                                <div field="Name" header="文件名称" headeralign="center"  guideid="" allowsort="true">文件名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="Title" header="公文名称" headeralign="center"  guideid="" allowsort="true">公文名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="50" headeralign="center" field="FileType" header="文件类型" guideid="" allowsort="true">文件类型<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="80" field="ToDept" header="来文单位" headeralign="center"  guideid="" allowsort="true">来文单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="60" field="MainRegDate" headeralign="center" header="录入日期" GuideID="" allowSort="true" dateformat="yyyy-MM-dd">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                <div width="50" headeralign="center" field="Status" header="流程状态" guideid="" allowsort="true">流程状态<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="30" field="FileExt" header="文件类型" headeralign="center"  guideid="" allowsort="true">文件类型<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="50" field="RegHumName" header="上传人" headeralign="center"  guideid="" allowsort="true">上传人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div width="60" field="RegDate" headeralign="center" header="附件上传日期" GuideID="" allowSort="true" dateformat="yyyy-MM-dd">附件上传日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            if(
+                (sessiondata.HumanName =="系统管理员" || sessiondata.PosiName.indexOf("办公室")>-1 
+                || sessiondata.PosiName.indexOf("董事长")>-1
+                || sessiondata.PosiName.indexOf("总经理")>-1
+                || sessiondata.PosiName.indexOf("分管副总")>-1)){
+                formconfig.config.joindata.swhere = " 1=1 ";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        function CreateAttachment()
+        {
+            Power.ui.confirm("所有终止/办理完结的收发文将生成留存档案，用时较长，确认执行么？", function (ret) {
+            if (ret) {
+                Power.ui.loading("生成附件中……")
+                var par = {};
+                FormFuns.APIExec("PS_FileContact", "BO", "CreateAttachment", par, function (text) {
+                    Power.ui.loading.close();
+                    var a = text;
+                });
+            }});
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if(!IsEmpty(mini.get("QStartDate").getFormValue()) && !IsEmpty(mini.get("QEndDate").getFormValue()))
+            {
+                var enddate = mini.get("QEndDate").getFormValue();
+                enddate+=' 23:59:59.999';
+                if (e.params.swhere == "") {
+                    e.params.swhere = " MainRegDate >='" + mini.get("QStartDate").getFormValue() + "' and MainRegDate<='" + enddate + "'";
+                }
+                else { 
+                    e.params.swhere += " and MainRegDate>='" + mini.get("QStartDate").getFormValue() + "' and MainRegDate<='" + enddate + "'";
+                }
+                
+            }   
+            var isshow = mini.get("IsShow").getValue();
+            if(isshow == "1")
+            {
+                if (e.params.swhere == "") {
+                    e.params.swhere +=" Name like '%留存档案-%'";
+                }
+                else
+                {
+                    e.params.swhere +=" and Name like '%留存档案-%'";
+                }
+                
+            }
+            if(isshow == "0")
+            {
+                if (e.params.swhere == "") {
+                    e.params.swhere +=" Name not like '%留存档案-%'";
+                }
+                else
+                {
+                    e.params.swhere +=" and Name not like '%留存档案-%'";
+                }
+                
+            }
+        }
+
+        mini.get("View_LZ_FilesContent").on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                var uid = e.record.Id;
+                var s = "<a href='javascript:;' class='upload' uid='" + uid + "' style='margin-left:40px;margin-right: 0.5em'></a>"
+                + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=downloadFile()>" + "下载" + "</a>"
+                + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=Show('pdfAll')>" + "查看" + "</a>"
+                // + "<a href='javascript:;' class='btn green btn-xs' style='margin-right: 0.5em' onclick=deleteFile()>" + "删除" + "</a>"
+                e.cellHtml = s;
+            }
+            if (e.column.field == "Title") {
+                if (!e.value) return false;
+                var record = e.record;
+                var sender = e.sender;
+            e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('6d673167-51fb-4284-969c-08a7625a6c37','" + e.record.FolderId + "')\">" + e.record.Title + "</a>";
+            }
+        })
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/EditForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 950,
+                height: 630
+            })
+        }
+
+        $("#btnDownLoads").click(function () {
+            var sel = mini.get("View_LZ_FilesContent").getSelecteds();
+            // var yes = app_global['docfile_yes']; //是
+            // var no = app_global['docfile_no']; //否
+            if (!sel || sel.length == 0) {
+                Power.ui.warning("请选择下载文件"); //
+                return
+            }
+            var ids = "";
+            for (var i = 0; i < sel.length; i++) {
+                ids += sel[i]["Id"] + ",";
+            }
+            ids = ids.substring(0, ids.length - 1);
+            var yes = "是";
+            var no = "否";
+            var btnOpt = {};
+            btnOpt[yes] = {
+                theme: 'primary',
+                handler: function () {
+                    postDataToServer("/PowerPlat/Control/File.ashx", { action: "zip", _type: "ftp", fileids: ids });
+                }
+            };
+            btnOpt[no] = function () { };
+            parent.Power.ui.confirm("压缩，需等待片刻，是否继续?", { button: btnOpt });
+        });
+
+        function downloadFile(){
+            var sel = mini.get("View_LZ_FilesContent").getSelected();
+            if (!sel || sel.length == 0) return;
+            windowopen("/File/Download/ftp/" + sel["Id"],sel);
+        }
+        var Utils = {
+            // 判断平台是什么
+            _checkPlat: function () {
+                var u = navigator.userAgent;
+                var tag;
+                if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                    tag = "Android";
+                } else if (u.indexOf('iPhone') > -1) {
+                    tag = "iPhone";
+                } else {
+                    tag = 'PC'
+                }
+                return tag
+            },
+            // 打开附件
+            OpenView: function (id, title, fileext) {
+                if (title.toLowerCase().indexOf(".avi") > -1 || title.toLowerCase().indexOf(".mp4") > -1 || title.toLowerCase().indexOf(".mov") > -1) {
+                    CallAppFunction("appPlayVideos", '{"fileid":"' + id + '","filename":"' + title + '"}', "", "");
+                } else {
+                    var url = "/File/Download/ftp/" + id;
+                    CallAppFunction("appOpenNewWebView", '{"action":"downloadfile","filename":"' + title + '","fileid":"' + id + '","fileext":"' + fileext + '","url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":"' + title + '"}', url);
+                }
+            }
+        }
+        function windowopen(url,row) {
+            var plat = Utils._checkPlat();
+            if (plat == "Android" || plat == "iPhone") {
+            if(row)
+                Utils.OpenView(row.Id, row.Name, row.FileExt)
+            else
+                parent.FormFuns.MiniOpenURL(url); 
+            } else if (plat == 'PC') {
+            window.open(url);
+            }
+        }
+
+        var isphone = parent && parent.FormFuns && parent.FormFuns.DeviceIsPhone();
+        function Show(action) {
+            var row = mini.get("View_LZ_FilesContent").getSelected();
+            if (!row) return;
+            if (!isphone && (row["FileExt"].toLowerCase() == ".png" || row["FileExt"].toLowerCase() == ".jpg" || row["FileExt"].toLowerCase() == ".bmp" || row["FileExt"].toLowerCase() == ".jpeg")) {
+                ImgTransform.i = 1;
+                var bdiv = "<div id=\"fileimgtopdiv\" style=\"top:0;left:0;background:rgba(0,0,0,0.8); width: " + parent.parent.parent.document.body.clientWidth + "px;text-align:center; line-height:50px;height:50px;z-index:9999;overflow: visible;position: fixed\">" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Transform()\"><i class=\"fa fa-repeat\"></i>旋转</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Restore()\"><i class=\"fa fa-undo\"></i>还原</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Original('" + row["Id"] + "')\"><i class=\"fa fa-arrows-alt\"></i>原图</a>" +
+                    "<a class=\"mini-button \" style=\"margin-left:10px;padding:5px\" onclick=\"ImgTransform.Close()\"><i class=\"fa fa-power-off\"></i>关闭</a></div>";
+                $(parent.parent.parent.document.body).append(bdiv);
+                 var cdiv = "<div id=\"fileimgdiv\" style=\"text-align:center; line-height:" + (parent.parent.parent.document.body.clientHeight - 60) + "px;padding:2px; overflow:auto;top:50px;left:0;background:rgba(0,0,0,0.7); width: " + parent.parent.parent.document.body.clientWidth + "px; height:" + (parent.parent.parent.document.body.clientHeight - 60) + "px;z-index: 9999; position: fixed\">" +
+                     "<a href=\"#\" onclick=\"ImgTransform.Transform()\"><img id=\"bigimg\" style=\"vertical-align:middle;max-width:100%;max-height:100%;border:5px solid #fff;position: \" src=\"/PowerPlat/Control/File.ashx?action=browser&_type=ftp&_fileid=" + row["Id"] + "\" /></a></div>";
+                $(parent.parent.parent.document.body).append(cdiv);
+            }
+            else if (action == "pdf" || action == "pdfAll" || action == "pdfAllUpdate" || action == "pdfUpdate") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    Power.ui.warning(".dwg格式的文件无法转为pdf查看");
+                }
+                else {
+                    var url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + row["Id"];
+                    if (row["FileExt"].toLowerCase() != ".pdf") {
+                        url = "/PowerPlat/FormXml/FileViewer.aspx?fileid=" + row["Id"];
+                    }
+                    // if (UsePdfSdk == "1" && row["FileExt"].toLowerCase() == ".pdf") {
+                    //     if (action == "pdf") {
+                    //         url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=0";
+                    //     }
+                    //     if (action == "pdfUpdate") {
+                    //         url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=1";
+                    //     }
+                    //     else if (action == "pdfAll") {
+                    //         url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=2";
+                    //     }
+                    //     else if (action == "pdfAllUpdate") {
+                    //         url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=3";
+                    //     }
+                    // }
+                    if (action == "pdf") {
+                        url = "/PdfSdk/PdfEdit.aspx?fileid=" + row["Id"] + "&IsAll=0";
+                    }
+                    if (isphone)
+                        url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + row["Id"];
+                    windowopen(url);
+                }
+            }
+            else if (action == "office") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    Power.ui.warning(".dwg格式的文件无法使用office查看");
+                }
+                else {
+                    var url = "/PowerPlat/FormXml/DocFile/DocumentEdit.aspx?id=" + row["Id"] + "&readonly=1";
+                    windowopen(url);
+                }
+            }
+            else if (action == "dwg") {
+                if (row["FileExt"].toLowerCase() == ".dwg") {
+                    var url = "/WebCAD/view.html?id=" + row["Id"];
+                    windowopen(url);
+                }
+                else {
+                    Power.ui.warning(".dwg格式的文件才可以查看");
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

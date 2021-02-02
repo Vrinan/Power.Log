@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/TreeManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+
+  <form id="frmMain" runat="server">
+
+    <table style="width: 100%"> 
+        <tr>
+            <td> 
+                <div id="treeWorkFlowList" class="mini-treegrid" onrowdblclick="onDBClickWorkFlow"
+                 showTreeIcon="true" treeColumn="Name" idField="Id"  iconField="icon" resultAsTree="true"  
+                 expandOnLoad="true"   >
+                    <div property="columns"> 
+                        <div type="indexcolumn"></div>
+                        <div name="Name" field="text" width="120" headeralign="center">$Helper.GetResource("g_name")</div><!--名称-->
+                        <div field="KeyWord" width="200" headeralign="center">$Helper.GetResource("g_keyword")</div><!--关键词-->
+                        <div field="Description" width="200" headeralign="center">$Helper.GetResource("g_class_name")</div><!--类全名-->
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        mini.parse();
+         
+        var treeWorkFlowList = mini.get("treeWorkFlowList");
+ 
+        //双击实体对象
+        var onDBClickWorkFlow = function (e) {
+            var row = e.record;
+            if (row.Alias != "WorkFlow") return;
+            CloseWindow("ok");
+        }
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        //对外方法
+        function GetData() { 
+            var row = treeWorkFlowList.getSelected(); 
+            return row;
+        }
+        //树加载完毕后触发
+        var EndLoad = function (e) {
+
+        } 
+        var treeManage = new TreeManage();
+        treeManage.setKeyWord   ("WorkFlowTreeList");
+        treeManage.setControl(treeWorkFlowList);
+         
+        treeManage.LoadTreeList(null,EndLoad);
+       
+    </script>
+    </form>
+</body>
+</html>

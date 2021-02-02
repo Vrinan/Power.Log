@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="SF_FK_OtherCostSchedule.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="SF_FK_OtherCostSchedule.Del" onclick="Dels"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="SF_FK_OtherCostSchedule.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <!--<a class="mini-button blue" id="SF_FK_OtherCostSchedule.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>-->
+                            <!--<a class="mini-button blue" id="SF_FK_OtherCostSchedule.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                            <a class="mini-button blue" id="SF_FK_OtherCostSchedule.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="SF_FK_OtherCostSchedule-Export" title="其他成本计划表" class="btn-group"></div>
+                        </div>
+                        <div class="tools">
+                            <input id="SF_FK_OtherCostSchedule-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="SF_FK_OtherCostSchedule-search">
+                                <input id="SF_FK_OtherCostSchedule-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_FK_OtherCostSchedule-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_FK_OtherCostSchedule" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+
+                                <div type="comboboxcolumn" field="Status" name="SF_FK_OtherCostSchedule.Status" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="状态" align="left">状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="标题" align="left">标题<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="EpsName" name="EpsName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div field="Total" name="Total" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合计" align="left" numberformat="n2">合计<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+                                <div field="Version" headeralign="center" name="Version" guideid="" datatype="" allowsort="true" currencyunit="" header="版本号" align="center">版本号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                <div type="checkboxcolumn" field="IsNew" truevalue="1" falsevalue="0" headeralign="center">是否最新版</div>
+                                <!--<div type="comboboxcolumn" field="TenderType" name="SF_FK_OtherCostSchedule.TenderType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="招标类型" align="left">招标类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                <div type="comboboxcolumn" field="TenderWay" name="SF_FK_OtherCostSchedule.TenderWay" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="招标方式" align="left">招标方式<input property="editor" class="mini-combobox" style="width: 100%;" /></div>-->
+
+                                <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function Dels() {
+            var grid = mini.get("SF_FK_OtherCostSchedule");
+            var a = grid.getSelected().IsNew;
+            var b = grid.getSelected().Version;
+            if (b == "1.0") {
+                PowerForm.OnBtnDel(this, SingleParams);
+            }
+            if (a == "1" && b != "1.0") {
+                Power.ui.warning("最新版记录禁止删除");
+            }
+        }
+
+    </script>
+</body>
+</html>

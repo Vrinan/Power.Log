@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script> 
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/PowerPlat/WorkFlows/Design/js/Configure.js?v=$AppVersion" type="text/javascript"></script>     
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+
+     <style>
+    .function-item 
+    {
+        margin-left:5px;
+        margin-right:5px;
+    }
+    .function-item input
+    {
+         
+    }
+    </style>
+
+</head>
+
+<body>
+    <form id="frmMain"   style="height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-reorder"></i>$Helper.GetResource("workflow_config")						
+                    </div><!--工作流全局参数-->
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave">$Helper.GetResource("g_save")</a><!--保存-->
+                        <a class="mini-button blue" iconcls="fa-power-off" onclick="CloseWindow('close')">$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%;">
+                        <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title="流程定义">
+                                   <div class="mini-fit">
+                                    <div class="fieldset-contain">
+                                        <div id="gdWorkFlowList" class="mini-datagrid" style="width:100%;height:350px;"  idField="Code" showPager="false"
+                                            allowResize="true"   showTreeIcon="true"  allowSelect="false" allowCellSelect="false" enableHotTrack="false"  ondrawcell="configureUtil.ondrawcell" allowCellWrap="true" >
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="Text" field="Text" width="120" >操作名称</div>
+                                                <div field="ColumnList" width="100%">行为定义</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   </div> 
+                            </div> 
+                            <div title="节点定义">
+                                   <div class="mini-fit">
+                                    <div class="fieldset-contain">
+                                        <div id="gdWorkNodeList" class="mini-datagrid" style="width:100%;height:350px;"  idField="Code" showPager="false"
+                                            allowResize="true"   showTreeIcon="true"  allowSelect="false" allowCellSelect="false" enableHotTrack="false"  ondrawcell="configureUtil.ondrawcell" allowCellWrap="true" >
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="Text" field="Text" width="120" >操作名称</div>
+                                                <div field="ColumnList" width="100%">行为定义</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   </div> 
+                            </div> 
+                             <div title="通知定义">
+                                    <fieldset> 
+                                    <div class="fieldset-contain">
+                                       <div id="gdNotifyList" class="mini-datagrid" style="width:100%;height:350px;"  idField="Code" showPager="false"
+                                            allowResize="true"   showTreeIcon="true"  allowSelect="false" allowCellSelect="false" enableHotTrack="false"  ondrawcell="configureUtil.ondrawcell" allowCellWrap="true" >
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div name="Text" field="Text" width="120" >操作名称</div>
+                                                <div field="ColumnList" width="100%">行为定义</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   </fieldset> 
+                            </div> 
+                             
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script type="text/javascript">
+        mini.parse();
+        var gdWorkFlowList = mini.get("gdWorkFlowList");
+        var gdWorkNodeList = mini.get("gdWorkNodeList");
+        var gdNotifyList = mini.get("gdNotifyList");
+
+        var configureUtil = new WorkFlowConfigureUtil();
+        
+        var sModuleID = getParameter("ModuleID");
+        if (!sModuleID) {
+            alert("无法继续，未得到ModuleID");
+        }
+        //执行保存操作
+        var onSave = function (e) {
+           
+            var result = configureUtil.getItemList();
+            var data = {};
+            data.SubOperate = "SaveModuleConfig";   //子指令集,保存选择的人员到指定节点中
+            data.JsonInfo = result;
+            data.ModuleID = sModuleID;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+             
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    Power.ui.info("保存成功");
+ 
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+        //标准方法接口定义
+        function SetData() {
+
+            
+        }
+        //加载完毕后触发的方法
+        var EndRead = function (data) {
+        }
+
+        function CloseWindow(action) {
+           
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        $(function () { 
+             
+            var data = {};
+            data.SubOperate = "ReadModuleConfig";   //子指令集,保存选择的人员到指定节点中 
+            data.ModuleID = sModuleID;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+            configureUtil.LoadConfigure("Module",msg,null,null); 
+        });
+       
+       
+    </script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js?v=$AppVersion" type="text/javascript"></script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>过滤器定义
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="User.Clear" onclick="ClearCustom()"><i class="fa fa-power-off"></i>清除条件</a><!--保存-->
+                        <a class="mini-button blue" id="User.Search" onclick="SearchCustom()"><i class="fa fa-search"></i>查询</a><!--保存-->
+                        <a class="mini-button blue" id="User.Save" onclick="SaveCustom()"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                        <a class="mini-button blue" id="User.CloseForm" onclick="CloseCustom()"><i class="fa fa-power-off"></i>$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; background-color: #fafafa;">
+                    <div class="mini-splitter" style="width:100%;height:100%;" allowresize="false" handlersize="0">
+                        <div size="40%" style="padding:0px;">
+                            <div class="btn-group">
+                                <a class="mini-button" id="User.Add" onclick="AddCustom()"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a> 
+                                <a class="mini-button" id="User.Delete" onclick="DelCustom()"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a> 
+                            </div>
+                            <div id="gridcustom" idfield="project_guid" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 allowcelledit="true" allowcellselect="true" showpager="false">
+                                <div property="columns">
+                                    <div type="indexcolumn" width="20"></div>
+                                    <div field="Name">
+                                        $Helper.GetResource("g_name")
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="btn-group">
+                                <a class="mini-button" id="btnAddField" onclick="AddField()"><i class="fa fa-plus"></i>新增条件</a><!--新增-->
+                                <a class="mini-button" id="btnDelField" onclick="DelField()"><i class="fa fa-trash-o"></i>删除条件</a><!--删除-->
+                            </div>
+                            <div id="gridcolumn" idfield="project_guid" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 allowcelledit="true" allowcellselect="true" showpager="false">
+                                <div property="columns">
+                                    <div type="indexcolumn" width="20"></div>
+                                    <div field="field" type="comboboxcolumn" width="60" name="colfield">
+                                        列<input property="editor" class="mini-combobox" style="width: 100%;" />
+                                    </div>
+                                    <div field="operate" type="comboboxcolumn" width="40" name="coloperate" textfield="text" valuefield="id" 
+                                         data='[{"id":"=","text":"等于"},{"id":">","text":"大于"},{"id":">=","text":"大于等于"},{"id":"<","text":"小于"},{"id":"<=","text":"小于等于"},{"id":"!=","text":"不等于"},{"id":"like","text":"包含"},{"id":"not like","text":"不包含"}]'>
+                                        操作<input property="editor" class="mini-combobox" style="width: 100%;" data='[{"id":"=","text":"等于"},{"id":">","text":"大于"},{"id":">=","text":"大于等于"},{"id":"<","text":"小于"},{"id":"<=","text":"小于等于"},{"id":"!=","text":"不等于"},{"id":"like","text":"包含"},{"id":"not like","text":"不包含"}]'/>
+                                    </div>
+                                    <div field="value">值</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none;">
+        <input class="mini-textbox" id="mini-textboxEditor" />
+        <input class="mini-spinner" id="mini-spinnerEditor" allowlimitvalue="false" />
+        <input class="mini-datepicker" id="mini-datepickerEditor" dateformat="yyyy-MM-dd" />
+        <input class="mini-timespinner" id="mini-timespinnerEditor" />
+        <input class="mini-combobox" id="mini-comboboxEditor" />
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var gridcustom = mini.get("gridcustom");
+        var gridcolumn = mini.get("gridcolumn");
+        var $formpack = null;
+        function LoadData(pack) {
+            if (!pack) return;
+            $formpack = pack;
+            //设置列的下拉列表
+            var ds = [];
+            for (var i in $formpack.fields) {
+                if (typeof (i) == "function") continue;
+                ds.push({ id: i, text: $formpack.fields[i].header });
+            }
+            gridcolumn.getColumn("colfield").editor.data = ds;
+            //默认新增字段按钮不可用
+            setBtnFieldEnabled(false);
+
+            var p = { KeyWord: "HumanCustom", sort: "Sequ" };
+            p.swhere = "CustomType='WidgetFilter' and HumanId='" + $formpack.humanid
+                    + "' and ObjectId='" + $formpack.formid + "' and ObjectCode='" + $formpack.gridid + "'";
+            FormFuns.GridPageLoad(p, function (o) {
+                if (!o.success) {
+                    Power.ui.error(o.message, { timeout: 0, position: "center center", closeable: true });
+                    return;
+                }
+                var data = mini.decode(o.data.value);
+                gridcustom.setData(data);
+                if (data.length > 0)
+                    gridcustom.select(0);
+            })
+        }
+
+        function setBtnFieldEnabled(enable) {
+            //mini.get("btnAddField").setEnabled(enable);
+            //mini.get("btnDelField").setEnabled(enable);
+        }
+
+        //选中默认时,取消其他默认,确保只能有一个默认选项
+        gridcustom.on("cellendedit", function (e) {
+            if (e.field == "IsDefault" && e.value == "1") {
+                for (var i = 0 ; i < gridcustom.data.length; i++) {
+                    var row = gridcustom.data[i];
+                    if (row._uid == e.record._uid)
+                        continue;
+                    if (row.IsDefault == "1")
+                        gridcustom.updateRow(row, { IsDefault: "0" });
+                }
+            }
+        })
+
+        gridcustom.on("select", function (e) {
+            extjsontocol();
+            setBtnFieldEnabled(true);
+        })
+
+        gridcolumn.on("cellbeginedit", function (e) {
+            if (e.field == "operate") {
+                var fdname = e.record.field;
+                if (!fdname) {
+                    e.editor.setData("");
+                    return;
+                }
+                var fd = $formpack.fields[fdname];
+                var ops = [{ id: "=", text: "等于" }, { id: ">", text: "大于" }, { id: ">=", text: "大于等于" }
+                     , { id: "<", text: "小于" }, { id: "<=", text: "小于等于" }, { id: "!=", text: "不等于" }];
+                if (fd.editorcls == "mini-textbox") {
+                    ops.push({ id: "like", text: "包含" });
+                    ops.push({ id: "not like", text: "不包含" });
+                }
+                e.editor.setData(ops);
+            }
+            if (e.field == "value") {
+                var editor = null;
+                var fdname = e.record.field;
+                if (fdname) {
+                    var fd = $formpack.fields[fdname];
+                    if (fd) {
+                        var id = fd.editorcls + "Editor";
+                        var editor = mini.get(id);
+                        if (editor && fd.editordata)
+                            editor.setData(fd.editordata);
+                    }
+                }
+                e.editor = editor;
+                e.column.editor = editor;
+            }
+        })
+
+        gridcolumn.on("cellendedit", function (e) {
+            coltoextjson();
+        })
+
+        gridcolumn.on("drawcell", function (e) {
+            var rec = e.record;
+            // if (e.field == "operate") {
+            //     e.cellHtml = e.value;
+            // }
+            if (e.field == "value" && rec.value) {
+                var fd = $formpack.fields[rec.field];
+                if (fd.isdate) {
+                    e.cellHtml = mini.formatDate(rec.value, "yyyy-MM-dd");
+                }
+                if (fd.iscombox && fd.editordata) {
+                    for (var i = 0; i < fd.editordata.length; i++) {
+                        var item = fd.editordata[i];
+                        if (item.id == rec.value) {
+                            e.cellHtml = item.text;
+                            break;
+                        }
+                    }
+                }
+            }
+        })
+
+        function coltoextjson() {
+            var row = gridcustom.getSelected();
+            var p = [];
+            for (var i = 0; i < gridcolumn.data.length; i++) {
+                var item = gridcolumn.data[i];
+                if (!item.field || item.field.length == 0) continue;
+                var vv = item.value;
+                if (item.value && $formpack.fields[item.field].isdate)
+                    vv = mini.formatDate(item.value, "yyyy-MM-dd");
+                p.push({ field: item.field, operate: item.operate, value: vv });
+            }
+            gridcustom.updateRow(row, { ExtJson: mini.encode(p) });
+            gridcolumn.accept(true);
+        }
+
+        function extjsontocol() {
+            var row = gridcustom.getSelected();
+            if (!row.ExtJson) {
+                gridcolumn.setData("");
+                return;
+            }
+            var data = mini.decode(row.ExtJson);
+            //字符串日期需要转换成日期对象
+            for (var i = 0 ; i < data.length; i++) {
+                var fd = $formpack.fields[data[i].field];
+                if (!fd || !fd.isdate || !data[i].value) continue;
+                data[i].value = StringToDate(data[i].value);
+            }
+            gridcolumn.setData(data);
+        }
+
+        function AddCustom() {
+            var row = { HumanId: $formpack.humanid, CustomType: "WidgetFilter", ObjectId: $formpack.formid, ObjectCode: $formpack.gridid };
+            row.Id = CreateGUID();
+
+            gridcustom.addRow(row, gridcustom.data.length);
+            gridcustom.scrollIntoView(row);
+            gridcustom.select(row, false);
+            gridcolumn.setData(mini.clone($formpack.column));
+            coltoextjson();
+            setBtnFieldEnabled(true);
+        }
+        function DelCustom() {
+            var row = gridcustom.getSelected();
+            if (!row) return;
+            gridcustom.removeRow(row, false);
+            gridcolumn.setData("");
+            if (gridcustom.getSelected())
+                setBtnFieldEnabled(true);
+            else
+                setBtnFieldEnabled(false);
+        }
+        function SearchCustom() {
+            SaveCustom(true);
+        }
+        function SaveCustom(isclose) {
+            //保存前先判断，如果明细表有修改，但主表没有选中行，则提示创建主表
+            if (gridcolumn.data && gridcolumn.data.length > 0) {
+                if (!gridcustom.getSelected()) {
+                    Power.ui.prompt("请填写查询分组名称", function (value) {
+                        var row = { HumanId: $formpack.humanid, CustomType: "WidgetFilter", ObjectId: $formpack.formid, ObjectCode: $formpack.gridid };
+                        row.Id = CreateGUID();
+                        row.Name = value;
+                        gridcustom.addRow(row, gridcustom.data.length);
+                        gridcustom.scrollIntoView(row);
+                        gridcustom.select(row, false);
+                        //gridcolumn.setData(mini.clone($formpack.column));
+                        coltoextjson();
+                        this.close();
+                        Save(isclose);
+                    });
+
+                }
+                else
+                    Save(isclose);
+            }
+            else
+                Save(isclose);
+        }
+        function ClearCustom() {
+            CloseCustom("clear",null);
+        }
+        function Save(isclose) {
+            debugger;
+            var rows = gridcustom.getChanges(null, false);
+            if (!rows || rows.length == 0) {
+                if (gridcustom.getSelected()&&isclose) {
+
+                    CloseCustom(gridcustom.getSelected().Id,gridcolumn);
+                }
+                return;
+            }
+            var p = {};
+            p.HumanCustom = { data: rows };
+            $.ajax({
+                url: "/Form/SaveWebForm",
+                type: "POST",
+                data: { formId: "", jsonData: mini.encode(p), Params: "" },
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success) {
+                        Power.ui.error(o.message, { timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+                    if (isclose) {
+                        if (gridcustom.getSelected()) {
+
+                            CloseCustom(gridcustom.getSelected().Id,gridcolumn);
+                        }
+                    }
+                    else {
+                        Power.form.success("保存成功");
+                        gridcustom.accept(true);
+                    }
+                }
+            });
+        }
+        function CloseCustom(action,gridcolumn) {
+            var data = [];
+            data.action = action;
+            data.gridcolumn = gridcolumn;
+            if (window.CloseOwnerWindow) //mini.open 的关闭方法
+                window.CloseOwnerWindow(data);
+            else {
+                if (window.parent && window.parent.CloseOwnerWindow) //嵌套流程框的时候
+                    window.parent.CloseOwnerWindow(data);
+                else
+                    window.close();
+            }
+        }
+
+        function AddField() {
+            gridcolumn.addRow({}, gridcolumn.data.length);
+        }
+
+        function DelField() {
+            var row = gridcolumn.getSelected();
+            if (!row) return;
+            gridcolumn.removeRow(row, false);
+            coltoextjson();
+        }
+    </script>
+</body>
+</html>

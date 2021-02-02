@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>运行状态</title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript">
+        var formconfig = { "config": { "joindata": { "miniid": "MainMenu", "KeyWord": "MainMenu", "sequfield": "Sequ", "sort": "Sequ", "children": [] } } };
+        var logoperator = [{ id: 'System', text: app_global['g_system'] }, { id: 'Maintain', text: app_global['admininfo_define'] },
+        { id: 'Login', text: app_global['g_login'] }, { id: 'Logout', text: app_global['g_logout'] },
+        { id: 'Insert', text: app_global['g_add'] }, { id: 'Delete', text: app_global['g_delete'] },
+        { id: 'Update', text: app_global['g_edit'] }, { id: 'Export', text: app_global['g_export'] },
+        { id: 'Import', text: app_global['g_import'] }, { id: 'Print', text: app_global['g_print'] },
+        { id: 'Valid', text: app_global['g_effect'] }, { id: 'Email', text: app_global['g_send_email'] },
+        { id: 'MobileMessage', text: app_global['g_send_mobile_message'] }, { id: 'TextMessage', text: app_global['g_send_text_message'] },
+        { id: 'OpenMenu', text: app_global['g_openmenu'] }, { id: 'EditForm', text: app_global['g_editform'] },
+        { id: 'ViewForm', text: app_global['g_viewform'] }, { id: 'CloseForm', text: app_global['g_closeform'] }]
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%;">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cols"></i>运行状态
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;padding:0;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='$Helper.GetResource("admininfo_cacheinfo")' style="height:100%;width:100%">
+                            <!--"缓存状态"-->
+                            <div id="CacheInfo" class="form">
+                                <h3 class="form-section" style="margin-bottom:0px;border-bottom-width:0px;">Redis</h3>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_redis_version")：</td><!--服务器版本-->
+                                        <td class="form-label">
+                                            <input name="redis_version" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_os")：</td><!--服务器的宿主操作系统-->
+                                        <td class="form-label">
+                                            <input name="redis_os" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_arch_bits")：</td><!--架构（32 或 64 位）-->
+                                        <td class="form-label">
+                                            <input name="redis_arch_bits" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_tcp_port")：</td><!--TCP/IP 监听端口-->
+                                        <td class="form-label">
+                                            <input name="redis_tcp_port" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_uptime_in_time")：</td><!--连续运行时间-->
+                                        <td class="form-label">
+                                            <input name="redis_uptime_in_time" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_connected_clients")：</td><!--已连接客户端的数量-->
+                                        <td class="form-label">
+                                            <input name="redis_connected_clients" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_blocked_clients")：</td><!--正在等待阻塞命令的客户端数量-->
+                                        <td class="form-label">
+                                            <input name="redis_blocked_clients" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_used_memory")：</td><!--分配的内存总量-->
+                                        <td class="form-label">
+                                            <input name="redis_used_memory" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <h3 class="form-section" style="margin-bottom:0px;border-bottom-width:0px;">IIS</h3>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_iis_path")：</td><!--网站路径-->
+                                        <td class="form-label" colspan="3">
+                                            <input name="iis_path" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_iisversion")：</td><!--IIS版本-->
+                                        <td class="form-label">
+                                            <input name="iis_version" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_iis_port")：</td><!--网站端口-->
+                                        <td class="form-label">
+                                            <input name="iis_port" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <!--                                <tr>
+                                        <td class="form-label">连续运行时间</td>
+                                        <td class="form-label">
+                                            <input name="uptime_in_time" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">已连接客户端的数量</td>
+                                        <td class="form-label">
+                                            <input name="connected_clients" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">正在等待阻塞命令的客户端数量：</td>
+                                        <td class="form-label">
+                                            <input name="blocked_clients" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">分配的内存总量</td>
+                                        <td class="form-label">
+                                            <input name="used_memory" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>-->
+                                </table>
+
+                                <h3 class="form-section" style="margin-bottom:0px;border-bottom-width:0px;">$Helper.GetResource("admininfo_cache")</span><!--缓存--></h3>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            <a href="javascript:;" onclick="OnClearIIS()" class="btn red"><i class="fa fa-trash-o"></i>$Helper.GetResource("admininfo_clear_iis_cache")</a><!--清除IIS缓存-->
+                                            <!--<a href="#" onclick="OnClearIIS()">清除IIS缓存</a>-->
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" onclick="OnClearRight()" class="btn red"><i class="fa fa-trash-o"></i>$Helper.GetResource("admininfo_clear_rigth_cache")</a><!--清除权限缓存-->
+                                            <!--<a href="#" onclick="OnClearRight()">清除权限缓存</a>-->
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" onclick="OnClearResource()" class="btn red"><i class="fa fa-trash-o"></i>$Helper.GetResource("admininfo_clear_resource_cache")</a><!--清除多语言缓存-->
+                                            <!--<a href="#" onclick="">清除多语言缓存</a>-->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="在线用户">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" id="btnRefreshOnline" onclick="mini.get('OnLineUsers').reload()"><i class="fa fa-refresh"></i>刷新</a><!--重新加载业务对象配置-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="OnLineUsers" class="mini-datagrid" url="/WebCenter/GetOnLineUsersInfo"
+                                     idfield="Id" allowresize="true" showpager="false" style="height: 100%;" autoload="true" editnextrowcell="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="Code" width="100" data allowsort="true">账号</div><!--关键词-->
+                                        <div field="Name" data allowsort="true">名称</div><!--允许的操作方式-->
+                                        <div field="LoginTime" width="180" allowsort="true" dateFormat="yyyy-MM-dd HH:mm:ss">登录时间</div><!--无权限控制-->
+                                        <div field="IP" width="90" allowsort="true">IP</div><!--允许绑定工作流-->
+                                        <div field="SystemInfo" width="100" allowsort="true">系统</div><!--记录操作SQL-->
+                                        <div field="DeviceInfo" width="120" allowsort="true">设备</div><!--权限树信息-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='$Helper.GetResource("admininfo_business")'>
+                            <!--"业务对象"-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" id="ResetBusinessConfig" onclick="ResetBusinessConfig()"><i class="fa fa-refresh"></i>$Helper.GetResource("admininfo_reset_business_config")</a><!--重新加载业务对象配置-->
+                                <a class="mini-button blue" onclick="OnUpdateRightBOName()"><i class="fa fa-history"></i>更新权限业务对象名称</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="BusinessConfig" class="mini-datagrid" url="/WebCenter/GetBusinessConfig"
+                                     idfield="Id" allowresize="true" showpager="false" style="height: 100%;" autoload="true"
+                                     editnextrowcell="true" ondrawcell="OnDrawCell">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="KeyWord" width="120" data allowsort="true">$Helper.GetResource("g_keyword")</div><!--关键词-->
+                                        <div field="BusinessOperateFlag" width="200" data allowsort="true">$Helper.GetResource("admininfo_business_operate_flag")</div><!--允许的操作方式-->
+                                        <div field="DefaultNothingRight" width="90" allowsort="true">$Helper.GetResource("admininfo_default_nothing_rigth")</div><!--无权限控制-->
+                                        <div field="IsAllowWorkFlow" width="90" allowsort="true">$Helper.GetResource("admininfo_allown_workflow")</div><!--允许绑定工作流-->
+                                        <div field="IsMonitorSaveChanged" width="100" allowsort="true">$Helper.GetResource("admininfo_monitor_save_changed")</div><!--记录操作SQL-->
+                                        <div field="RightTreeList" width="120" allowsort="true">$Helper.GetResource("admininfo_rightree")</div><!--权限树信息-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='功能菜单'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" id="MainMenu.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                <a class="mini-button blue" id="MainMenu.Delete" onclick="OnDelMainMenu()"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                                <a class="mini-button blue" id="MainMenu.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-arrow-up"></i>$Helper.GetResource("g_save")</a><!--保存-->
+
+                                <a class="mini-button blue" id="MainMenu.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i>$Helper.GetResource("g_up")</a><!--上移-->
+                                <a class="mini-button blue" id="MainMenu.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i>$Helper.GetResource("g_down")</a><!--下移-->
+                                <a class="mini-button blue" id="MainMenu.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i>$Helper.GetResource("g_left")</a><!--左移-->
+                                <a class="mini-button blue" id="MainMenu.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i>$Helper.GetResource("g_right")</a><!--右移-->
+                                <a class="mini-button blue" id="MainMenu.Longcode" onclick="OnInitMenuLongcode()"><i class="fa fa-history"></i>重新生成长代码</a>
+                                <a class="mini-button blue" id="MainMenu.UpdMenu" onclick="OnUpdateRightMenuName()"><i class="fa fa-history"></i>更新权限菜单名称</a>
+                                <a class="mini-button blue" id="MainMenu.Export" onclick="PowerForm.OnExportDataToXls('MainMenu', '功能菜单')"><i class="fa fa-sign-out"></i>导出</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="MainMenu" class="mini-treegrid" style="width: 100%; height: 100%"
+                                     showtreeicon="true" treecolumn="Name" idfield="Id" parentfield="ParentId" resultastree="false"
+                                     allowresize="true" expandonload="true" showpager="false" allowcelledit="true" allowcellselect="true"
+                                     showcheckbox="true" checkrecursive="false" virtualscroll="true">
+                                    <div property="columns">
+                                        <div name="Name" field="Name">$Helper.GetResource("g_name")</div><!--名称-->
+                                        <div field="Sequ" width="20">序号</div>
+                                        <div field="LongCode">长代码</div>
+                                        <div type="comboboxcolumn" field="MenuType">
+                                            类型
+                                            <input property="editor" class="mini-combobox" style="width:100%;" data="[{'id':'Public','text':'全局'},{'id':'EPS','text':'EPS'},{'id':'Project','text':'项目'}]" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='$Helper.GetResource("admininfo_log")'>
+                            <!--"运行日志"-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" onclick="OnRefreshLog()"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                <a class="mini-button blue" id="SYSLog.thispage" onclick="OnExportLog('thispage')"><i class="fa fa-sign-out"></i>导出当前页</a><!--刷新-->
+                                <a class="mini-button blue" id="SYSLog.all" onclick="OnExportLog('all')"><i class="fa fa-sign-out"></i>导出全部页</a><!--刷新-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SYSLog" class="mini-datagrid" url="/WebCenter/GetPMSLog"
+                                     idfield="Id" allowresize="true" pagesize="15" autoload="true" style="height: 100%">
+                                    <div property="columns">
+                                        <div type="indexcolumn" width="10"></div>
+                                        <div field="LogDate" dateformat="yyyy-MM-dd HH:mm:ss" width="30" data allowsort="true">$Helper.GetResource("admininfo_time")</div><!--时间-->
+                                        <div field="HumanName" width="20" allowsort="true">$Helper.GetResource("admininfo_humanname")</div><!--操作人-->
+                                        <div field="Operator" type="comboboxcolumn" width="20" allowsort="true">
+                                            $Helper.GetResource("adminifo_operator")
+                                            <input property="editor" class="mini-combobox" data="logoperator" style="width: 100%;" />
+                                        </div><!--操作类型-->
+                                        <div field="Message" allowsort="true">$Helper.GetResource("admininfo_message")</div><!--操作信息-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='$Helper.GetResource("adminifo_license")'>
+                            <!--"软件许可"-->
+                            <div id="LicenseInfo" class="form">
+                                <h3 class="form-section">$Helper.GetResource("admininfo_license_info")<!--许可信息--></h3>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_product_info")：</td><!--上海普华科技产品-->
+                                        <td class="form-label" colspan="3">
+                                            <input name="ProductInfo" class="mini-textbox" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_license_type")：</td><!--许可类型-->
+                                        <td class="form-label">
+                                            <input name="LicenseType" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_name")：</td><!--授权客户-->
+                                        <td class="form-label" colspan="3">
+                                            <input name="Name" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label">$Helper.GetResource("admininfo_user_count")：</td><!--授权客户-->
+                                        <td class="form-label">
+                                            <input name="UserCount" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td class="form-label">$Helper.GetResource("admininfo_expire_date")：</td><!--有效期-->
+                                        <td class="form-label">
+                                            <input name="ExpireDate" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px"></tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            $Helper.GetResource("admininfo_company")
+                                        </td><!--Copyright © 2014 上海普华科技发展股份有限公司-->
+                                        <td><a href="javascript:;" onclick="ApplyLicense()" class="btn green"><i class="fa fa-edit"></i>$Helper.GetResource("admininfo_apply_license")</a><!--申请许可--></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new SingleForm();
+        $(function () {
+            //加载cache信息
+            $.ajax({
+                url: "/WebCenter/GetCacheInfo",
+                data: { name: "redis,iis" },
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text)
+                    if (tmp != undefined && tmp != null && tmp != "") {
+                        var form = new mini.Form("#CacheInfo");
+                        form.setData(tmp.data.data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            })
+            $.ajax({
+                url: "/Account/GetLicense",
+                data: {},
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text)
+                    if (tmp != undefined && tmp != null && tmp != "") {
+                        var form = new mini.Form("#LicenseInfo");
+                        form.setData(tmp.data.value);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            })
+            PowerForm.Init(); //load mainmenu
+        });
+        function ViewRightTree(key) {
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/Systems/AdminInfoRightTree.htm&key=" + key,
+                title: app_global['admininfo_rightree']//"权限树信息"
+            });
+        }
+        function ResetBusinessConfig() {
+            $.ajax({
+                url: "/WebCenter/ReSetBusinessConfig",
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text)
+                    if (tmp != undefined && tmp != null && tmp != "") {
+                        if (tmp.success == true) {
+                            Power.ui.info(app_global['admininfo_reset_ok']);// "重置完成"
+                            mini.get("BusinessConfig").reload();
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            })
+        }
+        function ApplyLicense() {
+            mini.open({ url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/Systems/ApplyLicense.htm", width: 700, height: 450 });
+        }
+        function OnDrawCell(e) {
+            //业务对象参数，true做特殊颜色标记
+            if (e.field == "DefaultNothingRight" || e.field == "IsAllowWorkFlow" || e.field == "IsMonitorSaveChanged") {
+                if (e.value == true)
+                    e.cellStyle = "font-weight:bold;";
+            }
+        }
+
+        function OnDelMainMenu() {
+            var mainmenu = mini.get("MainMenu");
+            var rows = mainmenu.getCheckedNodes(false); //不包含没有选中的父节点
+            if (!rows || rows.length == 0) return;
+            var buttonOption = {};
+            var yes = "确定删除";
+            var no = "取消";
+            buttonOption[yes] = {
+                theme: 'primary',
+                handler: function (ret) {
+                    if (ret) {
+                        mainmenu.removeNodes(rows);
+                        //立即保存数据
+                        PowerForm.OnBtnSave({ "id": "MainMenu.Save" });
+                    }
+                }
+            };
+            buttonOption[no] = function () { };
+            top.Power.ui.confirm("删除菜单同时会删除已分配的菜单权限,继续操作?", { button: buttonOption });
+        }
+
+        function OnInitMenuLongcode() {
+            FormFuns.APIExec("MainMenu", "BO", "InitLongCode", { sorts: "Sequ" }, function (text) {
+                mini.get("MainMenu").reload();
+            });
+        }
+
+        function OnClearIIS(e) {
+            return;
+            Power.ui.confirm(app_global['admininfo_confirm_clear_iis_cache'], function (ret) {
+                //"清除本站点 [IIS] 缓存将会影响其他用户操作,确定清除吗?"
+                if (ret) {
+                    top.Power.ui.loading(app_global['admininfo_clearing_iis_cache'], { position: "center center" }); //"正在清除本站点 [IIS] 缓存"
+                    $.ajax({
+                        url: "/Account/ClearCache",
+                        cache: false,
+                        success: function (text) {
+                            top.Power.ui.loading.close();
+                            var tmp = mini.decode(text)
+                            if (tmp.success)
+                                Power.ui.info(app_global['admininfo_clear_cache_ok']);//"缓存清除完成."
+                            else
+                                Power.ui.error(tmp.message);
+                        }
+                    })
+                }
+            });
+        }
+
+        function OnClearRight(e) {
+            Power.ui.confirm(app_global['admininfo_confirm_clear_rigth_cache'], function (ret) {
+                //"清除本站点 [权限] 缓存将会影响其他用户操作,确定清除吗?"
+                if (ret) {
+                    top.Power.ui.loading(app_global['admininfo_clearing_rigth_cache'], { position: "center center" });// "正在清除本站点 [权限] 缓存"
+                    $.ajax({
+                        url: "/Right/ClearCache",
+                        cache: false,
+                        success: function (text) {
+                            top.Power.ui.loading.close();
+                            var tmp = mini.decode(text)
+                            if (tmp.success)
+                                Power.ui.info(app_global['admininfo_clear_cache_ok']);//"缓存清除完成."
+                            else
+                                Power.ui.error(tmp.message);
+                        }
+                    })
+                }
+            });
+        }
+        function OnClearResource(e) {
+            Power.ui.confirm(app_global['admininfo_confirm_clear_resource_cache'], function (ret) {
+                //"确定清除 [多语言] 缓存吗?"
+                if (ret) {
+                    top.Power.ui.loading(app_global['admininfo_clearing_resource_cache'], { position: "center center" }); //"正在清除本站点 [多语言] 缓存"
+                    $.ajax({
+                        url: "/Resource/ClearCache",
+                        data: { lan: "zh-CN", resourceId: "" },
+                        cache: false,
+                        success: function (text) {
+                            top.Power.ui.loading.close();
+                            var tmp = mini.decode(text)
+                            if (tmp.success)
+                                Power.ui.info(app_global['admininfo_clear_cache_ok']);//"缓存清除完成."
+                            else
+                                Power.ui.error(tmp.message);
+                        }
+                    })
+                }
+            });
+        }
+
+        function OnExportLog(xtype) {
+            var tab = mini.get("SYSLog");
+            var cols = FormFuns.GetExportXlsCol(tab.getColumns());
+            var strcols = mini.encode(cols);
+            var p = { sortField: tab.sortField, sortOrder: tab.sortOrder, pageSize: tab.pageSize, pageIndex: tab.pageIndex, toExcel: "1", xlscols: strcols };
+            if (xtype == "all") p.pageSize = 0;
+            postDataToServer("/WebCenter/GetPMSLog", p);
+        }
+
+        function OnRefreshLog() {
+            mini.get("SYSLog").reload();
+        }
+
+        function OnUpdateRightBOName() {
+            $.getJSON("/Right/SyncObjectName/object", function (o) {
+                if (o.success)
+                    Power.ui.success("更新完成.");
+                else
+                    Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+            })
+        }
+
+        function OnUpdateRightMenuName() {
+            $.getJSON("/Right/SyncObjectName/menu", function (o) {
+                if (o.success)
+                    Power.ui.success("更新完成.");
+                else
+                    Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+            })
+        }
+    </script>
+</body>
+</html>

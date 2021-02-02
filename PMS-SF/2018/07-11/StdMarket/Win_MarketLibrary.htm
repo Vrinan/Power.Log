@@ -1,0 +1,559 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var CurProjId = "$!CurrentSession.EpsProjId";
+        var HumanId="$!CurrentSession.HumanId"
+    </script>
+</head>
+<body>
+
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <!--end col-md-3-->
+            <div class="mini-splitter" vertical="true" style="width: 100%; height: 100%">
+                <div size="50%" showcollapsebutton="true">
+                    <div class="portlet box blue" style="height: 100%">
+                        <div class="portlet-title">
+                            <div class="captiontools">
+                                <a class="mini-button blue" id="ProjectPlan.Add" onclick="AddProjectPlan(this)"><i class="fa fa-plus"></i>$Helper.GetResource("g_add")</a><!--新增-->
+                                <a class="mini-button blue" id="ProjectPlan.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>$Helper.GetResource("g_delete")</a><!--删除-->
+                                <a class="mini-button blue" id="ProjectPlan.Save" onclick="PowerForm.OnBtnSave(this, null, null, afterbtnsaveclick)"><i class="fa fa-save"></i>$Helper.GetResource("g_save")</a><!--保存-->
+                                <a class="mini-button blue" id="ProjectPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>$Helper.GetResource("g_refresh")</a><!--刷新-->
+                                <a class="mini-button blue" id="ProjectPlan.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"> <i class="fa fa-arrow-up"></i>$Helper.GetResource("g_up")</a><!--上移-->
+                                <a class="mini-button blue" id="ProjectPlan.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"> <i class="fa fa-arrow-down"></i>$Helper.GetResource("g_down")</a><!--下移-->
+                                <a class="mini-button blue" id="ProjectPlan.MoveLeft" onclick="MoveLeft(this)"><i class="fa fa-arrow-left"></i>$Helper.GetResource("g_left")</a><!--左移-->
+                                <a class="mini-button blue" id="ProjectPlan.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i>$Helper.GetResource("g_right")</a><!--右移-->
+                                <a class="mini-button blue" id="ProjectPlanSetting" onclick="OpenPS_PLN_MonitorNotifySetting('Project')"><i class="fa fa-cog fa-fw"></i>通知配置</a>
+                            </div>
+                        </div>
+                        <div class="mini-fit">
+                            <div class="portlet-body" style="height: 100%;">
+                                <div id="ProjectPlan" idfield="proj_plan_guid" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                                     treecolumn="plan_short_name" parentfield="parent_plan_guid" resultastree="false"
+                                     allowresize="true" expandonload="true" allowcelledit="true" ondrawcell="DrawAction"
+                                     oncellcommitedit="ProjectPlan_CommitEdit"oncellendedit="ProjectPlan_EndEdit" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn" width="20">序号</div>
+                                        <div field="plan_short_name" vtype="required" name="plan_short_name" width="60">编号<input property="editor" class="mini-textbox" style="width:100%;" /></div>
+                                        <div field="plan_name" vtype="required">名称<input property="editor" class="mini-textbox" style="width:100%;" /> </div>
+                                        <div field="plan_start_date" vtype="required" dateformat="yyyy-MM-dd" width="60">计划开始<input property="editor" class="mini-datepicker" required="true" style="width:100%;" /> </div>
+                                        <div field="plan_end_date" dateformat="yyyy-MM-dd" width="60">计划完成<input property="editor" class="mini-datepicker" required="true" style="width:100%;" /> </div>
+                                        <div field="plantype"  type="comboboxcolumn" name="plantype" width="50">计划类型<input property="editor" class="mini-combobox" style="width: 100%;" /> </div>
+                                        <div field="plan_level_id" type="comboboxcolumn" width="50">等级<input property="editor" class="mini-combobox" style="width:100%;" /> </div>
+                                        <!--<div field="est_wt_value" width="50">权重<input property="editor" class="mini-spinner" style="width:100%;" /> </div>-->
+
+                                        <div field="receive_user" width="55">责任人<input property="editor" allowinput="false" id="ProjectPlan.receive_user" name="receive_user" textname="receive_user" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width:100%;" /></div><!--名称-->
+                                        <div field="create_user" width="50">创建人</div>
+                                        <div field="create_date" dateformat="yyyy-MM-dd" width="60">创建日期</div>
+                                        <div type="comboboxcolumn" field="clndr_id">日历<input property="editor" class="mini-combobox" style="width:100%;" /> </div>
+                                        <div name="action" width="55">通知配置</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div showcollapsebutton="true">
+                    <div class="portlet box gray" style="height: 100%">
+                        <div class="mini-tabs" id="maintabs" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+
+                            <div title="参与人员" name='PlanLimit'>
+                                <div class="design mini-toolbar" id="toolbar_PlanLimit">
+                                    <a class="design mini-button blue" iconcls="fa fa fa-plus" id="PlanLimit.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-trash-o" id="PlanLimit.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                    <a class="design mini-button blue selected" iconcls="fa fa fa-save" id="PlanLimit.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-refresh" id="PlanLimit.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                </div>
+                                <div class="design mini-fit">
+                                    <div id="PlanLimit" class="design mini-datagrid" visible="true" showpager="false"
+                                         idfield="Id" allowcelledit="true" allowcellselect="true"
+                                         oncellendedit="PlanLimit_EndEdit" style="width:100%;height:100%;" masterfield="Id" detailfield="ParentId">
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="30">序号</div>
+                                            <div name="Position" class="design mini-datagridcolumn"  field="Position" width="120" headeralign="center" type="textboxcolumn" id="PlanLimit.Position">
+                                                岗位
+                                                <input property="editor" id="PlanLimit.Position" name="Position" textname="Position" class="mini-buttonedit"
+                                                       onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                            </div>
+                                            <div name="HumanName" class="design mini-datagridcolumn"  field="HumanName" width="80" headeralign="center" type="textboxcolumn" id="ServiceLoan_1.HumanName">
+                                                姓名
+                                                <input property="editor" id="PlanLimit.HumanName" name="HumanName" textname="HumanName" class="mini-buttonedit"
+                                                       onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                            </div>
+                                            <div header="权限" headeralign="center">
+                                                <div property="columns">
+                                                    <div type="checkboxcolumn" field="ReadOnly" truevalue="1" falsevalue="0" headeralign="center">仅查看</div><!--生效-->
+                                                    <div type="checkboxcolumn" field="CanEdit" truevalue="1" falsevalue="0" headeralign="center">可编辑</div><!--生效-->
+                                                    <div type="checkboxcolumn" field="CanUpdate" truevalue="1" falsevalue="0" headeralign="center">可反馈</div><!--生效-->
+                                                    <div type="checkboxcolumn" field="AllLimit" truevalue="1" falsevalue="0" headeralign="center">所有权限</div><!--生效-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div title="计划类型" name='project_plan_type' visible="false">
+                                <div class="design mini-toolbar" id="toolbar_PlanLimit">
+                                    <a class="design mini-button blue" iconcls="fa fa fa-plus" id="project_plan_type.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-trash-o" id="project_plan_type.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                    <a class="design mini-button blue selected" iconcls="fa fa fa-save" id="project_plan_type.Save" onclick="PowerForm.OnBtnSave(this, null, null, afterbtnsaveclick)">保存</a>
+                                    <a class="design mini-button blue" iconcls="fa fa fa-refresh" id="project_plan_type.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                </div>
+                                <div class="design mini-fit">
+                                    <div id="project_plan_type" class="design mini-datagrid" showpager="false" idfield="Id" allowcelledit="true" allowcellselect="true" style="width:100%;height:100%;" masterfield="Id" detailfield="ParentId" oncellcommitedit="project_plan_type_commitedit">
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="30">序号</div>
+                                            <div name="plantype" field="plantype" width="120" vtype="required" headeralign="center" type="textboxcolumn" id="project_plan_type.plantype">
+                                                类型
+                                                <input property="editor" id="project_plan_type.plantype" name="plantype" textname="plantype" class="mini-textbox" />
+                                            </div>
+                                            <div name="plantype_title" field="plantype_title" width="80" headeralign="center" type="textboxcolumn" id="project_plan_type.plantype_title">
+                                                说明
+                                                <input property="editor" id="project_plan_type.plantype_title" name="plantype_title" textname="plantype_title" class="mini-textbox" />
+                                            </div>
+                                            <div type="checkboxcolumn" field="actived" truevalue="1" falsevalue="0" headeralign="center">有效</div>
+                                            <div field="bSysDefault" headeralign="center">系统缺省</div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div title="历史版本" name='project_plan_type'>
+                                <div class="design mini-toolbar" id="toolbar_PlanLimit"> 
+                                    <a class="design mini-button blue" iconcls="fa fa fa-trash-o" id="ProjectPlan2.Del" onclick="ProjectPlan2OnBtnDel(this)">删除</a> 
+									<a class="design mini-button blue" iconcls="fa fa fa-eye" id="ProjectPlan2.View" onclick="OnViewPlan(this)">查看</a> 
+                                </div>
+                                <div class="design mini-fit">
+                                    <div id="ProjectPlan2" class="design mini-datagrid" showpager="false" idfield="proj_plan_guid"  style="width:100%;height:100%;" >
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="30">序号</div>
+                                            <div  field="plan_short_name" width="120"  headeralign="center" >
+                                                编号
+
+                                            </div>
+                                            <div name="plan_name" field="plan_name" width="120" headeralign="center" >
+                                                名称
+
+                                            </div> 
+                                            <div field="versionCode" headeralign="center" width="120">版本号</div>
+                                            <!--
+											<div field="proj_plan_guid" style="display:none"></div>
+                                            -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="win_search" class="mini-window" title='$Helper.GetResource("g_search_panel")' style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true">
+        <!--查询面板-->
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var ProjectPlan = mini.get("ProjectPlan");
+        var PowerForm = new SingleForm();
+        $(function () {
+            LoadPlantypeCombobox(function () {
+                PowerForm.Init();
+            });
+        });
+        PowerForm.EventAfterLoadData = function (e) {
+            if (e.sender.id == "ProjectPlan") {
+                var grid = mini.get("ProjectPlan");
+                grid.select(0);
+            }
+        }
+        PowerForm.EventBeforeSave = function (e) {
+            e.isValid = true;
+            var oerr = FormFuns.ValidData("ProjectPlan", true);
+            if (!oerr.success) {
+                Power.ui.error("编号、名称、开始时间、计划类型不能为空，请检查");//"有必填项未填，请检查"
+                e.isValid = false;
+                return;
+            }
+            var data = mini.get("PlanLimit").getData();
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                if ((d.Position == undefined || d.Position == "") && (d.HumanName == "" || d.HumanName == undefined)) {
+                    Power.ui.error("参与人员的岗位和姓名不能都为空，请检查");//"有必填项未填，请检查"
+                    e.isValid = false;
+                    return;
+                }
+            }
+            if (e.id == "PlanLimit.Save" || e.id == "project_plan_type.Save" || e.id == "ProjectPlan2.Save") {
+                var mainGridSelected = mini.get("ProjectPlan").getSelected();
+                if (typeof (mainGridSelected) == "undefined" || mainGridSelected == "") {
+                    Power.ui.error("请先选择主表数据");
+                    e.canNext = false;
+                } else {
+                    var mainState = mainGridSelected._state;
+                    if (mainState == "added") {
+                        Power.ui.error("请先保存主表数据");
+                        e.canNext = false;
+                    }
+                    else {
+                        e.canNext = true;
+                    }
+                }
+            }
+        }
+		
+		PowerForm.EventWizardWhere = function (e) {
+		    if (e.id == 'PlanLimit.Position'){
+			    var p = { KeyWord: "EPSProject", select: "project_guid", sort: "project_id", size: "1" };
+                p.swhere = " parent_id=0";
+                FormFuns.GridPageLoad(p, function (o) {
+                    var data = mini.decode(o.data.value);
+                    if (data.length > 0) {
+                        e.where = " ((EpsProjId = '" + data[0].project_guid + "') or (EpsProjId = '" + CurProjId + "')) and  Code not like '%PPE%'  ";  
+                    }
+					else{
+					    e.where = "EpsProjId = '" + CurProjId + "'";
+					}
+                })
+			}
+                
+        }
+		
+		
+		PowerForm.EventWizardData = function(e, data) {
+            if (e.id == "PlanLimit.HumanName") {
+				var grid = mini.get("PlanLimit")
+			    var row = grid.getSelected();
+			    var rowid = row["Id"];
+				var postion = row["Position"];
+				var human = data[0]["Name"];
+				var getRows = grid.findRows(function(row){
+									if ( (row.Id != rowid) && (row.Position == postion) && (row.HumanName == human))return true;									
+								});
+				if (getRows.length >= 1) {
+				     Power.ui.warning("该角色用户已存在，请重新选择。");
+					 data[0]["Name"] = "";
+				}				
+            }
+			if (e.id == "PlanLimit.Position"){
+			   	var grid = mini.get("PlanLimit")
+			    var row = grid.getSelected();
+			    var rowid = row["Id"]; 
+				var postion = data[0]["Name"];
+				var human = row["HumanName"];
+				var getRows = grid.findRows(function(row){
+					if ( (row.Id != rowid) && (row.Position == postion) && (row.HumanName == human))return true;									
+				});
+				if (getRows.length >= 1) {
+				     Power.ui.warning("该角色用户已存在，请重新选择。");
+					 data[0]["Name"] = "";
+				}		
+			}
+			
+			
+        }
+		
+		
+		function OnViewPlan(e){
+		    var row = mini.get("ProjectPlan2").getSelected();
+            if (!row) {
+                Power.ui.warning("请选择要查看的历史版本");
+                return;
+            }
+			var Plan_guid = row["proj_plan_guid"];
+			if (!!Plan_guid){
+              window.open("/Form/EditForm/d51c2eb0-2bc1-44d1-8089-599833d12c50/?uiview=approving&plan_guid=" + Plan_guid);
+			}
+		}
+		
+		
+        function ProjectPlan2OnBtnDel(e) {
+            var row = mini.get("ProjectPlan2").getSelected();
+            if (!row) {
+                Power.ui.warning("请选择要删除的历史版本");
+                return;
+            }
+            var buttonOption = {};
+            var yes = "是";
+            var no = "否";
+            buttonOption[yes] = {
+                theme: 'primary',
+                handler: function (ret) {
+                    if (ret) {
+                        $.ajax({
+                            url: "/Plan/RemovePlanVersion",
+                            type: "POST",
+                            data: { PlanVersionGuid: row.proj_plan_guid },
+                            cache: false,
+                            success: function (text) {
+                                var tmp = mini.decode(text);
+                                if (!tmp.success)
+                                    Power.ui.error(tmp.message);
+                                else {
+                                    Power.ui.success("删除成功");
+                                    mini.get("ProjectPlan2").reload();
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+            buttonOption[no] = function () { };
+            top.Power.ui.confirm("是否确认删除", { button: buttonOption });
+        }
+        function project_plan_type_commitedit(e) {
+            if (e.field == "plantype") {
+                var data = e.sender.getData();
+                for (var i = 0; i < data.length; i++) {
+                    if (e.value == data[i].plantype) {
+                        Power.ui.error("类型不能重复");
+                        e.cancel = true;
+                        break;
+                    }
+                }
+            }
+        }
+        function PlanLimit_EndEdit(e) {
+            var record = e.record;
+            var sender = e.sender;
+            if (e.field == "ReadOnly" && e.value == 1) {
+                sender.updateRow(record, { CanEdit: 0, CanUpdate: 0, AllLimit: 0 });//当勾选中【仅查看】的时候，后面3个全部设置不勾选
+            }
+            if (e.field == "CanEdit" || e.field == "CanUpdate") {
+                var upd = {};
+                if (e.value == 1) {
+                    upd.ReadOnly = 0;
+
+                }
+                if (record.CanEdit == 1 && record.CanUpdate == 1)
+                    upd.AllLimit = 1;
+                else
+                    upd.AllLimit = 0;
+                sender.updateRow(record, upd);
+            }
+            if (e.field == "AllLimit") {
+                var upd = {}
+                if (e.value == 1) {
+                    upd.CanEdit = 1;
+                    upd.CanUpdate = 1;
+                    upd.ReadOnly = 0;
+                }
+                else {
+                    upd.CanEdit = 0;
+                    upd.CanUpdate = 0;
+                }
+                sender.updateRow(record, upd);
+            }
+        }
+        function ProjectPlan_CommitEdit(e) {
+            //开始时间不能大于结束时间
+            var record = e.record;
+		
+            if (e.field == "plan_start_date") {
+                if (e.value != null && record.plan_end_date != null
+                    && e.value > record.plan_end_date) {
+                    Power.ui.alert("开始时间不能大于结束时间");
+                    e.cancel = true;
+                }
+            }
+            if (e.field == "plan_end_date") {
+                if (record.plan_start_date != null && e.value != null
+                    && record.plan_start_date > e.value) {
+                    Power.ui.alert("开始时间不能大于结束时间");
+                    e.cancel = true;
+                }
+            }
+        }
+        function ProjectPlan_EndEdit(e) {
+            if (e.field == "clndr_id") {
+                var exec = {};
+                exec.KeyWord = "ProjectPlan";
+                exec.MethodName = "GetClndrGuid";
+                exec.MethodParams = {};
+                var params = exec.MethodParams;
+                params.clndr_id = e.value + "";
+
+                var txt = mini.encode(exec);
+
+                $.ajax({
+                    url: "/API/Exec",
+                    type: "POST",
+                    data: { jsonData: txt },
+                    cache: false,
+                    success: function (text) {
+                        var tmp = mini.decode(text);
+                        if (!tmp.success)
+                            Power.ui.error(tmp.message);
+                        var result = tmp.data.value;
+                        if (result && result != "") {
+                            var res = mini.decode(result);
+                            if (!res.success)
+                                Power.ui.error(res.message);
+                            else {
+                                var up = {};
+                                up.clndr_guid = res.data.value;
+                                e.sender.updateNode(e.record, up);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "ProjectPlan") {
+                LoadPlantypeCombobox();
+            }
+        }
+        function afterbtnsaveclick() {
+            LoadPlantypeCombobox();
+        }
+        PowerForm.EventAfterNodeSeleted = function (e) {
+            if (e.sender.id == "ProjectPlan") {
+                var op = { visible: e.node._level == 0 ? true : false };
+                var mtb = mini.get("maintabs");
+                mtb.updateTab(mtb.getTab("project_plan_type"), op);
+                if (!op.visible)
+                    mtb.activeTab(mtb.getTab("PlanLimit"));
+            }
+        }
+        mini.get("project_plan_type").on("cellbeginedit", function (e) {
+            if (e.field == "plantype")
+                e.cancel = e.record.bSysDefault == "Y";
+        });
+
+        function LoadPlantypeCombobox(fncallback) {
+            $.getJSON("/Data/PlanTypeData/", function (data) {
+                var col = mini.get("ProjectPlan").getColumn("plantype");
+                col.editor.valueField = "id";
+                col.editor.textField = "id";
+                if (!col.editor.data)
+                    col.editor.data = data;
+                else if (typeof (col.editor.load) == "function")
+                    col.editor.load(data);
+                if (fncallback) fncallback();
+            })
+        }
+        function AddProjectPlan(btn) {
+            if (sessiondata.EpsIsProject==1&&ProjectPlan.getSelectedNode() == null) {
+                var root = ProjectPlan.getRootNode();
+                if (root == null || root.children == null || root.children.length == 0) {
+                    Power.ui.warning("新增计划必须某个计划的子计划.");
+                    return;
+                }
+                ProjectPlan.selectNode(root.children[0]);
+            }
+            PowerForm.OnBtnAdd(btn);
+        }
+        function MoveLeft(btn) {
+            var sel = ProjectPlan.getSelectedNode();
+            if (sel == null) return;
+            if (sel._level == 1) {
+                Power.ui.warning("项目只允许有一个根节点");
+                return;
+            }
+            PowerForm.OnBtnMoveLeft(btn);
+        }
+
+        //通知配置
+        function OpenPS_PLN_MonitorNotifySetting(type) {
+            var row = mini.get("ProjectPlan").getSelected();
+            var planguid = row.proj_plan_guid;
+            var ConfigLevel = "Plan";
+            if (type == "Project"||type=="Golbal") {
+                planguid = CurProjId;
+                ConfigLevel = type;
+            }
+            //先判断当前pbs是否定义了通知配置
+            var p = { KeyWord: "PS_MonitorNotifySetting", select: "","url": "/Form/GridPageLoad" };
+            p.swhere = "LinkId='" + planguid + "' and ConfigLevel='" + ConfigLevel + "'";
+            FormFuns.GridPageLoad(p, function (o) {
+                var data = mini.decode(o.data.value);
+                var id = CreateGUID();
+                if (data.length >= 1) {
+                    id = data[0].Id;
+                } else {
+                    //先插一条记录进去
+                    var state = "added";
+                    var data = {
+                        PS_MonitorNotifySetting: {
+                            KeyWordType: "BO",
+                            data: [
+                                     {
+                                         Id: id,//主键
+                                         _state: "added",
+                                         LinkId: planguid,
+                                         ConfigLevel: ConfigLevel,
+                                         NoticePlanCreater: 1,
+                                         NoticePlanManager: 1,
+                                         NoticePlanParticipants: 1
+                                     }
+                            ]
+                        }
+                    }
+                    var jdata = { formId: "", Params: "" };
+                    jdata.jsonData = mini.encode(data);
+                    $.ajax({
+                        url: "/Form/SaveWebForm",
+                        type: "POST",
+                        data: jdata,
+                        async:false,
+                        success: function (text) {
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                
+                            }
+                        }
+                    });
+
+                }
+                var url = "/Form/ValidForm/18c39884-8d42-4f9e-9848-b12e0f6e3af9/edit/" + id+"/?type="+ConfigLevel;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 600,
+                    showMaxButton: true
+                });
+            });
+        }
+
+        function DrawAction(e) {
+            var record = e.record;
+            var column = e.column;
+            if (column.name == "action") {
+                e.cellHtml = '<a  href="javascript:;" class="btn btn-xs" style="margin-right: 0.5em;"  onclick="OpenPS_PLN_MonitorNotifySetting(this)">通知配置</a>';
+            }
+        }
+    </script>
+</body>
+</html>

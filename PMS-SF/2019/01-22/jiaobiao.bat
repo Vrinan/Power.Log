@@ -1,0 +1,1 @@
+sqlcmd -S . -i D:\Git\SF_PowerPMS\功能添加、修改\01-15\TimeAdd\add.sql

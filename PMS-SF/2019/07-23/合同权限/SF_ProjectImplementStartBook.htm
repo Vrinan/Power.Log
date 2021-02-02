@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目实施启动书
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="PS_ProjectInfo.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_ProjectImplementStartBook.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ProjectImplementStartBook.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ProjectImplementStartBook.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ProjectImplementStartBook" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3">
+                                            <input id="SF_ProjectImplementStartBook.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                        <td>
+                                            项目类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.ProjectType" name="ProjectType" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>                                  
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.CompactName" name="CompactName" textname="CompactName" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                        <td>
+                                            合同金额
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.ContractAmount" name="ContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" readonly="readonly"/>
+                                        </td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            客户名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.CustomerName" name="CustomerName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            项目地点
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.ProjectSite" name="ProjectSite" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划开始
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.PlanStart" name="PlanStart" class="mini-datepicker" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            计划结束
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.PlanEnd" name="PlanEnd" class="mini-datepicker" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目概况
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ProjectImplementStartBook.ProjectSituation" name="ProjectSituation" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectImplementStartBook.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+
+                        <div title='权限配置'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ProjectImplementStartBook_dtl.Add" onclick="PowerForm.OnBtnWizard(this)">选择人员</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ProjectImplementStartBook_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button green" iconcls="fa-github" id="SF_ProjectImplementStartBook_dtl.Delete" onclick="Synchronize()">同步</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ProjectImplementStartBook_dtl" class="mini-datagrid" style="height: 100%;" showPager="true" allowUnselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="false" allowcellselect="true" multiSelect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn"></div>
+                                        <div field="HumanName" headeralign="center">姓名</div>
+                                        <div field="DeptName" headeralign="center">所属部门</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            
+        });
+
+        PowerForm.EventAfterLoadRight = function (o) {
+            mini.get("SF_ProjectImplementStartBook_dtl.Add").setEnabled(true);
+            mini.get("SF_ProjectImplementStartBook_dtl.Delete").setEnabled(true);
+        }
+
+        function Synchronize(){
+            var num = mini.get("SF_ProjectImplementStartBook_dtl").data.length;
+            var ProjId = formconfig.config.joindata.currow["ProjectNameId"];
+            if(!IsEmpty(num) && !IsEmpty(ProjId))
+            {
+                Power.ui.loading("同步中……")
+                var par = { "id": KeyValue ,"projid":ProjId};
+                FormFuns.APIExec("SF_ProjectImplementStartBook", "BO", "SynContract", par, function (text) {
+                    var num = mini.decode(text).data.value;
+                    Power.ui.loading.close();
+                    Power.ui.success(num);
+                })
+            }
+            else
+            {
+                Power.ui.warning("未选择人员");
+            }
+        }
+
+    </script>
+</body>
+</html>

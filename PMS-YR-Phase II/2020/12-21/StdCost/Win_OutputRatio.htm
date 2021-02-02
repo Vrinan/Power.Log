@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+	<script src="/Scripts/PlatForm/Date.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>切换计划</span>
+                             <input id="txtPlanName" class="mini-buttonEdit"  allowinput="false" shownullitem="true" width="120px" />
+                            <span>开始日期</span>
+                            <input id="txtStartTime" class="mini-combobox" textfield="text" onvaluechanged="YearChange" valuefield="text" allowinput=" false" width="150px" />
+							<span>结束日期</span>
+                            <input id="txtEndTime" class="mini-combobox" textfield="text" onvaluechanged="YearChange" valuefield="text" allowinput=" false" width="150px" />
+                            <a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                       <div id="OutputRatio" class="mini-datagrid" style="width: 100%; height: 215px;"
+                             idfield="Id" allowresize="true" showpager="false">
+							 
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse(); 
+		var planGuids=[];
+        $(function () { 
+			Loadtime();
+        });
+		mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan7();
+        })
+		function OnWiardPlan7() {
+            var p = { title: "选择项目计划", multi: "1" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-cn/StdPlan/WizardProjectPlanListmulti.htm";
+            p.swhere = " proj_guid='" + currentproj + "'";
+            p.select = "proj_plan_guid,parent_plan_guid,plan_short_name,plan_name";
+            OpenWizard(p, function (data) {
+				var text =[];
+				planGuids=[];
+				$.each(data, function () {
+				  text.push(this.plan_short_name);
+				  planGuids.push(this.proj_plan_guid)
+				});
+                
+                SetBtnEditValue("txtPlanName", text.join(","));
+                LoadData();
+            })
+        }
+		function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        function YearChange() {
+            LoadData();
+        }
+		
+        function Loadtime() { 
+           
+            $.ajax({
+                url: "/Cost/GetOutputRatioTime",
+                data: { EpsProjId: currentproj },
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    if (!tmp.success) {
+                        Power.ui.alert(tmp.message);
+                        return;
+                    }
+                   var StartTime = tmp.data.StartTime;
+				    var EndTime = tmp.data.EndTime
+					var startData=[];
+					var endData=[];
+					$.each(StartTime, function () {
+						var startval=this.periodstrat.Format("yyyy-MM-dd"); 
+						var start={text:startval};
+						startData.push(start);
+						
+					});
+					$.each(EndTime, function () {
+						
+						var Endval=this.periodend.Format("yyyy-MM-dd");
+						var End={text:Endval};
+						
+						endData.push(End);
+					});
+                    mini.get("txtStartTime").setData(startData);
+					if(startData.length>1){
+					 mini.get("txtStartTime").setValue(startData[0].text);
+					}
+					mini.get("txtEndTime").setData(endData);
+                    if(endData.length>1){
+					 mini.get("txtEndTime").setValue(endData[0].text);
+					}
+                }
+            })
+
+        }
+      
+         
+          
+        mini.get("btnSearch").on("click", function (e) { 
+                LoadData(); 
+        })
+         
+
+        function LoadData() {			
+            var Plan = planGuids.join("','");
+            var StartTime= mini.get("txtStartTime").getValue();
+			var EndTime= mini.get("txtEndTime").getValue();
+            if (Plan==""||StartTime==""||EndTime=="") {
+                Power.ui.warning("请先选择计划");
+                return;
+            }
+            $.ajax({
+                url: "/Cost/GetOutputRatio",
+                data: { PlanGuids: Plan, StartTime: StartTime,EndTime:EndTime },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+						var cols = [ { field: "title", header: "", width: "60px" }];
+                        var actcur = {  "title": "实际" };
+                        var plncur = {  "title": "计划" };
+                        var dffcur = {  "title": "差值" };
+						var rows = [plncur, actcur, dffcur];
+						var grpcol;
+                        $.each(o.data.value, function () {
+                            
+                            var md = this.plan_name;
+                           
+                            cols.push({ field: md, headerAlign: "center", header: md, align: "center" });
+                            // 四舍五入保留2位小数，折算万元
+                            var planvalue = Math.round(this.planvalue/10000 * 100) / 100;
+							var actvalue = Math.round(this.actvalue/10000 * 100) / 100;
+							var  dffvalue=actvalue-planvalue;
+                            actcur[md] = actvalue;
+                            
+                            plncur[md] = planvalue;
+                          
+                            dffcur[md] = dffvalue;
+                           
+                        })
+                        var grid = mini.get("OutputRatio");
+                        grid.set({ columns: cols });
+                        grid.setData(rows);
+
+
+                        LoadChart(o.data.value);
+                    }
+                    else
+                        Power.ui.alert(o.message);
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            
+            var xaxis = { type: 'category', data: [] };
+            var plncur = { "name": "计划完成产值", type: 'bar', data: [] };
+        
+            var actcur = { "name": "实际完成产值", type: 'bar', data: [] };
+           
+            var curmax = 0, summax = 0;
+            $.each(data, function () {
+                var md = this.plan_name;
+                // 四舍五入保留2位小数，折算万元
+                this.planvalue = Math.round(this.planvalue/10000 * 100) / 100;
+				 this.actvalue = Math.round(this.actvalue/10000 * 100) / 100;
+                xaxis.data.push(md);
+                plncur.data.push(this.planvalue);                
+                actcur.data.push(this.actvalue); 
+                if (this.planvalue > summax) summax = this.planvalue;
+                if (this.actvalue > summax) summax = this.actvalue;
+            })
+           
+            var opt = {};
+            //opt.calculable = true;
+            //opt.title = { text: charttitle };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["计划完成产值", "实际完成产值"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '产值(万元)', min: 0}];
+            opt.series = [plncur, actcur];
+			opt.grid = { x: 120 };
+            InitEChart("charthere", opt);
+
+        }
+		  function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

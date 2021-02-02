@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="V_ZDelta_ComInvDesPlan.Title">
+                                <i class=""></i>
+                            </a>
+                            <a class="mini-button blue" onclick="FormFuns.ExportDataToXls('V_ZDelta_ComInvDesPlan','项目完成投资设计方案',null,null);">
+                                <i class="fa fa-sign-out"></i>导出</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="V_ZDelta_ComInvDesPlan" class="mini-datagrid" style="width: 100%;height: 100%;" idField="Id" allowCellSelect="true" allowCellEdit="true" allowresize="true" allowAlternating="true" showPager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" header="序号" width="40" headeralign="center"></div>
+                                <div field="Wbs_Name" name="Wbs_Name" header="标段" headeralign="center" align="left" width="120"></div>
+                                <div field="Title" name="Title" header="合同" headeralign="center" align="left" width="0"></div>
+                                <div field="BidBudgetAmount" name="BidBudgetAmount" header="预算金额" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                <div field="ContractAmount" name="ContractAmount" header="合同额" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                <div header="进度" headerAlign="center">
+                                    <div property="columns">
+                                        <div field="PlanInverstAmount" name="PlanInverstAmount" header="计划投资" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                        <div field="FinishInverstAmount" name="FinishInverstAmount" header="完成投资" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                    </div>
+                                </div>
+                                <div header="资金" headerAlign="center">
+                                    <div property="columns">
+                                        <div field="InvestAmount" name="InvestAmount" header="完成投资" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                        <div field="PayAmount" name="PayAmount" header="支付金额" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                        <div field="SetAmount" name="SetAmount" header="结算金额" headeralign="center" align="right" width="150" numberFormat="n2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        var reportGrid = mini.get("V_ZDelta_ComInvDesPlan");    
+        
+        // //单元格渲染事件
+        // reportGrid.on("drawcell",function(e){
+        //     var record = e.record;
+        //     if(e.field == "FirstLvlTypeName" && record.Name == "合计"){
+        //         e.rowStyle = "font-weight:bold;";
+        //     }
+        // });
+    </script>
+</body>
+
+</html>

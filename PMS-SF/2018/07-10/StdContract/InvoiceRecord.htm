@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>开票记录
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_InvoiceRecord.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_InvoiceRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_InvoiceRecord.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_InvoiceRecord" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_InvoiceRecord.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_InvoiceRecord.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_InvoiceRecord.ContractName" name="ContractName" textname="ContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_InvoiceRecord.ClientName">客户名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_InvoiceRecord.ClientName" name="ClientName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            发票金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.InvoiceAmount" name="InvoiceAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" format="n2" readonly/>
+                                        </td>
+                                        <td>
+                                            累计开票金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.TotalInvoiceAmount" name="TotalInvoiceAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" format="n2" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            本期不含税金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.AddNoTaxAmount" name="AddNoTaxAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" format="n2" />
+                                        </td>
+                                        <td>
+                                            本期含税金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.AddTaxAmount" name="AddTaxAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" format="n2" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            本期税费
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.AddTaxRate" name="AddTaxRate" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" format="n2" />
+                                        </td>
+                                        <td>
+                                            开票日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.InvoiceDate" name="InvoiceDate" class="mini-datepicker" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_InvoiceRecord.Memo" name="Memo" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_InvoiceRecord.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='开票明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_InvoiceAmount_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_InvoiceAmount_Dtl.Delete" onclick="PowerForm.OnBtnDel(this);">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_InvoiceAmount_Dtl" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+                                        <!--编号-->
+                                        <div field="InvoiceCode" headeralign="center">
+                                            发票编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--金额-->
+                                        <div field="InvoiceAmount" headeralign="center" summarytype="sum" id="PS_InvoiceAmount_Dtl.InvoiceAmount" align="center" numberformat="n2">
+                                            发票金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <!--类型-->
+                                        <div field="InvoiceType" headeralign="center" type="comboboxcolumn" align="center">
+                                            发票类型
+                                            <input property="editor" id="PS_InvoiceAmount_Dtl.InvoiceType" name="InvoiceType" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <!--其他信息-->
+                                        <div field="Remarks" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title='金额明细' name="SF_InvoiceContract_AmountList">
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_InvoiceContract_AmountList.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_InvoiceContract_AmountList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_InvoiceContract_AmountList" class="mini-datagrid" style="height: 100%;" oncellendedit="endedit" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="AmountType" headeralign="center" type="comboboxcolumn">
+                                            费用类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="FinancialDocumentNumber" headeralign="center">
+                                            财务凭证号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="NoTaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            不含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="TaxRate" headeralign="center">
+                                            税率（%）
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="TaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            税费
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            Refresh();
+        }
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            if (e.Id = "SF_InvoiceContract_AmountList") {
+                data.NoTaxAmount = "0";
+                data.TaxAmount = "0";
+                data.TotalAmount = "0";
+            }
+        }
+
+        function endedit(e) {
+            var record = e.record;
+            var grid = mini.get(SF_InvoiceContract_AmountList);
+            //判断、并进行计算
+            if (e.field == "NoTaxAmount" || e.field == "TaxAmount") {
+                var s = parseFloat(record.NoTaxAmount) + parseFloat(record.TaxAmount);
+                //grid.updateRow(record, { "TotalAmount": s });
+            }
+            var sumN = Number(0);
+            var sum = Number(0);
+            var sumT = Number(0);
+            var row = grid.findRow(function (row) {
+                if (row.TotalAmount != "" && row.TotalAmount != undefined && row.TotalAmount != null) {
+                    sumN += parseFloat(row.NoTaxAmount);
+                    sum += parseFloat(row.TaxAmount);
+                    sumT += parseFloat(row.TotalAmount);
+                }
+            })
+            mini.get("PS_InvoiceRecord.AddNoTaxAmount").setValue(sumN);
+            mini.get("PS_InvoiceRecord.AddTaxAmount").setValue(sumT);
+            mini.get("PS_InvoiceRecord.AddTaxRate").setValue(sum);
+        }
+
+        PowerForm.EventBeforeOnBtnSave = function (e, data) {
+            var grid = mini.get(SF_InvoiceContract_AmountList);
+            var sumN = Number(0);
+            var sum = Number(0);
+            var sumT = Number(0);
+            var row = grid.findRow(function (row) {
+                if (row.TotalAmount != "" && row.TotalAmount != undefined && row.TotalAmount != null) {
+                    sumN += parseFloat(row.NoTaxAmount);
+                    sum += parseFloat(row.TaxAmount);
+                    sumT += parseFloat(row.TotalAmount);
+                }
+            })
+            mini.get("PS_InvoiceRecord.AddNoTaxAmount").setValue(sumN);
+            mini.get("PS_InvoiceRecord.AddTaxAmount").setValue(sumT);
+            mini.get("PS_InvoiceRecord.AddTaxRate").setValue(sum);
+
+            var listAmount = mini.get("PS_InvoiceRecord.AddTaxAmount").getValue();
+            var contractAmount = mini.get("PS_InvoiceRecord.InvoiceAmount").getValue();
+            if (listAmount > contractAmount) {
+                //Power.ui.warning("分摊总额大于发票金额");
+            }
+            if (listAmount < contractAmount) {
+                //Power.ui.warning("发票金额剩余" + (parseFloat(contractAmount) - parseFloat(listAmount)) + "未分摊");
+            }
+        }
+
+
+        function Refresh() {
+            var exec = {};  //对象
+            var guid = formconfig.KeyValue;
+            exec.KeyWord = "PS_InvoiceRecord";   //bo的KeyWord
+            exec.MethodName = "countSum"; //方法名称
+            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.Id = guid;
+            var txt = mini.encode(exec); //对象转换成字符串
+            $.ajax({
+                url: "/API/Exec",
+                type: "POST",
+                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                cache: false,
+                success: function (text) {
+                    // var tmp = mini.decode(text);
+                    // var result = tmp.data.value;
+                    //刷新
+                    var e = { id: "PS_InvoiceRecord.Refresh" };
+                    PowerForm.OnBtnRefresh(e);
+                }
+            });
+
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_InvoiceRecord.ContractName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/34399717-2ebe-40fe-9fd7-bca7b76f54e4/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    debugger;
+        //    var record = e.record;
+        //    var grid = mini.get("PS_InvoiceAmount_Dtl");
+
+        //    var sum = new Number(0);
+        //    var row = grid.findRow(function (row) {
+
+        //        sum = sum + parseInt(row.InvoiceAmount);
+        //    });
+        //    //传值
+        //    mini.get("PS_InvoiceRecord.InvoiceAmount").setValue(sum);
+        //}
+    </script>
+</body>
+</html>

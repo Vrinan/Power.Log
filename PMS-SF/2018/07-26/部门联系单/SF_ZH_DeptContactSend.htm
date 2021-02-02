@@ -1,0 +1,350 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>发文管理
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_FileContact.Send" onclick="OnSendPaper()"><i class="fa fa-save"></i>回复</a><!--回复-->
+                    <a class="mini-button blue" id="PS_FileContact.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <!--<a class="mini-button blue" id="PS_FileContact.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>审批</a>审批
+                    <div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_FileContact.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_FileContact.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="PS_FileContact" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            文件编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_FileContact.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_FileContact.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            文件名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_FileContact.DeptType">部门类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.DeptType" name="DeptType" class="mini-combobox" onvaluechanged="valuechanged" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            发件人
+                                        </td>
+                                        <td class="1">
+                                            <input id="PS_FileContact.Sender_1" name="Sender_1" class="mini-textbox" />
+                                        </td>
+                                        <td class="2">
+                                            <input id="PS_FileContact.Sender" name="Sender" textname="Sender" class="mini-buttonedit"
+                                                   emptytext="请选择发件人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            发件部门
+                                        </td>
+                                        <td class="1">
+                                            <input id="PS_FileContact.FromDept_1" name="FromDept_1" class="mini-textbox" />
+                                        </td>
+                                        <td class="2">
+                                            <input id="PS_FileContact.FromDept" name="FromDept" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            收件人
+                                        </td>
+                                        <td class="1">
+                                            <input id="PS_FileContact.Receiver_1" name="Receiver_1" class="mini-textbox" />
+                                        </td>
+                                        <td class="2">
+                                            <input id="PS_FileContact.Receiver" name="Receiver" textname="Receiver" class="mini-buttonedit"
+                                                   emptytext="请选择收件人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            收件部门
+                                        </td>
+                                        <td class="1">
+                                            <input id="PS_FileContact.ToDept_1" name="ToDept_1" class="mini-textbox" />
+                                        </td>
+                                        <td class="2">
+                                            <input id="PS_FileContact.ToDept" name="ToDept" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            文件类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.FileType" name="FileType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            文件用于
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.FileFor" name="FileFor" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            抄报/抄送
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_FileContact.CC" name="CC" class="mini-textbox" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            是否需要回复
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.isNeedReply" name="isNeedReply" truevalue="1" falsevalue="0" class="mini-checkbox" />
+                                        </td>
+                                        <td>
+                                            是否已回复
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.isAlreadyReply" name="isAlreadyReply" truevalue="1" falsevalue="0" class="mini-checkbox" readonly="readonly" />
+                                            <a class="mini-button mini-button-info" onclick="OnbtnAAA()"><label style="color:blue">点击查看回复</label></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            发文说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_FileContact.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_FileContact.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <label><b>详情见附件&nbsp;</b></label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            mini.get("PS_FileContact.Send").setVisible(false);
+        });
+        //function OnSendPaper() {
+        //    var id = formconfig.config.joindata.currow["Id"];
+        //    if (formconfig.FormState == "add" || mini.get("PS_FileContact.isAlreadyReply").value == 1) {
+        //        return;
+        //    }
+        //    else {
+        //        if (mini.get("PS_FileContact.isNeedReply").value == 1) {
+        //            var url = "/Form/AddForm/929739a9-8b4e-4595-8ffc-6ea70ff3dea2/?ContactId=" + id;
+        //            mini.open({
+        //                url: url,
+        //                width: 900,
+        //                height: 550,
+        //                ondestroy: function (action) {
+        //                    if (this.getIFrameEl().contentWindow.formconfig.FormState == "edit")
+        //                        mini.get("PS_FileContact.isAlreadyReply").setValue("1");
+        //                }
+        //            });
+        //        }
+        //        else {
+        //            Power.ui.alert("不需要回复");
+        //        }
+        //    }
+        //}
+
+        //回复
+        function OnSendPaper() {
+            var  aa = formconfig.config.joindata.currow["isAlreadyReply"];
+            if(aa != 1){
+                var IsLastVersion = formconfig.config.joindata.currow["isNeedReply"];
+                if (IsLastVersion != 1) {
+                    Power.ui.warning("不需要回复");
+                    return false;
+                }
+                //var status = mini.get("PS_FileContact.Status").getValue();
+                //if (status != "50") {
+                //    Power.ui.warning("批准后才能回复");
+                //    return false;
+                //}
+                Power.ui.confirm("确定回复？", function (ret) {
+                    if (ret) {
+                        Power.ui.loading("回复中……")
+                        var id = formconfig.config.joindata.currow["Id"];
+                        var par = { "id": id };
+                        FormFuns.APIExec("PS_FileContact", "BO", "InsertBudget", par, function (text) {
+                            var tem = mini.decode(text).data.value
+                            Power.ui.loading.close();
+                            var a = { id: "PS_FileContact.CloseForm" };
+                            PowerForm.OnBtnCloseForm(a);
+                            if (tem != "") {
+                                var url = "/Form/ValidForm/6d673167-51fb-4284-969c-08a7625a6c37/edit/" + tem;
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 550
+                                });
+                            }
+                        })
+                    }
+                });
+            }
+        }
+
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (formconfig.FormState == "add" && getParameter("ContactId")) {
+                formconfig.config.joindata.currow["ContactId"] = getParameter("ContactId");
+            }
+        }
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            if (parent && parent.mini.get("PS_FileContact.isAlreadyReply")) {
+                parent.mini.get("PS_FileContact.isAlreadyReply").setValue("1");
+            }
+        }
+
+        function OnbtnAAA() {
+
+            var guid = formconfig.config.joindata.currow["Id"];
+            if (mini.get("PS_FileContact.isAlreadyReply").value == 1) {
+
+                var exec = {};  //对象
+                exec.KeyWord = "PS_FileContact";   //bo的KeyWord
+                exec.MethodName = "GetId"; //方法名称
+                //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                exec.MethodParams = {}; //方法参数
+                var params = exec.MethodParams;
+                params.id = guid;
+                var txt = mini.encode(exec); //对象转换成字符串
+
+                $.ajax({
+                    url: "/API/Exec",
+                    type: "POST",
+                    data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                    cache: false,
+                    success: function (text) {
+                        debugger;
+                        var tmp = mini.decode(text);
+                        if (tmp.success) {
+                            var result = tmp.data.value;
+                            if (result != "") {
+                                var url = "/Form/ValidForm/6d673167-51fb-4284-969c-08a7625a6c37/view/" + result;
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 550
+                                });
+                            }
+                        }
+                        else
+                            Power.ui.alert(tmp.message);
+                    }
+                });
+            }
+            else {
+                Power.ui.alert("目前没有回复");
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (o) {
+            $(".1").hide();//隐藏
+            $(".2").hide();
+            var a = mini.get("PS_FileContact.DeptType").getValue();
+            if (a == "D5") {
+                $(".2").show();
+            } else {
+                $(".1").show();
+            }
+            if (o.id == "PS_FileContact" && sessiondata.UserName == mini.get("PS_FileContact.Receiver").getValue()) {
+                mini.get("PS_FileContact.Send").setVisible(true);
+            }
+        }
+
+        function valuechanged() {
+            var a = mini.get("PS_FileContact.DeptType").getValue();
+            if (a == "D5") {
+                $(".2").show();
+                $(".1").hide();
+            } else {
+                $(".1").show();
+                $(".2").hide();
+            }
+        }
+
+    </script>
+</body>
+</html>

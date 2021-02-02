@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>特种设备档案
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_YX_EquRecord.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_YX_EquRecord.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_YX_EquRecord.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_EquRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_YX_EquRecord.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_EquRecord" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_EquRecord.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Status" name="Status" class="mini-combobox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_EquRecord.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>                             
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            所属运行站/运行部
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.RunStation" name="RunStation" textname="RunStation" class="mini-buttonedit" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            报废
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Type" name="Type" class="mini-combobox" />
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设备名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Name" name="Name" class="mini-textbox" />
+                                        </td> 
+                                        <td>
+                                            设备出厂编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.EquCode" name="EquCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            附件出厂编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.FileCode" name="FileCode" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            安监编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.SafeCode" name="SafeCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            型号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Model" name="Model" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            使用地点
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Address" name="Address" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            生产日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.ProduceDate" name="ProduceDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            投用日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.UseDate" name="UseDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            推荐使用期限(年)
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.Deadline" name="Deadline" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            检验日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.TestDate" name="TestDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            检验周期(月)
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.TestDeadline" name="TestDeadline" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            应检日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.CheckDate" name="CheckDate" class="mini-datepicker" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_EquRecord.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_EquRecord.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            //1、如果检验日期为空： 应检日期=生产日期+检验周期。
+           // 2、检验日期不为空：应检日期=检验日期 + 检验周期
+
+            var TestDeadline = mini.get("SF_YX_EquRecord.TestDate").getValue();
+            if (TestDeadline == NaN || TestDeadline == '' || TestDeadline == null) {
+                var Deadline = mini.get("SF_YX_EquRecord.TestDeadline").getValue();
+                var ProduceDate = mini.get("SF_YX_EquRecord.ProduceDate").getValue();
+                ProduceDate = new Date(ProduceDate).format("yyyy-MM-dd");
+                var date = AddYear(ProduceDate, Deadline);
+                mini.get("SF_YX_EquRecord.CheckDate").setValue(date);
+            }
+            else {
+                var Deadline = mini.get("SF_YX_EquRecord.TestDeadline").getValue();
+                ProduceDate = new Date(TestDeadline).format("yyyy-MM-dd");
+                var date = AddYear(TestDeadline, Deadline);
+                mini.get("SF_YX_EquRecord.CheckDate").setValue(date);
+            }
+        }
+        function AddYear(date, Month) {
+            var d = new Date(date);
+            d.setMonth(parseFloat(d.getMonth()) + parseFloat(Month));
+            var m = d.getMonth() + 1;
+            return d.getFullYear() + '-' + m + '-' + d.getDate();
+        }
+    </script>
+</body>
+</html>

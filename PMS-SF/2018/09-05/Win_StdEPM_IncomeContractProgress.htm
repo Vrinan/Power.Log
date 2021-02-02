@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+    <style type="text/css">
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #4F94CD;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        .reds {
+            width: 26px;
+            height: 26px;
+            display: inline-block;
+            font-size: 30px;
+            line-heigth: 16px;
+            text-align: center;
+            color: #f00;
+            text-decoration: none;
+        }
+
+        .yellows {
+            width: 26px;
+            height: 26px;
+            display: inline-block;
+            font-size: 30px;
+            line-heigth: 16px;
+            text-align: center;
+            color: #ff0;
+            text-decoration: none;
+        }
+
+        .blues {
+            width: 26px;
+            height: 26px;
+            display: inline-block;
+            font-size: 30px;
+            line-heigth: 16px;
+            text-align: center;
+            color: #0f0;
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <!--<div class="captiontools">
+                            <span>切换EPS/项目</span>
+                            <input id="txtPlanName" class="mini-textbox" width="300px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>-->
+                        <div class="captiontools">
+                            <span>签订日期 从</span>
+                            <input id="txtSignFDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()" />
+                            <span>到</span>
+                            <input id="txtSignTDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()" />
+                            <span>项目名称</span>
+                            <!-- <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="100px" /> -->
+                            <input id="project_name1" class="mini-textbox" allowinput="true" width="100px" onvaluechanged="LoadData()" />
+                            <span>合同名称</span>
+                            <input id="txtContractName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" onvaluechanged="LoadData()" />
+                            <span>甲方</span>
+                            <input id="txtPartyAName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-splitter" style="width: 100%; height: 100%;" vertical="true">
+                            <div size="60%" showcollapsebutton="true">
+                                <div id="IncomeContractProgress" class="mini-treegrid" style="width: 100%; height: 100%" showsummaryrow="true"
+                                     showtreeicon="true" treecolumn="name" idfield="Id" parentfield="" onnodedblclick="ViewForm(e)"
+                                     allowresize="true" expandonload="true" virtualscroll="true" ondrawcell="onDrawCell"
+                                     showpager="false">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="Status" width="40" headeralign="center">标识列</div>
+                                        <div field="project_name" width="80" headeralign="center">项目名称</div>
+                                        <div field="ContractName" width="80" headeralign="center">合同名称</div>
+                                        <div field="PartyA" width="80" headeralign="center">甲方</div>
+                                        <div field="ContractAmount" numberFormat="n2" align="right" width="80" headeralign="center" summarytype="sum">合同额</div>
+                                        <!--<div field="progress" width="80" headeralign="center">工程进度</div>-->
+                                        <div field="InvoicePercent" width="80" headeralign="center">开票比例</div>
+                                        <div field="ReceivePercent" width="80" headeralign="center">付款进度</div>
+                                        <div field="ApplyAmount" numberFormat="n2" align="right" width="80" headeralign="center" summarytype="sum">累计请款</div>
+                                        <div field="InvoiceAmount" numberFormat="n2" align="right" width="80" headeralign="center" summarytype="sum">累计开票</div>
+                                        <div field="ReceiveAmount" numberFormat="n2" align="right" width="80" headeralign="center" summarytype="sum">累计收款</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div showcollapsebutton="true">
+                                <div id="charthere" style="width: 100%; height: 100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        LoadData();
+        //var newLongCode = "";
+        //var yellowvalue;
+        //var redvalue;
+
+        //$(function () {
+        //    $.ajax({
+        //        url: "/Contract/getWarn",
+        //        data: {
+        //            MonitorType: "InConProgress"
+        //        },
+        //        type: "POST",
+        //        success: function (text) {
+        //            var result = text;
+        //            var s = result.split("|");
+        //            yellowvalue = s[0];
+        //            redvalue = s[1];
+        //        }
+        //    });
+        //    //SetBtnEditValue("txtPlanName", EpsProjName);
+        //    LoadData();
+        //});
+        //mini.get("txtPlanName").on("buttonclick", function (e) {
+        //    OnWiardPlan();
+        //})
+        //function OnWiardPlan() {
+        //    var p = { title: "选择项目计划", multi: "0" };
+        //    p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+        //    p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+        //    p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+        //    OpenWizard(p, function (data) {
+        //        currenttask = data[0].project_guid;
+        //        newLongCode = data[0].LongCode;
+        //        SetBtnEditValue("txtPlanName", data[0].project_name);
+        //    })
+        //}
+        mini.get("IncomeContractProgress").on("drawsummarycell", function (e) {
+            if (e.field == "ContractAmount" || e.field == "ApplyAmount" || e.field == "InvoiceAmount" || e.field == "ReceiveAmount") {
+                e.cellStyle = "text-align:right;"
+                e.cellHtml = e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+            if (e.field == "project_name")
+            {
+                e.cellHtml = "合计";
+            }
+        })
+        function ViewForm(e) {
+            var SubContractId = e.node["Id"];
+            var url = "/Form/ValidForm/" + "34399717-2ebe-40fe-9fd7-bca7b76f54e4" + "/" + "/view/" + SubContractId;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        function onDrawCell(e) {
+            var node = e.node,
+                column = e.column,
+                field = e.field,
+                value = (e.value * 100).toFixed(2);
+
+            //比例进度条
+            if (!e.record.EpsProjType) {
+                if (field == "progress" || field == "InvoicePercent" || field == "ReceivePercent") {
+                    e.cellHtml = '<div class="progressbar">'
+                                    + '<div class="progressbar-percent" style="width:' + value + '%;"></div>'
+                                    + '<div class="progressbar-label">' + value + '%</div>'
+                                + '</div>';
+                }
+                if (field == "Status") {
+                    var ReceivePercent = e.record.ReceivePercent;
+                    //var progress = e.record.progress;
+                    //var cha = progress - ReceivePercent;
+                    //if (cha < yellowvalue)
+                    //    e.cellHtml = '<div class="blues">●</div>';
+                    //if (cha >= yellowvalue && cha < redvalue)
+                    //    e.cellHtml = '<div class="yellows">●</div>';
+                    //if (cha >=redvalue)
+                    //    e.cellHtml = '<div class="reds">●</div>';
+
+                    //收款比例
+                    if (ReceivePercent >= 1)
+                        e.cellHtml = '<div class="blues">●</div>';
+                    if (ReceivePercent < 1 && ReceivePercent > 0)
+                        e.cellHtml = '<div class="yellows">●</div>';
+                    if (ReceivePercent <= 0)
+                        e.cellHtml = '<div class="reds">●</div>';
+                }
+            }
+
+        }
+        mini.get("IncomeContractProgress").on("rowclick", function (e) {
+            if (!e.record.EpsProjType) {
+                LoadChart(e.record.Id);
+            }
+        });
+        function LoadData() {
+            var startDate = "";
+            var endDate = "";
+            //当前年的1-1到当前天
+            startDate = new Date().getFullYear() + "-1-1";
+            endDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+            if (mini.get("txtSignFDate").getValue() == "" && mini.get("txtSignTDate").getValue() == "") {
+                mini.get("txtSignFDate").setValue(startDate);
+                mini.get("txtSignTDate").setValue(endDate);
+            }
+            ////开始时间
+            //var startDate = IsEmpty(mini.get("txtSignFDate").getValue()) ? "" : mini.get("txtSignFDate").getValue();
+            ////结束时间
+            //var endDate = IsEmpty(mini.get("txtSignTDate").getValue()) ? "" : mini.get("txtSignTDate").getValue();
+            //项目名称
+            var projName = IsEmpty(mini.get("project_name1").getValue()) ? "" : mini.get("project_name1").getValue();
+            //合同名称
+            var contractName = IsEmpty(mini.get("txtContractName").getValue()) ? "" : mini.get("txtContractName").getValue();
+            //甲方
+            var partyA = IsEmpty(mini.get("txtPartyAName").getValue()) ? "" : mini.get("txtPartyAName").getValue();
+
+            var ContractName = "";
+            $.ajax({
+                url: "/Al/EPMIncomeContractProgress",
+                data: {
+                    startDate: mini.get("txtSignFDate").getValue().format("yyyy-MM-dd"),
+                    endDate: mini.get("txtSignTDate").getValue().format("yyyy-MM-dd"),
+                    projName: projName,
+                    contractName: contractName,
+                    partyA: partyA
+                },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("IncomeContractProgress");
+                        grid.loadList(o.data.value, "Id", "");
+                        LoadChart(o.data.value[0]["Id"]);
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        //加载图表
+        function LoadChart(conId) {
+            $.ajax({
+                url: "/Contract/EPMContractProgressChar",
+                data: {
+                    conId: conId
+                },
+                type: "POST",
+                success: function (text) {
+                    var result = text;
+                    var s = result.split("|");
+                    var sddt = s[0];
+                    var sddt1 = s[1];
+                    var svvl1 = s[2];
+                    var sddt2 = s[3];
+                    var svvl2 = s[4];
+
+                    var ddt = {};
+                    var ddt1 = {};
+                    var vvl1 = {};
+                    var ddt2 = {};
+                    var vvl2 = {};
+                    ddt = sddt.split(",");
+                    ddt1 = sddt1.split(",");
+                    vvl1 = svvl1.split(",");
+                    ddt2 = sddt2.split(",");
+                    vvl2 = svvl2.split(",");
+
+
+                    var opt = {};
+                    opt.title = { text: "合同执行" };
+                    opt.calculable = true;
+                    opt.tooltip = { trigger: 'axis' };
+                    opt.legend = { data: ['开票进度', '付款进度'] },
+                    opt.toolbox = { show: false };
+                    //opt.xAxis = [xaxis];
+                    opt.xAxis = [{ type: 'category', data: [] }];
+                    opt.yAxis = [{ type: 'value', axisLabel: { formatter: '{value}%' } }, { type: 'value', axisLabel: { formatter: '{value}%' } }];
+                    opt.series = [{ name: '开票进度', type: 'line', data: [] }, { name: '付款进度', type: 'line', yAxisIndex: 1, data: [] }];
+
+                    for (var i = ddt.length - 1; i > -1 ; i--) {
+                        opt.xAxis[0].data.push(ddt[i]);
+                        for (var j = ddt1.length - 1; j > -1 ; j--) {
+                            if (ddt[i] == ddt1[j]) {
+                                opt.series[0].data.push(vvl1[j]);
+                            }
+                        }
+                        for (var k = ddt2.length - 1; k > -1 ; k--) {
+                            if (ddt[i] == ddt2[k]) {
+                                opt.series[1].data.push(vvl2[k]);
+                            }
+                        }
+                    }
+
+                    InitEChart("charthere", opt);
+
+                }
+            });
+
+        }
+
+
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+        //function OpenWizard(e, callback) {
+        //    mini.open({
+        //        url: e.url,
+        //        width: "80%", height: "80%", title: e.title,
+        //        showMaxButton: true,
+        //        onload: function () {
+        //            var iframe = this.getIFrameEl();
+        //            var winpar = iframe.contentWindow.WizardParams;
+        //            if (winpar && e.multi) {
+        //                winpar.multi = e.multi;
+        //            }
+        //            var selobj = iframe.contentWindow.Select;
+        //            if (selobj) {
+        //                if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+        //                if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+        //            }
+        //        },
+        //        ondestroy: function (action) {
+        //            if (action != "ok") return;
+        //            var iframe = this.getIFrameEl();
+        //            var data = null;
+        //            if (iframe.contentWindow.Select)
+        //                data = iframe.contentWindow.Select.GetData();
+        //            else {
+        //                if (iframe.contentWindow.GetData)
+        //                    data = iframe.contentWindow.GetData();
+        //            }
+        //            data = mini.clone(data);
+        //            if (data) {
+        //                if (callback) callback(data);
+        //            }
+        //        }
+        //    });
+        //}
+    </script>
+</body>
+</html>

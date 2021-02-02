@@ -1,0 +1,233 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同控制管理
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <div id="btnPrint" class="btn-group"></div>
+
+                        <a class="mini-button blue" id="ContractControl.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存
+                        </a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="ContractControl.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新
+                        </a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="ContractControl.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭
+                        </a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="ContractControl" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="ContractControl.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+ 
+
+                                    <tr>
+                                        <td>
+                                            填报年月
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.years" class="mini-monthpicker" name="years" />
+                                        </td>
+                                        <td>
+                                            填报部门
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.DeptName" class="mini-textbox" name="DeptName" readonly/>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+
+                                            <input id="ContractControl.Memo" name="Memo" class="mini-TextArea" height="100" />
+                                        </td>
+                                    </tr>
+
+
+
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="ContractControl.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title='合同管理明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ContractControlList.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ContractControlList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="ContractControlList" class="mini-datagrid" style="height: 100%;" idfield="Id" allowresize="true" allowcelledit="true"
+                                     allowcellselect="true" allowCellWrap="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="Name" headeralign="center">
+                                            合同名称
+                                            <input id="ContractControlList.Name" property="editor" class="mini-textbox" style="width: 100%;" readonly />
+
+                                        </div>
+                                        <div field="Code" headeralign="center">
+                                            合同编号
+                                            <input id="ContractControlList.Code" property="editor" class="mini-textbox" style="width: 100%;"  readonly/>
+
+                                        </div>
+                                        <div field="TimeA" headeralign="center" dateformat="yyyy-MM-dd">
+                                            签订时间
+                                            <input id="ContractControlList.TimeA" property="editor" class="mini-datepicker" style="width: 100%;"  readonly />
+                                        </div>
+                                        <div field="contractAmount" headeralign="center" format="n2">
+                                            合同金额
+                                            <input id="ContractControlList.contractAmount" property="editor" class="mini-Spinner" style="width: 100%;" format="n2"   readonly/>
+                                        </div>
+                                        <div field="TimeB" headeralign="center" width="100" dateformat="yyyy-MM-dd">
+                                            合同履行时间
+
+                                            <input id="ContractControlList.TimeB" property="editor" class="mini-datepicker" style="width: 20%;" />
+                                        </div>
+                                        <div field="Node" headeralign="center">
+                                            里程碑节点
+
+                                            <input id="ContractControlList.Node" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ReceivingNode" headeralign="center">
+                                            收款节点
+
+                                            <input id="ContractControlList.ReceivingNode" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Progress" headeralign="center">
+                                            实际进度
+                                            <input id="ContractControlList.Progress" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Analysis" headeralign="center">
+                                            进度偏差分析
+                                            <input id="ContractControlList.Analysis" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Acceptance" headeralign="center">
+                                            竣工验收及质量保修
+                                            <input id="ContractControlList.Acceptance" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Deal" headeralign="center">
+                                            争议处理
+                                            <input id="ContractControlList.Deal" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" id="ContractControlList.Memo" class="mini-TextArea" name="Results" style="width: 100%;" />
+                                        </div>
+
+                                    </div>
+                                        </div>
+                                    </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        })
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "ContractControlList.Name") {//此处判断点击的状态按钮，才加判断条件，因为页面可能有多个向导按钮
+                //e.where = " ContractName in 	(select ContractName from PS_MK_ContractInfo where RunStatus !='3')";
+                e.where = "";
+            }
+        }
+
+
+        //PowerForm.EventWizardWhere = function (e) {
+        //    e.where = "1=1 and code='xxxxx'";
+        //}
+    </script>
+</body>
+
+</html>

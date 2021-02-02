@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId"; 
+        var FormState = "$Model.data.FormState";
+		var EpsProjId = "$!CurrentSession.EpsProjId"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>工时分解
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_BudgetHour.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_BudgetHour.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_BudgetHour.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_BudgetHour" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.Project_ShortName" name="Project_ShortName" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_BudgetHour.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计划开始
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.Target_Strat_Date" name="Target_Strat_Date" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            计划完成
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.Target_End_Date" name="Target_End_Date" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计经理
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.DesignManager" name="DesignManager" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            检测类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.MeasureType" name="MeasureType" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            预算工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.BudgetHour" name="BudgetHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            变更工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.ChangeHour" name="ChangeHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更后工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.TotalHour" name="TotalHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            已分解工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.AllocatedHour" name="AllocatedHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            未分解工时
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.UnAllocatedHour" name="UnAllocatedHour" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_BudgetHour.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细'>
+                            <div class="mini-toolbar">
+                               
+                            </div>
+
+                            <div class="mini-fit">
+                                <div id="PS_BudgetHour_Dtl" class="mini-treegrid" style="height: 100%;"
+                                     idfield="Wbs_Guid" treecolumn="Wbs_Name" parentfield="Parent_Wbs_Guid" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true"   oncellbeginedit="BeginEdit"
+                                     oncellendedit="EndEdit" >
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+										<div field="Parent_Wbs_Guid" visible="false" ></div>
+                                        <div field="Wbs_Name" name="Wbs_Name" headeralign="center">
+                                            WBS名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  readonly="readonly"/>
+                                        </div>
+                                        <!-- <div field="Est_Wt" headeralign="center">
+                                            权值
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Est_Wt_Pct" headeralign="center">
+                                            权重
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div> -->
+                                        <div field="BudgetHour" headeralign="center">
+                                            预算工时
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="ChangeHour" headeralign="center">
+                                            变更工时
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="FinalBudgetHour" headeralign="center">
+                                            最终预算工时
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+		mini.parse();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function onValueChanged() {
+
+            var ProjectStartDate = mini.get("PS_BudgetHour.Target_Strat_Date").value;//开始时间
+            var ProjectEndDate = mini.get("PS_BudgetHour.Target_End_Date").value;//结束时间
+            var startDate = new Date(ProjectStartDate);
+            var endDate = new Date(ProjectEndDate);
+
+            if(Date.parse(startDate) - Date.parse(endDate)>0)
+                {
+                    Power.ui.alert("'计划开始时间'不能晚于'计划结束时间'!");
+                    mini.get("PS_BudgetHour.Target_End_Date").setValue("");
+                    return;
+                }
+        }
+
+	    PowerForm.EventAfterFormLoad = function (e,data) {
+            if(formconfig.FormState == "add"){
+				 funsself.APIExec("PS_MajorLeaderAppoint", "BO", "GetDesignManager", {"EpsProjId":EpsProjId}, function (text) {
+					 var o = mini.decode(text);
+					//
+					 if (o.success) {
+                       var datas = mini.decode(o.data.value);
+					   mini.get("PS_BudgetHour.DesignManager").setValue(datas.DesignManager);
+					   formconfig.config.joindata.currow["DesignManagerId"]=datas.DesignManagerId;
+
+                    }
+				});
+			}
+        }
+
+		PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "PS_BudgetHour_Dtl") {
+               var grid=mini.get("PS_BudgetHour_Dtl");
+			   var heads="WBS名称";
+			   var com=mini.get("PS_BudgetHour.MeasureType").getText();
+			   if(com=="专业")
+			   {
+
+			   heads="专业名称";
+			   }
+			   if(com=="WBS")
+			   {
+			   heads="WBS名称";
+			   }
+              grid.updateColumn("Wbs_Name", { header: heads });
+            }
+        }
+		function BeginEdit(e) {
+            if (!e.sender.isLeaf(e.record)) {
+                e.cancel = true;
+            }
+
+        }
+		mini.get("PS_BudgetHour_Dtl").on("cellcommitedit", function (e) {
+		var com=mini.get("PS_BudgetHour.MeasureType").getText();
+		var BudgetHours=mini.get("PS_BudgetHour.BudgetHour").getValue();
+			if(e.field == "BudgetHour"){
+					var data = e.sender.data;
+					var FinalBudgetHours = 0;
+					for (var i = 0; i < data.length; i++) {
+						var d = data[i];
+						FinalBudgetHours += d.BudgetHour == null ? 0 : parseFloat(d.BudgetHour);
+					}
+					FinalBudgetHours=FinalBudgetHours-e.oldValue+e.value;
+					if (FinalBudgetHours>BudgetHours){
+						 Power.ui.warning("预算工时超出已填预算工时!");
+						e.cancel = true;
+						return ;
+					}
+			}
+		})
+
+        function EndEdit(e) {
+
+
+			if (e.field == "BudgetHour" || e.field == "ChangeHour") {
+                var record = e.record;
+                var sender = e.sender;
+                var BudgetHour = record.BudgetHour == null ? 0 : parseFloat(record.BudgetHour);
+                var ChangeHour = record.ChangeHour == null ? 0 : parseFloat(record.ChangeHour);
+                var FinalBudgetHour = BudgetHour + ChangeHour;
+
+                sender.updateRow(record, { FinalBudgetHour: FinalBudgetHour });
+            }
+            TotalAcount(e.sender, e.record);
+			var data = e.sender.data;
+			var ChangeHours=0;
+			var FinalBudgetHours=0;
+			for (var i = 0; i < data.length; i++) {
+						var d = data[i];
+						FinalBudgetHours += d.FinalBudgetHour == null ? 0 : parseFloat(d.FinalBudgetHour);
+						ChangeHours += d.ChangeHour == null ? 0 : parseFloat(d.ChangeHour);
+			}
+			mini.get("PS_BudgetHour.ChangeHour").setValue(ChangeHours);
+			mini.get("PS_BudgetHour.AllocatedHour").setValue(FinalBudgetHours);
+			var Num=mini.get("PS_BudgetHour.BudgetHour").getValue();
+			var SumNUm=Num+ChangeHours;
+			mini.get("PS_BudgetHour.TotalHour").setValue(SumNUm);
+			var Num1=SumNUm-FinalBudgetHours;
+			mini.get("PS_BudgetHour.UnAllocatedHour").setValue(Num1);
+
+        }
+        function TotalAcount(sender,record) {
+            //获取当前节点的父节点，再获取父节点的所有子节点，并统计金额，并修改，当没有父节点的时候，退出
+            var parentSender = sender.getParentNode(record);
+            if (parentSender==null)  //父节点为空，则退出
+                return;
+            var childs = sender.getChildNodes(parentSender);//获取子节点集合
+            var BudgetHour = 0;// 总数
+			var ChangeHour=0;
+			var FinalBudgetHour=0;
+            for (var i = 0; i < childs.length; i++) {
+                var child = childs[i];
+                BudgetHour += child.BudgetHour == null ? 0 : parseFloat(child.BudgetHour);
+				  ChangeHour += child.ChangeHour == null ? 0 : parseFloat(child.ChangeHour);
+				  FinalBudgetHour += child.FinalBudgetHour == null ? 0 : parseFloat(child.FinalBudgetHour);
+            }
+
+            sender.updateRow(parentSender, { BudgetHour: BudgetHour ,ChangeHour:ChangeHour,FinalBudgetHour:FinalBudgetHour});//修改treegrid上的
+            TotalAcount(sender,parentSender)//把当前父节点，当成子节点，在计算父父节点
+        }
+
+    </script>
+</body>
+</html>

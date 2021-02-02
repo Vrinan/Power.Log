@@ -1,0 +1,901 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <!--<script src="/Scripts/PlatForm/PowerMobile.js"></script>-->
+    <!--<link href="/App_Themes/Default/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />-->
+    <link href="/Scripts/plugins/jstree/docs/assets/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <!--<link href="/App_Themes/Default/assets/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/App_Themes/Default/assets/css/style-metronic.css" rel="stylesheet" type="text/css" />
+    <link href="/App_Themes/Default/assets/css/style-responsive.css" rel="stylesheet" type="text/css" />-->
+
+    <script src="/Scripts/bootstrap/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    <script src="/Scripts/bootstrap/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"
+            type="text/javascript"></script>
+    <script src="/Scripts/plugins/jQuery/jquery-slimscroll/jquery.slimscroll.min.js"
+            type="text/javascript"></script>
+    <script src="/Scripts/plugins/jQuery/jquery.cookie.min.js" type="text/javascript"></script>
+    <script src="/Scripts/assets/scripts/app.js" type="text/javascript"></script>
+    <style>
+        /*控制tab页头部高度*/
+        .nav > li > a {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .portlet > .portlet-title > .caption.right {
+            float: right;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .hover {
+            cursor: pointer;
+        }
+
+        .table {
+            table-layout: fixed;
+        }
+
+            .table > tbody > tr > trhover {
+            }
+
+            .table > tbody > tr > td {
+                border-bottom: 1px solid #ddd;
+                border-top: 0px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+    </style>
+    <style type="text/css">
+        /*grid进度条*/
+        .progressbar {
+            position: relative;
+            background: #bbb;
+            width: 100%;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progressbar-percent {
+            position: absolute;
+            height: 18px;
+            background: #4F94CD;
+            left: 0;
+            top: 0px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .progressbar-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 13px;
+            color: White;
+            z-index: 10;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+        }
+    </style>
+    <style>
+        .icocolor {
+            color: white;
+        }
+
+        .projaction {
+            margin-left: 6px;
+            padding-right: 2px;
+        }
+
+        .zhoubao {
+            background-color: #CCCC00;
+        }
+
+        .baoxiao {
+            background-color: #0099CC;
+        }
+
+        .jiangjin {
+            background-color: #FFCC33;
+        }
+
+        .kaipiao {
+            background-color: #FF6666;
+        }
+
+        .jiesuan {
+            background-color: #FF6600;
+        }
+
+        .zhengshu {
+            background-color: #99CC33;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; overflow-x: hidden; background-gray">
+    <div class="row-wrap">
+        <div class="row row-hd row-hd-responsive">
+            <div class="col-md-8 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的审批
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <iframe style='width:100%;height:100%;' frameborder='0' src='/Form/EditForm/C18537D6-C6B6-4563-84BD-C4842AD08C7A/'></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>快捷操作
+                        </div>
+                        <div class="tools">
+                            <a href="" class="collapse"></a>
+                            <a href="#portlet-config" data-toggle="modal" class="config"></a>
+                            <a href="" class="reload"></a>
+                            <a href="" class="remove"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <iframe style='width:100%;height:100%;' frameborder='0' src='/Form/EditForm/61507CD7-C60E-4DE9-883A-C4A30E050F31/'></iframe>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-8 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的消息
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <iframe style='width:100%;height:100%;' frameborder='0' src='/Form/EditForm/a894cc31-b9d3-40b3-a76d-f39cb2bea59f/'></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>通知公告
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/EditForm/93086420-7fde-42f4-8b4f-f6e16e9dec51/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-condensed table-hover">
+                            <tbody id="PS_ProjectEvents"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-6" name="View_SF_ZHLeaveReport" id="View_SF_ZHLeaveReport" style="display:none">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>未销假记录
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/EditForm/1f13be96-6001-4c3e-83f5-7dcdf954023f/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_ZHLeave" ondrawcell="onDrawCellLeave" class="mini-datagrid" showpager="false" style="width: 100%; height: 100%;" pageSize="15" idField="ID">
+                            <div property="columns">
+                                <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="HumName" name="HumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="请假人员" align="left">请假人员<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Department" name="Department" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="请假部门" align="left">请假部门<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="LeaveTime" name="LeaveTime" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="请假期限" align="left">请假期限<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="StartDate" name="StartDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="请假起始日期" dateformat="yyyy-MM-dd" align="left">请假起始日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="EndDate" name="EndDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="请假结束日期" dateformat="yyyy-MM-dd" align="left">请假结束日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-6" name="View_SF_MarginSubcontractorApplyReport" id="View_SF_MarginSubcontractorApplyReport" style="display:none">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>保证金(保函)（分包）登记
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/EditForm/21e23a33-9393-4a6d-b4c1-b8f67ab00b42/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="View_SF_MarginSubcontractorApply" ondrawcell="onDrawCellApply" class="mini-datagrid" showpager="false" style="width: 100%; height: 100%;" pageSize="15" idField="Id">
+                            <div property="columns">
+                                <div field="Code" name="Code" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="编号" align="left">编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="名称" align="left">名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="PartyBName" name="PartyBName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="对方单位名称" align="left">对方单位名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="ReturnAmount" name="ReturnAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="登记金额" align="left" numberformat="n2">登记金额<input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" /></div>
+                                <div field="ExpirationTime" name="ExpirationTime" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="保函到期时间" dateformat="yyyy-MM-dd" align="left">保函到期时间<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegHumName" name="RegHumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人" align="left">录入人<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的任务
+                        </div>
+                        <div class="tools">
+                            <span style="color:white">从</span>
+                            <input id="syear" class="mini-datepicker" shownullitem="true" readonly="readonly" width="120" />
+                            <span style="color:white">到</span>
+                            <input id="smonth" class="mini-datepicker" shownullitem="true" readonly="readonly" width="120" />
+                            <a class="mini-button blue" id="SelectPeriod" onclick="SelectPeriod()"><i class="fa fa-ellipsis-h"></i>选择周期</a>
+                            <a class="mini-button blue" id="LastPeriod" onclick="LastPeriod()" tooltip="上一周期"><i class="fa fa-arrow-left"></i></a>
+                            <a class="mini-button blue" id="NowPeriod" onclick="NowPeriod()" tooltip="当前周期"><i class="fa fa-stop"></i></a>
+                            <a class="mini-button blue" id="NexPeriod" onclick="NexPeriod()" tooltip="下一周期"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="MyTask" class="mini-treegrid" style="width: 100%; height: 100%" showtreeicon="true" expandOnLoad="true"
+                             idfield="proj_plan_guid" parentfield="parent_plan_guid" treecolumn="plan_name" allowresize="true" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn" width="15"></div>
+                                <div field="plan_name" name="plan_name" width="80" headeralign="center">计划名称</div>
+                                <div field="plan_start_date" width="50" dateformat="yyyy-MM-dd" headeralign="center">计划开始</div>
+                                <div field="plan_end_date" width="50" dateformat="yyyy-MM-dd" headeralign="center">计划完成</div>
+
+                                <div field="FeedStatus" header="状态" align="center" width="30">状态</div>
+                                <div field="action" name="action" renderer="onActionRenderer" width="50" align="center" headerAlign="center">#</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="col-md-12 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>销售任务
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/EditForm/8e3b012a-299a-9aca-c06e-b1954a9f043b/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="v_mis_slaestask" class="mini-datagrid" ondrawcell="onDrawCellSaleTask" showpager="false" style="width: 100%; height: 100%;" pageSize="15" idField="ID">
+                            <div property="columns">
+                                <div field="TaskStatus" width="60" allowSort="true" headeralign="center">任务状态</div>
+                                <div field="finishpercent" width="60" allowSort="true" headeralign="center">完成进度</div>
+                                <div field="TaskId" width="80" allowSort="true" headeralign="center">任务编号</div>
+                                <div field="TaskName" width="250" allowSort="true" headeralign="center">任务名称</div>
+                                <div field="ProductType" width="80" allowSort="true" headeralign="center">产品类型</div>
+                                <div field="EstimateAmount" allowSort="true" headeralign="center" align="right" dataType="currency" currencyUnit="￥">预估金额</div>
+                                <div field="ResponsiblePerson" allowSort="true" headeralign="center">责任人</div>
+                                <div field="PlanFinishdate" allowSort="true" dateformat="yyyy-MM-dd" headeralign="center">计划完成日期</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div class="col-md-6 col-hd-6">
+                <div class="portlet box blue tabbable">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的问题
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/ViewForm/a4d2438a-263d-4430-b810-d935fcb0d380/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!--tabbable tabbable-custom-->
+                        <table class="tabbable tabbable-custom">
+                            <tbody id="wenti"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的会议
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/ViewForm/05144422-9f3c-40c3-9e97-a0fe42736885/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-condensed table-hover">
+                            <tbody id="MisMeeting"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-hd-6">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-calendar"></i>我的文档
+                        </div>
+                        <div class="caption right">
+                            <a href="/Form/ViewForm/b1ed854c-78b5-4e55-98a3-5d22e13be900/" style="color:white"><i class="fa fa-bars"></i>更多</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-condensed table-hover">
+                            <tbody id="DocFile"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" hasvelocity="true">
+        var deptidLeave = "$!CurrentSession.DeptId";
+        $session = { HumanId: "$!CurrentSession.HumanId", HumanCode: "$!CurrentSession.HumanCode", EpsProjId: "$!CurrentSession.EpsProjId", DeptId: "$!CurrentSession.DeptId", PosiName: "$!CurrentSession.PosiName" }
+    </script>
+    <script type="text/javascript">
+        mini.parse();
+        var currentperiod = "";
+        $(function () {
+            //LaodPeriod();
+            //初始化加载数据
+            //1、通知公告
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: { KeyWord: 'PS_ProjectEvents', KeyWordType: 'BO', select: 'Id,Code,Title,RegDate', swhere: '', sort: 'RegDate desc', index: '0', size: '8' },
+
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        var html = '';
+                        for (var i = 0; i < data.length; i++) {
+                            html += "<tr class='hover' onclick=\"OnViewForm('494875E9-B0DF-4701-9BC2-DD52AAF413B1','" + data[i].Id + "')\">";
+                            html += ("<td>" + data[i].Title + "</td>");
+                            html += ("<td width='100px'>" + data[i].RegDate.Format("yyyy-MM-dd") + "</td>");
+                            html += "</tr>";
+                        }
+                        if (data.length == 0) {
+                            html = "<p class='text-center' style:'font-size: 12px;'>暂无通知信息</p>"
+                        }
+                        $("#PS_ProjectEvents").html(html);
+
+                    }
+                }
+            })
+
+
+            //3、我的会议
+            var p = { KeyWord: 'PS_MeetingSummary', KeyWordType: 'BO', select: 'Id,Title,MeetingDate', swhere: '', sort: 'MeetingDate desc', index: '0', size: '8' };
+            p.swhere = "ParticipantsId like '%" + $session.HumanCode + ",%'";
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        var html = '';
+                        for (var i = 0; i < data.length; i++) {
+                            html += "<tr class='hover' onclick=\"OnViewForm('d0e845ea-ff8c-4b2c-9bb0-8538b3adb234','" + data[i].Id + "')\">";
+                            html += ("<td>" + data[i].Title + "</td>");
+                            html += ("<td width='100px'>" + data[i].MeetingDate.Format("yyyy-MM-dd") + "</td>");
+                            html += "</tr>";
+                        }
+                        if (data.length == 0) {
+                            html = "<p class='text-center' style:'font-size: 12px;'>暂无将要参加的会议</p>"
+                        }
+                        $("#MisMeeting").html(html);
+                    }
+                }
+            })
+            var HumanId = $session.HumanId;
+            //if (HumanId != 'ad000000-0000-0000-0000-000000000000') {
+            //    //为什么这个hideTab不能用啊！！
+            //    //hideTab("View_SF_MarginSubcontractorApplyReport");
+            //    //hideTab("View_SF_ZHLeave");
+            //    document.getElementById("View_SF_MarginSubcontractorApplyReport").style.display = "none";
+            //    ument.getElementById("View_SF_MarginSubcontractorApplyReport").style.display = "none";
+            //}
+            var PosiName = $session.PosiName;
+            //if (HumanId != 'ad000000-0000-0000-0000-000000000000' || PosiName != "合同_部长" || PosiName != "招标_部长" || PosiName != "财务_部长" || PosiName != "安环_部长" || PosiName != "项目_部长" || PosiName != "设计_部长" || PosiName != "运行_部长" || PosiName != "市场_部长" || PosiName != "制造_部长" || PosiName != "综合_部长") {
+            if (HumanId == 'ad000000-0000-0000-0000-000000000000' || PosiName.indexOf("部长") != -1) {
+                document.getElementById("View_SF_MarginSubcontractorApplyReport").style.display = "";
+                document.getElementById("View_SF_ZHLeaveReport").style.display = "";
+            }
+
+            //5、最新文档
+            GetDocFiles();
+            //6、我的项目
+            GetMyProjects();
+            //7、我的问题
+            GetMisTask();
+            //add1、未销假记录
+            GetZHLeave();
+            //add2、保证金(保函)（分包）登记
+            GetFKApply();
+        })
+        mini.get("MyTask").on("drawcell", function (e) {
+            if (e.field == "FeedStatus") {
+                var data = { "0": "新增", "20": "审批中", "35": "生效", "40": "终止", "50": "批准" };
+                var txt = data[e.record[e.field]];
+                if (!txt) txt = e.record[e.field];
+                e.cellHtml = txt;
+            }
+        })
+        function SelectPeriod() {
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-cn/StdPlan/WizardSelectPeriod.htm",
+                width: 900,
+                height: 550,
+                title: "选择周期",
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere) selobj.SetWhere(" proj_guid='" + $session.EpsProjId + "' ");
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        currentperiod = data.Id;
+                        mini.get("syear").setValue(data.PeriodStart);
+                        mini.get("smonth").setValue(data.PeriodEnd);
+                        GetMyProjects();
+
+                    }
+                }
+            });
+        }
+
+        function onActionRenderer(e) {
+            if (e.record.TaskCount > 0) {
+                if (!e.record.FeedRecordId) {
+                    return '<a href="#" class="btn default btn-xs purple" onclick=\'InitProgressFeedBack("' + e.record.proj_plan_guid + '","' + e.record.plan_name + '","' + e.record.period_guid + '")\'><i class="fa fa-edit"></i> 反馈(' + e.record.TaskCount + ')</a>';
+                } else {
+                    return '<a href="#" class="btn default btn-xs purple" onclick=\'OpenFeedBackForm("' + e.record.FeedRecordId + '")\'><i class="fa fa-edit"></i> 反馈(' + e.record.TaskCount + ')</a>';
+                }
+            }
+
+
+        }
+        function InitProgressFeedBack(plan_guid, plan_name, period_guid) {
+            var data = {};
+            data.plan_guid = plan_guid;
+            data.plan_name = plan_name;
+            data.period_guid = period_guid;
+            $.ajax({
+                url: "/Plan/InitProgressFeedBack",
+                dataType: "JSON",
+                data: data,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        OpenFeedBackForm(o.data.value);
+                    }
+                }
+            });
+        }
+        function OpenFeedBackForm(keyvalue) {
+            mini.open({
+                url: '/Form/ValidForm/414a8e7e-1125-46fd-92b2-25adb5a87a99/edit/' + keyvalue + '/?loadtaks=true',
+                showMaxButton: true,
+                width: 800,
+                height: 600,
+                ondestroy: function () {
+                    GetMyProjects();
+                }
+            })
+        }
+        //8、获取最新文档
+        function GetDocFiles() {
+            var p = { KeyWord: 'DocFile', KeyWordType: 'BO', select: 'Id,Name,UpdHumName,UpdDate', swhere: '', sort: 'UpdDate desc', index: '0', size: '10' };
+            p.swhere = "RegHumId = '" + $session.HumanId + "'";
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        var html = '';
+                        for (var i = 0; i < data.length; i++) {
+                            html += "<tr>";
+                            html += ("<td>" + data[i].Name + "</td>");
+                            html += ("<td width='80px'>" + data[i].UpdHumName + "</td>");
+                            html += ("<td width='100px'>" + data[i].UpdDate.Format("yyyy-MM-dd") + "</td>");
+                            html += ("<td class='hover' onclick=\"OnLookandDownload('Look','" + data[i].Id + "')\" width='20px'><i class='fa fa-eye'></i></td>");
+                            html += ("<td class='hover' onclick=\"OnLookandDownload('Download','" + data[i].Id + "')\" width='20px'><i class='fa fa-download'></i></td>");
+                            html += "</tr>";
+                        }
+                        $("#DocFile").html(html);
+                    }
+                }
+            })
+        }
+        //上一周期
+        function LastPeriod() {
+            //找开始时间-1天=Period[i]的结束时间的数据
+            var a = mini.get("syear").getValue();
+            var x = a.setDate(a.getDate() - 1);
+
+            var d = new Date(x);
+
+            for (var i = 0; i < Period.length; i++) {
+                if (i == Period.length - 1) {
+                    mini.get("LastPeriod").setEnabled(false);
+                }
+                if (mini.formatDate(d, "yyyy-MM-dd") == mini.formatDate(Period[i].PeriodEnd, "yyyy-MM-dd")) {
+                    mini.get("syear").setValue(Period[i].PeriodStart);
+                    mini.get("smonth").setValue(Period[i].PeriodEnd);
+                    currentperiod = Period[i].Id;
+                    GetMyProjects();
+
+                    mini.get("NexPeriod").setEnabled(true);
+                    mini.get("NowPeriod").setEnabled(true);
+                    break;
+                }
+            }
+
+        }
+        //下一周期
+        function NexPeriod() {
+            var day = new Date();
+            var a = mini.get("smonth").getValue();
+            var x = a.setDate(a.getDate() + 1);
+
+            var d = new Date(x);
+
+            for (var i = 0; i < Period.length; i++) {
+                if (mini.formatDate(d, "yyyy-MM-dd") == mini.formatDate(Period[i].PeriodStart, "yyyy-MM-dd")) {
+                    mini.get("syear").setValue(Period[i].PeriodStart);
+                    mini.get("smonth").setValue(Period[i].PeriodEnd);
+                    currentperiod = Period[i].Id;
+                    GetMyProjects();
+                    mini.get("LastPeriod").setEnabled(true);
+                    break;
+                }
+            }
+            if (mini.get("smonth").getValue() >= day) {
+                mini.get("NexPeriod").setEnabled(false);
+                mini.get("NowPeriod").setEnabled(false);
+            }
+        }
+        //当前周期
+        function NowPeriod() {
+            var d = new Date();
+            for (var i = 0; i < Period.length; i++) {
+                if (Period[i].PeriodStart <= d && Period[i].PeriodEnd >= d) {
+                    mini.get("syear").setValue(Period[i].PeriodStart);
+                    mini.get("smonth").setValue(Period[i].PeriodEnd);
+                    currentperiod = Period[i].Id;
+                    GetMyProjects();
+                    mini.get("NexPeriod").setEnabled(true);
+                    mini.get("NowPeriod").setEnabled(false);
+                    mini.get("LastPeriod").setEnabled(true);
+                    break;
+                }
+
+            }
+        }
+        //	 var Period = [];
+        ////加载当前日期所属范围
+        //	function LaodPeriod(){
+
+        //        var exec = { KeyWord: "PS_MDM_MeasurePeriodDefine", MethodName: "GetPreiod", MethodParams: { epsid: $session.EpsProjId } };
+        //        var txt = mini.encode(exec); //对象转换成字符串
+
+        //        $.ajax({
+        //            url: "/API/Exec",
+        //            type: "POST",
+        //            data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+        //            cache: false,
+        //            async: false, //同步
+        //            success: function (text) {
+        //                var tmp = mini.decode(text);
+        //                if (tmp.success == false) {
+        //                    Power.ui.alert(tmp.message);
+        //                    return;
+        //                }
+        //                var result = tmp.data.value;
+        //                Period = mini.decode(result);//当前EPS的检测周期
+        //            }
+        //        });
+        //        if (Period.length == 0)
+        //            return;
+        //        var d = new Date();
+        //        //循环当前EPS的检测周期，如果当前日期在周期之间，则赋值，如果全部都不在，则提示
+        //        for (var i = 0; i < Period.length; i++) {
+        //            if (Period[i].PeriodStart <= d && Period[i].PeriodEnd >= d) {
+        //                mini.get("syear").setValue(Period[i].PeriodStart);
+        //                mini.get("smonth").setValue(Period[i].PeriodEnd);
+
+        //                break;
+        //            }
+        //        }
+
+        //	}
+
+        //9、获取我的任务
+        function GetMyProjects() {
+            var data = {};
+            data.period_guid = currentperiod;
+            $.ajax({
+                url: "/Plan/GetPlanFeedBackRecordForPC",
+                dataType: "JSON",
+                data: data,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (!o.data.currentperiod && currentperiod == "") {
+                            //Power.ui.alert("项目未定义周期！");
+                            return false;
+                        }
+                        if (currentperiod == "") {
+                            mini.get("syear").setValue(o.data.currentperiod.PeriodStart);
+                            mini.get("smonth").setValue(o.data.currentperiod.PeriodEnd);
+                        }
+                        var tree = mini.get("MyTask");
+                        tree.loadList(o.list, tree.idField, tree.parentField);
+                    }
+                }
+            });
+        }
+
+
+
+        //add1、未销假记录
+        function GetZHLeave() {
+            var p = { KeyWord: 'View_SF_ZHLeave', KeyWordType: 'VIEWENTITY', select: '*', swhere: '', sort: 'Code', index: '0', size: '' };
+            p.swhere = "DaptId='" + $session.DeptId + "'";
+            //var dpid = sessiondata.DeptId;
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        mini.get("View_SF_ZHLeave").setData(data);
+                    }
+                    else
+                        mini.get("View_SF_ZHLeave").setData("");
+                }
+            })
+        }
+
+        //add2、保证金(保函)（分包）登记
+        function GetFKApply() {
+            var p = { KeyWord: 'View_SF_MarginSubcontractorApply', KeyWordType: 'VIEWENTITY', select: '*', swhere: '', sort: 'Code', index: '0', size: '' };
+            var firstDate = new Date();
+            var YearMonth = firstDate.format("yyyyMM");
+            p.swhere = "ExpirationTimes='" + YearMonth + "'";
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        mini.get("View_SF_MarginSubcontractorApply").setData(data);
+                    }
+                    else
+                        mini.get("View_SF_MarginSubcontractorApply").setData("");
+                }
+            })
+        }
+
+
+        //PowerForm.EventAfterFormLoad = function () {
+        //    //var deptName =$session.DeptName;
+        //    var HumanId = $session.HumanId;
+        //    if(HumanId != 'AD000000-0000-0000-0000-000000000000')
+        //    {
+        //        hideTab("View_SF_MarginSubcontractorApply");
+        //        hideTab("View_SF_ZHLeave");
+        //    }
+        //}
+        function onDrawCellLeave(e) {
+            if (e.field == "Code") {
+                e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('f841338e-293c-4819-b11a-e399f5d58dca','" + e.record.Id + "')\">" + e.record.Code + "</a>";
+            }
+        }
+
+        function onDrawCellApply(e) {
+            if (e.field == "Code") {
+                e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('aa72f7a9-bc84-4c94-8890-2e3f27cc97df','" + e.record.Id + "')\">" + e.record.Code + "</a>";
+            }
+        }
+
+        //if (o.success) {
+        //    var data = mini.decode(o.data.value);
+        //    var html = '';
+        //    for (var i = 0; i < data.length; i++) {
+        //        html += "<tr class='hover' onclick=\"OnViewForm('d0e845ea-ff8c-4b2c-9bb0-8538b3adb234','" + data[i].Id + "')\">";
+        //        html += ("<td>" + data[i].Title + "</td>");
+        //        html += ("<td width='100px'>" + data[i].MeetingDate.Format("yyyy-MM-dd") + "</td>");
+        //        html += "</tr>";
+        //    }
+        //    if (data.length == 0) {
+        //        html = "<p class='text-center' style:'font-size: 12px;'>暂无将要参加的会议</p>"
+        //    }
+        //    $("#MisMeeting").html(html);
+        //}
+
+
+        //10、获取我的销售任务
+        function GetSaleTask() {
+            var p = { KeyWord: 'v_mis_slaestask', KeyWordType: 'VIEWENTITY', select: 'ID,TaskStatus,finishpercent,TaskId,TaskName,ProductType,EstimateAmount,ResponsiblePerson,PlanFinishdate', swhere: '', sort: 'TaskId', index: '0', size: '5' };
+            p.swhere = "ResponsiblePersonId='" + $session.HumanId + "'";
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        mini.get("v_mis_slaestask").setData(data);
+                    }
+                    else
+                        mini.get("v_mis_slaestask").setData("");
+                }
+            })
+        }
+        // 获取我的问题
+        function GetMisTask() {
+            var p = { KeyWord: 'PS_ProjectIssue', KeyWordType: 'BO', select: 'Id,Code,Title,IssueLevel,IssuePriority,IssueStatus,RequiredDate', sort: 'DeadLine desc', index: '0', size: '8' };
+            p.swhere = "(AppointHumanId='" + $session.HumanId + "' or RegHumId='" + $session.HumanId + "') and IssueStatus<>'01'";
+            $.ajax({
+                url: "/Form/GridPageLoad",
+                data: p,
+                type: 'post',
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        var html = "";
+                        for (var i = 0; i < data.length; i++) {
+                            html += "<tr class='hover' onclick=\"OnViewForm('9e86339d-e1c5-46d8-a523-749bdeea16ae','" + data[i].Id + "')\">";
+                            html += ("<td width='80px'>" + data[i].IssueLevel + "</td>");
+                            html += ("<td>" + data[i].Title + "</td>");
+                            html += ("<td width='100px'>" + data[i].RegDate.Format("yyyy-MM-dd") + "</td>");
+                            html += "</tr>";
+                        }
+                        if (data.length == 0) {
+                            html = "<p  class='text-center' style:'font-size: 12px;'>暂无问题</p>";
+                        }
+                        $("#wenti").html(html);
+                    }
+                }
+            })
+        }
+
+        //绘制项目grid中的进度
+        function onDrawProgressCell(e) {
+            if (e.field == "complete_pct") {
+                e.cellHtml = '<div class="progressbar">'
+                                + '<div class="progressbar-percent" style="width:' + e.value + '%;"></div>'
+                                + '<div class="progressbar-label">' + e.value + '%</div>'
+                            + '</div>';
+            }
+            if (e.field == "task_name") {
+                e.cellHtml = "<a target=\"_blank\" href=\"/Form/EditForm/19b8af36-0daf-4b2f-b227-b1cf9f03873d/?projectguid="
+                    + e.record.epsprojid + "\">" + e.record.projectname + "</a>";
+            }
+
+
+        }
+        function myOpenUrl(projectguid) {
+            var url = "/Form/EditForm/3c195ded-ed01-6d9f-6a74-57eb729d5a0a/?project_guid=" + projectguid;
+            mini.open({ url: url, width: 1200, height: 150 })
+        }
+        //绘制销售任务中的进度
+        function onDrawCellSaleTask(e) {
+            if (e.field == "finishpercent") {
+                e.cellHtml = '<div class="progressbar">'
+                                + '<div class="progressbar-percent" style="width:' + e.value + '%;"></div>'
+                                + '<div class="progressbar-label">' + e.value + '%</div>'
+                            + '</div>';
+            }
+            if (e.field == "TaskName") {
+                e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('da063f7a-21b1-4e81-8992-6f2cfc614e02','" + e.record.ID + "')\">" + e.record.TaskName + "</a>";
+            }
+        }
+
+
+
+
+
+        function OnAddForm(formid) {
+            var row = mini.get("MyProjects").getSelected();
+            if (!row) return;
+            var data = { "EpsProjId": row.epsprojid, "OwnProjId": row.epsprojid, "OwnProjName": row.projectname };
+            var url = "/Form/AddForm/" + formid + "/";
+            //打开表单的宽、高,优先考虑按钮的参数，再考虑表单的参数
+            mini.open({
+                url: "/Form/AddForm/" + formid + "/",
+                width: 900,
+                height: 550,
+                showMaxButton: true,
+                onload: function () {
+                    //弹出页面加载完成，设置新增默认值
+                    var iframe = this.getIFrameEl();
+                    //调用弹出页面方法进行初始化
+                    iframe.contentWindow.SetNewDefault(data);
+
+                }
+            });
+        }
+        function OnLookandDownload(type, Id) {
+            var url = null;
+            if (type == "Look") {
+                url = "/PowerPlat/FormXml/FileViewer.aspx?online=1&fileid=" + Id;
+            } else {
+                url = "/File/DownLoad/ftp/" + Id;
+            }
+            if (!url) {
+                return false;
+            }
+            window.open(url);
+        }
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/ViewForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 800,
+                height: 600
+            })
+        }
+    </script>
+</body>
+
+</html>

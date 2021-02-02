@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目编号申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="ProjectNumberApplication.ViewForm1" onclick="ViewForm1()"><i class="fa fa-eye"></i>查看团队组建</a>
+                    <a class="mini-button blue" id="PS_ProjectInfo.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看任务通知书</a>
+                    <a class="mini-button blue" id="SF_ProjectNumberApplication.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ProjectNumberApplication.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_ProjectNumberApplication.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ProjectNumberApplication" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.Code" name="Code" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td colspan="3">
+                                            <input id="SF_ProjectNumberApplication.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>  
+                                    <tr>
+                                        <td>
+                                            项目来源
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.ProjectSource" name="ProjectSource" class="mini-combobox" required="true" onvaluechanged="valuechanged"/>
+                                        </td>
+                                        <td class="aa">
+                                            项目名称
+                                        </td>
+                                        <td class="aa">
+                                            <input id="SF_ProjectNumberApplication.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"required="true"/>
+                                        </td>
+                                        <td class="bb">
+                                            项目名称
+                                        </td>
+                                        <td class="bb">
+                                            <input id="SF_ProjectNumberApplication.ProjectBName" name="ProjectBName" class="mini-textbox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.ProjectLeader" name="ProjectLeader" textname="ProjectLeader" class="mini-buttonedit"
+                                                   emptytext="请选择设计负责人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ProjectNumberApplication.DesignStage">设计阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.DesignStage" name="DesignStage" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>                                  
+                                    <tr>
+                                        <td>
+                                           设计规模(T/D)
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.StartupAccording" name="StartupAccording" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            任务通知书
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.TaskNotice" name="TaskNotice" textname="TaskNotice" class="mini-buttonedit"
+                                                   emptytext="关联设计任务通知书..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ProjectNumberApplication.Memo" name="Memo" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ProjectNumberApplication.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+	    
+        function ViewForm1() {
+            var id = formconfig.config.joindata.currow["Id"];
+            var ProjMessageId = formconfig.config.joindata.currow["ProjMessageId"];
+            if (IsEmpty(ProjMessageId)) {
+                Power.ui.warning("未生成团队组建！");
+            }
+            else {
+                var url = "/Form/ValidForm/6271cc3f-a34b-441c-bec3-ceec9db0a094/" + "/view/" + ProjMessageId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (o) {
+            $(".aa").hide();//隐藏
+            $(".bb").hide();
+            var a = mini.get("SF_ProjectNumberApplication.ProjectSource").getValue();
+            if (a == "F") {
+                $(".aa").show();
+            }
+            if (a == "T") {
+                $(".bb").show();
+            }
+            if (o.id == "SF_ProjectNumberApplication" && sessiondata.HumanId=="ad000000-0000-0000-0000-000000000000") {
+                //管理员任何状态都能修改code
+                mini.get("SF_ProjectNumberApplication.Save").setEnabled(true);
+                mini.get("SF_ProjectNumberApplication.Code").setReadOnly(false);
+            }
+            //var aa = mini.get("SF_HSE_RewardsAndPunishments.ImplementationHuman").getValue();
+            //if (aa == "" || aa == null || aa == undefined) {
+            //    mini.get("SF_HSE_RewardsAndPunishments.ImplementationHuman").setValue(sessiondata.UserName)
+            //}
+        }
+
+        function valuechanged() {
+            var a = mini.get("SF_ProjectNumberApplication.ProjectSource").getValue();
+            if (a == "F") {
+                $(".aa").show();
+                $(".bb").hide();
+            }
+            if (a == "T") {
+                $(".bb").show();
+                $(".aa").hide();
+            }
+        }
+        //查看
+        function ViewForm() {
+
+            var id = formconfig.config.joindata.currow["Id"];
+            var InvestorId = formconfig.config.joindata.currow["TaskNoticeId"];
+
+            if (formconfig.FormState == "add" || mini.get("SF_ProjectNumberApplication.TaskNotice").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/44b1001b-a253-4e67-ab24-49909d4489de/" + "/view/" + InvestorId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+
+            }
+        }
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (mini.get("SF_ProjectNumberApplication.Status").getValue() == "0" && mini.get("SF_ProjectNumberApplication.ProjectSource").getValue() == "T") {
+                var ProjectBName = formconfig.config.joindata.currow["ProjectBName"];
+                var par = { "ProjectBName": ProjectBName };
+                FormFuns.APIExec("SF_ProjectNumberApplication", "BO", "Budget", par, function (text) {
+                    var data = mini.decode(text).data.value;
+                    if (data == '1') {
+                        Power.ui.alert("该项目已存在，请更改项目来源选择项目！");
+                        //mini.get("SF_ProjectNumberApplication.ProjectBName").setValue();
+                        debugger;
+                    }
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>

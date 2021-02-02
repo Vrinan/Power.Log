@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=298" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=298" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=298" type="text/javascript"></script>
+    <script src="/Form/Init/4851ca7d-5041-49ae-a117-404c7e8bedc4/edit/"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" iconcls="fa-plus" id="View_ContractSc.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="View_ContractSc.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!-- <a class="mini-button blue" id="View_ContractSc.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                                <a class="mini-button blue" id="View_ContractSc.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                                <a class="mini-button blue" id="View_ContractSc.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                                <a class="mini-button blue" id="View_ContractSc.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a> -->
+                                <a class="mini-button green" iconcls="fa fa-sign-out" id="View_ContractSc.Export" onclick="PowerForm.OnExportDataToXls('View_ContractSc', '合同审查')">导出</a>
+                        </div>
+                        <div class="tools">
+                            <!-- <input id="SF_FK_EquipmentCostSchedule-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="SF_FK_EquipmentCostSchedule-search">
+                                <input id="SF_FK_EquipmentCostSchedule-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="SF_FK_EquipmentCostSchedule-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>查询 -->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_ContractSc" class="mini-treegrid" style="height:100%;" showsummaryrow="true" multiselect="true" idfield="treeId" showCheckBox="true" checkRecursive="true"
+                         showtreeicon="true" treecolumn="Name" parentfield="ParentId" resultastree="false" expandonload="true"
+                        allowresize="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <!--<div type="checkcolumn" width="30"></div>-->
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div field="Name" headeralign="center">
+                                    EPS名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Code" headeralign="center">
+                                    合同编号
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Title" headeralign="center">
+                                    合同名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="ContractAmount" headeralign="center" numberformat="n2">
+                                    合同金额
+                                    <input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" changeOnMousewheel="false"/>
+                                </div>
+                                <div field="PartyA" headeralign="center">
+                                    甲方
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="PartyB" headeralign="center">
+                                    乙方
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="ExecutorName" headeralign="center">
+                                    执行人
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <!-- summarytype="sum" -->
+                                <div field="RegDate" headeralign="center">
+                                    录入日期
+                                    <input property="editor" class="mini-datepicker" />
+                                </div>
+                                <div field="Memo" headeralign="center">
+                                    备注
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+    </script>
+</body>
+</html>

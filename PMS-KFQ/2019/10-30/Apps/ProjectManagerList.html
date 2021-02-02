@@ -1,0 +1,246 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="js/TouchSlide.1.1.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script src="/Apps/Common.js"></script>
+	<script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Apps/js/MobileSingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="style/style.css" rel="stylesheet" type="text/css" />
+    <link href="style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            background-color: #ebebeb;
+        }
+        .sendlist-title {
+            line-height: 40px;
+            font-size: 1.6rem;
+            background-color: #fff;
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            color: #666;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sendlist-content {
+            margin-top: 5px;
+        }
+
+        .sendlist {
+            border: 1px solid #ddd;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+            .sendlist h3 {
+                margin: 0px 10px;
+                line-height: 40px;
+                font-size: 1.6rem;
+            }
+
+            .sendlist p {
+                margin: 0px 10px;
+                line-height: 30px;
+            }
+
+            .sendlist .date {
+                font-size: 1.4rem;
+                color: #595959;
+            }
+			.sendlist .date span{
+				width:50%;
+				display:inline-block;
+				text-indent:4px;
+			}
+            .sendlist .time {
+                font-size: 1.4rem;
+            }
+
+            .sendlist .read {
+                font-size: 1.4rem;
+                line-height: 35px;
+                margin-top: 10px;
+                border-top: 1px solid #dedede;
+                font-weight: bold;
+            }
+
+                .sendlist .read span {
+                    float: right;
+                }
+			.sendlist .date .right{
+                float: right;
+             }
+    </style>
+
+</head>
+<body> 
+    <div class="sendlist-content" id="content">
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    var DataP = {};
+   
+    var types = "";
+    $(function () {
+		EpsProjLongCode=getParameter("EpsProjLongCode");
+        types = getParameter("types");
+        if ( EpsProjLongCode == ""||types == "") {
+            alert("没有传入必要数据");
+            return;
+        }
+      
+        LoadData({ size: "10", index: "0" });
+    })
+    function LoadData(dataparams) {
+        dataparams.size = "10";
+        dataparams.index = "0";
+        DataP = dataparams;
+        PowerM3AppCallBack.loadpage = doLoadData;
+
+        doLoadData(dataparams);
+    }
+    function doLoadData(dataparams) {
+        dataparams = dataparams || DataP;
+        if(types=="Project"){
+			var p = { KeyWord: "V_PS_EPM_ProjectList", KeyWordType: "ViewEntity", index: dataparams.index, size: dataparams.size };
+            p.swhere = "1=1 and (LongCode='" + EpsProjLongCode + "' or LongCode like '" + EpsProjLongCode + ".%')";;
+			 FormFuns.GridPageLoad(p, function (rlt) {
+                if (!rlt.success) {
+                    Power.ui.alert(rlt.message);
+                    return;
+                }
+                var rs = mini.decode(rlt.data.value);
+				BuildHTML(rs)
+			})
+
+		
+		}else if(types=="problem")
+		{
+			var p = { KeyWord: "PS_ProjectIssue", index: dataparams.index, size: dataparams.size};
+			var exp = {defaultright:false};
+			var str = mini.encode(exp);
+			str = base64encode(str);
+			p.extparams= str;
+            p.swhere = "IssueStatus<>'03' and  EpsProjId in ( select project_guid  from pln_project  where LongCode='" + EpsProjLongCode + "' or LongCode like '" + EpsProjLongCode + ".%' )";;
+			 FormFuns.GridPageLoad(p, function (rlt) {
+                if (!rlt.success) {
+                    Power.ui.alert(rlt.message);
+                    return;
+                }
+                var rs = mini.decode(rlt.data.value);
+				BuildHTML(rs)
+			});
+		
+		}
+		
+		
+    }
+    
+    function BuildHTML(data) {
+        var html = "";
+        if (types=="Project") {
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+				var act=0;
+				var pln=0;
+				var htmla='';
+				if (row.act_complete_pct != act && row.act_complete_pct != null)
+					 act =row.act_complete_pct.toFixed(2);
+				if (row.plan_complete_pct != pln && row.plan_complete_pct != null)
+					pln =row.plan_complete_pct.toFixed(2);
+                if (act - pln >= 0)
+                    htmla = '<a class="fa fa-circle " style="color:green"></a>';
+                else if (pln - act > 0 && pln - act <= 5)
+                    htmla = '<a class="fa fa-circle " style="color:yellow"></a>';
+                else if (pln - act > 5)
+                    htmla = '<a class="fa fa-circle " style="color:red"></a>';				
+                var project_name = "";
+                if (row.project_name != project_name && row.project_name != null)
+                    project_name = row.project_name;
+				var PV=0;
+				if (row.PV != PV && row.PV != null)
+                    PV = row.PV;
+				var EV=0;
+				if (row.EV != EV && row.EV != null)
+                    EV = row.EV;
+				var SPI=0;
+				if (row.SPI != SPI && row.SPI != null)
+                    SPI = row.SPI;
+					//onclick="OpenFrom(\'' + project_name + '\',\'' + row.proj_guid + '\',\'' + pln + '\',\'' + act + '\') 
+              html += '<div class="sendlist" onclick="OpenFrom(\'' + project_name + '\',\'' + row.project_guid + '\')">' +
+                '<h3>'+htmla + project_name + '</h3>	' +
+                '<p class="date"><span>计划完成:' + pln + '%</span><span>实际完成:' + act + '%</span></p>' +				
+				'<p class="date"><span>PV:' + PV + '</span><span>EV:' + EV + '</span></p>' +	
+				'<p class="read" >详情<span><i class="fa fa-angle-right"></i><span></p>' +
+                '</div> ';
+            }
+        }else if(types=="problem")
+		{
+			 for (var j = 0; j < data.length; j++) {
+				var row = data[j];
+				 var Title = "";
+                if (row.Title != Title && row.Title != null)
+                    Title = row.Title;
+				var AppointHuman = "";
+                if (row.AppointHuman != AppointHuman && row.AppointHuman != null)
+                    AppointHuman = row.AppointHuman;
+				var yx="";
+				if (row.IssuePriority != "" && row.IssuePriority != null)
+				{
+				    if(row.IssuePriority=="I1")
+						yx="低";
+					if(row.IssuePriority=="I2")
+						yx="中";
+					if(row.IssuePriority=="I3")
+						yx="高";
+				}
+				 html += '<div class="sendlist" onclick="OpenComment(\'' + Title + '\',\'' + row.Id + '\',\'' + row.EpsProjId + '\')">' +
+                '<h3>'+ Title + '</h3>	' +
+                '<p class="date">' + row.OwnProjName + '</p>' +				
+				'<p class="date">发起人:' + AppointHuman + '<span class="right">优先级：'+yx+'<span></p>' +	
+				'<p class="read" >详情<span><i class="fa fa-angle-right"></i><span></p>' +
+                '</div> ';
+			 }
+		}
+        
+        $("#content").append(html);
+
+        if (data.length > 0)
+            DataP.index = parseInt(DataP.index) + 1;
+
+    }
+	function OpenComment(title,Id,Eid) {
+        var url = "/Apps/ProjectComment.html?keyvalue="+Id+"&EpsProjId="+Eid; 
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"true","pullDown":"true","showTabbar":"true","title":"' + title + '"}',url);
+		}
+	function OpenFrom(title,Id) {
+        var url = "/Apps/Projectinform.html?EpsProjId="+Id+"&OpenType=E"; 
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"true","pullDown":"true","showTabbar":"true","title":"' + title + '"}',url);
+		}
+    var PowerM3AppCallBack = PowerM3AppCallBack || {};
+    PowerM3AppCallBack.pagepullup = function () {
+        //Power.ui.success("上拉触发成功");
+        //alert(typeof (loadpage));
+        PowerM3AppCallBack.loadpage(null, null);
+    }
+    PowerM3AppCallBack.loadpage = function () {
+    }
+</script>
+
+</html>

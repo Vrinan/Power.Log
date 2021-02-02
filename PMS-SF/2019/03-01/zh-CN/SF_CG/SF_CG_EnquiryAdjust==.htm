@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <!--Excel导入js引用-->
+    <!-- <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script> -->
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>补录询比价物资</span>
+                </div>
+                <div class="actions">
+                    <!-- <a class="mini-button blue" id="SF_CG_Enquiry.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> -->
+                    <a class="mini-button blue" id="SF_CG_Enquiry.Refresh" iconcls="fa fa-refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                    <a class="mini-button blue" id="SF_CG_Enquiry.CloseForm" iconcls="fa fa-power-off" onclick="PowerForm.OnBtnCloseForm(this)">关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="确认价物资">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" id="SF_CG_EnquiryList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_CG_EnquiryList.AdjustMat" onclick="PowerForm.OnBtnWizard(this)">选择调整物资</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_EnquiryList.Delete" onclick="OnBtnDel(this)">删除调整物资</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_CG_EnquiryList.DelMat" onclick="DelMat(this)">剔除物资</a>
+                                <a class="mini-button blue" iconcls="fa fa-refresh" id="SF_CG_EnquiryList.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_CG_EnquiryList" class="mini-datagrid" style="width: 100%; height: 100%;" 
+                                    showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true"
+                                    allowCellValid="true" sortField="Left(PlanCode,Len(PlanCode)-CHARINDEX('-' ,Reverse(PlanCode))),Cast(Right(PlanCode,CHARINDEX('-' ,Reverse(PlanCode))-1) AS INT)">
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div>
+                                        <div type="indexcolumn" width="40">序号</div>
+                                        <div field="IsAdjust" width="60" type="checkboxcolumn" truevalue="1" falsevalue="0">调整</div>
+                                        <div field="isDel" width="60" type="checkboxcolumn" truevalue="1" falsevalue="0">剔除</div>
+                                        <div field="Code" width="100" allowSort="true">物资编码<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PlanCode" width="120" allowSort="true">计划编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatName" width="100" allowSort="true">物资名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Specification" width="180" allowSort="true">规格型号/技术参数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="PID" width="100" allowSort="true">PID编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="MatUnit" width="100" allowSort="true">单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Supplier" width="140" allowSort="true">厂家/品牌/供应商<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="SupplyDate" width="100" allowSort="true">供货周期<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="Amount" width="100" allowSort="true" summarytype="sum">请购数量<input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeOnMousewheel="false" format="n2" style="width: 100%;" /></div>
+                                        <div field="Remark" width="150" allowSort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="基本数据">
+                            <div id="SF_CG_Enquiry" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>询价编号</td>
+                                        <td><input id="SF_CG_Enquiry.Code" name="Code" class="mini-textbox" readonly /></td>
+                                        <td>状态</td>
+                                        <td><input id="SF_CG_Enquiry.Status" name="Status" class="mini-combobox" readonly/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>询价名称</td>
+                                        <td><input id="SF_CG_Enquiry.Title" name="Title" class="mini-textbox" readonly /></td>
+                                        <td>采购方案</td>
+                                        <td><input id="SF_CG_Enquiry.SchemeCode" name="SchemeCode" class="mini-textbox" readonly/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function OnBtnDel(e){
+            var gridId =  e.id.split(".")[0];
+            var grid = mini.get(gridId);
+            var rows = grid.getSelecteds();
+            rows.forEach(function (item,i) {
+                //只允许删除调整物资
+                if(item.IsAdjust=="1"){
+                    grid.removeRow(item);
+                }
+            });
+            PowerForm.OnBtnSave(e);
+            Power.ui.success("仅对调整物资作删除");
+        }
+        function DelMat(e){
+            var gridId =  e.id.split(".")[0];
+            var grid = mini.get(gridId);
+            var rows = grid.getSelecteds();
+            var delPlanIds = "";
+            rows.forEach(function (item,i) {
+                    //只剔除非调整物资
+                    if(item.IsAdjust!="1"){
+                        delPlanIds += item.PlanId + ",";
+                    }
+                });
+            //把最后的,去掉
+            delPlanIds = delPlanIds.substr(0, delPlanIds.length - 1);
+
+            if(delPlanIds&&delPlanIds.length>0){
+                var par = { "EnquiryId": KeyValue,"PlanIds": delPlanIds };
+                Power.ui.loading("剔除中……");
+                FormFuns.APIExec("SF_CG_Enquiry", "BO", "FuckingDelMat", par, function (text) {
+                    Power.ui.loading.close();
+                    var data = mini.decode(text).data.value;
+                    var JSONData = mini.decode(text).data.value;
+                    if(mini.decode(text).success){
+                        Power.ui.success("剔除成功!");
+                        mini.get("SF_CG_EnquiryList").reload();
+                    }
+                });
+            }else{
+                Power.ui.warning("未选中物资!");
+            }
+        }
+        //调整物资IsAdjust=1
+        PowerForm.EventBeforeAddRow=function(e,data){
+            if(e.id=="SF_CG_EnquiryList"){
+                data.IsAdjust=1;
+            }
+        }
+        mini.get("SF_CG_EnquiryList").on("CellBeginEdit",function(e){
+            //允许编辑的列
+            if (e.field == "Supplier" || e.field == "SupplyDate" ) {
+
+            }else{
+                e.cancel = true;
+            }
+        })
+        mini.get("SF_CG_EnquiryList").on("drawcell",function(e){
+            if (e.field == "IsAdjust" && e.value == 1) {
+                e.rowStyle = "background:#00FA9A;";
+            }else if (e.field == "isDel" && e.value == 1) {
+                e.rowStyle = "background:#FF7F50;";
+            }
+        })
+    </script>
+</body>
+
+</html>

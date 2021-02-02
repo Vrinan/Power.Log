@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>技术文件会审
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_DesignTaskAdviceNote.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_TechnicalDocuments.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_TechnicalDocuments.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_TechnicalDocuments.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_TechnicalDocuments" class="form">
+                                <table class="table table-bordered">
+                                    <!--<tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.OwnProjName" name="OwnProjName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.Code">单据编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.Code" name="Code" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            单据标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechnicalDocuments.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                     
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.ProjectCode">项目号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit"
+                                                   emptytext="请选择项目号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.ProjectMessage">项目信息</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.ProjectMessage" name="ProjectMessage" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.ProjectManager">项目负责人</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.ProjectManager" name="ProjectManager" class="mini-textbox" readonly="readonly"/>
+                                        </td>
+                                        <!--<td>
+                                            <label for="SF_TechnicalDocuments.ProjectPhase">设计阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.ProjectPhase" name="ProjectPhase" class="mini-combobox" readonly="readonly"/>
+                                        </td>-->
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.Stage">阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.Stage" name="Stage" class="mini-combobox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.CountersignOpinion">会签意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechnicalDocuments.CountersignOpinion" name="CountersignOpinion" class="mini-textarea" height="50" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.DesignOpinion">设计意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechnicalDocuments.DesignOpinion" name="DesignOpinion" class="mini-textarea" height="50" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_TechnicalDocuments.Memo">备注说明</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_TechnicalDocuments.Memo" name="Memo" class="mini-textarea" height="60"/>
+                                        </td>
+                                    </tr>								
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_TechnicalDocuments.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+	    //PowerForm.EventAfterFormLoad = function (e,data) {
+		//	if(formconfig.FormState == "add"){
+		//		formconfig.config.joindata.currow["ProjectName"]=EpsName;
+		//		formconfig.config.joindata.currow["ProjectInfo_Guid"]=EpsId;
+		//		var btn = mini.get("SF_DesignTaskAdviceNote.ProjectName");
+		//		btn.setText(EpsName);
+		//		btn.setValue(EpsName);
+
+		//   }
+
+        //}
+        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_TechnicalDocuments";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_TechnicalDocuments";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("hqyj") > -1) {
+                mini.get("SF_TechnicalDocuments.CountersignOpinion").setReadOnly(false);
+                mini.get("SF_TechnicalDocuments.Save").enable();
+            }
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("sjyj") > -1) {
+                mini.get("SF_TechnicalDocuments.DesignOpinion").setReadOnly(false);
+                mini.get("SF_TechnicalDocuments.Save").enable();
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <link href="/Apps/js/mui/css/mui.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/js/mui/css/mui.picker.min.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/AppCommon.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/newForm.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId";
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="main-form">
+        <div class="main-form-wrap">
+            <div class="main-form-header bottom-line">
+                <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                    <div class="mui-scroll heade-nav">
+                        <a class="mui-control-item mui-active" href="#item1">
+                            <span>基本信息</span>
+                        </a>
+                        <a class="mui-control-item" href="#item2">
+                            <span>传阅</span>
+                        </a>
+                        <a id="attach_action" class="mui-control-item" href="#AttachMainContent">
+                            <span>附件</span>
+                            <span id="attach_num"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="main-form-content">
+                <div class="mui-content">
+                    <div id="item1" class="mui-control-content mui-active">
+                        <form id="KFQ_ParallelDetectionRecord" class="mui-input-group main-table">
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">项目名称</label>
+                                <input type="text" id="KFQ_ParallelDetectionRecord_ProjectName" data-url="/PowerPlat/FormXml/zh-CN/StdSystem/apps_WizardEPSProject.html"
+                                    name="ProjectName" data-keyword="KFQ_ParallelDetectionRecord" class="mui-input mui-wizard" readonly placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">发单编号</label>
+                                <input id="KFQ_ParallelDetectionRecord_Title" type="text" name="ToDept" class="mui-input" placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">文件编号</label>
+                                <input id="KFQ_ParallelDetectionRecord_Code" type="text" name="Code" readonly class="mui-input" placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">状态</label>
+                                <input id="KFQ_ParallelDetectionRecord_Status" disabled type="text" name="Status" data-keyword="KFQ_ParallelDetectionRecord" class="mui-input mui-select" placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">工程划分</label>
+                                <input type="text" id="KFQ_ParallelDetectionRecord_UnitEngineering" data-url="/PowerPlat/FormXml/zh-CN/StdSystem/apps_WizardEngineeringClassify.html"
+                                    name="UnitEngineering" data-keyword="KFQ_ParallelDetectionRecord" class="mui-input mui-wizard" readonly placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">承包方</label>
+                                <input id="KFQ_ParallelDetectionRecord_Contractor" disabled type="text" name="Contractor" readonly class="mui-input" placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">送检日期</label>
+                                <input id='KFQ_ParallelDetectionRecord_Date' data-format="yyyy-MM-dd" readonly name="Date" type="text" class="btn-picker mui-input" value="" placeholder="选择日期 ...">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text" style="width: 100%">备注</label>
+                            </div>
+                            <div >
+                                <textarea id="KFQ_ParallelDetectionRecord_Memo" name="Memo" rows="3"  placeholder=""></textarea>
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">录入人</label>
+                                <input id="KFQ_ParallelDetectionRecord_RegHumName" type="text" name="RegHumName" readonly class="mui-input"
+                                    placeholder="">
+                            </div>
+                            <div class="mui-input-row">
+                                <label class="mui-label-text">录入日期</label>
+                                <input id='KFQ_ParallelDetectionRecord_RegDate' data-format="yyyy-MM-dd" readonly name="RegDate" type="text" class="btn-picker mui-input" value="" placeholder="选择日期 ...">
+                            </div>
+                         
+                        </form>
+                        <div id="Action_btn" class="main-content-footer top-line">
+                            <a class="mui-control-item permission-btn font-color-active">
+                                <span class="mui-icon mui-icon-bars"></span>
+                                <span>操作</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="item2" class="mui-control-content">
+                        <ul id="KFQ_ParallelDetectionRecordList" class="mui-table-view children-table-lists"></ul>
+                        <div class="form-wrap">
+                            <form id="KFQ_ParallelDetectionRecordList_Form" class="form children-table-form mui-input-group move-animation-start">
+                                <div class="input-group">
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">检测项目</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_TestingItems" name="TestingItems" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">桩号</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_PileNumber" name="PileNumber" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">高程</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_Altitude" name="Altitude" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">代表数量</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_Number" name="Number" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">组数</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_GroupNumber" name="GroupNumber" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">取样人</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_SamplingPerson" name="SamplingPerson" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">送样人</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_SendingPerson" name="SendingPerson" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">送样时间</label>
+                                        <input id='KFQ_ParallelDetectionRecord_SendTime' data-format="yyyy-MM-dd" name="SendTime" type="text" class="btn-picker mui-input" value="" placeholder="选择日期 ...">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">检测机构</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_TestingOrganization" name="TestingOrganization" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">检测结果</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_DetectionResult" name="DetectionResult" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">检测报告编号</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_TestReportNumber" name="TestReportNumber" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                    <div class="mui-input-row">
+                                        <label class="mui-label-text">跟踪监理人员</label>
+                                        <input id="KFQ_ParallelDetectionRecordList_UpdHumanName" name="UpdHumanName" type="text" class="mui-input" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="mui-footer top-line">
+                                    <div class="action-table">
+                                        <div class="table-list-action save-child-table font-color-active">
+                                            <span class="mui-icon mui-icon-paperplane"></span>
+                                            <span>保存</span>
+                                        </div>
+                                        <div class="table-list-action close-child-table font-color-red">
+                                            <span class="mui-icon mui-icon-closeempty"></span>
+                                            <span>关闭</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <nav class="mui-bar mui-footer">
+                            <div class="action-table">
+                                <div class="table-list-action add-table-list font-color-active">
+                                    <span class="mui-icon mui-icon-plusempty"></span>
+                                    <span>新增</span>
+                                </div>
+                                <div class="table-list-action delete-table-list font-color-red">
+                                    <span class="mui-icon mui-icon-trash"></span>
+                                    <span>删除</span>
+                                </div>
+                            </div>
+                            <div class="action-table hide">
+                                <div class="table-list-action delete-table-lists font-color-red">
+                                    <span class="mui-icon mui-icon-trash"></span>
+                                    <span>确认删除</span>
+                                </div>
+                                <div class="table-list-action delete-table-back font-color-active">
+                                    <span class="mui-icon mui-icon-undo"></span>
+                                    <span>返回</span>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <!-- 附件的dom容器 不可删 -->
+                    <div id="AttachMainContent" class="mui-control-content">
+                        <div id="fileAttach" class="attach-content-wrap">
+                            <div class="file-attach-list">
+                                <div class="title file-attach-title hide bottom-line">图片</div>
+                                <ul id="picFiles" class="mui-table-view"></ul>
+                            </div>
+                            <div class="file-attach-list">
+                                <div class="title file-attach-title bottom-line hide">视频/音频</div>
+                                <ul id="mediaFiles" class="mui-table-view"></ul>
+                            </div>
+
+                            <div class="file-attach-list">
+                                <div class="title file-attach-title hide bottom-line">文档</div>
+                                <ul id="docFiles" class="mui-table-view"></ul>
+                            </div>
+
+                            <div class="file-attach-list">
+                                <div class="title file-attach-title hide bottom-line">其他</div>
+                                <ul id="otherFiles" class="mui-table-view"></ul>
+                            </div>
+                        </div>
+                        <div class="mui-footer top-line">
+                            <div class="mui-slider mui-fullscreen">
+                                <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                                    <div class="mui-scroll attach-action">
+                                        <a id="Gallery" class="mui-control-item permission-btn">
+                                            <span class="mui-icon mui-icon-image"></span>
+                                            <span>图片</span>
+                                        </a>
+                                        <a id="Camera" class="mui-control-item permission-btn">
+                                            <span class="mui-icon mui-icon-camera"></span>
+                                            <span>相机</span>
+                                        </a>
+                                        <a id="RecordVideos" class="mui-control-item permission-btn hide">
+                                            <span class="mui-icon mui-icon-videocam"></span>
+                                            <span>打开录像</span>
+                                        </a>
+                                        <a id="Videos" class="mui-control-item permission-btn hide">
+                                            <span class="mui-icon mui-icon-videocam"></span>
+                                            <span>上传视频</span>
+                                        </a>
+                                        <a id="Audio" class="mui-control-item permission-btn hide">
+                                            <span class="mui-icon mui-icon-mic"></span>
+                                            <span>打开录音</span>
+                                        </a>
+                                        <a id="UploadFileAll" class="mui-control-item permission-btn">
+                                            <span class="mui-icon mui-icon-upload"></span>
+                                            <span>文件</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 报表的容器 -->
+                    <div id="ReportContent" class="mui-control-content">
+                        <div class="report-wrap">
+                            <ul id="ReportList" class="mui-table-view"></ul>
+                        </div>
+                    </div>
+                    <!-- 评论容器 -->
+                    <div id="CommentContent" class="mui-control-content comment-content-main-wrap">
+                        <div class="comment-content-main">
+                            <div id="comment_lists_wrap" class="comment-lists-wrap">
+                                <div id="comment_history"></div>
+                            </div>
+                            <div class="comment-action-wrap">
+                                <div class="comment-actions">
+                                    <div class="subscribe-warp hide">
+                                        <span class="mui-checkbox">
+                                            <input id="subscribe" name="checkbox" value="" type="checkbox">
+                                        </span>
+                                        <span class="text">订阅</span>
+                                    </div>
+                                    <div class="people-at-wrap">
+                                        <div id="at_wizard" style="padding: 0 10px;">
+                                            <span class="at-icon-text">@</span>
+                                        </div>
+                                        <div class="at-people-text-wrap">
+                                            <input class="people-lists" type="text" disabled>
+                                            <div id="selected_lists" class="selected-lists"></div>
+                                        </div>
+                                    </div>
+                                    <div id="send_btn" class="comment-send">
+                                        <span class="send-btn">发送</span>
+                                    </div>
+                                </div>
+                                <div class="comment-text-area-wrap">
+                                    <textarea id="Send_comment_text" class="comment-text-area" placeholder="输入评论内容"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="AtHumanWrap" class="At-Human-wrap move-animation-start">
+                            <div class="At-Human-main mui-indexed-list">
+                                <div class="At-Human-header">
+                                    <div class="header-text-wrap bottom-line">
+                                        <div data-action="cancel" class="text-list at-btn">取消</div>
+                                        <div class="text-list at-text">选择@人员</div>
+                                        <div data-action="finish" class="text-list at-btn">完成</div>
+                                    </div>
+                                    <div class="mui-indexed-list-search mui-input-row mui-search bottom-line">
+                                        <input id="search_wizard" type="search" class="mui-input-clear" placeholder="搜索">
+                                    </div>
+                                </div>
+                                <div class="mui-indexed-list-inner">
+                                    <ul id="wizard_lists" class="mui-table-view">
+                                        <li data-code="" data-name="" data-id="" class="mui-table-view-cell mui-media">
+                                            <div>
+                                                <div class="mui-media-object mui-checkbox mui-pull-left">
+                                                    <input name="checkbox" type="checkbox">
+                                                </div>
+                                                <div class="mui-media-body">
+                                                    <span>张强</span>
+                                                    <p class="mui-ellipsis">zhangqiang</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作表的DOM容器 不可删 不许修改-->
+            <div id="ActionSheet" class="mui-popover mui-popover-action mui-popover-bottom">
+                <ul id="ActionSheetList" class="mui-table-view">
+                </ul>
+                <ul class="mui-table-view">
+                    <li class="mui-table-view-cell">
+                        <a href="#ActionSheet">
+                            <b>取消</b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 主子表向导容器 -->
+            <div id="WizardIframeWrap" class="mui-content mui-wizard-content wizard-iframe move-animation-start">
+                <iframe id="WizardIframe" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+    <script src="/Apps/js/jquery-1.8.3.min.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/mui/js/mui.min.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/mui/js/mui.picker.min.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/newAppjs/appUtils.js?v=$AppVersion"></script>
+    <script src="/Apps/newAppjs/appPhysicalUtils.js?v=$AppVersion"></script>
+    <script src="/Apps/newAppjs/appFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/Apps/appWorkFlows/common/js/common.js?v=$AppVersion"></script>
+    <script src="/Apps/appWorkFlows/common/js/workFlowAction.js?v=$AppVersion"></script>
+    <script src="/Apps/newAppjs/AppForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            var appForm = new AppForm();
+            appForm.init({
+                // 保存主表之前
+                mainFormSaveBefore: function (params) {
+                    return params;
+                },
+                // 保存主表之后
+                mainFormSaveAfter: function () {
+                    
+                },
+                btnExtend: [
+
+                ],
+                // 子表配置
+                // 最好不超过两个子表
+                childrenTables: {
+                    KFQ_ParallelDetectionRecordList: {
+                        dataparams: {
+                            KeyWord: "KFQ_ParallelDetectionRecordList", //子表的KeyWord
+                            select: "", // //需要查询哪些字段,默认空
+                            KeyWordType: "BO", //BO/ViewEntity;默认BO
+                            swhere: "", //where条件，默认空
+                            size: "0", //每页条数，默认0
+                            index: "0", //当前多少页，默认0
+                            order: "" //排序，默认空
+                        },
+                        htmlparams: {
+                            // 指定容器的id，把对应的html塞进指定的元素中
+                            // 一般和子表的KeyWord相同
+                            gridid: "KFQ_ParallelDetectionRecordList",
+                            idfield: "Id", //主键,
+                            icon: "", //默认fa-plus-square-o
+                            formid: "", //如果需要打开表单，表单的formid
+                            title: {
+                                value: "TestingItems", // title显示的字段
+                                format: ""
+                            },
+                            left: {
+                                value: "PileNumber", // 左侧显示的字段
+                                format: "" // 如果是下拉框，就设置combobox
+                            },
+                            //center: {
+                            //    value: "Content", // 中间显示的字段
+                            //    format: ""
+                            //},
+                            right: {
+                                value: "Altitude", // 右边显示的字段
+                                format: ""
+                            }
+                        }
+                    }
+                },
+                AttachFile: {
+                     // 附件加载前事件 主要处理参数
+                    loadBefore: function (params) {
+                        return params;
+                    },
+                    // 附件加载后事件 主要处理数据
+                    loadAfter: function (data) {
+                        return data;
+                    }
+                }
+            }, function () {
+            });
+        });
+    </script>
+</body>
+</html>

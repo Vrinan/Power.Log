@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/en_US.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var FormId = "$Model.data.FormId";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%;">
+        <div class="col-md-12" style="height: 100%;">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="PowerMessage.Refresh" onclick="grid.reload()"><i class="fa fa-refresh"></i>
+                            $Helper.GetResource("g_refresh")</a>
+                        <input class="mini-combobox" id="PowerMessage.types" onvaluechanged="OnTypesChange" style="width: 150px;"  visible="false"/>
+                        <a class="mini-button blue" iconcls="fa fa-plus"  onclick="grid.expandGroups()">展开分组</a>
+                        <a class="mini-button blue" iconcls="fa fa-minus"  onclick="grid.collapseGroups()">收缩分组</a>
+                    </div>
+
+                    <div class="tools">
+                        <label style="color:white;">过滤:</label>
+                        <!-- <input id="search_proj" type="text" class="mini-autocomplete" popupWidth="400px" emptytext="项目名称"
+                               name="project_name" textname="project_name"
+                               url="/Data/AutoComplete?keyword=EPSProject&id=project_name&text=project_name" style="width:150px"> -->
+                        <input id="search_Description" type="text" class="mini-textbox" emptytext="输入分类"
+                            name="Description" textname="Description" style="width:150px">
+                        <input id="search_title" type="text" class="mini-textbox" popupWidth="400px" emptytext="输入标题"
+                            name="Title" textname="Title" style="width:200px">
+                        <input id="search_user" type="text" class="mini-autocomplete" popupWidth="200px" emptytext="送审人"  visible="false"
+                            name="Name" textname="Name" url="/Data/AutoComplete?keyword=Human&id=Name&text=Name" style="width:100px">
+                        <input id="search_human" type="text" class="mini-autocomplete" popupWidth="200px" emptytext="发送人"  visible="false"
+                            name="Name" textname="Name" url="/Data/AutoComplete?keyword=Human&id=Name&text=Name" style="width:100px">
+                        <a class="mini-button blue" id="btn-search" onclick="grid.load({ pageIndex:'0'})"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>
+                    </div>
+                </div>
+                <div class="mini-fit" style="background: #FFF;">
+                    <div class="portlet-body" style="height: 100%; padding: 4px">
+                        <div id="PowerMessage" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                            allowresize="true" pagesize="200" sizeList="[10,20,50,100,200,500]" showpager="true"
+                            onbeforeload="OnBeforeLoad" allowCellWrap="true" onpreload="OnPreLoad" url="/ALLZ/MyWorkInfos"
+                            autoload="false" sortMode="client" ondrawgroup="onDrawGroup" >
+                            <div property="columns">
+                                <div type="indexcolumn" width="10">序号</div>
+                                <!-- <div field="KeyWord" name="KeyWord" headerAlign="center" Align="center" width="20" allowSort="true">关键词</div> -->
+                                <div field="Description" name="Description" headerAlign="center" Align="center" width="30"
+                                    allowSort="true">分类</div>
+                                <div field="RecordStatus" name="RecordStatus" headerAlign="center" Align="center" width="20"
+                                     allowSort="true">状态</div>
+                                <div field="DocumentCode" name="DocumentCode" allowSort="true" headerAlign="center"
+                                    width="35">编码</div>
+                                <div name="name" field="Title" headerAlign="center" allowSort="true">$Helper.GetResource("g_title")</div>
+                                <!-- <div field="EpsProjName" allowSort="true">$Helper.GetResource("g_project_name")</div>
+                                <div field="EpsProjCode" width="60" allowSort="true">$Helper.GetResource("hisdatatable_project_code")</div> -->
+                                <div field="UserName" name="UserName" headerAlign="center" Align="center" width="20"
+                                    allowSort="true">送审人</div>
+                                <div field="FromHumanName" name="FromHumanName" width="20" headerAlign="center" Align="center"
+                                    allowSort="true">$Helper.GetResource("g_formhumanname")</div>
+                                <div field="wfDate" width="30" headerAlign="center" Align="center" dateformat="yyyy-MM-dd HH:mm:ss"
+                                    allowSort="true">$Helper.GetResource("coderule_date")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var grid = mini.get("PowerMessage");
+        var cmbtypes = mini.get("PowerMessage.types");
+        var search_users = "CreateUserName";
+
+        mini.get("PowerMessage").on("drawcell", function (e) {
+            if (e.column.field == "RecordStatus") {
+                switch (e.record.RecordStatus) {
+                    case 15:
+                        e.cellHtml = "起草";
+                        break;
+                    case 20:
+                        e.cellHtml = "审批中";
+                        break;
+                    case 35:
+                        e.cellHtml = "生效";
+                        break;
+                    case 40:
+                        e.cellHtml = "终止";
+                        break;
+                    case 50:
+                        e.cellHtml = "批准";
+                        break;
+                }
+            }
+        })
+
+        $(function () {
+            var typesdata = [{ id: "infos", text: app_global['workflow_infos'] }, { id: "actived", text: app_global['workflow_active'] }, { id: "join", text: app_global['workflow_joins'] }];
+            cmbtypes.setData(typesdata);
+            cmbtypes.setValue(FormParams.types);
+            grid.reload();
+            grid.groupBy("Description", "ASC");
+        });
+
+        grid.on("drawcell", function (e) {
+            if (e.column.name == "name") {
+                e.cellHtml = '<a href="javascript:;" onclick="doAction()";>' + e.record.Title + '</a>   ';
+            }
+        });
+
+        function OnTypesChange(e) {
+            mini.get("search_title").setValue("");
+            mini.get("search_Description").setValue("");
+            mini.get("search_human").setText("");
+            mini.get("search_user").setText("");
+            grid.load({ pageIndex: "0" });
+        }
+
+        function doAction(e) {
+            var r = grid.getSelected();
+            var url = "/Form/ValidForm/" + r.HtmlPath + "/edit/" + r.KeyValue + "/";
+            if (r.LinkUrl && r.LinkUrl != null && r.LinkUrl != "")
+                url = "/" + r.LinkUrl;
+            //OpenWindow(url, 'div', 900, 550);
+            var ss = mini.open({
+                url: url,
+                width: 900,
+                height: 500,
+                showMaxButton: true,
+                ondestroy: function () {
+                    grid.reload();
+                }
+            });
+            //  ss.max()
+        }
+
+        function OnBeforeLoad(e) {
+            var params = e.params;
+            params.index = params.pageIndex;
+            params.size = params.pageSize;
+            params.types = cmbtypes.getValue();
+            var swhere = "1=1";
+            var txt = "";
+            txt = mini.get("search_title").getValue();
+            if (txt) swhere += " and Title like '%" + txt + "%'";
+            txt = mini.get("search_Description").getValue();
+            if (txt) swhere += " and Description like '%" + txt + "%'";
+            txt = mini.get("search_human").getText();
+            if (txt) swhere += " and BeforeUserName like '%" + txt + "%'";
+            txt = mini.get("search_user").getText();
+            if (cmbtypes.getValue() == "infos") {
+                search_users = "CreateUserName";
+            } else if (cmbtypes.getValue() == "actived") {
+                search_users = "UserName";
+            } else if (cmbtypes.getValue() == "join") {
+                search_users = "CreateUserName";
+            }
+            if (txt) swhere += " and " + search_users + " like '%" + txt + "%'";
+            swhere +=" and x1.KeyWord != 'KFQ_ZH_Leave' and x1.KeyWord != 'KFQ_ZH_Selling' and x1.KeyWord != 'KFQ_ZH_BusinessTravel' and x1.KeyWord != 'PS_MeetingSummary' and x1.KeyWord != 'PS_FileContact' and x1.KeyWord != 'KFQ_ZH_CarManage'";
+            params.swhere = swhere;
+        }
+
+        function OnPreLoad(e) {
+            var o = mini.decode(e.text);
+            if (o.success == false) {
+                Power.ui.error(o.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            if (o.data.infos) {
+                e.data = o.data.infos.sort(sortBy("wfDate"));
+                if (o.data.infostotalcount)
+                    e.sender.setTotalCount(o.data.infostotalcount);
+            }
+            if (o.data.actived) {
+                e.data = o.data.actived.sort(sortBy("wfDate"));
+                if (o.data.activedtotalcount)
+                    e.sender.setTotalCount(o.data.activedtotalcount);
+            }
+            if (o.data.join) {
+                e.data = o.data.join.sort(sortBy("wfDate"));
+                if (o.data.jointotalcount)
+                    e.sender.setTotalCount(o.data.jointotalcount);
+            }
+
+            if (cmbtypes.getValue() == "infos") {
+                e.sender.updateColumn("UserName", { visible: false });
+                mini.get("search_human").hide();
+                mini.get("search_user").hide();
+            }
+            else if (cmbtypes.getValue() == "actived") {
+                e.sender.updateColumn("UserName", { visible: true });
+                mini.get("search_human").hide();
+                mini.get("search_user").show();
+                e.sender.updateColumn("FromHumanName", { visible: false });
+                e.sender.updateColumn("DocumentCode", { visible: true });
+            }
+            else if (cmbtypes.getValue() == "join") {
+                e.sender.updateColumn("UserName", { visible: true });
+                mini.get("search_human").show();
+                mini.get("search_user").show();
+                e.sender.updateColumn("FromHumanName", { visible: true });
+                e.sender.updateColumn("DocumentCode", { visible: false });
+            }
+        }
+
+        function openmore(id, text) {
+            var t = base64encode('{"types":"' + id + '"}');
+            var url = '/Form/EditForm/2b9a8adb-121e-40e7-ab4a-52d05806c548/2b9a8adb-121e-40e7-ab4a-52d05806c548/' + t;
+            id = 'my' + id + 'workflow';
+            top.Power.menu.nav.addTabs(url, id, text, "single");
+        }
+        function onDrawGroup(e) {
+            if(e.field=="Description")
+            { 
+                e.cellHtml = "<span  style='color:#008800;font-size:15px;'>" + e.value + "</span>";
+            }
+        }
+        function sortBy(field){
+            return function(a,b){
+                var value1 = a[field];
+                var value2 = b[field];
+                return value1 - value2;
+            }
+        }
+    </script>
+</body>
+
+</html>

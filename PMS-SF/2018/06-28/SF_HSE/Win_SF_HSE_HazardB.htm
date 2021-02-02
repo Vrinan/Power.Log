@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+        <div class="col-md-4" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_HSE_Hazard.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                        <!--<a class="mini-button blue" id="SF_KM_DocFolder.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>-->
+                        <a class="mini-button blue" id="SF_HSE_Hazard.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)"><i class="fa fa-arrow-up"></i></a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)"><i class="fa fa-arrow-down"></i></a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.MoveLeft" onclick="PowerForm.OnBtnMoveLeft(this)"><i class="fa fa-arrow-left"></i></a>
+                        <a class="mini-button blue" id="SF_HSE_Hazard.MoveRight" onclick="PowerForm.OnBtnMoveRight(this)"><i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="SF_HSE_Hazard" idfield="Id" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                             treecolumn="text" parentfield="ParentId" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="checkcolumn" width="10"></div>
+                                <div name="text" field="Code" header="编号" allowsort="true" width="40">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="Title" header="涉及部门/工序" allowsort="true">涉及部门/工序<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end col-md-3-->
+        <div class="col-md-8" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_HSE_Hazard_dtl.AddForm" onclick="PowerForm.OnBtnAdd(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_HSE_Hazard_dtl.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_Hazard_dtl.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                        <a class="mini-button blue" id="SF_HSE_Hazard_dtl.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_Hazard_dtl.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                        <div id="btnUpload">导入</div>
+                        <a class="mini-button blue" iconcls="fa-apple" href="/Upload/重要环境因素清单导入模板.xlsx">导入模板下载</a>
+                    </div>
+                    <!--<div class="tools">
+                        <input id="SF_HSE_CareerSafe_dtl-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                        <span id="SF_HSE_CareerSafe_dtl-search">
+                            <input id="SF_HSE_CareerSafe_dtl-search-value" class="mini-textbox" style="width: 120px;" />
+                        </span>
+                        <a class="mini-button blue" id="SF_HSE_CareerSafe_dtl-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a>
+                    </div>-->
+                </div>
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_HSE_Hazard_dtl"  multiselect="true" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" masterfield="Id" detailfield="MasterId"
+                              pageSize="15" showToolbar="true" idField="Id" allowcelledit="true" allowcellselect="true" showpager="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="15"></div>
+                                <div type="checkcolumn" width="20"></div>
+                                <div field="MainReason">
+                                    重要环境因素
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="MainDamage">
+                                    环境影响<input property="editor" class="mini-textarea" style="width: 100%;" />
+                                </div>
+                                <div field="MayDamage">
+                                    控制措施<input property="editor" class="mini-textarea" style="width: 100%;" />
+                                </div>
+                                <div field="MainDel">
+                                    优先等级<input property="editor" class="mini-textarea" style="width: 100%;" />
+                                </div>
+                                <div field="Memo">
+                                    备注<input property="editor" class="mini-textarea" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+            <div style="height: 195px; overflow:auto;">
+                <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+            </div>
+            <table style="width: 363px; height: 30px; margin-top:8px;">
+                <tr>
+                    <td align="center" style="text-align:right;">
+                        <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                        <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                        <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_HSE_Hazard", CreateGUID())//此处修改关键词
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        //自定义Excel上传
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "SF_HSE_Hazard";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_HSE_Hazard");//此处修改关键词
+            //发起人导入
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>批量导入",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_HSE_Hazard";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }
+    </script>
+</body>
+</html>

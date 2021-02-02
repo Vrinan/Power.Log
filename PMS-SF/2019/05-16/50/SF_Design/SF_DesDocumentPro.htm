@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+        var EpsId = "$!CurrentSession.EpsProjId";
+        var EpsName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>设计文件校审
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_DesignTaskAdviceNote.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_DesDocumentPro.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_DesDocumentPro.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_DesDocumentPro.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_DesDocumentPro" class="form">
+                                <table class="table table-bordered">
+                                    <!--<tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectHandover.OwnProjName" name="OwnProjName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.Code">单据编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            单据标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.Profession">专业</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.Profession" name="Profession" textname="Profession" class="mini-buttonedit"
+                                                   emptytext="请选择专业..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.ProjectCode">项目号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit"
+                                                   emptytext="请选择项目号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.ProjectMessage">项目信息</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.ProjectMessage" name="ProjectMessage" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.ProjectManager">项目负责人</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.ProjectManager" name="ProjectManager" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <!--<td>
+                                            <label for="SF_DesDocumentPro.ProjectPhase">设计阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.ProjectPhase" name="ProjectPhase" class="mini-combobox" readonly="readonly" />
+                                        </td>-->
+                                        <td>
+                                            <label for="SF_DesDocumentPro.Stage">阶段</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.Stage" name="Stage" class="mini-combobox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            设计类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.DesignType" name="DesignType" class="mini-combobox" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.ProofreadOpinion">校审意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DesDocumentPro.ProofreadOpinion" name="ProofreadOpinion" class="mini-textarea" readonly="readonly" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.AuditOpinion">审核意见</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DesDocumentPro.AuditOpinion" name="AuditOpinion" class="mini-textarea" height="60" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DesDocumentPro.Memo">备注说明</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DesDocumentPro.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DesDocumentPro.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+
+        //$(document).ready(function () {
+        //    $('textarea').autosize();
+        //});
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DesDocumentPro";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+        PowerForm.EventAfterLoadRight = function (e) {
+            var mtabs = mini.get("maintabs");
+            if (mtabs != undefined) {
+                var mkeyword = "SF_DesDocumentPro";
+                var mkeyvalue = formconfig.KeyValue;
+                var tmptab = mtabs.getTab("attachfile");
+                if (tmptab) {
+                    var effected = formconfig.Effected;
+                    var upddata = { url: "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + mkeyword + "&KeyValue=" + mkeyvalue };
+
+                    //upddata.url += "&canEdit=false";//不允许编辑附件页面
+
+                    upddata.url += "&canEdit=true";//允许编辑附件页面
+                    mtabs.updateTab(tmptab, upddata);
+                    mtabs.reloadTab(tmptab);
+                }
+            }
+        }
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("jsyj") > -1) {
+                mini.get("SF_DesDocumentPro.ProofreadOpinion").setReadOnly(false);
+                mini.get("SF_DesDocumentPro.Save").enable();
+            }
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.toString().indexOf("shyj") > -1) {
+                mini.get("SF_DesDocumentPro.AuditOpinion").setReadOnly(false);
+                mini.get("SF_DesDocumentPro.Save").enable();
+            }
+        }
+
+    </script>
+</body>
+</html>

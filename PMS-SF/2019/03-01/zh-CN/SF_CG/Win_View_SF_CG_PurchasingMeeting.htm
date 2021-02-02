@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_CG_PurchasingMeeting.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_CG_PurchasingMeeting-Export" title="上会列表" class="btn-group"></div>
+                            <a class="mini-button green" id="View_SF_CG_PurchasingMeeting.Conference" iconcls="fa fa-plus" onclick="Conference()">上会</a>
+                        </div>
+						 <div class="tools">
+                             <input id="View_SF_CG_PurchasingMeeting-group-fields" class="mini-combobox" showclose="true" emptytext="选择分组" oncloseclick="PowerForm.ColseCombobox"
+                                     onvaluechanged="PowerForm.GroupChanged(this)" style="width: 110px;" />
+
+                            <input id="View_SF_CG_PurchasingMeeting-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_CG_PurchasingMeeting-search">
+                            <input id="View_SF_CG_PurchasingMeeting-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_CG_PurchasingMeeting-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_CG_PurchasingMeeting" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                             showpager="true" pagesize="50" sizelist="[50,100,200,500]" allowcellselect="true" ondrawcell="DrawCell" multiselect="true" allowalternating="true" ondrawgroup="PowerForm.DrawGroup">
+                            <!--是否显示分页/每页行数/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示汇总行/汇总事件/显示斑马纹/按回车键进入下一个单元格编辑/粘贴导入-->
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div type="indexcolumn" width="20">序号</div>
+                                <div field="Code" name="Code" width="100" allowsort="true">单据编号</div>
+                                <div field="Title" name="Title" width="100" allowsort="true">单据标题</div>
+                                <div field="Price" headerAlign="center" name="Price" allowsort="true" header="金额(元)" numberformat="n2">金额(元)</div>
+                                <div field="Company" name="Company" width="100" allowsort="true">单位</div>
+                                <div field="Remark" name="Remark" width="100" allowsort="true">采购说明</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div id="win_search" class="mini-window" title="查询面板"
+         style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true"
+         onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto;
+                margin-right: auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)">
+                        <i class="fa fa-search"></i>搜索
+                    </a> <a class="mini-button blue"
+                            id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)">
+                        <i class="fa fa-repeat">
+                        </i>清空
+                    </a> <a class="mini-button blue" id="BtnSearch_Close"
+                            name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function DrawCell(e) {
+            if (e.field == "Code") {
+                if (e.record.PurchaseType == "2") {//询比价
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('bbf4c358-fdb3-4cef-8dc3-93cab40f6e78', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                }
+                if (e.record.PurchaseType == "3") {//定向采购
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('71f9e02c-5d28-40d6-bb9f-6f78fa7ff056', '" + e.record.Id + "');\">" + (e.record.Code ? e.record.Code : "") + "</a>";
+                }
+
+            }
+        }
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+
+        function Conference() {
+            var date = new Date();
+            var da = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+
+            var ListIds = "";
+            var grid = mini.get("View_SF_CG_PurchasingMeeting");
+            var Rows = grid.getSelecteds();	//取得选中的行
+            if (Rows.length > 0) {
+                for (var i = 0; i < Rows.length; i++) {
+                    ListIds = ListIds + Rows[i].Id + ",";
+                }
+            } else {
+                Power.ui.warning("请先勾选需要上会的采购明细！");
+                return false;
+            }
+            
+            Power.ui.confirm("是否上会？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("上会中……")
+                    var par = { "ListIds": ListIds, "date": da };
+                    FormFuns.APIExec("SF_CG_PurchasingMeeting", "BO", "Conference", par, function (text) {
+                        var tem = mini.decode(text).data.value;
+                        mini.get("View_SF_CG_PurchasingMeeting").reload();
+                        Power.ui.loading.close();
+                        //Power.ui.success(tem);
+                        var a = { id: "SF_CG_PurchasingMeeting.CloseForm" };
+                        PowerForm.OnBtnCloseForm(a);
+                        if (tem != "") {
+                            var url = "/Form/ValidForm/581ad4be-9413-4789-90d5-c367c900ca75/edit/" + tem;
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 550
+                            });
+                        }
+                    })
+                }
+            });
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.params.swhere != "")
+                e.params.swhere += " and id not in (select PurchaseId from SF_CG_PurchasingMeeting_list)";
+            else
+                e.params.swhere = " id not in (select PurchaseId from SF_CG_PurchasingMeeting_list)";
+        }
+
+    </script>
+</body>
+</html>

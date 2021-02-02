@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+        <div class="col-md-3 col-hd-12" style="height: 100%">
+            <div class="portlet blue box" style="height: 100%">
+                <a class="mini-button blue" id="SF_EngineeringClassify.AddForm" onclick="PowerForm.OnBtnAdd(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                <a class="mini-button blue" id="SF_EngineeringClassify.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                <a class="mini-button blue" id="SF_EngineeringClassify.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                <!--<div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>左侧标题
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="reload"></a>
+                    </div>
+                </div>-->
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="SF_EngineeringClassify" idfield="Id" class="mini-treegrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                             treecolumn="Name" parentfield="ProjId" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div><!--序号-->
+                                <!--<div type="checkcolumn"></div>-->
+                                <div field="Name" header="分项工程" allowsort="true">分项工程<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end col-md-3-->
+        <div class="col-md-9 col-hd-6">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_EngineeringClassify_list.AddForm" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_list.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_list.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                        <!--<a class="mini-button blue" id="右上方关键词.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>$Helper.GetResource("g_edit")</a>--><!--编辑-->
+                        <!--<a class="mini-button blue" id="右上方关键词.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>$Helper.GetResource("g_view")</a>--><!--查看-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_list.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    </div>
+                    <!--<div class="tools">
+                        <input id="右上方关键词-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="右上方关键词-search">
+                            <input id="右上方关键词-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="右上方关键词-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>查询
+                    </div>-->
+                    <div class="tools">
+                        <input id="SF_EngineeringClassify_list-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="SF_EngineeringClassify_list-search">
+                            <input id="SF_EngineeringClassify_list-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="SF_EngineeringClassify_list-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_EngineeringClassify_list" class="mini-datagrid" style="width: 100%; height: 100%;" pageSize="15" showToolbar="true" idField="Id" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div><!--序号-->
+                                <!--<div field="Id" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("g_code")</div>--><!--编号-->
+                                <div field="Subproject">分部工程<input property="editor" class="mini-textbox" style="width: 100%;" /></div><!--名称-->
+                                <!--<div field="ImpType" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("report_import_type")</div>--><!--导入类型-->
+                                <!--<div field="ExpType" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("report_export_type")</div>--><!--导出类型-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 col-hd-6">
+            <div class="portlet blue box" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" id="SF_EngineeringClassify_dtl.AddForm" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a><!--新增-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_dtl.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_dtl.Del" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a><!--删除-->
+                        <!--<a class="mini-button blue" id="右下方关键词.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>$Helper.GetResource("g_edit")</a>--><!--编辑-->
+                        <!--<a class="mini-button blue" id="右下方关键词.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>$Helper.GetResource("g_view")</a>--><!--查看-->
+                        <a class="mini-button blue" id="SF_EngineeringClassify_dtl.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    </div>
+                    <!--<div class="tools">
+                        <input id="右下方关键词-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="右下方关键词-search">
+                            <input id="右下方关键词-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="右下方关键词-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>查询
+                    </div>-->
+                    <div class="tools">
+                        <input id="SF_EngineeringClassify_dtl-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                        <span id="SF_EngineeringClassify_dtl-search">
+                            <input id="SF_EngineeringClassify_dtl-search-value" class="mini-textbox" style="width: 150px;" />
+                        </span>
+                        <a class="mini-button blue" id="SF_EngineeringClassify_dtl-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_EngineeringClassify_dtl" class="mini-datagrid" style="width: 100%; height: 100%;" pageSize="15" showToolbar="true" idField="Id" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div><!--序号-->
+                                <!--<div field="Id" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("g_code")</div>--><!--编号-->
+                                <div field="UnitProject">单位工程<input property="editor" class="mini-textbox" style="width: 100%;" /></div><!--名称-->
+                                <!--<div field="ImpType" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("report_import_type")</div>--><!--导入类型-->
+                                <!--<div field="ExpType" allowmove="true" autoescape="true" allowdrag="true" allowsort="true" headeralign="center" allowresize="true">$Helper.GetResource("report_export_type")</div>--><!--导出类型-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end col-md-9-->
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+    </script>
+</body>
+</html>

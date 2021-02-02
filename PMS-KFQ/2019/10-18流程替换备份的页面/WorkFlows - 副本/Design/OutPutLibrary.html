@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+
+
+</head>
+
+<body>
+    <form id="frmMain" style="height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-reorder"></i>输出操作 				
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnCreateCode" iconcls="fa-save" onclick="onOutPutCode">增量生成</a>
+                        <a class="mini-button blue" id="btnCreateAllCode" iconcls="fa-save" onclick="onOutPutAllCode">全部生成</a>
+                        <span class="separator"></span>                        
+                        <a class="mini-button blue" id="btnOutPut" iconcls="fa-save" onclick="onOutputCheck">发 布</a>
+                        <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSaveAdvanced">保 存</a>
+                        <a class="mini-button blue" iconcls="fa-save" onclick="CloseWindow('close')">关 闭</a>
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height: 100%;">
+                        <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" onactivechanged="onMainTabActivechanged">
+                            <div title="常规" name="tabNormal">
+                                <table width="100%">
+                                    <tr>
+                                        <td>
+                                            <label>输出源码路径：</label></td>
+                                        <td>
+                                            <div id="txtSourceCodePath" enabled="false" class="mini-textbox" width="350" value=""></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <fieldset style="height: 255px">
+                                    <legend>输出信息</legend>
+                                    <div style="height: 210px">
+                                        <textarea class="mini-textarea" id="txtResultInfo" style="width: 100%; height: 250px"></textarea>
+                                        <br />
+                                        <div>注： 发布操作会将编译生成的dll 文件，从 Web/Projects/项目/OutPut 目录复制到 /Web/bin 目录，引发网站的初始化和十数秒的卡顿现象，属于正常现象。</div>
+
+                                    </div>
+                                    <div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div title="高级" name="tabAdvanced">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 100px">额外引用类库：</td>
+                                        <td style="padding-top: 5px;">
+                                            <input id="txtReference" name="Reference" class="mini-textbox" style="width: 100%;" />
+                                            <br />
+                                            输出格式为分号分隔，无须文件后缀名，如： Asponse.Cell;Power.aaabbb;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="height: 20px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>自定义公共类：</td>
+                                        <td>
+                                            <div align="right">
+                                                <a class="mini-button" id="A2" iconcls="fa-plus" onclick="addCustomFileRow()">$Helper.GetResource("g_add")</a><!--新增-->
+                                            </div>
+                                            <div id="gdCustomFile" class="mini-datagrid" style="width: 100%; height: 150px" showpager="false" showemptytext="true" allowcelledit="true" allowcellselect="true">
+                                                <div property="columns">
+                                                    <div field="FilePath" width="120" headeralign="center">
+                                                        所在路径
+                                                    </div>
+                                                    <div field="FileName" width="70" headeralign="center">
+                                                        文件名
+                                                        <input property="editor" class="mini-textbox" style="width:100%;" />
+                                                    </div>
+                                                    <div width="50" headeralign="center" renderer="onEditCustomFileRenderer">删除</div>
+                                                </div>
+                                                </div>
+                                                <br />
+                                                请自行将自定义的公用 cs 文件，放到 <br /> /Projects/项目编号/SourceCode/项目编号.WorkFlows/Common/ <br />目录下。
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+    <script type="text/javascript">
+        mini.parse();
+
+        var gdCustomFile = mini.get("gdCustomFile");
+
+
+        var onMainTabActivechanged = function (e) {
+           
+         
+            switch (e.name) {
+                case "tabNormal":    //常规
+                    mini.get("btnCreateCode").setVisible(true);
+                    mini.get("btnCreateAllCode").setVisible(true);
+                    mini.get("btnOutPut").setVisible(true);
+                    mini.get("btnSave").setVisible(false);
+                    break;
+                case "tabAdvanced":  //高级
+                    mini.get("btnCreateCode").setVisible(false);
+                    mini.get("btnCreateAllCode").setVisible(false);
+                    mini.get("btnOutPut").setVisible(false);
+                    mini.get("btnSave").setVisible(true);
+                    break;
+            }
+
+        }
+
+        var onOutPutAllCode = function () {
+            onOutPutCode(null, true);
+        }
+        var onOutPutCode = function (e, IsAll) {
+            if (!IsAll) IsAll = false;
+
+            var path = "/PowerPlat/WorkFlows/Commons/SetDebugging.aspx?Mode=Release" + "&IsAllCompile=" + IsAll;
+
+            onOpenDialog(path);
+        }
+        var onOpenDialog = function (path) {
+
+            var resultInfo = null;
+            if (navigator.userAgent.indexOf("Chrome") > 0 || navigator.userAgent.indexOf("Firefox") > 0) {
+
+                var winOption = "height=300px,width=980px,top=50,left=50,modal=yes,dialog=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,fullscreen=0";
+                resultInfo = window.open(path, window, winOption);
+            }
+            else {
+                resultInfo = window.showModalDialog(path, window, "dialogHeight:300px;dialogWidth:980px");
+
+            }
+            if (!resultInfo) resultInfo = window.returnValue;   //for chrome
+
+            var result = mini.decode(resultInfo);
+            if (result && result.Text)
+                mini.get("txtResultInfo").setValue(result.Text);
+        }
+        var SetTextInfo = function (resultInfo) {
+
+            var result = mini.decode(resultInfo);
+            if (result && result.Text)
+                mini.get("txtResultInfo").setValue(result.Text);
+        }
+        var onOutput = function () {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "OutPut";   //获取当前节点序号 
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Events;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    Power.ui.success("发布成功");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        var onOutputCheck = function () {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "CheckOutPut";   //获取当前节点序号 
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Events;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    var tmpDate = new Date(result.data.LastWriteTime);
+                    var sFileDate = mini.formatDate(tmpDate, "yyyy-MM-dd HH:mm:ss");
+                    var str = "您是否要将文件[" + result.data.FileName + "] <br /> (" + sFileDate + ") 发布到/bin 目录下? ";
+                    top.Power.ui.confirm(str, function (confirm) {
+                        if (confirm) {
+                            onOutput();
+                        }
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        //获取输出路径等信息
+        var onGetOutPath = function () {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "GetOutPutInfo";   //获取当前节点序号 
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Events;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    mini.get("txtSourceCodePath").setValue(result.data.OutputPath);
+
+                    if (!result.data.ConfigAdvanced) return;
+                    var advanced = result.data.ConfigAdvanced;
+                    mini.get("txtReference").setValue(advanced.Reference);
+                    gdCustomFile.setData(advanced.CustomFiles);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+
+        //-------------------------------------------------------------------------------------
+        var onSaveAdvanced = function (e) {
+
+            var result = {};
+            result.Reference = mini.get("txtReference").getValue();
+            result.CustomFiles = gdCustomFile.getData();
+             
+            var data = {};
+            data.SubOperate = "SaveAdvancedInfo";   //子指令集,保存选择的人员到指定节点中
+            data.JsonInfo = result;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.Events;     
+
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    Power.ui.info("保存成功");
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+
+        }
+
+        var onDeleteRow = function (grid) {
+            var curGrid = mini.get(grid);
+            var row = curGrid.getSelected();
+            if (!row) return;
+            curGrid.removeRow(row);
+        }
+        var onEditCustomFileRenderer = function (e) {
+            var record = e.record;
+            var s = "";
+            s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDeleteRow(\'' + e.sender.id + '\')")">' + app_global["g_delete"] + '</a>';//删除
+            return s;
+        }
+        var addCustomFileRow = function (e) {
+            var row = { "FilePath": "/WorkFlows/Common/" };
+            gdCustomFile.addRow(row);
+        }
+
+
+        $(function () {
+            onGetOutPath();
+        });
+    </script>
+</body>
+</html>

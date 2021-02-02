@@ -1,0 +1,5 @@
+--alter table SF_ZH_NewTrainPlan_list add ListId uniqueidentifier null
+--alter table SF_ZH_NewTrainPlan_list add TrainingResult nvarchar(100) null
+--alter table SF_ZH_NewTrainPlan_list add RetestResult nvarchar(100) null
+--alter table SF_ZH_NewTrainPlan_list add RetestAmount float null
+--alter table SF_ZH_NewTrainPlan_list add Certificate nvarchar(500) null

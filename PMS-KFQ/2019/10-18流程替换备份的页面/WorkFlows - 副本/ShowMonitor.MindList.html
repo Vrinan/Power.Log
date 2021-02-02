@@ -1,0 +1,226 @@
+﻿ 
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>流程监控</title>
+     
+
+     <script src="/scripts/boot.js" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+    
+     <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+
+     <style type="text/css">
+        .media-object {
+            border-radius: 32px; /*border: 1px solid #ccc;*/
+            line-height: 32px;
+            text-align: center;
+            margin: 5px;
+        }
+
+        .media {
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .media-heading {
+            margin: 5px 0 5px; /*border-bottom: 1px dotted #ccc;*/
+            font-weight: bold;
+        }
+
+        .tooltip-user {
+        }
+
+        .tooltip-inner {
+            max-width: 200px;
+            padding: 3px 8px;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            background-color: red!important;
+            border-radius: 4px;
+        }
+
+        .mini-layout-region-body {
+            overflow: hidden;
+        }
+
+        .myrow {
+            background: #fceee2;
+        }
+
+        .myHidden {
+            background: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+      <div class="mini-fit">
+            <div id="mindList"></div>
+      </div>
+
+   <script>
+       mini.parse(); 
+       _lastFlowOperate = null;//存放上一个节点的发送方式
+       //wsl算法做了调整，依据参数，提取上个节点的操作信息
+       function GetOperate(node) {
+           var flowString = "";
+
+           switch (node.FlowOperate) {
+               case EFlowOperate.Active:
+                   flowString = "送审"; break;
+               case EFlowOperate.Send:
+                   flowString = "发送"; break;
+               case EFlowOperate.Return:
+                   flowString = app_global["workflow_return"]; break; //"退回"
+               case EFlowOperate.Stop:
+                   flowString = app_global["workflow_termination"]; break; //终止
+               case EFlowOperate.CheckOut:
+                   flowString = app_global["workflow_signing"]; break; //签收
+               case EFlowOperate.Delegate:
+                   if (node.IsReturnDelegateRoot == false)
+                       flowString = "委办反馈";
+                   else
+                       flowString = "委办返还发起人";
+                   break; //委派给他人
+               case EFlowOperate.DelegateAndReturn:
+                   flowString = app_global["workflow_delegate_other"]; break; //委派并须返还
+               case EFlowOperate.EndFlow:
+                   flowString = app_global["workflow_end"]; break; //办结
+               default:
+                   flowString = ""; break;
+
+           }
+           if (flowString) flowString = "(" + flowString + ")";
+           return flowString;
+       }
+
+       function getInboxStatus(_lastFlowOperate,InboxStatus) {
+           var flowString = "";
+           switch (InboxStatus) {
+               case EFlowInboxStatus.WaitingSign:
+                    flowString += " (等候签收)";
+                    break;
+               case EFlowInboxStatus.Hidden:
+                    flowString += " (隐藏等候中)";
+                    break;
+               case EFlowInboxStatus.Normal:
+                    flowString += " (正在处理)";
+                    break;
+               case EFlowInboxStatus.WorkEnd:
+                    if(_lastFlowOperate){
+                        if(_lastFlowOperate=="Return"){
+                            flowString += " (驳回)";
+                        }else{
+                            flowString += " (同意)";
+                        }
+                    }else{
+                        flowString += " (同意)";
+                    }
+                    break;
+           }
+           return flowString;
+       }
+
+       function DrawItem(node) {
+           var tb = '';
+           var flowString = "";
+           flowString = GetOperate(node);
+           
+           var toUserName = node.ToUserName; //node.UserName.substring(0, 1);
+           if (toUserName == null || toUserName == "null") toUserName = "";
+           if (node.SequeID <= -2) toUserName = "管理员";
+           var userColor = "bg-blue";
+           if (node.FlowOperate == EFlowOperate.Return) userColor = "bg-red";
+
+           tb += "<li class='media'><a class=\"pull-left\" href=\"#\"><span class=\"media-object " + userColor + "\" style=\"width: 64px; height: 32px;\">" + toUserName + "</span></a>";
+           tb += "<div class='media-body'><h4 class='media-heading bg-green-meadow'>" + node.ActName;
+           if (flowString != "")
+               tb += getInboxStatus(_lastFlowOperate,node.InboxStatus);
+            _lastFlowOperate = node.FlowOperate;
+           tb += "<span class='pull-right'>" + flowString + node.MindDate + "</span>";
+           tb += "</h4>";
+
+           var c = parent.Agreelable;  //同意意见
+           /*if (node.FlowOperate == EFlowOperate.Return)
+               c = parent.DisagreeLabel; //不同意意见*/
+
+           if (node.Content && node.Content != "")
+               c = node.Content;
+           /*if (node.SequeID <= -2)   //<=-2说明是系统消息
+               c = "<font color='red'>" + c + "</font>";*/
+           switch (node.InboxStatus) {
+               case EFlowInboxStatus.WaitingSign:
+                   tb += "<p>" + app_global["workflow_waiting_sign"] + " </p>"; //等候签收
+                   break;
+               case EFlowInboxStatus.Hidden:
+                   tb += "<p>隐藏等待中</p>"; //等候签收
+                   break;
+               case EFlowInboxStatus.WaitingUnlock:
+
+                   tb += "<p>等候解锁</p>"; //等候签收
+                   break;
+               case EFlowInboxStatus.Delegated:
+                   if (c)
+                       tb += "<p>" + c + "</p>";
+                   else
+                       tb += "<p>委办</p>";
+                   break;
+               case EFlowInboxStatus.WorkEnd:
+                   tb += "<p>" + c + "</p>";
+                   break;
+               case EFlowInboxStatus.WorkStop:
+                    
+                   tb += "<p>自动跳过</p>";
+                   return '';
+                   break;
+               default:
+                   if (c)
+                       if(node.InboxStatus==EFlowInboxStatus.Normal)
+                            tb += "<p>正在处理</p>";
+                       else
+                            tb += "<p>" + c + "</p>";
+                   else
+                       tb += "<p> " + app_global["workflow_transacting"] + "</p>"; //正在办理
+                   break;
+           }
+           tb += "</div></li>";
+
+           return tb;
+       }
+       function DrawList(mindList) {
+
+           var div = $("#mindList");
+           var tb = "<ul class='media-list' style=\"width:100%\" >";
+            
+           for (var iTmp = 0, len = mindList.length; iTmp < len; iTmp++) {
+               var node = mindList[iTmp];
+               if (node.InboxStatus == EFlowInboxStatus.Hidden) continue;  //隐藏的记录暂时不显示 
+
+               if (typeof (node["FlowOperate"]) != "undefined" && node.FlowOperate == EFlowOperate.EndFlow) continue;  //如果是办结操作，则无视掉
+               if (node.Alias != "MindRecord") continue;
+
+               //记录如果是隐藏，则不显示 
+               tb += DrawItem(node);
+           }
+
+           tb += "</ul>";
+           div.append(tb);
+       }
+       var SetData = function (mindList) {
+
+           DrawList(mindList);
+       }
+
+       $(document).ready(function () {
+           
+           if (parent && parent.MindData) {
+               SetData(mini.clone(parent.MindData));
+           }
+       });
+
+   </script>
+</body>
+</html>

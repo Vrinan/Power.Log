@@ -1,0 +1,917 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ComTools.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowUtil.js?v=$AppVersion"></script>
+
+    <script language="javascript" src="/PowerPlat/WorkFlows/WorkNodeSelect.js?v=$AppVersion"></script>
+
+
+    <style>
+        v\:* {
+            behavior: url(#default#VML);
+        }
+        /*.mini-tabs-position-top .mini-tabs-scrollCt {
+            background-color: #CAE1FF;
+        }*/
+    </style>
+</head>
+<!-- onselectstart="return false" -->
+<body id="body" >
+
+    <div style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <label>流程流转</label>
+                </div><!--流程流转-->
+                <div class="actions">
+
+                    <a class="mini-button blue" id="btnCustomWorkFlow" onclick="onCustomFlow('cancel');" ><i class="fa fa-ban"></i>$Helper.GetResource("workflow_custom_workflow")</a>
+
+                    <a class="mini-button blue" onclick="onEditMind('cancel');" enabled="true"><i class="fa fa-wrench"></i>常用意见</a><!--常用意见-->
+                    <a class="mini-button blue" id="btnOK" onclick="onNext" enabled="false">下一步</a><!--下一步-->
+                    <a class="mini-button blue" onclick="WorkFlowUtil.CloseWindow('cancel');"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; padding-top: 4px">
+                    <form id="frmMain" style="height: 100%">
+                        <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" onactivechanged="onMainTabActivechanged">
+                            <div title="流程选择" name="tabSelectWorkFlow">
+                                <!--流程选择-->
+                                <div id="gdWorkFlowList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="WorkFlowID" showpager="false" showemptytext="true" allowcelledit="true" allowcellselect="true"
+                                     onselectionchanged="onWorkFlowSelection" onrowdblclick="onWorkFlowDblClick" oncellbeginedit="onWorkFlowBeginEdit" oncellendedit="onWorkFlowEndEdit">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="10"></div>
+
+                                        <div field="WorkFlowName" width="60" headeralign="center">
+                                            流程名
+                                        </div><!--流程名-->
+                                        <div field="Description" width="70" headeralign="center">
+                                            说明
+                                        </div><!--说明-->
+                                        <div field="PlanEndDate" width="30" headeralign="center" tooltip="填写期望完成时间" dateFormat="yyyy-MM-dd" renderer="onPlanEndRenderer">
+                                            期望完成时间
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" ondrawdate="onDrawPlanEndDate" />
+                                        </div>
+                                        <div width="20" headeralign="center" align="center" renderer="onShowRenderer">显示</div><!--显示-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="节点选择" name="tabSelectNode" style="height: 100%;">
+                                <div id="chkHideNode" class="mini-checkbox" onvaluechanged="onHideNodeChanged">过滤正常定义节点</div>
+                                <div id="gdNodeList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="NodeCode" showpager="false" showemptytext="true">
+                                    <div property="columns">
+                                        <div type="index" width="10">序号</div>
+                                        <div field="NodeName" width="60" headeralign="center">
+                                            节点名称
+                                        </div>
+                                        <div field="ShowUserInfo" width="70" headeralign="center">
+                                            说明
+                                        </div><!--说明-->
+                                        <div field="Status" width="30" headeralign="center" renderer="onNodeStatusRenderer">状态</div>
+                                        <div width="50" headeralign="center" renderer="onNodeRenderer">操作</div><!--操作-->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div title="人员选择" name="tabSelectUser" class="portlet-body" style="height: 100%;" enabled="false">
+                                <!--节点选择-->
+                                <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 100%;" borderstyle="border:0;">
+                                    <div id="divContent" region="north" split="true" title="流程选择" height="230px" showcollapsebutton="false">
+                                        <div id="mnuNodeList" borderstyle="border:0">
+                                        </div>
+                                    </div>
+
+                                    <div region="center" id="workMindInfo" title="办理意见" height="250" showcollapsebutton="false">
+                                        <!--办理意见-->
+                                        <span id="spnPlanEndDate" style="display:none"><span>期望完成时间：</span><div id="dtPlanEndDate" class="mini-datepicker" style="width:150px;" visible="false" ondrawdate="onDrawPlanEndDate"></div></span>
+                                        <div id="divVoteInfo"></div>
+                                        <div borderstyle="border:2; padding:10px;">
+                                            <div id="txtMindInfo" class="mini-textarea" height="80" borderstyle="border:2; padding:10px;" style="background-color: blue" emptytext="请输入办理意见"></div><!--请输入办理意见-->
+                                        </div>
+                                        <div id="mindList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript">
+
+        mini.parse();
+        var form = new mini.Form("frmMain");
+
+        var tabMain = mini.get("tabMain");
+        var gdWorkFlowList = mini.get("gdWorkFlowList");
+        var gdNodeList = mini.get("gdNodeList");
+
+
+        var curWin = null;  //当前窗体
+        var FormInfo = null;  // 表单信息
+        var MyVoteInfo = null;   //投票信息包
+        var curFlowOperate = null;
+        var AllData = null;   //所有节点列表
+
+        var curInstance = null; //当前信息
+
+        var chkHideNode = mini.get("chkHideNode");
+        chkHideNode.setValue(true);
+        var onMainTabActivechanged = function (e) {
+            var txt = "<i class='fa fa-save'></i>";
+            if (e.name == "tabSelectUser")
+                txt +=  "提交";
+            else
+                txt +=  "下一步";
+            mini.get("btnOK").setText(txt);
+
+        }
+        var onHideNodeChanged = function (e) {
+
+            gdNodeList.filter(function (node) {
+                if (e.value == "false") return true;
+                switch (node.SendUserMode) {
+                    case "ByDraft":               //起草者定义模式
+                    case "ByMainNode":               //指定节点定义
+                        return true;
+                }
+                return false;
+
+            });
+        }
+        //------------------专用流程域
+        var onCustomFlow = function (e) {
+
+            if (!AllData || !AllData.Current) {
+                Power.ui.error("流程尚未送审，流程图尚未选择，不可执行自定义流程");
+                return;
+            }
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowDesign.html?WorkFlowMode=WorkingDesign&WorkInfoID=" + AllData.Current.WorkInfoID,
+                width: 1000, height: 600, //title: "流程流转",
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                  //  if (action != "ok") return;
+
+                    var tmpData = {};
+                    tmpData.SequeID = AllData.Current.SequeID;
+                    tmpData.WorkFlowID = AllData.Current.WorkFlowID;
+                    tmpData.Version = AllData.Current.Version;
+                    tmpData.WorkInfoID = AllData.Current.WorkInfoID;
+                    onSelectNode(tmpData, EFlowOperate.Send, "ReadSendNodeList");
+                }
+            });
+        }
+        function ShowFlowPicture() {
+            var row = gdWorkFlowList.getSelected();
+            if (!row) return;
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/WorkFlowDesign.html?hidetoolbar=1&WorkFlowMode=WorkFlowView&WorkFlowID=" + row.WorkFlowID + "&Version=" + row.Version,
+                width: "60%", height: "60%", //title: "流程流转",
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                }
+            });
+        }
+        function onShowRenderer(e) {
+            var row = e.record;
+            var s = '<a class="New_Button" href="javascript:ShowFlowPicture()">流程图</a>';//流程图
+            return s;
+        }
+        function onPlanEndRenderer(e) {
+            var row = e.record;
+
+            if (row.InputLimitDaysByRun == false && row.TimeLimit ==0) return '----';
+
+            return mini.formatDate( row.PlanEndDate,"yyyy-MM-dd");
+        }
+        //只允许选择当前日期之后的日期
+        var onDrawPlanEndDate = function (e) {
+            var date = e.date;
+            var d = new Date();
+
+            if (date.getTime() < d.getTime()) {
+                e.allowSelect = false;
+            }
+        }
+        var onWorkFlowBeginEdit = function (e) {
+            var row = e.record;
+
+            switch (e.field) {
+                case "PlanEndDate":
+                    if (row.InputLimitDaysByRun == false) {
+                        e.cancel = true;
+                        return;
+                    }
+                    break;
+            }
+        }
+        var onWorkFlowEndEdit = function (e) {
+            var row = e.row;
+
+            switch (e.field) {
+                case "PlanEndDate":
+                    gdWorkFlowList.updateRow(row, { "PlanEndDate": row.PlanEndDate });
+            }
+        }
+        var onWorkFlowSelection = function (e) {
+            if (!e) return;
+            if (e.selected == false) return;
+
+            var row = e.selected;
+            if (!row) return;
+
+            curInstance = {};
+            curInstance.WorkFlowID = row.WorkFlowID;
+            curInstance.Version = row.Version;
+            curInstance.WorkInfoID = row.WorkInfoID;
+
+            var tab = tabMain.getTab("tabSelectNode");
+            tabMain.updateTab(tab, { visible: (row.IsByDraft == true) }); //如果有起草者定义,或者发送者定义节点，则此流程显示第二特tab页
+
+            mini.get("btnOK").setEnabled(true);
+        }
+
+        var onWorkFlowDblClick = function (e) {
+            var row = e.record;
+            if (!row) return;
+
+            //如果涵盖起草者定义的节点，则必须先完善流程
+            if (row.IsByDraft == true) {
+                var tab = tabMain.getTab("tabSelectNode");
+                tabMain.activeTab(tab);
+                DraftWorkNodes(row);
+                return;
+            }
+            else {
+                if (row.InputLimitDaysByRun == true && !row.PlanEndDate) {
+                    Power.ui.info("对不起，您选择的流程图，需要设定[期望完成时间]");
+                    return;
+                }
+                var tab = tabMain.getTab("tabSelectUser");
+                tabMain.activeTab(tab);
+                ActiveWorkFlow(row);   //激活tab页
+                return;
+            }
+        }
+        //提取流程列表
+        var onSelectWorkFlow = function (data) {
+
+            FormInfo = data;
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = data;
+            msg.data.FlowOperate = EFlowOperate.SelectFlow;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    gdWorkFlowList.setData(result.data.WorkFlowList);
+
+                    //如果返回数据包中，指定了默认选中行，则触发选中
+                    if (result.data.WorkFlowID) {
+                        for (var irow = 0; irow < result.data.WorkFlowList.length; irow++) {
+                            if (result.data.WorkFlowList[irow].WorkFlowID != result.data.WorkFlowID) continue;
+                            gdWorkFlowList.setSelected(result.data.WorkFlowList[irow])
+                            break;
+                        }
+                    }
+                    Power.ui.loading.close();
+
+
+                    //如果有默认选择的流程,则让列表默认选中,且默认跳到下一步
+                    if (onWorkFlowAfterLoad() == true) {
+                        onNext();
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        var onNext = function () {
+
+            var row = gdWorkFlowList.getSelected();
+
+            switch (tabMain.getActiveTab().name) {
+                case "tabSelectWorkFlow":
+                    if (!row) {
+                        Power.ui.alert("请选择一个流程");//必须选择一个流程
+                        return;
+                    }
+                    if (row.InputLimitDaysByRun == true && !row.PlanEndDate) {
+                        Power.ui.info("对不起，您选择的流程图，需要设定[期望完成时间]");
+                        return;
+                    }
+                    //流程中如果没有任何节点，需要起草者重新定义，则继续
+                    if (row.IsByDraft == false) {
+                        var tab = tabMain.getTab("tabSelectUser");
+                        tabMain.activeTab(tab);
+                        ActiveWorkFlow(row);
+                        return;
+                    }
+
+                    var tab = tabMain.getTab("tabSelectNode");
+                    tabMain.activeTab(tab);
+                    DraftWorkNodes(row);
+                    return;
+                case "tabSelectNode":
+                    if (row) {
+                        if (row.InputLimitDaysByRun == true && !row.PlanEndDate) {
+                            Power.ui.info("对不起，您选择的流程图，需要设定[期望完成时间]");
+                            return;
+                        }
+                    }
+
+                    var gdData = gdNodeList.getData();
+                    for (var irow = 0; irow < gdData.length; irow++) {
+                        if (gdData[irow].Status == true) continue;
+                        Power.ui.error("起草者定义节点 [" + gdData[irow].NodeName + "] 尚未定义人员信息，不可继续");
+                        return;
+                    }
+
+                    var tab = tabMain.getTab("tabSelectUser");
+                    tabMain.activeTab(tab);
+                    if (row) {
+                        ActiveWorkFlow(row);
+                    }
+                    else {
+
+                        var tmpData = {};
+                        tmpData.SequeID = curInstance.SequeID;
+                        tmpData.WorkFlowID = curInstance.WorkFlowID;
+                        tmpData.Version = curInstance.Version;
+                        tmpData.WorkInfoID = curInstance.WorkInfoID;
+                        onSelectNode(tmpData, EFlowOperate.Send, "ReadSendNodeAndUserList");
+                    }
+                    return;
+                case "tabSelectUser":
+                    if (CheckSelectUser() == false) return;   //选择人员
+                    mini.get("btnOK").setEnabled(false);
+                    WorkFlowUtil.CloseWindow("ok");
+                    return;
+            }
+        }
+        var onNodeStatusRenderer = function (e) {
+            var row = e.row;
+            var s ='';
+            if (row.Status == true) s = '√';
+            return s;
+        }
+        var onNodeRenderer = function (e) {
+            var s = '';
+            var row = e.row;
+            if (!row.UserList) row.UserList = [];
+            switch (row.SendUserMode) {
+                case "ByDraft":               //起草者定义模式
+
+                    if ( row.UserList)  row.UserList = mini.decode(row.UserList)
+
+                    if (row.UserList.length == 0)
+                        s += '&nbsp;<a class="New_Button" href="javascript:onDesignUser()">选择人员</a>';
+
+                    if (row.UserList && row.UserList.length > 0)
+                        s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDesignUserTwo()">二次筛选</a>';
+
+                    break;
+                case "ByMainNode":               //指定节点定义
+
+                    if (!row.SendUserModeNode || !curInstance.NodeCode || row.SendUserModeNode.indexOf(curInstance.NodeCode) < 0) break;
+                    if (row.UserList) row.UserList = mini.decode(row.UserList)
+                    if (row.UserList.length == 0)
+                        s += '&nbsp;<a class="New_Button" href="javascript:onDesignUser()">选择人员</a>';
+
+                    if (row.UserList && row.UserList.length > 0)
+                        s += '&nbsp;&nbsp;<a class="New_Button" href="javascript:onDesignUserTwo()">二次筛选</a>';
+
+                    break;
+                    break;
+                case "BySendUser":
+                    s += '&nbsp;发送时定义';
+                    break;
+                default:
+                    break;
+            }
+
+            return s;
+        }
+
+        var onDesignUser = function (e) {
+            var row = gdNodeList.getSelected();
+            if (!row) return;
+
+            var CanSendUsers = mini.decode(row.CanSendUsers);
+            if (!CanSendUsers) CanSendUsers = [];
+
+            designUser(row.NodeCode, CanSendUsers, onSaveDraftToInstanceNode,row);
+        }
+        var onDesignUserBySend = function (nodeCode) {
+            for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                var node = AllData.NextNodeList[irow];
+                if (node.NodeCode != nodeCode) continue;
+                var CanSendUsers = mini.decode(node.CanSendUsers);
+                if (!CanSendUsers) CanSendUsers = [];
+                designUser(nodeCode, node.CanSelectUsers, onSaveSendUserToInstanceNode);
+                return;
+            }
+        }
+
+
+        var designUser = function (nodeCode, CanSendUsers, callback, nodeRow) {
+
+
+            mini.open({
+                url: "/PowerPlat/WorkFlows/Commons/SelectUser.html",
+                title: '人员选择', width: "1000px", height: "600px",
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = {};
+                    // PositionAndUser
+                    tmpNode.SourceMode = "DeptAndUser";   //默认是选择岗位
+                    tmpNode.AllowMulitUser = true;
+                    iframe.contentWindow.SetData(tmpNode, CanSendUsers);
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+
+                    var data = iframe.contentWindow.GetData();
+                    data = mini.clone(data);
+                    if (data.length == 0) {
+                        Power.ui.error("未捕获到任何用户");
+                        return;
+                    }
+                    debugger;
+
+                    callback(nodeCode, data, nodeRow);
+                }
+            });
+        }
+
+        var onDesignUserTwo = function (e) {
+
+            var row = gdNodeList.getSelected();
+            if (!row) return;
+            if (row.UserList) row.UserList = mini.decode(row.UserList);
+
+            designUserTwo(row.NodeCode, row.UserList, onSaveDraftToInstanceNode,row);
+        }
+        var onDesignUserBySendTwo = function (nodeCode) {
+            for (var irow = 0; irow < AllData.NextNodeList.length; irow++) {
+                var node = AllData.NextNodeList[irow];
+                if (node.NodeCode != nodeCode) continue;
+                designUserTwo(nodeCode, node.CanSelectUsers, onSaveSendUserToInstanceNode);
+                return;
+            }
+        }
+        var designUserTwo = function (nodeCode, userList, callback, nodeRow) {
+            mini.open({
+                url: "/PowerPlat/WorkFlows/Commons/SelectUserTwo.html",
+                title: '人员选择', width: "800px", height: "200px",
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = userList;
+                    iframe.contentWindow.SetData(tmpNode);
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+
+                    var data = iframe.contentWindow.GetData();
+                    data = mini.clone(data);
+                    if (data.length == 0) {
+                        Power.ui.error("未捕获到任何用户");
+                        return;
+                    }
+
+
+                    callback(nodeCode, data, nodeRow);
+                }
+            });
+        }
+
+        //保存起草人定义的信息
+        var onSaveDraftToInstanceNode = function (nodeCode, userList, nodeRow) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "SaveUserToInstanNode";   //子指令集,保存选择的人员到指定节点中
+            CurrentInfo.NodeCode = nodeCode;
+            CurrentInfo.ConfigUserList = userList;
+            var data = {};
+
+            data.WorkFlowID = curInstance.WorkFlowID;
+            data.Version = curInstance.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID;    //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+
+
+            if (curInstance.WorkInfoID) {
+                data.WorkInfoID = curInstance.WorkInfoID;
+            }
+            else {
+                if (!data.WorkInfoID) data.WorkInfoID = WorkFlowUtil.CreateGUID();    //申请一个guid
+                curInstance.WorkInfoID = data.WorkInfoID;
+                var row = gdWorkFlowList.getSelected();
+                if (!row) { alert("严重警告，没有选择流程"); return; }
+                gdWorkFlowList.updateRow(row, { "WorkInfoID": data.WorkInfoID });
+            }
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+
+                    var showUserInfo = "";
+                    for (var irow = 0; irow < userList.length; irow++)
+                        showUserInfo += userList[irow].UserName + ",";
+                    if (showUserInfo.length > 0) showUserInfo = showUserInfo.substring(0, showUserInfo.length - 1);
+                    gdNodeList.updateRow(nodeRow, { "ShowUserInfo": showUserInfo, "Status": true ,"CanSendUsers":mini.encode(userList)});
+
+                    mini.unmask(document.body);
+
+                    var nodeLst = gdNodeList.getData();
+                    //如果不是所有的起草者定义节点，都做了定义，则不允许切换到 人员选择界面
+                    for (var irow = 0; irow < nodeLst.length; irow++) {
+                        if (nodeLst[irow].Status != true) return;
+                    }
+
+                 //   ActiveWorkFlow(row);   //激活tab页 (应山东 薛发刚要求， 节点中定义好人员，不要自动切换到 人员选择列）
+                    mini.unmask(document.body);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+        //保存发送者定义的信息
+        var onSaveSendUserToInstanceNode = function (nodeCode, userList) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "SaveUserToInstanNode";   //子指令集,保存选择的人员到指定节点中
+            CurrentInfo.NodeCode = nodeCode;
+            CurrentInfo.ConfigUserList = userList;
+            var data = {};
+
+            data.WorkFlowID = AllData.Current.WorkFlowID;
+            data.Version = AllData.Current.Version;
+            data.WorkInfoID = AllData.Current.WorkInfoID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+                    var tmpData = {};
+                    tmpData.SequeID = AllData.Current.SequeID;
+                    tmpData.WorkFlowID = AllData.Current.WorkFlowID;
+                    tmpData.Version = AllData.Current.Version;
+                    tmpData.WorkInfoID = AllData.Current.WorkInfoID;
+                    onSelectNode(tmpData, EFlowOperate.Send, "ReadSendNodeList");
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        //让起草人追加人员定义
+        var DraftWorkNodes = function (row) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadNodeList";   //子指令集,加载所有节点
+            var data = {};
+            data.WorkFlowID = row.WorkFlowID;
+            data.Version = row.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID;    //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+
+            if (row.WorkInfoID)
+                data.WorkInfoID = row.WorkInfoID;
+            else {
+                if (!data.WorkInfoID) data.WorkInfoID = WorkFlowUtil.CreateGUID();    //申请一个guid
+            }
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow ;    //提取流程节点信息
+
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+                    gdNodeList.setData(result.data.NodeList);
+                    mini.unmask(document.body);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+
+
+
+
+        //激活流程
+        var ActiveWorkFlow = function (row) {
+
+            var CurrentInfo = {};
+            var data = {};
+
+            data.WorkFlowID = row.WorkFlowID;
+            data.Version = row.Version;
+            data.FormId = FormInfo.FormId;
+            data.KeyWord = FormInfo.KeyWord;
+            data.KeyValue = FormInfo.KeyValue;
+            data.PlanEndDate = row.PlanEndDate;
+
+            if (FormInfo.WorkInfoID) data.WorkInfoID = FormInfo.WorkInfoID;    //如果表单中传入了workInfoID ,则直接使用。子流程的workInfoID 由父流程 构建并传入
+            if (FormInfo.GroupID) data.GroupID = FormInfo.GroupID;
+
+            if (row.WorkInfoID)
+                data.WorkInfoID = row.WorkInfoID;
+            else {
+                if (!data.WorkInfoID) data.WorkInfoID = WorkFlowUtil.CreateGUID();    //申请一个guid
+            }
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate =  EFlowOperate.Active;    //激活指令
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+
+                    var tabNode = tabMain.getTab("tabSelectUser");
+                    tabNode.enabled = true;
+                    tabMain.activeTab(tabNode);
+
+                    AllData = result.data;
+                    GetNodesUser(result.data, true);
+
+
+                    if (AllData.IsReDesign == true) {
+                         mini.get("btnCustomWorkFlow").setEnabled(true);
+                         mini.get("btnCustomWorkFlow").setVisible(true);
+                    }
+                    mini.unmask(document.body);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+
+        //提取流程列表
+        var onSelectNode = function (data, MyFlowOperate, subOperate) {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = subOperate;   //选择目标流程人员信息
+            if (data.SequeID) CurrentInfo.SequeID = data.SequeID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    result.data.FlowOperate = MyFlowOperate;
+
+
+                    if (result.data.IsByDraft == true)  //需要补充节点人员
+                    {
+
+                        var tab = tabMain.getTab("tabSelectNode");  //放开选择节点页面
+                        tabMain.updateTab(tab, { visible: true ,enabled:true});
+                        tabMain.activeTab(tab);
+
+                        result.data.CurrentInfo = mini.decode(result.data.CurrentInfo);
+                        curInstance = {};
+                        curInstance.WorkInfoID = result.data.CurrentInfo.WorkInfoID;
+                        curInstance.WorkFlowID = result.data.CurrentInfo.WorkFlowID;
+                        curInstance.Version = result.data.CurrentInfo.Version;
+                        curInstance.NodeCode = result.data.CurrentInfo.NodeCode;
+                        FormInfo = {};
+                        FormInfo.FormId = result.data.CurrentInfo.FormId;
+                        FormInfo.KeyWord = result.data.CurrentInfo.KeyWord;
+                        FormInfo.KeyValue = result.data.CurrentInfo.KeyValue;
+
+                        gdNodeList.setData(result.data.NodeList);
+
+                        mini.get("btnOK").setEnabled(true);
+
+                        if (result.data.IsAllPass == false) {
+                            var tab = tabMain.getTab("tabSelectUser");     //选人tab页关闭
+                            tabMain.updateTab(tab, { visible: false });
+                            return;
+                        }
+                        else {
+                            var tab = tabMain.getTab("tabSelectUser");     //选人tab打开，并且后续执行加载选人界面
+                            tabMain.updateTab(tab, { visible: true });
+                        }
+                    }
+
+
+                    AllData = result.data;
+
+
+
+                    GetNodesUser(result.data, true);
+
+                    if (AllData.IsReDesign == true) {
+                        mini.get("btnCustomWorkFlow").setEnabled(true);
+                        mini.get("btnCustomWorkFlow").setVisible(true);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        //返回false 说明没有选择默认流程，返回true 说明选择了一行流程
+        var onWorkFlowAfterLoad = function() {
+
+            var datas =  gdWorkFlowList.getData();
+            if (datas.length == 1) {
+
+                var data = datas[0];
+                //如果这个流程没有起草者定义，也不可设计，且是自动选择，则触发下一步按钮事件
+                if ((!data.IsByDraft || data.IsByDraft == false) &&
+                    (!data.IsReDesign || data.IsReDesign == false) &&
+                    data.IsAutoSelect && data.IsAutoSelect == true) {
+
+                    mini.get("btnOK").setEnabled(true);
+                    gdWorkFlowList.setSelected(data);
+                    return true;
+                }
+            }
+            return false;
+        }
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data, flowOperate,win) {
+
+            curWin = win;
+
+            if (flowOperate == EFlowOperate.Active) { onSelectWorkFlow(data); return; }
+
+            var tabFlow = tabMain.getTab("tabSelectWorkFlow");
+            tabFlow.enabled = false;
+            tabFlow.visible = false;
+            tabMain.updateTab(tabFlow, { visible: false });
+
+            onSelectNode(data, flowOperate, "ReadSendNodeList");
+        }
+        var GetData = function () {
+            return getSelectedInfo(AllData.Current);
+        }
+    </script>
+
+</body>
+</html>

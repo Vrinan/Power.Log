@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>费用分摊通用表
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_CostAllocation.Effect" onclick="PowerForm.OnBtnEffect(this);"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="PS_CostAllocation.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="PS_CostAllocation.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_CostAllocation.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_CostAllocation.CloseForm" onclick="CloseForm()"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_CostAllocation" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_CostAllocation.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_CostAllocation.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                            <input id="PS_CostAllocation.Plan_Guid" name="Plan_Guid" class="mini-textbox" style="display:none" />
+                                            <input id="PS_CostAllocation.KeyWord" name="KeyWord" class="mini-textbox" style="display:none" />
+                                            <input id="PS_CostAllocation.KeyWordFilter" name="KeyWordFilter" class="mini-textbox" style="display:none" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            分摊总值
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.AllocatedField" name="AllocatedField" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" required="true" />
+                                        </td>
+                                        <td>
+                                            总金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.TotalAllocatedAmount" name="TotalAllocatedAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            已分摊-WBS
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.AllocatedAmount_WBS" name="AllocatedAmount_WBS" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            已分摊-CBS
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.AllocatedAmount_CBS" name="AllocatedAmount_CBS" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            未分摊-WBS
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.UnAllocatedAmount_WBS" name="UnAllocatedAmount_WBS" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            未分摊-CBS
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.UnAllocatedAmount_CBS" name="UnAllocatedAmount_CBS" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_CostAllocation.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_CostAllocation.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='费用分摊-CBS'>
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="25%" showcollapsebutton="true"> 
+                                     <div class="mini-toolbar">
+
+                                       费用科目分类
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="PS_CBS_Class" class="mini-tree" style="width: 100%; height:100%" showtreeicon="true" textfield="CbsClassName"
+                                             idfield="Id" parentfield="ParentId" resultastree="false" expandonload="true"  virtualscroll="true">
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div size="75%" showcollapsebutton="true">
+                                    <!--数据明细-->
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" iconcls="fa-plus" id="PS_CostAllocation_CBS.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="PS_CostAllocation_CBS.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="PS_CostAllocation_CBS" class="mini-treegrid" style="height: 100%;" showsummaryrow="true"
+                                             idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+
+                                                <!--编码-->
+                                                <div field="CbsCode" headeralign="center">
+                                                    CBS编码
+                                                    <input property="editor" allowsort="true" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                                </div>
+                                                <!--名称-->
+                                                <div field="CbsName" headeralign="center">
+                                                    CBS名称
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='费用分摊-WBS'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_CostAllocation_WBS.Add" onclick="AddWBS()">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_CostAllocation_WBS.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_CostAllocation_WBS" class="mini-datagrid" style="height: 100%;" showsummaryrow="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+                                        <!--编号-->
+                                        <div field="WbsCode" headeralign="center">
+                                            WBS编号
+                                            <input allowsort="true" property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                        <!--名称-->
+                                        <div field="WbsName" headeralign="center">
+                                            WBS名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "PS_CostAllocation_CBS") {
+                if (formconfig.FormState == "add")
+                    e.cancel = true;
+                if (e.params.swhere != "")
+                    e.params.swhere += " and MasterId='" + formconfig.KeyValue + "' ";
+                else {
+                    e.params.swhere += "  MasterId='" + formconfig.KeyValue + "' ";
+                }
+            }
+        }
+        //数据时触发
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            //动态增加列
+            debugger;
+            var KeyWord = mini.get("PS_CostAllocation.KeyWord").getValue();
+            var keywordFilter = mini.get("PS_CostAllocation.KeyWordFilter").getValue();
+            if (e.sender.id == "PS_CostAllocation_WBS" || e.sender.id == "PS_CostAllocation_CBS") {
+                var firstRow = {};
+                if (data && data.length > 0) {
+                    firstRow = data[0];
+                }
+                var CbsTitle = firstRow.CbsTitle;
+                var cols = [];
+                if (!CbsTitle || CbsTitle == "") {
+                    CbsTitle = [];
+                    $.ajax({
+                        url: "/Plan/GetCBSSheetHeader",
+                        data: {
+                            keyword: KeyWord,
+                            keywordFilter: keywordFilter,
+                            strEpsProjId: strEpsProjId
+                        },
+                        async: false,
+                        dataType: "JSON",
+                        success: function (headerData) {
+                            CbsTitle = headerData.list;
+                        }
+                    });
+                }
+                else
+                    CbsTitle = $.parseJSON(CbsTitle);
+                var columns = e.sender.getColumns();
+                $.each(CbsTitle, function () {
+                    var thisCbs = this;
+                    var filterCols = $.grep(columns, function (item) {
+                        return item.field == thisCbs.Id;
+                    });
+                    if (filterCols.length == 0)
+                        columns.push({
+                            header: this.CbsTitle,
+                            headerAlign: "center",
+                            align: "center",
+                            field: this.Id,
+                            width: 100,
+                            editor: {
+                                type: "spinner",
+                                maxValue: 999999999
+                            }
+                        });
+                    cols.push(this.Id);
+                });
+                e.sender.setColumns(columns);
+                //处理加载时 数据
+                $.each(data, function () {
+                    var value = this.AllocatedAmount;
+                    if (typeof (value) == "string" && value[0] == "{") {
+                        value = $.parseJSON(value);
+                        for (var f in value) {
+                            if (typeof (value[f]) != "function") {
+                                this[f] = value[f];
+                            }
+                        }
+                    }
+                });
+                //编辑完后,将值更新到行的特定列上去
+                var gridObj = e.sender;
+                e.sender.on("cellendedit", function (e) {
+                    debugger;
+                    if ($.inArray(e.field, cols) > -1) {
+                        var _value = e.record.AllocatedAmount;
+                        if (_value == null)
+                            _value = 0;
+                        if (_value[0] != "{") {
+                            //debugger;
+                            _value = "{}";
+                        }
+                        _value = $.parseJSON(_value);
+                        _value[e.field] = e.value || 0;
+                        var upddate = {};
+                        upddate.AllocatedAmount = mini.encode(_value);
+                        upddate.AllocatedTitle = mini.encode(CbsTitle);
+                        gridObj.updateRow(e.record, upddate);
+                    }
+                })
+            }
+            return data;
+        }
+
+        //选择计划
+        function AddWBS() {
+            var Grid = mini.get("PS_CostAllocation_WBS");
+            var plan_guid = mini.get("PS_CostAllocation.Plan_Guid").getValue();
+            var MGuid = formconfig.KeyValue;
+            var url = "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardPS_CostAllocation_WBS.htm&multi=1&plan_guid=" + plan_guid + "&MGuid=" + MGuid;
+            mini.open({
+                url: url,
+                showMaxButton: true,
+                width: 900,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.Wbs_Guid = data[i].wbs_guid;
+                        row.WbsCode = data[i].wbs_short_name;
+                        row.WbsName = data[i].wbs_name;
+                        Grid.addRow(row, 0);
+                    }
+                    var a = { id: "PS_CostAllocation.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            debugger;
+            Refresh();
+
+            var TotalAllocatedAmount = mini.get("PS_CostAllocation.TotalAllocatedAmount").getValue();
+            var AllocatedAmount_WBS = mini.get("PS_CostAllocation.AllocatedAmount_WBS").getValue();
+            var AllocatedAmount_CBS = mini.get("PS_CostAllocation.AllocatedAmount_CBS").getValue();
+            if (AllocatedAmount_WBS > TotalAllocatedAmount || AllocatedAmount_CBS > TotalAllocatedAmount) {
+                Power.form.warning("已分摊额不能大于分摊总值");
+            }
+        }
+        function Refresh() {
+            var exec = {};  //对象
+            var guid = formconfig.KeyValue;
+            exec.KeyWord = "PS_CostAllocation";   //bo的KeyWord
+            exec.MethodName = "getWBSAllocatedAmount"; //方法名称
+            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.Id = guid;
+            var txt = mini.encode(exec); //对象转换成字符串
+            $.ajax({
+                url: "/API/Exec",
+                type: "POST",
+                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                cache: false,
+                success: function (text) {
+                    // var tmp = mini.decode(text);
+                    // var result = tmp.data.value;
+                    //刷新
+                    var e = { id: "PS_CostAllocation.Refresh" };
+                    PowerForm.OnBtnRefresh(e);
+                }
+            });
+
+        }
+
+        function CloseForm() {
+            debugger;
+            var a = { id: "PS_CostAllocation.CloseForm" };
+            var UnAllocatedAmount_WBS = mini.get("PS_CostAllocation.UnAllocatedAmount_WBS").getValue();
+            var UnAllocatedAmount_CBS = mini.get("PS_CostAllocation.UnAllocatedAmount_CBS").getValue();
+            if (UnAllocatedAmount_WBS == 0 || UnAllocatedAmount_CBS == 0) {
+                PowerForm.OnBtnCloseForm(a);
+            }
+            else {
+                Power.ui.confirm("费用尚未分摊完毕，确定要退出吗？", function (ret) {
+                    if (ret) {
+                        PowerForm.OnBtnCloseForm(a);
+                    }
+                });
+            }
+        }
+		
+		
+		PowerForm.EventWizardWhere = function (e) {
+		    if (e.id == "PS_CostAllocation_CBS.Add") {
+			    var grid = mini.get("PS_CBS_Class");
+				record = grid.getSelected();
+                e.where = " CbsClassCode = '" + record.CbsClassCode + "' ";
+            }
+		}
+		
+		
+        PowerForm.EventWizardAfterUpdateRow = function (e, row) {
+            if (e.id == "PS_CostAllocation_CBS.Add") {
+                mini.get("PS_CostAllocation_CBS").updateRow(row, { MasterId: formconfig.KeyValue });
+            }
+        }
+    </script>
+</body>
+</html>

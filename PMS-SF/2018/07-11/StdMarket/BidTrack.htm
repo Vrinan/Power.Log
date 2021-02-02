@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>投标信息跟踪
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>
+                        <a class="mini-button blue" id="PS_BidTrack.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_BidTrack.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="PS_BidTrack.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_BidTrack" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择投标任务书..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_BidTrack.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            客户
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_BidTrack.ClientName" name="ClientName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开标结果
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.BidResult" name="BidResult" class="mini-combobox" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            投标金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.BidAmount" name="BidAmount" class="mini-spinner" changeonmousewhee="false" required="true" allowlimitvalue="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            开标日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.BidDate" name="BidDate" class="mini-datepicker" required="true" />
+                                        </td>
+                                        <td>
+                                            中标日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.WinBidDate" name="WinBidDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            预计合同签订日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.ContractSignDate" name="ContractSignDate" class="mini-datepicker" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            中标单位
+                                        </td>
+                                        <td>
+                                            <input id="PS_BidTrack.WinCompany" name="WinCompany" class="mini-textbox" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            丢标原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_BidTrack.LoseReason" name="LoseReason" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='报价情况'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_BidTrack_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_BidTrack_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_BidTrack_Dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" oncellendedit="BidTrack_EndEdit">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <!--名称 Price-->
+                                        <div field="Tenderer" headeralign="center">
+                                            投标单位
+                                            <input property="editor" id="PS_BidTrack_Dtl.Tenderer" class="mini-buttonedit" name="Tenderer" textname="Tenderer" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" required="true" />
+                                        </div>
+                                        <div field="Offer" headeralign="center">
+                                            报价
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" required="true" />
+                                        </div>
+                                        <div type="checkboxcolumn" field="isWin" truevalue="1" falsevalue="0" headeralign="center">是否中标</div><!--生效-->
+                                        <!--其他信息-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        function BidTrack_EndEdit(e) {
+            if (e.field == "isWin") {
+                var record = e.record;
+                var sender = e.sender;
+                var isWin = record.isWin;
+                var data = sender.data;
+                if (isWin == 1) {
+                    var Tenderer = record.Tenderer;
+                    mini.get("PS_BidTrack.WinCompany").setValue(Tenderer);
+                    $.each(data, function () {
+                        if (record._uid != this._uid) {
+                            sender.updateRow(this, { isWin: 0 });
+                        }
+                    })
+                } else {
+                    mini.get("PS_BidTrack.WinCompany").setValue("");
+                    $.each(data, function () {
+                        if(this.isWin==1)
+                        {
+                            var Tenderer = this.Tenderer;
+                            mini.get("PS_BidTrack.WinCompany").setValue(Tenderer);
+                        }
+                    })
+                }
+            }
+        }
+
+        function onValueChanged() {
+
+            var BidResult = mini.get("PS_BidTrack.BidResult").value;
+
+            if(BidResult == '01')
+                {
+                    mini.get("PS_BidTrack.WinBidDate").setEnabled(true);
+                    mini.get("PS_BidTrack.ContractSignDate").setEnabled(true);
+                }else{
+                    mini.get("PS_BidTrack.WinBidDate").setValue("");
+                    mini.get("PS_BidTrack.ContractSignDate").setValue("");
+                    mini.get("PS_BidTrack.WinBidDate").setEnabled(false);
+                    mini.get("PS_BidTrack.ContractSignDate").setEnabled(false);
+                    }
+        }
+    </script>
+</body>
+</html>
+

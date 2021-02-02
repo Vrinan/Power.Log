@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var projname = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>合同评审</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_ContractReview.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="PS_ContractReview.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="PS_ContractReview.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <!--portlet-body-->
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" style="height: 100%; border: 0px;" tabposition="left">
+                        <div title="合同评审" name='PlanApprove'>
+                            <div id="PS_ContractReview" name="PS_ContractReview" class="form">
+                                <table id="ContractReview_table" class="table table-bordered">
+
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.EPSProjectName" name="EPSProjectName" textname="EPSProjectName" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ClientName">客户名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                             <input id="PS_ContractReview.ClientName" name="ClientName" textname="ClientName" class="mini-buttonedit"
+                                                 emptytext="请选择客户..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" /></td>
+                                            <!--<input id="PS_ContractReview.ClientName" readonly="readonly" name="ClientName" class="mini-textbox" />-->
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ContractCode">合同编号</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractReview.ContractCode" required="true" name="ContractCode" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ContractName">合同名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractReview.ContractName" required="true" name="ContractName" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ContractType">合同类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ContractType" required="true" name="ContractType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.ContractForm">合同形式</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ContractForm" required="true" name="ContractForm" class="mini-combobox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ContractAmount">预计合同金额</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ContractAmount" name="ContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false"  format="n2"/>
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.CurrencyType">币种</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.CurrencyType" required="true" name="CurrencyType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ProductType">产品类型</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ProductType" required="true" name="ProductType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.ReviewWay">评审形式</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ReviewWay" required="true" name="ReviewWay" class="mini-combobox" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.ReviewDate">评审日期</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.ReviewDate" required="true" name="ReviewDate" dateformat="yyyy-MM-dd" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.SignedDate">预计签订日期</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.SignedDate" required="true" name="SignedDate" dateformat="yyyy-MM-dd" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>备注</td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractReview.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractReview.RegHumName">录入人</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.RegHumName" name="RegHumName" readonly="readonly" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ContractReview.RegDate">录入日期</label>
+
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractReview.RegDate" name="RegDate" dateformat="yyyy-MM-dd" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                    <!--portlet-body end-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "SubPlanTemp") {
+                e.cancel = true;
+                var url = "/Plan/GetSubPlanWbsTask/" + formconfig.KeyValue;
+                $.getJSON(url, function (o) {
+                    if (o.success) {
+                        var data = mini.decode(o.data.value);
+                        mini.get("SubPlanTemp").loadList(data, "Id", "ParentId")
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                })
+            }
+        }
+
+        PowerForm.EventBeforeSaveData = function (pack, e) {
+            if (e.id == "SubPlanTemp.Delete" && pack.SubPlanTemp && pack.SubPlanTemp.data.length != 0) {
+                $.each(pack.SubPlanTemp.data, function () {
+                    this.id = this.SubPlanTempId;
+                })
+            }
+        }
+
+    </script>
+</body>
+</html>

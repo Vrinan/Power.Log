@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>作废操作</title>
+
+    <link rel="stylesheet" type="text/css" href="/PowerPlat/WorkFlows/themes/default/easyui.css?v=$AppVersion">
+    <link href="/PowerPlat/WorkFlows/css/flowPath.css?v=$AppVersion" type="text/css" rel="stylesheet" />
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+     
+    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+      <script language="javascript" src="/Form/GetWebUrl?url=/Scripts/PlatForm/WorkFlowUtil.js"></script>
+
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <style>
+        v\:* {
+            behavior: url(#default#VML);
+        }
+    </style>
+
+</head>
+<body id="body" onselectstart="return false">
+    <form id="frmMain" style="height:100%">
+        <div style="height: 100%">
+            <div class="portlet box blue" style="height: 100%">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <label></label><!--流程流转-->
+                    </div>
+                    <div class="actions">
+                        <a class="mini-button blue" id="btnOK" onclick="btnOK" enabled="false"><i class="fa fa-save"></i>作废</a><!--终止-->
+                        <a class="mini-button blue" onclick="CloseWindow('cancel')"><i class="fa fa-power-off"></i>$Helper.GetResource("g_off")</a><!--关闭-->
+                    </div>
+                </div>
+                <div class="mini-fit">
+                    <div class="portlet-body" style="height:100%">
+                         <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;"  >
+
+                                <div title="步骤选择" name="tabSelectSeque"  style="height: 100%;" enabled="false" visible="false"  url="/PowerPlat/WorkFlows/WorkSequeSelect.html">
+                                
+                                </div>
+                               <div title="作废操作" name="tabScrap"  style="height: 100%;" enabled="false" > 
+                                    <div class="mini-panel" style="width:100%;height:30%" showheader="false">
+                                        <div id="txtMindInfo" class="mini-textarea" height="100%" emptytext="$Helper.GetResource('workflow_input_end_opinion')"  ></div><!--请输入终止意见-->
+                                    </div>
+                                    <div class="mini-panel" id="workMindInfo" title="$Helper.GetResource('workflow_opinion')" showheader="false" style="width:100%;height:70%">
+                                        <!--办理意见-->
+                                       <div id="mindList"></div>
+                                    </div>   
+                               </div>   
+                          </div>                  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form> 
+
+    <script language="javascript">
+
+        mini.parse();
+        var form = new mini.Form("frmMain");
+        var tabMain = mini.get("tabMain");
+        var treeNodeSelect = mini.get("treeNodeSelect");
+
+        var CurrentInfo = {};
+   
+        var onNodeClick = function (e) {
+            mini.get("btnOK").setEnabled(false);
+            var row = e.record;
+            if (row.Alias == "Group") return;
+            
+            if (row.Alias == "Node" && row.NodeType != FlowNodeType.EndNode) return;
+
+            mini.get("btnOK").setEnabled(true);
+        }
+        //////////////////////////////////
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+        var btnOK = function () {
+             
+            form.validate();
+            if (form.isValid() == false) {
+                alert(app_global["workflow_input_end_opinion"]);//"请输入终止意见"
+                return;
+            }
+            CloseWindow("ok");
+        }
+        
+        //提取流程列表
+        var onInitScrap= function (data) {
+
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "GetCurrentSeque";   //获取当前节点序号
+            CurrentInfo.SequeID = data.SequeID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    } 
+                    result.data.FlowOperate = EFlowOperate.Scrap;
+
+                    var tabScrap = tabMain.getTab("tabScrap");
+                    tabMain.updateTab(tabScrap, { visible: true });
+                    tabMain.activeTab(tabScrap);
+                    mini.get("btnOK").setEnabled(true);
+
+                   
+                    var div = $("#mindList");
+                    WorkFlowUtil.DrawMindList(div, result.data.HistoryMind, result.data.Agreelable, result.data.DisagreeLabel);
+                      
+                    mini.get("txtMindInfo").setRequired(true);
+                    mini.get("txtMindInfo").setRequiredErrorText(app_global["workflow_input_opinion"]);//"请填写办理意见"
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        function SetData(data, flowOperate) {
+
+            CurrentInfo = data;
+            onInitScrap(data);
+        }
+
+
+
+        //选中的目标用户返还给表单前台
+        function GetData() {
+
+            var mindInfo = mini.get("txtMindInfo").getValue();
+
+            return { "Current": CurrentInfo, "MindInfo": mindInfo };
+           
+        }
+
+    </script>
+</body>
+</html>

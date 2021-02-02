@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>费用</title>
+    <!--非美工引用-->
+    <script src="/Scripts/plugins/echarts/echarts.min.js" type="text/javascript"></script>
+
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/ead12ab6-625f-474c-93b1-936d2d6c0c0a/edit/"></script>
+
+    <link href="/App_Themes/css/TZKZ/default.css" rel="stylesheet">
+    <link href="/App_Themes/css/TZKZ/Expenses.css" rel="stylesheet">
+</head>
+
+<body style="background: #eff5f9;">
+    <div class="box-list">
+        <ul class="box-ul">
+            <li>
+                <div class="pro" id="div1">
+                    <h1 class="pro-title" style="background: #76b5f5;margin-top:0px;margin-bottom:0px;">项目概算（万元）</h1>
+                    <div id="ProGSum" class="pro-body" style="font-size: 24px;color: #76b5f5;">0</div>
+                    <ul class="pro-foot">
+                        <li>设备购置费<span id="ProG_SB">0</span></li>
+                        <li>主要材料费<span id="ProG_CL">0</span></li>
+                        <li>安装工程费<span id="ProG_AZ">0</span></li>
+                        <li>建设工程费<span id="ProG_JS">0</span></li>
+                        <li>其他费用<span id="ProG_QT">0</span></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="pro" id="div2">
+                    <h1 class="pro-title" style="background: #fb8b80;margin-top:0px;margin-bottom:0px;">投资控制目标（万元)</h1>
+                    <div id="ControlSum" class="pro-body" style="font-size: 24px;color: #fb8b80;">0</div>
+                    <ul class="pro-foot">
+                        <li>设备购置费<span id="Control_SB">0</span></li>
+                        <li>主要材料费<span id="Control_CL">0</span></li>
+                        <li>安装工程费<span id="Control_AZ">0</span></li>
+                        <li>建设工程费<span id="Control_JS">0</span></li>
+                        <li>其他费用<span id="Control_QT">0</span></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="pro" id="div3">
+                    <h1 class="pro-title" style="background: #feb43b;margin-top:0px;margin-bottom:0px;">累计合同金额（万元）</h1>
+                    <div id="ContSum" class="pro-body" style="font-size: 24px;color: #feb43b;">0</div>
+                    <ul class="pro-foot">
+                        <li>本年度金额<span id="Cont_Year">0</span></li>
+                        <li>本月度金额<span id="Cont_Month">0</span></li>
+                        <li>占目标比%<span id="Cont_MBB">0</span></li>
+                        <li>占概算比%<span id="Cont_GSB">0</span></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="pro" id="div4">
+                    <h1 class="pro-title" style="background: #69dcbb;margin-top:0px;margin-bottom:0px;">累计支付金额（万元）</h1>
+                    <div id="PaySum" class="pro-body" style="font-size: 24px;color: #69dcbb;">0</div>
+                    <ul class="pro-foot">
+                        <li>本年度支付<span id="Pay_Year">0</span></li>
+                        <li>本月度支付<span id="Pay_Month">0</span></li>
+                        <li>占合同比%<span id="Pay_HTB">0</span></li>
+                        <li>占目标比%<span id="Pay_MBB">0</span></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li style="flex: 2.5;">
+                <div class="box-li-con" style="width:100%;height:10%;margin-top:0px;margin-bottom:0px;">
+                    <h1 class="common-h" style="margin-top:0px;margin-bottom:0px;">合同执行情况</h1>
+                </div>
+                <div class="tc" style="width:100%;height:90%;">
+                    <div id="chart5" style="width:100%;height:100%;">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div style="width:100%;height:33%;">
+        <table cellpadding="0" cellspacing="0" style="width:100%;height:100%;">
+            <tbody>
+                <tr style="width:100%;height:10%;">
+                    <td width="33%" align="left" style="background:#fff;">
+                        <h1 class="common-h" style="width:100%;height:100%;margin-top:0px;margin-bottom:0px;">总体投资情况
+                        </h1>
+                    </td>
+                    <td width="33%" align="left" style="background:#fff;">
+                        <h1 class="common-h" style="width:100%;height:100%;margin-top:0px;margin-bottom:0px;">本年度投资情况
+                        </h1>
+                    </td>
+                    <td width="33%" align="left" style="background:#fff;">
+                        <h1 class="common-h" style="width:100%;height:100%;margin-top:0px;margin-bottom:0px;">本月度投资情况
+                        </h1>
+                    </td>
+                </tr>
+                <tr style="width:100%;height:90%;">
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart1" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart2" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart3" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!--<div style="width:100%;height:20%;">
+            <div style="width:33%;height:100%;">
+                <h1 class="common-h tc">总体投资情况</h1>
+            </div>
+            <div style="width:33%;height:100%;">
+                <h1 class="common-h tc">年度投资情况</h1>
+            </div>
+            <div style="width:33%;height:100%;">
+                <h1 class="common-h tc">月度投资情况</h1>
+            </div>
+        </div>
+        <div style="width:100%;height:80%;">
+            <div style="width:33%;height:90%;">
+                <div id="chart1" style="width:80%;height:80%;">
+                </div>
+            </div>
+            <div style="width:33%;height:90%;">
+                <div id="chart2" style="width:80%;height:80%;">
+                </div>
+            </div>
+            <div style="width:33%;height:90%;">
+                <div id="chart3" style="width:80%;height:80%;">
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <div style="width:100%;height:33%;margin-bottom: 10px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%;height:100%;">
+            <tbody>
+                <tr style="width:100%;height:100%;">
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart6" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart7" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                    <td width="33%" style="background:#fff;">
+                        <div id="chart8" style="width:100%;height:100%;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="width:100%;height:45%;margin-bottom: 10px;">
+        <!--<ul class="box-ul" style="width:100%;height:100%;">
+            <li style="flex:1.5;">
+                <div class="box-li-con" style="width:100%;height:10%;margin-top:0px;margin-bottom:0px;">
+                    <h1 class="common-h" style="width:100%;height:100%;margin-top:0px;margin-bottom:0px;">投资额完成曲线(万元)
+                    </h1>
+                </div>
+                <div class="tc" style="width: 100%; height: 95%;">
+                    <div id="chart4" style="width:100%;height:100%;">
+                    </div>
+                </div>
+            </li>
+        </ul>-->
+        <table cellpadding="0" cellspacing="0" style="width:100%;height:100%;">
+            <tbody>
+                <tr style="width:100%;height:100%;">
+                    <td width="70%" align="left" style="background:#fff;">
+                        <table cellpadding="0" cellspacing="0" style="width:100%;height:100%;">
+                            <tbody>
+                                <tr style="width:100%;height:10%;">
+                                    <td width="100%" align="left" style="background:#fff;">
+                                        <h1 class="common-h"
+                                            style="width:100%;height:100%;margin-top:0px;margin-bottom:0px;">
+                                            投资额完成曲线(万元)
+                                        </h1>
+                                    </td>
+                                </tr>
+                                <tr style="width:100%;height:90%;">
+                                    <td width="100%" style="background:#fff;">
+                                        <div id="chart4" style="width:100%;height:100%;">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td width="30%" align="left" style="background:#fff;">
+                        <table cellpadding="0" cellspacing="0" style="width:100%;height:100%;">
+                            <tbody>
+                                <tr style="width:100%;height:100%;">
+                                    <td rowspan="2" width="100%" style="background:#fff;">
+                                        <div id="chart9" style="width:100%;height:100%;">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--<div class="box-list">
+        <table class="table-ui" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>年份</th>
+                    <th>批复下达投资计划</th>
+                    <th>年度合同值</th>
+                    <th>投资完成额合计</th>
+                    <th>付款额合计</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="tc">2020</td>
+                    <td>25</td>
+                    <td>Female</td>
+                    <td>5'4</td>
+                    <td>British Columbia</td>
+
+                </tr>
+                <tr>
+                    <td class="tc">2019</td>
+                    <td>30</td>
+                    <td>Male</td>
+                    <td>5'9</td>
+                    <td>Ontario</td>
+
+                </tr>
+                <tr>
+                    <td class="tc">2018</td>
+                    <td>29</td>
+                    <td>Female</td>
+                    <td>5'6</td>
+                    <td>Manitoba</td>
+
+                </tr>
+                <tr>
+                    <td class="tc">2017</td>
+                    <td>21</td>
+                    <td>Mail</td>
+                    <td>5'8</td>
+                    <td>Alberta</td>
+
+                </tr>
+                <tr>
+                    <td class="tc">2016</td>
+                    <td>31</td>
+                    <td>Male</td>
+                    <td>6'1</td>
+                    <td>British Columbia</td>
+
+                </tr>
+
+            </tbody>
+        </table>
+    </div>-->
+</body>
+
+</html>
+<script>
+    //单柱立体阴影
+    var MyCubeRect = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48, //柱宽
+            zWidth: 8, //阴影折角宽
+            zHeight: 4, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2, shape.y];
+            const p4 = [shape.x + shape.width / 2, shape.y];
+            const p2 = [xAxisPoint[0] - shape.width / 2, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width / 2, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48,
+            zWidth: 8,
+            zHeight: 4,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2, shape.y];
+            const p4 = [shape.x + shape.width / 2, shape.y];
+            const p6 = [shape.x + shape.width / 2 + shape.zWidth, shape.y - shape.zHeight];
+            const p7 = [shape.x - shape.width / 2 + shape.zWidth, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] + shape.width / 2, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.width / 2 + shape.zWidth, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect', MyCubeRect);
+    echarts.graphic.registerShape('MyCubeShadow', MyCubeShadow);
+    //双柱立体阴影
+    var MyCubeRect2_1 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48, //柱宽
+            zWidth: 8, //阴影折角宽
+            zHeight: 4, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2 - 40, shape.y];
+            const p4 = [shape.x + shape.width / 2 - 40, shape.y];
+            const p2 = [xAxisPoint[0] - shape.width / 2 - 40, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width / 2 - 40, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow2_1 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48,
+            zWidth: 8,
+            zHeight: 4,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2 - 40, shape.y];
+            const p4 = [shape.x + shape.width / 2 - 40, shape.y];
+            const p6 = [shape.x + shape.width / 2 + shape.zWidth - 40, shape.y - shape.zHeight];
+            const p7 = [shape.x - shape.width / 2 + shape.zWidth - 40, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] + shape.width / 2 - 40, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.width / 2 + shape.zWidth - 40, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect2_1', MyCubeRect2_1);
+    echarts.graphic.registerShape('MyCubeShadow2_1', MyCubeShadow2_1);
+    var MyCubeRect2_2 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48, //柱宽
+            zWidth: 8, //阴影折角宽
+            zHeight: 4, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2 + 30, shape.y];
+            const p4 = [shape.x + shape.width / 2 + 30, shape.y];
+            const p2 = [xAxisPoint[0] - shape.width / 2 + 30, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width / 2 + 30, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow2_2 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 48,
+            zWidth: 8,
+            zHeight: 4,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x, shape.y];
+            const p1 = [shape.x - shape.width / 2 + 30, shape.y];
+            const p4 = [shape.x + shape.width / 2 + 30, shape.y];
+            const p6 = [shape.x + shape.width / 2 + shape.zWidth + 30, shape.y - shape.zHeight];
+            const p7 = [shape.x - shape.width / 2 + shape.zWidth + 30, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] + shape.width / 2 + 30, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.width / 2 + shape.zWidth + 30, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect2_2', MyCubeRect2_2);
+    echarts.graphic.registerShape('MyCubeShadow2_2', MyCubeShadow2_2);
+    //三柱立体阴影
+    var MyCubeRect3_1 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12, //柱宽
+            zWidth: 6, //阴影折角宽
+            zHeight: 3, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x - shape.width - shape.width / 4 * 5, shape.y];
+            const p1 = [shape.x - shape.width - shape.width / 4 * 5, shape.y];
+            const p4 = [shape.x + shape.width - shape.width - shape.width / 4 * 5, shape.y];
+            const p2 = [xAxisPoint[0] - shape.width - shape.width / 4 * 5, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width - shape.width - shape.width / 4 * 5, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow3_1 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12,
+            zWidth: 6,
+            zHeight: 3,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x - shape.width / 4 * 5, shape.y];
+            const p1 = [shape.x - shape.width - shape.width / 4 * 5, shape.y];
+            const p4 = [shape.x - shape.width / 4 * 5, shape.y];
+            const p6 = [shape.x + shape.zWidth - shape.width / 4 * 5, shape.y - shape.zHeight];
+            const p7 = [shape.x - shape.width + shape.zWidth - shape.width / 4 * 5, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] - shape.width / 4 * 5, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.zWidth - shape.width / 4 * 5, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect3_1', MyCubeRect3_1);
+    echarts.graphic.registerShape('MyCubeShadow3_1', MyCubeShadow3_1);
+    var MyCubeRect3_2 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12, //柱宽
+            zWidth: 6, //阴影折角宽
+            zHeight: 3, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x - shape.width / 2, shape.y];
+            const p1 = [shape.x - shape.width / 2, shape.y];
+            const p4 = [shape.x + shape.width - shape.width / 2, shape.y];
+            const p2 = [xAxisPoint[0] - shape.width / 2, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width - shape.width / 2, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow3_2 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12,
+            zWidth: 6,
+            zHeight: 3,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x - shape.width / 2, shape.y];
+            const p1 = [shape.x - shape.width / 2, shape.y];
+            const p4 = [shape.x + shape.width - shape.width / 2, shape.y];
+            const p6 = [shape.x + shape.width + shape.zWidth - shape.width / 2, shape.y - shape.zHeight];
+            const p7 = [shape.x + shape.zWidth - shape.width / 2, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] + shape.width - shape.width / 2, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.width + shape.zWidth - shape.width / 2, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect3_2', MyCubeRect3_2);
+    echarts.graphic.registerShape('MyCubeShadow3_2', MyCubeShadow3_2);
+    var MyCubeRect3_3 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12, //柱宽
+            zWidth: 6, //阴影折角宽
+            zHeight: 3, //阴影折角高
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x + shape.width / 4 * 5, shape.y];
+            const p1 = [shape.x + shape.width / 4 * 5, shape.y];
+            const p4 = [shape.x + shape.width + shape.width / 4 * 5, shape.y];
+            const p2 = [xAxisPoint[0] + shape.width / 4 * 5, xAxisPoint[1]];
+            const p3 = [xAxisPoint[0] + shape.width + shape.width / 4 * 5, xAxisPoint[1]];
+
+            ctx.moveTo(p0[0], p0[1]); //0
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p2[0], p2[1]); //2
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.lineTo(p0[0], p0[1]); //0
+            ctx.closePath();
+        }
+    });
+    var MyCubeShadow3_3 = echarts.graphic.extendShape({
+        shape: {
+            x: 0,
+            y: 0,
+            width: 12,
+            zWidth: 6,
+            zHeight: 3,
+        },
+        buildPath: function (ctx, shape) {
+            const api = shape.api;
+            const xAxisPoint = api.coord([shape.xValue, 0]);
+            const p0 = [shape.x + shape.width / 4 * 5, shape.y];
+            const p1 = [shape.x + shape.width / 4 * 5, shape.y];
+            const p4 = [shape.x + shape.width + shape.width / 4 * 5, shape.y];
+            const p6 = [shape.x + shape.width + shape.zWidth + shape.width / 4 * 5, shape.y - shape.zHeight];
+            const p7 = [shape.x + shape.zWidth + shape.width / 4 * 5, shape.y - shape.zHeight];
+            const p3 = [xAxisPoint[0] + shape.width + shape.width / 4 * 5, xAxisPoint[1]];
+            const p5 = [xAxisPoint[0] + shape.width + shape.zWidth + shape.width / 4 * 5, xAxisPoint[1] - shape.zHeight];
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p3[0], p3[1]); //3
+            ctx.lineTo(p5[0], p5[1]); //5
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p4[0], p4[1]); //4
+
+            ctx.moveTo(p4[0], p4[1]); //4
+            ctx.lineTo(p6[0], p6[1]); //6
+            ctx.lineTo(p7[0], p7[1]); //7
+            ctx.lineTo(p1[0], p1[1]); //1
+            ctx.lineTo(p4[0], p4[1]); //4
+            ctx.closePath();
+        }
+    });
+    echarts.graphic.registerShape('MyCubeRect3_3', MyCubeRect3_3);
+    echarts.graphic.registerShape('MyCubeShadow3_3', MyCubeShadow3_3);
+
+    //总体投资情况
+    var myChart1 = echarts.init(document.getElementById('chart1'));
+    var zttzqk = [0, 0, 0, 0, 0];
+    var option1 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            borderWidth: 0,
+            x: 100,
+            x2: 50,
+            y: 10,
+            y2: 40
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                axisLabel: {
+                    rotate: 20
+                },
+                data: ['概算', '目标', '已完成', '未完成', '预计完成']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '单位(万元)',
+                barWidth: '33%',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            var colorList = ['#76b5f5', '#fb8b80', '#FF6695', '#867DFA', '#69dcbb'];
+                            return colorList[params.dataIndex]
+                        }
+                    },
+                },
+                renderItem: function (params, api) {
+                    var colorList = ['#76b5f5', '#fb8b80', '#FF6695', '#867DFA', '#69dcbb'];
+                    var colorList1 = ['#76a5f5', '#fb7b80', '#FF5695', '#866DFA', '#69ccbb'];
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList[params.dataIndex]
+                            }
+                        }, {
+                            type: 'MyCubeShadow',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList1[params.dataIndex]
+                            }
+                        }]
+                    };
+                },
+                data: zttzqk
+            }
+        ]
+    };
+    myChart1.setOption(option1);
+    //年度投资情况
+    var myChart2 = echarts.init(document.getElementById('chart2'));
+    var ndtzqk = [0, 0, 0];
+    var option2 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            borderWidth: 0,
+            x: 100,
+            x2: 50,
+            y: 10,
+            y2: 40
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                axisLabel: {
+                    rotate: 20
+                },
+                data: ['本年度目标', '本年度已完成', '本年度预计完成']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '单位(万元)',
+                barWidth: '33%',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            var colorList = ['#fb8b80', '#FF6695', '#FA7DD9'];
+                            return colorList[params.dataIndex]
+                        }
+                    },
+                },
+                renderItem: function (params, api) {
+                    var colorList = ['#fb8b80', '#FF6695', '#FA7DD9'];
+                    var colorList1 = ['#fb7b80', '#FF5695', '#FA6DD9'];
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList[params.dataIndex]
+                            }
+                        }, {
+                            type: 'MyCubeShadow',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList1[params.dataIndex]
+                            }
+                        }]
+                    };
+                },
+                data: ndtzqk
+            }
+        ]
+    };
+    myChart2.setOption(option2);
+    //月度投资情况
+    var myChart3 = echarts.init(document.getElementById('chart3'));
+    var ydtzqk = [0, 0, 0];
+    var option3 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            borderWidth: 0,
+            x: 100,
+            x2: 50,
+            y: 10,
+            y2: 40
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                axisLabel: {
+                    rotate: 20
+                },
+                data: ['本月度目标', '本月度已完成', '本月度预计完成']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '单位(万元)',
+                barWidth: '33%',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            var colorList = ['#fb8b80', '#FF6695', '#7DBAF9'];
+                            return colorList[params.dataIndex]
+                        }
+                    },
+                },
+                renderItem: function (params, api) {
+                    var colorList = ['#fb8b80', '#FF6695', '#7DBAF9'];
+                    var colorList1 = ['#fb7b80', '#FF5695', '#7DAAF9'];
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList[params.dataIndex]
+                            }
+                        }, {
+                            type: 'MyCubeShadow',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: colorList1[params.dataIndex]
+                            }
+                        }]
+                    };
+                },
+                data: ydtzqk
+            }
+        ]
+    };
+    myChart3.setOption(option3);
+    //投资完成额曲线(万元)
+    var myChart4 = echarts.init(document.getElementById('chart4'));
+    //月份列表
+    var dateArray = ['2020-01', '2020-02', '2020-03', '2020-04', '2020-05', '2020-06', '2020-07', '2020-08', '2020-09', '2020-10', '2020-11', '2020-12'];
+    //投资完成额数据
+    var tzwce = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    //付款确认额数据
+    var fkqre = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    //累计投资完成额数据
+    var ljtzwce = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    //累计付款确认额数据
+    var ljfkqre = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var option4 = {
+        grid: {
+            borderWidth: 0,
+            x: 100,
+            x2: 50,
+            y: 50,
+            y2: 60
+        },
+
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+        },
+        legend: {
+            data: ['投资完成额', '付款确认额', "累计投资完成额", "累计付款确认额"]
+        },
+
+        calculable: true,
+        xAxis: [
+            {
+                splitLine: { show: false },//去除网格线
+                type: 'category',
+                data: dateArray
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '投资完成额',
+                type: 'bar',
+                itemStyle: {
+                    normal: {
+                        color: '#7CBBF9'
+                    }
+                },
+                data: tzwce
+            },
+            {
+                name: '付款确认额',
+                type: 'bar',
+                itemStyle: {
+                    normal: {
+                        color: '#FF6695'
+                    }
+                },
+                data: fkqre
+            },
+            {
+                name: '累计投资完成额',
+                type: 'line',
+                itemStyle: {
+                    normal: {
+                        color: '#feb43b'
+                    }
+                },
+                data: ljtzwce
+            },
+            {
+                name: '累计付款确认额',
+                type: 'line',
+                itemStyle: {
+                    normal: {
+                        color: '#63cda7'
+                    }
+                },
+                data: ljfkqre
+            }
+        ]
+    };
+    myChart4.setOption(option4);
+    //合同执行情况
+    var myChart5 = echarts.init(document.getElementById('chart5'));
+    var htlb_5 = ['工程类', '设备类', "材料类", "专利技术类", "其它"];
+    //原始金额数据
+    var ysje_5 = [0, 0, 0, 0, 0];
+    //最终金额数据
+    var zzje_5 = [0, 0, 0, 0, 0];
+    //支付金额数据
+    var zfje_5 = [0, 0, 0, 0, 0];
+    //合同数
+    var hts_5 = [0, 0, 0, 0, 0];
+    var option5 = {
+        grid: {
+            borderWidth: 0,
+            x: 100,
+            x2: 50,
+            y: 50,
+            y2: 50
+        },
+
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+        },
+        legend: {
+            data: ['原始金额', '最终金额', "支付金额", "合同数"]
+        },
+
+        calculable: true,
+        xAxis: [
+            {
+                splitLine: { show: false },//去除网格线
+                type: 'category',
+                data: htlb_5
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                splitNumber: 6,
+                axisLabel: {
+                    formatter: '{value} 万元'
+                }
+            },
+            {
+                type: 'value',
+                splitNumber: 6,
+                axisLabel: {
+                    formatter: '{value} 个'
+                }
+            }
+        ],
+        series: [
+            {
+                name: '原始金额',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: '#FD6417'
+                    }
+                },
+                renderItem: function (params, api) {
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect3_1',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#FD6417"
+                            }
+                        }, {
+                            type: 'MyCubeShadow3_1',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#FD5417"
+                            }
+                        }]
+                    };
+                },
+                data: ysje_5
+            },
+            {
+                name: '最终金额',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: '#02BDFB'
+                    }
+                },
+                renderItem: function (params, api) {
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect3_2',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#02BDFB"
+                            }
+                        }, {
+                            type: 'MyCubeShadow3_2',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#02ADFB"
+                            }
+                        }]
+                    };
+                },
+                data: zzje_5
+            },
+            {
+                name: '支付金额',
+                type: 'custom',
+                itemStyle: {
+                    normal: {
+                        color: '#C80EDC'
+                    }
+                },
+                renderItem: function (params, api) {
+                    let location = api.coord([api.value(0), api.value(1)]);
+                    return {
+                        type: 'group',
+                        children: [{
+                            type: 'MyCubeRect3_3',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#C80EDC"
+                            }
+                        }, {
+                            type: 'MyCubeShadow3_3',
+                            shape: {
+                                api,
+                                xValue: api.value(0),
+                                yValue: api.value(1),
+                                x: location[0],
+                                y: location[1]
+                            },
+                            style: {
+                                fill: "#C801DC"
+                            }
+                        }]
+                    };
+                },
+                data: zfje_5
+            },
+            {
+                name: '合同数',
+                type: 'line',
+                yAxisIndex: 1,
+                itemStyle: {
+                    normal: {
+                        color: '#63cda7'
+                    }
+                },
+                data: hts_5
+            }
+        ]
+    };
+    myChart5.setOption(option5);
+    //总体投资情况
+    var myChart6 = echarts.init(document.getElementById('chart6'));
+    var option6 = {
+        title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['已完成目标', '未完成目标']
+        },
+        color: ['#FB8B7F', '#7EBAF9'],
+        series: [
+            {
+                name: '金额(万元)',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    { value: 0, name: '已完成目标' },
+                    { value: 0, name: '未完成目标' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart6.setOption(option6);
+    //年度投资情况
+    var myChart7 = echarts.init(document.getElementById('chart7'));
+    var option7 = {
+        title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['本年度已完成目标', '本年度未完成目标']
+        },
+        color: ['#FF6695', '#867DFA'],
+        series: [
+            {
+                name: '金额(万元)',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    { value: 0, name: '本年度已完成目标' },
+                    { value: 0, name: '本年度未完成目标' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart7.setOption(option7);
+    //月度投资情况
+    var myChart8 = echarts.init(document.getElementById('chart8'));
+    var option8 = {
+        title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['本月度已完成目标', '本月度未完成目标']
+        },
+        color: ['#FEB43B', '#7D9AF8'],
+        series: [
+            {
+                name: '金额(万元)',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    { value: 0, name: '本月度已完成目标' },
+                    { value: 0, name: '本月度未完成目标' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart8.setOption(option8);
+    //月度投资情况
+    var myChart9 = echarts.init(document.getElementById('chart9'));
+    var option9 = {
+        title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['累计确认付款', '剩余目标金额']
+        },
+        color: ['#63cda7', '#feb43b'],
+        series: [
+            {
+                name: '金额(万元)',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    { value: 0, name: '累计确认付款' },
+                    { value: 0, name: '剩余目标金额' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart9.setOption(option9);
+    var url_keyvalue1 = "";
+    var url_keyvalue2 = "";
+    $(function () {
+        //项目概算信息
+        var GSMoney = 0;
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartXMGS";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    GSMoney = parseFloat(tmp.data.value[0]).toFixed(2);
+                    document.getElementById("ProGSum").innerHTML = format_number(parseFloat(tmp.data.value[0]).toFixed(0)) + "<small></small>";
+                    document.getElementById("ProG_JS").innerHTML = format_number(parseFloat(tmp.data.value[1]).toFixed(0));
+                    document.getElementById("ProG_AZ").innerHTML = format_number(parseFloat(tmp.data.value[2]).toFixed(0));
+                    document.getElementById("ProG_CL").innerHTML = format_number(parseFloat(tmp.data.value[3]).toFixed(0));
+                    document.getElementById("ProG_SB").innerHTML = format_number(parseFloat(tmp.data.value[4]).toFixed(0));
+                    document.getElementById("ProG_QT").innerHTML = format_number(parseFloat(tmp.data.value[5]).toFixed(0));
+                    url_keyvalue1 = tmp.data.value[6];
+                    var div = document.getElementById('div1');
+                    div.addEventListener('click', viewdiv1);
+                }
+            }
+        });
+        //投资控制目标图表
+        var ControlMoney = 0;
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartTZKZMB";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    document.getElementById("ControlSum").innerHTML = format_number(parseFloat(tmp.data.value[0]).toFixed(0)) + "<small></small>";
+                    ControlMoney = parseFloat(tmp.data.value[0]).toFixed(2);
+                    document.getElementById("Control_JS").innerHTML = format_number(parseFloat(tmp.data.value[1]).toFixed(0));
+                    document.getElementById("Control_AZ").innerHTML = format_number(parseFloat(tmp.data.value[2]).toFixed(0));
+                    document.getElementById("Control_CL").innerHTML = format_number(parseFloat(tmp.data.value[3]).toFixed(0));
+                    document.getElementById("Control_SB").innerHTML = format_number(parseFloat(tmp.data.value[4]).toFixed(0));
+                    document.getElementById("Control_QT").innerHTML = format_number(parseFloat(tmp.data.value[5]).toFixed(0));
+                    url_keyvalue2 = tmp.data.value[6];
+                    var div = document.getElementById('div2');
+                    div.addEventListener('click', viewdiv2);
+                }
+            }
+        });
+        //累计合同金额图表
+        var ContMoney = 0;
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartLJHTJE";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    document.getElementById("ContSum").innerHTML = format_number(parseFloat(tmp.data.value[0]).toFixed(0)) + "<small></small>";
+                    ContMoney = parseFloat(tmp.data.value[0]).toFixed(2);
+                    document.getElementById("Cont_Year").innerHTML = format_number(parseFloat(tmp.data.value[1]).toFixed(0));
+                    document.getElementById("Cont_Month").innerHTML = format_number(parseFloat(tmp.data.value[2]).toFixed(0));
+                    if (parseFloat(GSMoney) != 0 && parseFloat(tmp.data.value[0]) != 0) {
+                        document.getElementById("Cont_GSB").innerHTML = format_number((parseFloat(tmp.data.value[0]) / parseFloat(GSMoney) * 100).toFixed(0));
+                    } else {
+                        document.getElementById("Cont_GSB").innerHTML = "0";
+                    }
+                    if (parseFloat(ControlMoney) != 0 && parseFloat(tmp.data.value[0]) != 0) {
+                        document.getElementById("Cont_MBB").innerHTML = format_number((parseFloat(tmp.data.value[0]) / parseFloat(ControlMoney) * 100).toFixed(0));
+                    } else {
+                        document.getElementById("Cont_MBB").innerHTML = "0";
+                    }
+                    var div = document.getElementById('div3');
+                    div.addEventListener('click', viewdiv3);
+                }
+            }
+        });
+        //累计支付金额图表
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartLJZFJE";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    document.getElementById("PaySum").innerHTML = format_number(parseFloat(tmp.data.value[0]).toFixed(0)) + "<small></small>";
+                    document.getElementById("Pay_Year").innerHTML = format_number(parseFloat(tmp.data.value[1]).toFixed(0));
+                    document.getElementById("Pay_Month").innerHTML = format_number(parseFloat(tmp.data.value[2]).toFixed(0));
+                    if (parseFloat(ContMoney) != 0 && parseFloat(tmp.data.value[0]) != 0) {
+                        document.getElementById("Pay_HTB").innerHTML = format_number((parseFloat(tmp.data.value[0]) / parseFloat(ContMoney) * 100).toFixed(0));
+                    } else {
+                        document.getElementById("Pay_HTB").innerHTML = "0";
+                    }
+                    if (parseFloat(ControlMoney) != 0 && parseFloat(tmp.data.value[0]) != 0) {
+                        document.getElementById("Pay_MBB").innerHTML = format_number((parseFloat(tmp.data.value[0]) / parseFloat(ControlMoney) * 100).toFixed(0));
+                    } else {
+                        document.getElementById("Pay_MBB").innerHTML = "0";
+                    }
+                    var div = document.getElementById('div4');
+                    div.addEventListener('click', viewdiv4);
+                }
+            }
+        });
+        //合同执行情况图表
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartTHZXQK";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    option5.series[0].data = tmp.data.value[0];
+                    option5.series[1].data = tmp.data.value[1];
+                    option5.series[2].data = tmp.data.value[2];
+                    option5.series[3].data = tmp.data.value[3];
+                    var arr = new Array();
+                    arr[0] = tmp.data.value[0];
+                    arr[1] = tmp.data.value[1];
+                    arr[2] = tmp.data.value[2];
+                    option5.yAxis[0].max = calMax(arr, 1000);
+                    option5.yAxis[0].interval = parseInt(option5.yAxis[0].max) / 6;
+                    var arr1 = new Array();
+                    arr1[0] = tmp.data.value[3];
+                    option5.yAxis[1].max = calMax(arr1, 1);
+                    option5.yAxis[1].interval = parseInt(option5.yAxis[1].max) / 6;
+                    myChart5.setOption(option5);
+                    myChart5.on('click', function (params) {
+                        var name = params.name;
+                        var url = "/Form/EditForm/92838649-bb44-4d25-8bf1-2520114c117a/"
+                        // encodeURIComponent(url)
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                                iframe.contentWindow.SetData(name);
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    });
+                }
+            }
+        });
+        //总体投资情况图表
+        $.ajax({
+            url: "/Progress/ActionProc",
+            type: "POST",
+            data: {
+                ProcName: "P_YLSH_COS_OverallInvestmentBar",
+                ProcParamsName: "@EpsProjId,@Type",
+                ProcParamsValue: sessiondata.EpsProjId + ",Overall",
+                Type: "Table"
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                var tmp = mini.decode(data);
+                var data_str = [0, 0, 0, 0, 0];
+                if (tmp[0] != undefined) {
+                    data_str[0] = parseFloat((tmp[0].BudgetCost == null ? 0 : tmp[0].BudgetCost).toFixed(0));
+                    data_str[1] = parseFloat((tmp[0].TargetCost == null ? 0 : tmp[0].TargetCost).toFixed(0));
+                    data_str[2] = parseFloat((tmp[0].Finished == null ? 0 : tmp[0].Finished).toFixed(0));
+                    data_str[3] = parseFloat((tmp[0].Unfinished == null ? 0 : tmp[0].Unfinished).toFixed(0));
+                    data_str[4] = parseFloat((tmp[0].Expected == null ? 0 : tmp[0].Expected).toFixed(0));
+                }
+                option1.series[0].data = data_str;
+                myChart1.setOption(option1);
+                myChart1.on('click', function (params) {
+                    if (params.name == "概算") {
+                        viewdiv1();
+                    }
+                    else if (params.name == "目标") {
+                        viewdiv2();
+                    } else if (params.name == "已完成") {
+                        var url = "/Form/EditForm/9185b420-2f7d-4a39-90df-b8d2ede19718/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    } else if (params.name == "未完成") {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    } else {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                });
+                option6.series[0].data[0].value = parseFloat(parseFloat(data_str[2]).toFixed(0));
+                option6.series[0].data[1].value = parseFloat(parseFloat(data_str[3]).toFixed(0));
+                myChart6.setOption(option6);
+                myChart6.on('click', function (params) {
+                    var url = "/Form/EditForm/d0346365-4221-4028-b53c-f70459a79d04/";
+                    mini.open({
+                        showMaxButton: true,
+                        width: "1200",
+                        height: "600",
+                        url: url,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                        },
+                        ondestroy: function (result) {
+                        }
+                    });
+                });
+            }
+        });
+        //年度投资情况图表
+        $.ajax({
+            url: "/Progress/ActionProc",
+            type: "POST",
+            data: {
+                ProcName: "P_YLSH_COS_OverallInvestmentBar",
+                ProcParamsName: "@EpsProjId,@Type",
+                ProcParamsValue: sessiondata.EpsProjId + ",Year",
+                Type: "Table"
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                var tmp = mini.decode(data);
+                var data_str = [0, 0, 0];
+                if (tmp[0] != undefined) {
+                    data_str[0] = parseFloat((tmp[0].ThisYearTarget == null ? 0 : tmp[0].ThisYearTarget).toFixed(0));
+                    data_str[1] = parseFloat((tmp[0].ThisYearFinished == null ? 0 : tmp[0].ThisYearFinished).toFixed(0));
+                    data_str[2] = parseFloat((tmp[0].Expected == null ? 0 : tmp[0].Expected).toFixed(0));
+                }
+                option2.series[0].data = data_str;
+                myChart2.setOption(option2);
+                myChart2.on('click', function (params) {
+                    if (params.name == "本年度目标") {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                    else if (params.name == "本年度已完成") {
+                        var url = "/Form/EditForm/32b01617-2264-431e-9840-744164cc8925/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    } else {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                });
+                option7.series[0].data[0].value = parseFloat(parseFloat(data_str[1]).toFixed(0));
+                option7.series[0].data[1].value = parseFloat((parseFloat(data_str[0]) - parseFloat(data_str[1])).toFixed(0));
+                myChart7.setOption(option7);
+                myChart7.on('click', function (params) {
+                    var url = "/Form/EditForm/efb2a646-2cc1-4a4b-bac7-32d930437e49/";
+                    mini.open({
+                        showMaxButton: true,
+                        width: "1200",
+                        height: "600",
+                        url: url,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                        },
+                        ondestroy: function (result) {
+                        }
+                    });
+                });
+            }
+        });
+        //月度投资情况图表
+        $.ajax({
+            url: "/Progress/ActionProc",
+            type: "POST",
+            data: {
+                ProcName: "P_YLSH_COS_OverallInvestmentBar",
+                ProcParamsName: "@EpsProjId,@Type",
+                ProcParamsValue: sessiondata.EpsProjId + ",Month",
+                Type: "Table"
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                var tmp = mini.decode(data);
+                var data_str = [0, 0, 0];
+                if (tmp[0] != undefined) {
+                    data_str[0] = parseFloat((tmp[0].ThisMonthTarget == null ? 0 : tmp[0].ThisMonthTarget).toFixed(0));
+                    data_str[1] = parseFloat((tmp[0].ThisMonthFinished == null ? 0 : tmp[0].ThisMonthFinished).toFixed(0));
+                    data_str[2] = parseFloat((tmp[0].Expected == null ? 0 : tmp[0].Expected).toFixed(0));
+                }
+                option3.series[0].data = data_str;
+                myChart3.setOption(option3);
+                myChart3.on('click', function (params) {
+                    if (params.name == "本月度目标") {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                    else if (params.name == "本月度已完成") {
+                        var url = "/Form/EditForm/5a8a962b-05cc-4a88-93a5-8d1e1f1e1d10/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    } else {
+                        var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                });
+                option8.series[0].data[0].value = parseFloat(parseFloat(data_str[1]).toFixed(0));
+                option8.series[0].data[1].value = parseFloat((parseFloat(data_str[0]) - parseFloat(data_str[1])).toFixed(0));
+                myChart8.setOption(option8);
+                myChart8.on('click', function (params) {
+                    var url = "/Form/EditForm/41286740-c945-494e-870c-a2e92a5e3138/";
+                    mini.open({
+                        showMaxButton: true,
+                        width: "1200",
+                        height: "600",
+                        url: url,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                        },
+                        ondestroy: function (result) {
+                        }
+                    });
+                });
+            }
+        });
+        //投资额完成曲线图表
+        var data_str0 = [];
+        var data_str1 = [];
+        var data_str2 = [];
+        var data_str3 = [];
+        var data_list = [];
+        var data_list9 = ["2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12"];
+        var A_data = "";
+        var sum_Cost = 0;
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "returnDataList";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.data.value != "") {
+                    data_list9 = tmp.data.value;
+                }
+            }
+        });
+        $.ajax({
+            url: "/Progress/ActionProc",
+            type: "POST",
+            data: {
+                ProcName: "P_YLSH_COS_InvestmentCompletionCurve",
+                ProcParamsName: "@EpsProjId",
+                ProcParamsValue: sessiondata.EpsProjId,
+                Type: "Table"
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                var tmp = mini.decode(data);
+                if (tmp[0] != undefined) {
+                    if (tmp[0].A_Date < data_list9[0]) {
+                        data_list9[0] = tmp[0].A_Date;
+                    }
+                    if (tmp[tmp.length - 1].A_Date > data_list9[1]) {
+                        data_list9[1] = tmp[tmp.length - 1].A_Date;
+                    }
+                    data_list9 = getMonthList(data_list9[0], data_list9[1]);
+                    option4.xAxis[0].data = data_list9;
+                    var j = 0;
+                    for (var i = 0; i < data_list9.length; i++) {
+                        A_data += data_list9[i] + ",";
+                        if (j < tmp.length && data_list9[i] == tmp[j].A_Date) {
+                            data_str0[i] = parseFloat(parseFloat(tmp[j].InvestmentCompletion == null ? 0 : tmp[j].InvestmentCompletion).toFixed(0));
+                            sum_Cost += parseFloat(tmp[j].InvestmentCompletion == null ? 0 : tmp[j].InvestmentCompletion);
+                            data_str2[i] = parseFloat(sum_Cost.toFixed(0));
+                            j++;
+                        } else {
+                            data_str0[i] = 0;
+                            sum_Cost += 0;
+                            data_str2[i] = parseFloat(sum_Cost.toFixed(0));
+                        }
+                    }
+                    /*
+                    for (var i = 0; i < tmp.length; i++) {
+                        data_list[i] = tmp[i].A_Date;
+                        A_data += tmp[i].A_Date + ",";
+                        data_str0[i] = parseFloat(parseFloat(tmp[i].InvestmentCompletion == null ? 0 : tmp[i].InvestmentCompletion).toFixed(0));
+                        sum_Cost += parseFloat(tmp[i].InvestmentCompletion == null ? 0 : tmp[i].InvestmentCompletion);
+                        data_str2[i] = parseFloat(sum_Cost.toFixed(0));
+                    }
+                    if (data_list.length > 0) {
+                        option4.xAxis[0].data = data_list;
+                    } else {
+                        option4.xAxis[0].data = data_list9;
+                    }*/
+                }
+            }
+        });
+        var exec = {};  //对象
+        exec.KeyWord = "YLSH_CON_SubContract";
+        exec.MethodName = "chartTZEWCQX";
+        exec.MethodParams = {};
+        var params = exec.MethodParams;
+        params.EpsId = sessiondata.EpsProjId;
+        params.A_data = A_data;
+        var txt = mini.encode(exec);
+        $.ajax({
+            url: "/API/Exec",
+            async: false,
+            type: "POST",
+            data: { jsonData: txt },
+            cache: false,
+            success: function (text) {
+                var tmp = mini.decode(text);
+                if (A_data.indexOf("null") == -1 && A_data != "" && tmp.data.value[0] != undefined && tmp.data.value[0].length != 0) {
+                    option4.series[0].data = data_str0;
+                    data_str1 = tmp.data.value[0];
+                    option4.series[1].data = data_str1;
+                    option4.series[2].data = data_str2;
+                    data_str3 = tmp.data.value[1];
+                    option4.series[3].data = data_str3;
+                    myChart4.setOption(option4);
+                    myChart4.on('click', function (params) {
+                        if (params.seriesName == "付款确认额" || params.seriesName == "累计付款确认额") {
+                            viewdiv4();
+                        }
+                        else {
+                            var url = "/Form/EditForm/1df45972-b4c2-45ca-b0f3-6d2d4acbba9a/";
+                            mini.open({
+                                showMaxButton: true,
+                                width: "1200",
+                                height: "600",
+                                url: url,
+                                onload: function () {
+                                    var iframe = this.getIFrameEl();
+                                },
+                                ondestroy: function (result) {
+                                }
+                            });
+                        }
+                    });
+                    option9.series[0].data[0].value = parseFloat(parseFloat(tmp.data.value[1][tmp.data.value[1].length - 1]).toFixed(0));
+                    option9.series[0].data[1].value = parseFloat((parseFloat(data_str2[data_str2.length - 1]) - parseFloat(tmp.data.value[1][tmp.data.value[1].length - 1])).toFixed(0));
+                    myChart9.setOption(option9);
+                }
+                myChart9.on('click', function (params) {
+                    if (params.data.name == "剩余目标金额") {
+                        var url = "/Form/EditForm/d0346365-4221-4028-b53c-f70459a79d04/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                    else {
+                        var url = "/Form/EditForm/92838649-bb44-4d25-8bf1-2520114c117a/";
+                        mini.open({
+                            showMaxButton: true,
+                            width: "1200",
+                            height: "600",
+                            url: url,
+                            onload: function () {
+                                var iframe = this.getIFrameEl();
+                            },
+                            ondestroy: function (result) {
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+    function viewdiv1() {
+        if (url_keyvalue1 != "") {
+            var url = "/Form/ValidForm/81cdb1bc-0eef-49e8-830c-4fc482e344ca/view/" + url_keyvalue1 + "/"
+            // encodeURIComponent(url)
+            mini.open({
+                showMaxButton: true,
+                width: "1200",
+                height: "600",
+                url: url,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                },
+                ondestroy: function (result) {
+                }
+            });
+        }
+    }
+    function viewdiv2() {
+        var url = "/Form/ValidForm/131c3ec0-0b36-4b52-b1ea-b2a7c66a6005/view/" + url_keyvalue2 + "/"
+        // encodeURIComponent(url)
+        mini.open({
+            showMaxButton: true,
+            width: "1200",
+            height: "600",
+            url: url,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+            },
+            ondestroy: function (result) {
+            }
+        });
+    }
+    function viewdiv3() {
+        var url = "/Form/EditForm/976d05e3-2327-4725-ae09-3acbd548bc42/"
+        // encodeURIComponent(url)
+        mini.open({
+            showMaxButton: true,
+            width: "1200",
+            height: "600",
+            url: url,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+            },
+            ondestroy: function (result) {
+            }
+        });
+    }
+    function viewdiv4() {
+        var url = "/Form/EditForm/24c3216e-1a34-4955-b65a-07144bcb2e0d/"
+        // encodeURIComponent(url)
+        mini.open({
+            showMaxButton: true,
+            width: "1200",
+            height: "600",
+            url: url,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+            },
+            ondestroy: function (result) {
+            }
+        });
+    }
+    function format_number(n) {
+        var b = parseInt(n).toString();
+        var len = b.length;
+        if (len <= 3) { return b; }
+        var r = len % 3;
+        return r > 0 ? b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : b.slice(r, len).match(/\d{3}/g).join(",");
+    }
+    function getMonthList(e, f) {
+        var startArr = e.split("-");
+        var startYear = parseInt(startArr[0]);
+        var startMonth = parseInt(startArr[1]);
+        var curArr = f.split("-");
+        var curYear = parseInt(curArr[0]);
+        var curMonth = parseInt(curArr[1]);
+        var list = new Array();
+        var len = 0;
+        for (var i = startYear; i <= curYear; i++) {
+            for (var j = 1; j <= 12; j++) {
+                if (((i == startYear && j < startMonth) || (i == curYear && j > curMonth))) {
+                } else {
+                    var monthStr = "";
+                    if (j < 10) {
+                        monthStr = "0" + j;
+                    } else {
+                        monthStr = j;
+                    }
+                    var yearMonth = i + "-" + monthStr;
+                    list[len++] = yearMonth;
+                }
+            }
+        }
+        return list;
+    }
+
+    //计算最大值
+    function calMax(arr, bl) {
+        let max = 0;
+        arr.forEach((el) => {
+            el.forEach((el1) => {
+                if (!(el1 === undefined || el1 === '')) {
+                    if (max < el1) {
+                        max = el1;
+                    }
+                }
+            })
+        })
+        let maxint = Math.ceil(max / 9.5 / bl / 6);//不让最高的值超过最上面的刻度
+        let maxval = maxint * 10 * bl * 6;//让显示的刻度是整数
+        return maxval;
+    }
+</script>

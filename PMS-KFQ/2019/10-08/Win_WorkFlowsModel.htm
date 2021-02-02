@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                                <span>状态</span>
+                                <input id="QStatus" class="mini-combobox" shownullitem="true" width="120px"></input>
+                                <span>送审时间</span>
+                                <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                                <span>——</span>
+                                <input id="QEndDate" class="mini-datepicker" width="120px"></input>                           
+                                <span>单据标题</span>
+                                <input id="QTitle" class="mini-textbox" shownullitem="true" width="120px"></input>
+                                <span>起草人</span>
+                                <input id="QUserName" class="mini-textbox" shownullitem="true" width="120px"></input>
+                                <!--<span>批准日期</span>
+                                <input id="QFinish" class="mini-datepicker" width="120px"></input>-->
+                                <a class="mini-button yellow" onclick="mini.get('View_KFQ_FilesWorkFlow').reload();">查询</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <div id="View_KFQ_FilesWorkFlow-Export" title="收文流程跟踪" class="btn-group"></div>     
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                            <div id="View_KFQ_FilesWorkFlow" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                allowresize="true" showPager="true" pagesize="50"  ondrawcell="drawcell">
+                            <div property="columns">
+                                <div type="indexcolumn">
+                                </div>
+                                <div field="RecordStatus" width="50" type="comboboxcolumn">
+                                    状态
+                                    <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                </div>
+                                <!--<div field="KeyWord" width="100">
+                                    关键词
+                                </div>-->
+                                <!--<div field="EpsProjectName" width="100">
+                                    所属项目
+                                </div>-->
+                                <!--<div field="DocumentCode" width="150">
+                                    单据编号
+                                </div>-->
+                                <div field="Title" width="150" allowsort="true">
+                                    单据标题
+                                </div>
+                                <div field="RegHumName" width="100">
+                                    起草人
+                                </div>
+                                <div field="BeforeUserName" width="100">
+                                    前序人
+                                </div>
+                                <div field="UserName" width="100">
+                                    当前待办人
+                                </div>
+                                <div field="delayDays" width="100" allowsort="true">
+                                    延迟天数
+                                </div>
+                                <div field="Content" width="100">
+                                    审批意见
+                                </div>
+                                <div field="CreateDate" allowsort="true" dateformat="yyyy-MM-dd">
+                                    送审日期
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="RecvDate" allowsort="true" dateformat="yyyy-MM-dd">
+                                    记录到手时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="ReadDate" allowsort="true" dateformat="yyyy-MM-dd">
+                                    记录打开时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="SendDate" allowsort="true" dateformat="yyyy-MM-dd">
+                                    记录送出时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                </div>
+                                <div field="ActName" width="0">
+                                    当前节点
+                                </div>
+                                <div field="TypeName" width="0">
+                                    节点分类
+                                </div>
+                                
+                           </div>
+                       </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            var type = getParameter("type");
+            if(!IsEmpty(type))
+            {
+                formconfig.config.joindata.swhere = " FileType='"+ type +"' and ";
+            }
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        function drawcell(e){
+            if(e.field=="Title"){
+                    e.cellHtml = "<a href='javasrcipt:void(0)' onclick=\"OpenForm('6d673167-51fb-4284-969c-08a7625a6c37','" + e.record.KeyValue + "');\">" + e.record.Title + "</a>";
+                }
+            }
+            //打开表单
+        function OpenForm(formid, value) {
+            var url = "/Form/ValidForm/" + formid + "/view/" + value;
+            mini.open({
+                url: url,
+                width: 850,
+                height: 530
+            })
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_KFQ_FilesWorkFlow") {
+                if (e.params.swhere == "") {
+                    e.params.swhere = " CreateDate>='" + mini.get("QStartDate").getFormValue() + "' and CreateDate<='" + mini.get("QEndDate").getFormValue() + "'";
+                }
+                else { 
+                    e.params.swhere += " CreateDate>='" + mini.get("QStartDate").getFormValue() + "' and CreateDate<='" + mini.get("QEndDate").getFormValue() + "'";
+                }
+                //单据标题
+                if (mini.get("QTitle").getValue() != "") {
+                    e.params.swhere += " and Title like '%" + mini.get("QTitle").getValue() + "%'";
+                }
+                //起草人
+                if (mini.get("QUserName").getValue() != "") {
+                    e.params.swhere += " and UserName like '%" + mini.get("QUserName").getValue() + "%'";
+                }
+                ////批准日期
+                //if (mini.get("QFinish").getValue() != "") {
+                //    e.params.swhere += " and FinishDate ='" + mini.get("QFinish").getFormValue() + "'";
+                //}
+                //状态
+                if (mini.get("QStatus").getValue() != "") {
+                    e.params.swhere += " and RecordStatus ='" + mini.get("QStatus").getFormValue() + "'";
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>

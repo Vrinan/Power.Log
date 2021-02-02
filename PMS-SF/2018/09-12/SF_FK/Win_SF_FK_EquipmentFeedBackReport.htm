@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <span>当前选择的EPS层级</span>
+                            <input id="project_guid" class="mini-hidden" >
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="120px" />
+                            <span>当前选择的成本计划表</span>
+                            <input id="View_SF_EquipmentCost.Id" textname="Id" class="mini-hidden" allowinput="false"/>
+                            <input id="View_SF_EquipmentCost.Code" textname="Code" class="mini-hidden" allowinput="false" />
+                            <input id="View_SF_EquipmentCost.Titile" textname="Titile" class="mini-buttonEdit" allowinput="false" width="120px" />
+                            
+                            <a class="mini-button blue" id="View_SF_EquipmentCost.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" iconcls="fa-refresh" id="View_SF_EquipmentCost.Export" 
+                            onclick="PowerForm.OnExportDataToXls('View_SF_EquipmentCost', '设备成本计划-季度反馈报表')">导出</a>
+                            <a class="mini-button yellow" onclick="mini.get('View_SF_EquipmentCost').reload();">查询</a>
+
+                            <a class="mini-button blue" iconcls="fa-plus" id="View_SF_EquipmentCost.Expand" onclick="PMS_Expand()">展开</a>
+                            <a class="mini-button blue" iconcls="fa-minus" id="View_SF_EquipmentCost.Collapse" onclick="PMS_Collapse()">折叠</a>
+
+                            
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                            <div id="View_SF_EquipmentCost" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" 
+                            idfield="Id" parentfield="ParentId" showtreeicon="true"  treecolumn="Code" resultastree="false" expandonload="true" onload="onLoad" ondrawcell="drawcell" >
+                            <div property="columns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow: auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top: 8px;">
+            <tr>
+                <td align="center" style="text-align: right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            //mini.get("project_guid").setValue(currentproj);
+            //mini.get("txtPlanName").setValue(EpsProjName);
+            //mini.get("txtPlanName").setText(EpsProjName);
+
+            PowerForm.Init();
+            mini.get("txtPlanName").on("buttonclick", function (e) {
+                OnWizardPlan();
+            });
+        });
+        mini.parse();
+        function onLoad(e) {
+            //mini.get("View_SF_EquipmentCost").mergeColumns(["MainCode","EpsCode","EpsName"]);
+            //mini.get("View_SF_EquipmentCost").frozenColumns(0,6);
+        }
+
+
+
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            if (e.sender.id == "View_SF_EquipmentCost") {
+                if(data){
+                    var columns = [];
+                    //固定列
+                    columns.push({ field: "Code",name:"Code", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "编号" });
+                    columns.push({ field: "Name", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "名称" });
+                    columns.push({ field: "Specifications", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "规格型号" });
+                    columns.push({ field: "unit", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "单位" });
+                    columns.push({ field: "Quantity", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "数量",numberFormat:"n2"  });
+                    columns.push({ field: "UnitPrice", width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "单价",numberFormat:"n2" });
+                    columns.push({ field: "Price", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "目标总成本", numberFormat: "n2" });
+                    columns.push({ field: "FeedBackAmount", width: 100, headerAlign: "center", Align: "center", allowSort: false, header: "实际总成本", numberFormat: "n2" });
+                    
+                    //动态增加列
+                    for (var i = 0; i < data.length; i++) {
+                        if(!data[i].FeedBackReport){
+                            continue;
+                        }
+                        var tmp = mini.decode(data[i].FeedBackReport);
+                        for (var j = 0; j < tmp.length; j++) {
+                            //赋值
+                            data[i]["Quantity" + j]=tmp[j].Quantity;
+                            data[i]["UnitPrice" + j]=tmp[j].UnitPrice;
+                            data[i]["Price" + j]=tmp[j].Price;
+                            //如果是第一行，则还需要创建表头
+                            if (i == 1) {
+                                var columnss=[];
+                                columnss.push({ field: "Quantity" + j, name:"Quantity" + j, width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "数量",numberFormat:"n2", editor: { type: "textbox" } });
+                                columnss.push({ field: "UnitPrice" + j, name:"UnitPrice" + j, width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "单价",numberFormat:"n2", editor: { type: "textbox"  } });
+                                columnss.push({ field: "Price" + j, name:"Price" + j, width: 100, headerAlign: "center", Align: "center",allowSort: false, header: "合价",numberFormat:"n2", editor: { type: "textbox" } });
+                                columns.push({ columns: columnss, width: 60, headerAlign: "center", Align: "center",allowSort: false, header: "第"+tmp[j].SeasonReport+"季度" });
+                            }
+                        }
+                    }
+                    mini.get("View_SF_EquipmentCost").set({
+                        columns: columns
+                    });
+                }
+            }
+            return data;
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+        function OnWizardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            p.swhere = "A.project_guid in (select id from dbo.returnEPSChildrenTreeIds('4b5d4678-5f00-4eb6-b14d-61e6bfc01674')) "
+            OpenWizard(p, function (data) {
+                currenttask = data[0].LongCode;
+                mini.get("project_guid").setValue(data[0].project_guid);
+                mini.get("txtPlanName").setValue(data[0].project_name);
+                mini.get("txtPlanName").setText(data[0].project_name);
+                //选完向导后,直接加载。
+                mini.get("View_SF_EquipmentCost").load();
+            })
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_EquipmentCost") {
+                //项目名称
+                if (mini.get("txtPlanName").getValue()) {
+                    e.params.swhere += " EpsId='" + mini.get("project_guid").getValue() + "'";
+                    //加载所有
+                    // e.params.swhere += " or EpsId in ( select id from dbo.returnEPSChildrenTreeIds('"+ currentproj +"')) ";
+                }
+                if (mini.get("View_SF_EquipmentCost.Id").getValue()) {
+                    e.params.swhere += " and a.Id='" + mini.get("View_SF_EquipmentCost.Id").getValue() + "'";
+                }
+            }
+        }
+        function drawcell(e){
+            //把0转成空,为了显示好看点
+            if(e.cellHtml=="0"||e.cellHtml=="0.0"||e.cellHtml=="0.00"){
+                e.cellHtml="";
+            }
+        }
+        mini.get("View_SF_EquipmentCost.Titile").on("buttonclick", function (e) {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/SF_FK/WizardEquipmentCostSchedule.htm";
+            p.select = " * ";
+            p.swhere = " IsNew='1' ";
+            OpenWizard(p, function (data) {
+                if(data[0]){
+                    mini.get("project_guid").setValue(data[0].EpsId);
+                    mini.get("txtPlanName").setValue(data[0].EpsName);
+                    mini.get("txtPlanName").setValue(data[0].EpsName);
+
+                    mini.get("View_SF_EquipmentCost.Id").setValue(data[0].Id);
+                    mini.get("View_SF_EquipmentCost.Code").setValue(data[0].Code);
+                    mini.get("View_SF_EquipmentCost.Titile").setValue(data[0].Titile);
+                    mini.get("View_SF_EquipmentCost.Titile").setText(data[0].Titile);
+                    mini.get("View_SF_EquipmentCost").load();
+                }else{
+                    Power.ui.warning("未选中任何数据!");
+                }
+                
+            })
+        });
+        //展开分组
+        function PMS_Expand()
+        {
+            mini.get("View_SF_EquipmentCost").expandAll();
+        }
+        //折叠分组
+        function PMS_Collapse()
+        {
+            mini.get("View_SF_EquipmentCost").collapseAll();
+        }
+    </script>
+</body>
+</html>

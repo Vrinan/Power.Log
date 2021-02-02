@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>周计划
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_YX_WeekPlan.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_YX_WeekPlan.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_YX_WeekPlan.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_WeekPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_YX_WeekPlan.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_WeekPlan" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_WeekPlan.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_WeekPlan.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            开始时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.StartDate" name="StartDate" class="mini-datepicker"    onvaluechanged="ChangesDate" required/>
+                                        </td>
+                                        <td>
+                                            结束时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.EndDate" name="EndDate" class="mini-datepicker"   readonly="readonly" required/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_WeekPlan.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+                                            部门
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_WeekPlan.DeptId" name="DeptId" class="mini-textbox" readonly="readonly" />
+                                        </td>-->
+                                        <td>
+                                            部门
+                                        </td>
+                                        <td>
+
+                                            <input id="SF_YX_WeekPlan.Department" name="Department" class="mini-textbox" readonly />
+                                            <input id="SF_YX_WeekPlan.DeptId" name="DeptId" class="mini-textbox" style="display:none;" />
+                                        </td>
+                                            
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_WeekPlan.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_YX_WeekPlan.Department").value == '') {
+                debugger;
+                var DeptId = sessiondata.DeptId;
+                var Department = sessiondata.DeptName;
+
+                mini.get("SF_YX_WeekPlan.DeptId").setValue(DeptId);
+                mini.get("SF_YX_WeekPlan.Department").setValue(Department);
+                $.ajax({
+                    url: "/zyx/GetHumSecondDept",
+                    type: "POST",
+                    data: { HumId: sessiondata.DeptId },
+                    cache: false,
+                    success: function (text) {
+
+                        result = mini.decode(text);
+                        if (result.data.Message != "Not Find!") {
+                            mini.get("SF_YX_WeekPlan.Department").setValue(result.data.Message.split(",")[0]);
+                            mini.get("SF_YX_WeekPlan.DeptId").setValue(result.data.Message.split(",")[1]);
+                        }
+                    }
+                });
+            }
+        };
+        function ChangesDate() {
+            var Date = mini.get("SF_YX_WeekPlan.StartDate").getValue();
+            var enddate = addDate(Date, 6);
+            mini.get("SF_YX_WeekPlan.EndDate").setValue(enddate);
+        }        function addDate(date, days) {
+            var d = new Date(date);
+            d.setDate(d.getDate() + days);
+            var m = d.getMonth() + 1;
+            return d.getFullYear() + '-' + m + '-' + d.getDate();
+        }
+    </script>
+
+
+</body>
+</html>

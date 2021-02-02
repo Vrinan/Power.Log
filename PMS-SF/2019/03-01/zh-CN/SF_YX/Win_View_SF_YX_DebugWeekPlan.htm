@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--<a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>-->
+                            <!--<a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>-->
+                            <!--<a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>-->
+                            <a class="mini-button blue" id="View_SF_YX_DebugWeekPlan.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_YX_DebugWeekPlan-Export" title="调试周进度报表" class="btn-group"></div>
+
+                            <span>开始时间</span>
+                            <input id="StartDate" class="mini-datepicker" width="120">
+                            <span>-</span>
+                            <input id="EndDate" class="mini-datepicker" width="120">
+                            <span>项目名称</span>
+                            <input id="EpsName" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+
+                        </div>
+                        <div class="tools">
+                            <input id="View_SF_YX_DebugWeekPlan-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="View_SF_YX_DebugWeekPlan-search">
+                                <input id="View_SF_YX_DebugWeekPlan-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="View_SF_YX_DebugWeekPlan-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i> 搜索</a><!--查询-->
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_YX_DebugWeekPlan" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id" onload="OnBeforeLoad">
+                            <div property="columns">
+                                <div field="ProjName" name="ProjName" headeralign="center" header="项目名称" width="150">
+                                    项目名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%; height:90px;" readonly="readonly" />
+                                </div>
+                                <div field="StartDate" name="StartDate" headeralign="center" header="本周开始时间" dateformat="yyyy-MM-dd">
+                                    本周开始时间
+                                    <input property="editor" class="mini-textbox" style="width: 100%; height:90px;" readonly="readonly" />
+                                </div>
+                                <div field="EndDate" name="EndDate" headeralign="center" header="本周结束时间" dateformat="yyyy-MM-dd">
+                                    本周结束时间
+                                    <input property="editor" class="mini-textbox" style="width: 100%; height:90px;" readonly="readonly" />
+                                </div>
+                                <div field="DeBugName" headeralign="center" header="调试工艺段">
+                                    调试工艺段
+                                    <input property="editor" class="mini-textbox" style="width: 100%; height:90px;" readonly="readonly" />
+                                </div>
+                                <div field="WeekPlan" headeralign="center" width="130" header="本周计划调试形象进度">
+                                    本周计划调试形象进度
+                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                </div>
+                                <div field="LastWeekPlan" headeralign="center" width="130" header="下周计划安排形象进度">
+                                    下周计划安排形象进度
+                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                </div>
+                                <div header="本周完成进水(m3/d)" headeralign="center">
+                                    <div property="columns">
+                                        <div field="WeekWater1" headeralign="center" header="1#">
+                                            1#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                        <div field="WeekWater2" headeralign="center" header="2#">
+                                            2#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="下周计划进水(m3/d)" headeralign="center">
+                                    <div property="columns">
+                                        <div field="LastWeekWater1" headeralign="center" header="1#">
+                                            1#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                        <div field="LastWeekWater2" headeralign="center" header="2#">
+                                            2#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div header="本周达到设计能力(%)" headeralign="center">
+                                    <div property="columns">
+                                        <div field="WeekE1" headeralign="center" header="1#">
+                                            1#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                        <div field="WeekE2" headeralign="center" header="2#">
+                                            2#
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div field="Remark" headeralign="center" width="150"  header="备注">
+                                    备注
+                                    <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                </div>-->
+                                <div header="备注" headeralign="center" width="300">
+                                    <div property="columns">
+                                        <div field="Remark1" headeralign="center" width="150" header="本周计划未完成的主要原因">
+                                            本周计划未完成的主要原因
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                        <div field="Remark2" headeralign="center" width="150" header="需公司协助解决的问题">
+                                            需公司协助解决的问题
+                                            <input property="editor" class="mini-textbox" style="width: 100%;height:90px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            //mini.get("View_SF_YX_DebugWeekPlan").load();
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("StartDate").setValue(firstDate);
+            mini.get("EndDate").setValue(endDate);
+
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_YX_DebugWeekPlan').reload();
+        }
+
+
+        function OnBeforeLoad(e) {
+            //mini.get("View_SF_SJ_Overview").mergeColumns(["xmbhCode"], ["ProjectLeader"], ["DesignStage"], ["tdzjTitle"], ["ggspsTitle"]);
+            mini.get("View_SF_YX_DebugWeekPlan").mergeColumns(["ProjName"]);
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_YX_DebugWeekPlan") {
+                var StartMonth = mini.get("StartDate").getValue().format("yyyy-MM-dd");
+                var EndMonth = mini.get("EndDate").getValue().format("yyyy-MM-dd");
+                var QDepartment = mini.get("EpsName").getValue();
+
+                if (e.params.swhere == "") {
+                    e.params.swhere = " StartDate between'" + StartMonth + "' and '" + EndMonth + "'  and ProjName like '%" + QDepartment + "%' ";
+                }
+                else {
+                    e.params.swhere += "and StartDate between'" + StartMonth + "' and '" + EndMonth + "'  and ProjName like '%" + QDepartment + "%' ";
+                }
+            }
+
+        }
+
+
+
+    </script>
+</body>
+</html>

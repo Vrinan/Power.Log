@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjName = "$!CurrentSession.EpsProjName"
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    费用登记
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="XLX_COST_CostRegister.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存
+                    </a><!--保存-->
+                    <a class="mini-button blue" id="XLX_COST_CostRegister.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                        <i class="fa fa-refresh"></i>刷新
+                    </a><!--刷新-->
+
+                    <a class="mini-button blue" id="XLX_COST_CostRegister.share" onclick="Share()"><i class="fa fa-share-alt"></i>分摊</a>
+
+                    <!--<div id="btnPrint" class="btn-group">
+                    </div>-->
+                    <a class="mini-button blue" id="XLX_COST_CostRegister.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭
+                    </a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="XLX_COST_CostRegister" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            申请编号
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="XLX_COST_CostRegister.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.Status" name="Status" class="mini-combobox" readonly="readonly" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            申请名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_COST_CostRegister.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            本期申请金额
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_COST_CostRegister.FullMoney" name="FullMoney" class="mini-spinner" allowlimitvalue="false" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            税费
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.TaxMoney" name="TaxMoney" class="mini-spinner" allowlimitvalue="false" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            无税金额
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.NoTaxMoney" name="NoTaxMoney" class="mini-spinner" allowlimitvalue="false" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            年份月份
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_COST_CostRegister.RegYear" name="RegYear" class="mini-combobox" textfield="text" valuefield="id" style="width:80px" />
+                                            <input id="XLX_COST_CostRegister.RegMonth" name="RegMonth" class="mini-combobox" textfield="text" valuefield="id" style="width:80px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            审批人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.ApprHumName" name="ApprHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            批准日期
+                                        </td>
+                                        <td>
+                                            <input id="XLX_COST_CostRegister.ApprDate" name="ApprDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_COST_CostRegisterList.Add" onclick="PowerForm.OnBtnAdd(this)"> 新增 </a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XLX_COST_CostRegisterList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_COST_CostRegisterList" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true"
+                                     oncellendedit="XLX_COST_CostRegisterList_EndEdit" showpager="false">
+                                    <div property="columns">
+                                        <div type="indexcolumn">
+                                        </div>
+                                        <div field="Code" headeralign="center">
+                                            项目编码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Title" headeralign="center">
+                                            项目名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="FullMoney" headeralign="center" align="right">
+                                            申请金额
+                                        </div>
+                                        <div field="TaxMoney" headeralign="center" align="right">
+                                            税费<input property="editor" class="mini-spinner" allowlimitvalue="false" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="NoTaxMoney" headeralign="center" align="right">
+                                            无税金额<input property="editor" class="mini-spinner" allowlimitvalue="false" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var date = new Date();
+        $(function () {
+            PowerForm.Init();
+            var year = [];//年份=当前年-3+当前年+4；
+            var beginy = date.getFullYear() - 3;
+            for (var i = 0; i < 9; i++) {
+                var b = { "id": beginy + i, "text": beginy + i };
+                year.push(b);
+            }
+            var month = [{ "id": 1, "text": 1 }, { "id": 2, "text": 2 }, { "id": 3, "text": 3 }, { "id": 4, "text": 4 },
+            { "id": 5, "text": 5 }, { "id": 6, "text": 6 }, { "id": 7, "text": 7 }, { "id": 8, "text": 8 },
+            { "id": 9, "text": 9 }, { "id": 10, "text": 10 }, { "id": 11, "text": 11 }, { "id": 12, "text": 12 }];
+            mini.get("XLX_COST_CostRegister.RegYear").setData(year);
+            mini.get("XLX_COST_CostRegister.RegMonth").setData(month);
+        });
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (formconfig.FormState == "add") {
+                mini.get("XLX_COST_CostRegister.RegYear").setValue(date.getFullYear());
+                mini.get("XLX_COST_CostRegister.RegMonth").setValue(date.getMonth() + 1);
+
+            }
+        }
+        function XLX_COST_CostRegisterList_EndEdit(e) {
+            //编辑税费、无税金额，后，计算当前行的申请金额，及合计主表的金额
+            if (e.field == "TaxMoney" || e.field == "NoTaxMoney") {
+                var record = e.record;
+                var taxMoney = parseFloat(record.TaxMoney) || 0;
+                var noTaxMoney = parseFloat(record.NoTaxMoney) || 0;
+                var fullMoney = taxMoney + noTaxMoney;
+                e.sender.updateRow(record, { "FullMoney": fullMoney });
+                SumToMain();
+            }
+        }
+        PowerForm.EventAfterDelete = function (e) {
+            SumToMain();
+        }
+        //计算明细表和，到主表
+        function SumToMain() {
+            debugger;
+            var data = mini.get("XLX_COST_CostRegisterList").data;
+            var taxMoneySum = 0;
+            var noTaxMoneySum = 0;
+            var fullMoneySum = 0;
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                taxMoneySum += parseFloat(d.TaxMoney) || 0;
+                noTaxMoneySum += parseFloat(d.NoTaxMoney) || 0;
+                fullMoneySum += parseFloat(d.FullMoney) || 0;
+            }
+            mini.get("XLX_COST_CostRegister.FullMoney").setValue(fullMoneySum);
+            mini.get("XLX_COST_CostRegister.NoTaxMoney").setValue(noTaxMoneySum);
+            mini.get("XLX_COST_CostRegister.TaxMoney").setValue(taxMoneySum);
+        }
+        function Share() {
+            var ShareAmount = mini.get("XLX_COST_CostRegister.FullMoney").getValue();
+            $.ajax({
+                url: "/Cost/CheckShareId",
+                data: { KeyValue: formconfig.KeyValue, ShareAmount: ShareAmount },
+                type: "POST",
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.detail != "") {
+                            var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 600,
+                                showMaxButton: true,
+                                onload: function () {
+                                },
+                                ondestroy: function () {
+                                }
+                            });
+                        } else {
+                            NewShare();
+                        }
+                    }
+                    else {
+                        Power.ui.loading.close();
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                }
+            });
+
+        }
+        function NewShare() {
+            Power.ui.confirm("确定分摊？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("分摊中。。")
+                    var Code = mini.get("XLX_COST_CostRegister.Code").getValue();
+                    var Title = mini.get("XLX_COST_CostRegister.Title").getValue();
+                    var ShareAmount = mini.get("XLX_COST_CostRegister.FullMoney").getValue();
+                    var Plan_Guid = "";
+                    $.ajax({
+                        url: "/Cost/InsertShare",
+                        data: {
+                            KeyWord: "XLX_COST_CostRegister",
+                            KeyValue: formconfig.KeyValue,
+                            KeyWordFilter: "",
+                            Plan_Guid: Plan_Guid,
+                            Code: Code,
+                            Title: Title,
+                            ShareAmount: ShareAmount
+                        },
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (text) {
+                            debugger
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                debugger;
+                                Power.ui.loading.close();
+                                var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                                //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 600,
+                                    showMaxButton: true,
+                                    onload: function () {
+                                    },
+                                    ondestroy: function () {
+                                    }
+                                });
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
+

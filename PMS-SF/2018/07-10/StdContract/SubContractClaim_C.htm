@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同索赔
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_SubContractClaim.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_SubContractClaim.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    
+                    <a class="mini-button blue" id="PS_SubContractClaim.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                            <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_SubContractClaim" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            索赔单编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractClaim.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_SubContractClaim.ContractName">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractClaim.Status" name="Status" class="mini-combobox" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            索赔单名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractClaim.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractClaim.SubContractName" name="SubContractName" textname="SubContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+
+                                    </tr>
+                                 
+                                    <tr>
+                                      
+                                        <td>申请索赔金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractClaim.ClaimAmount" name="ClaimAmount" class="mini-spinner" allowlimitvalue="false" readonly="readonly" changeonmousewhere="false" />
+                                        </td>
+                                        <td>
+                                            批准金额
+                                        </td>
+                                        <td>
+										<input id="PS_SubContractClaim.ApprAmount" name="ApprAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                   maxvalue="999999999" changeonmousewhere="false"  />
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>索赔理由
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractClaim.ClaimReason" name="ClaimReason" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>                                                                  
+                                </table>
+                            </div>
+                        </div>
+						
+                        <div title='评估详情'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContractClaim_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContractClaim_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContractClaim_Dtl" class="mini-datagrid" style="height: 100%;" showpager="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" >
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="ClaimItemNo" headeralign="center">
+                                            编号
+                                                 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ClaimItme" headeralign="center">
+                                            索赔项目
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ClaimType" type="comboboxcolumn" headeralign="center" name="PS_SubContractClaim_Dtl.ClaimType" width="100" allowsort="true">
+                                            索赔类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ApplyClaimAmount" headeralign="center" summarytype="sum">
+                                            申请索赔金额
+                                                 <input property="editor" class="mini-spinner" allowlimitvalue="false" changeonmousewhee="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                                 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						<div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            debugger;
+            Refresh();
+        }
+        function Refresh() {
+            debugger;
+            var exec = {};  //对象
+            var guid = formconfig.KeyValue;
+            exec.KeyWord = "PS_SubContractClaim";   //bo的KeyWord
+            exec.MethodName = "countSum"; //方法名称
+            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.Id = guid;
+            var txt = mini.encode(exec); //对象转换成字符串
+            $.ajax({
+                url: "/API/Exec",
+                type: "POST",
+                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                cache: false,
+                success: function (text) {
+                    // var tmp = mini.decode(text);
+                    // var result = tmp.data.value;  
+                    //刷新
+                    var e = { id: "PS_SubContractClaim.Refresh" };
+                    PowerForm.OnBtnRefresh(e);
+                }
+            });
+
+        }
+
+        //function cellendedit1(e){
+
+        //	var sum = 0;
+        //    e.findRow(function (row) {
+        //        if(row.ApplyClaimAmount!= "") 
+        //		{
+        //			sum += parseFloat(row.ApplyClaimAmount);
+        //		}
+
+        //	});
+        //给主表赋值
+        //    mini.get("PS_SubContractClaim.ClaimAmount").setValue(sum);
+        //}
+
+        //PowerForm.EventAfterDelete = function (e, row) {
+        //    if (e.id == "PS_SubContractClaim_Dtl.Delete") {
+        //        var grid = mini.get("PS_SubContractClaim_Dtl");
+        //        var rows = grid.findRows(function (row) {
+        //            if (row.ApplyClaimAmount != null && row.ApplyClaimAmount != "" && row.ApplyClaimAmount != undefined) return true;
+        //        });
+        //        var sum = 0;
+        //        $.each(rows, function (a, b) {
+        //            sum += parseFloat(b.ApplyClaimAmount);
+        //       })
+        //        mini.get("PS_SubContractClaim.ClaimAmount").setValue(sum);
+
+        //    }
+        //}
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["SubContract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_SubContractClaim.SubContractName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/5c89e719-843a-4ac4-a542-129e9b4cfa0f/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+
+

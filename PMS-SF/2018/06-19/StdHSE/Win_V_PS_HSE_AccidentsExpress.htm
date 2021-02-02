@@ -1,0 +1,175 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var currentproj = "$!CurrentSession.EpsProjId"
+        var KeyValue = "$Model.data.KeyValue"
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--
+                            <span>所属层级 </span>
+                            <input id="QProjects" class="mini-combobox" shownullitem="true" width="200px" />
+                            <span>项目名称 </span>
+                            <input id="QProjectName" class="mini-textbox" shownullitem="true" width="200px" />
+                                -->
+                            <span>起始日期</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120px"></input>
+                            <span>起始日期</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120px"></input>
+                            <a class="mini-button yellow" id="btnSearch" >查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_HSE_AccidentsExpress" idfield="Id" class="mini-treegrid" style="width: 100%; height: 50%;" showtreeicon="true"
+                             treecolumn="text" parentfield="parent_guid" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="false" allowcellselect="true" onselect="LoadData">
+
+                            <div property="columns">
+                                <div type="indexcolumn" width="15">
+                                </div>
+                                <div field="EpsProjName" headeralign="center" name="text">
+                                    EPS/项目
+                                </div>
+                                <div field="AccidentDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                    最新事故时间
+                                </div>
+                                <div field="DateNum" headeralign="center" align="right">
+                                    事故次数
+                                </div>
+                                <div field="MinorInjuries" headeralign="center" width="30" align="right">
+                                    轻伤
+                                </div>
+                                <div field="SeriousInjuries" headeralign="center" width="30" align="right">
+                                    重伤
+                                </div>
+                                <div field="Deaths" headeralign="center" width="30" align="right">
+                                    死亡
+                                </div>
+                                <div field="EconomicLoss" headeralign="center" numberformat="￥#,0.00" summarytype="sum" align="right">
+                                    经济损失
+                                </div>
+                            </div>
+                        </div>
+                        <div id="charthere" style="width: 100%; height: 50%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+
+        $(function () {
+			 mini.parse();
+            mini.get("QStartDate").setValue((new Date()).getFullYear() + "-1-1");
+            mini.get("QEndDate").setValue((new Date()).getFullYear() + "-12-31");
+			Loadgrid();
+        });
+		function Loadgrid(){
+			    var p = {};
+				p.stratData = mini.get("QStartDate").getFormValue();
+				p.EndData = mini.get("QEndDate").getFormValue();
+			$.ajax({
+                url: "/HSE/GetHSE_Accidentstatistics",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                       var datas = mini.decode(o.list);
+						mini.get("V_PS_HSE_AccidentsExpress").loadList(datas,"Id","parent_guid");
+						if(o.list){
+						mini.get("V_PS_HSE_AccidentsExpress").select(0);
+						
+						}
+								
+                    }
+                },
+                error: function (XMLResponse) { alert(XMLResponse.responseText) }
+
+            });
+		
+		}
+
+        mini.get("btnSearch").on("click", function (e) {
+          Loadgrid();
+        })
+
+        function LoadData() {
+            var p = {};
+			var row=mini.get("V_PS_HSE_AccidentsExpress").getSelected();
+			LoadChart(row);
+              
+        }
+
+
+        //加载图表
+        function LoadChart(data) {
+			var DateNum=data.DateNum||0;
+			var MinorInjuries=data.MinorInjuries||0;
+			var SeriousInjuries=data.SeriousInjuries||0;
+			var Deaths=data.Deaths||0;
+			
+            //标题
+            var xaxis = { type : 'category' ,data : ['']};
+            var actcur = { "name": "事故次数", type: 'bar', data: [DateNum] };
+			var actcur1 = { "name": "轻伤", type: 'bar', data: [MinorInjuries] };
+			var actcur2 = { "name": "重伤", type: 'bar', data: [SeriousInjuries] };
+			var actcur3 = { "name": "死亡", type: 'bar', data: [Deaths] };
+            var opt = {};
+            //opt.calculable = true;
+            opt.title = { text: "事故统计" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["事故次数","轻伤","重伤","死亡"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value'}];
+            opt.series = [actcur,actcur1,actcur2,actcur3];
+            InitEChart("charthere", opt);
+
+        }
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+
+
+
+    </script>
+</body>
+</html>

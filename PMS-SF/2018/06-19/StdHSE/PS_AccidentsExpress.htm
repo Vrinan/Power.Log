@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>HSE事故快报
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_AccidentsExpress.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_AccidentsExpress.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="PS_AccidentsExpress.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_AccidentsExpress" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_AccidentsExpress.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            事故地点
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.AccidentPlace" name="AccidentPlace" class="mini-textbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            事故日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.AccidentDate" name="AccidentDate" class="mini-datepicker" required/>
+                                        </td>
+                                        <td>
+                                            事故类别
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.AccidentType" name="AccidentType" class="mini-combobox"  required/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            所属管理部门
+                                        </td>
+                                        <td>
+                                            <!--<input id="PS_AccidentsExpress.DeptName" name="DeptName" class="mini-textbox" />-->
+                                            <input id="PS_AccidentsExpress.DeptName" name="DeptName" textname="DeptName" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            事故等级
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.AccidentLeave" name="AccidentLeave" class="mini-combobox" required/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            事故单位名称
+                                        </td>
+                                        <td>
+                                            <!--<input id="PS_AccidentsExpress.ResponsibleDept" name="ResponsibleDept" class="mini-textbox" />-->
+                                            <input id="PS_AccidentsExpress.ResponsibleDept" name="ResponsibleDept" textname="ResponsibleDept" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择施工单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            报告人
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.ResponsibleHuman" name="ResponsibleHuman" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            伤亡所在单位
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.CasualtyDept" name="CasualtyDept" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            伤亡人数
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.Casualties" name="Casualties" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            被困（人数）
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.MinorInjuries" name="MinorInjuries" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            受伤（人数）
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.SeriousInjuries" name="SeriousInjuries" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            死亡（人数）
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.Deaths" name="Deaths" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" onvaluechanged="onValueChanged" />
+                                        </td>
+                                        <td>
+                                            预计财产损失（元）
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.EconomicLoss" name="EconomicLoss" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" format="n2"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            事故描述
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.AccidentReason" name="AccidentReason" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            发生经过
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.AccidentProcess" name="AccidentProcess" class="mini-textbox" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            已采取措施
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.MeasuresTaken" name="MeasuresTaken" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_AccidentsExpress.Influence" name="Influence" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_AccidentsExpress.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function onValueChanged(e) {
+
+            var MinorInjuries = mini.get("PS_AccidentsExpress.MinorInjuries").value;
+            var SeriousInjuries = mini.get("PS_AccidentsExpress.SeriousInjuries").value;
+            var Deaths = mini.get("PS_AccidentsExpress.Deaths").value;
+            mini.get("PS_AccidentsExpress.Casualties").setValue(MinorInjuries + SeriousInjuries + Deaths);
+        }
+
+        
+        PowerForm.EventAfterLoadRight = function (o) {
+            var aa = mini.get("PS_AccidentsExpress.ResponsibleHuman").getValue();
+            if (aa == "" || aa == null || aa == undefined) {
+                mini.get("PS_AccidentsExpress.ResponsibleHuman").setValue(sessiondata.HumanName)
+            }
+        }
+    </script>
+</body>
+</html>

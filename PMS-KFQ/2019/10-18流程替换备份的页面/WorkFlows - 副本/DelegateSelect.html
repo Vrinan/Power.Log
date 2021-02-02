@@ -1,0 +1,533 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ComTools.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowUtil.js?v=$AppVersion"></script>
+    <style>
+        v\:* {
+            behavior: url(#default#VML);
+        }
+        /*.mini-tabs-position-top .mini-tabs-scrollCt {
+            background-color: #CAE1FF;
+        }*/
+    </style>
+</head>
+
+<body id="body" onselectstart="return false">
+
+    <div style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <label>委派处理</label>
+                </div><!--流程流转-->
+                <div class="actions">
+                    <a class="mini-button blue" onclick="onEditMind('cancel');" enabled="true"><i class="fa fa-wrench"></i>常用意见</a><!--常用意见-->
+                    <a class="mini-button blue" id="btnSelectUser" onclick="onSelectUser" enabled="false">人员选择</a><!--下一步-->
+                    <a class="mini-button blue" id="btnOK" onclick="onNext" enabled="false">下一步</a><!--下一步-->
+                    <a class="mini-button blue" onclick="WorkFlowUtil.CloseWindow('cancel');"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; padding-top: 4px">
+                    <form id="frmMain" style="height: 100%">
+                        <div id="tabMain" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;" onactivechanged="onMainTabActivechanged">
+
+                            <div title="人员选择" name="tabSelectUser" class="portlet-body" style="height: 100%;">
+                                <div id="LayoutMain" class="mini-layout" style="width: 100%; height: 300px;" borderstyle="border:0;">
+                                    <div id="divContent" region="north" split="true">
+                                        <!--流程选择-->
+                                        <table border="1" style="width:100%" cellpadding="2">
+                                            <tr>
+                                                <td><div id="rdoDelegateMode" class="mini-radiobuttonlist" value="Parallel" valuefield="Code" textfield="Text" data=[{"Code":"Serial","Text":"串行"},{"Code":"Parallel","Text":"并行"}] /> </td>
+                                                <td><div id="chkIsReturnRoot" class="mini-checkbox" value="true" enabled="false"  >是否返还发起人</div></td>
+                                            </tr>
+                                        </table>
+                                        <div id="mnuNodeList" borderstyle="border:0"> </div>
+                                    </div>
+                                    <div region="center" id="workMindInfo" title="办理意见" height="250" showcollapsebutton="false">
+                                        <!--办理意见-->
+                                        <div id="divVoteInfo"></div>
+                                        <div borderstyle="border:2; padding:10px;">
+                                            <div id="txtMindInfo" class="mini-textarea" height="80" borderstyle="border:2; padding:10px;" style="background-color: blue" emptytext="请输入办理意见"></div><!--请输入办理意见-->
+                                        </div>
+                                        <div id="mindList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript">
+
+        mini.parse();
+        var form = new mini.Form("frmMain");
+
+        var tabMain = mini.get("tabMain");
+        var curWin = null;  //当前窗体
+        var MySendData = null;
+        var MyVoteInfo = null;   //投票信息包
+        var rdoDelegateMode = mini.get("rdoDelegateMode");
+        var chkIsReturnRoot = mini.get("chkIsReturnRoot");
+
+        var currentData = null;
+        var currentSequeID = -1;
+
+        var onMainTabActivechanged = function (e) {
+            var txt = "<i class='fa fa-save'></i>";
+            if (e.name == "tabSelectUser")
+                txt += "提交";
+            else
+                txt += "下一步";
+            mini.get("btnOK").setText(txt);
+
+        }
+
+        var onIsReturnRootChanged = function (e) {
+
+            alert(e.value);
+        }
+
+        //调取选择人员处理
+        var CheckSelectUser = function () {
+
+            var IsMindMustInput = true;  //意见是否必填
+
+            //如果当前节点意见必填,或者不是发送操作，则意见必填
+            if (IsMindMustInput == true) {
+                mini.get("txtMindInfo").setRequired(true);
+                mini.get("txtMindInfo").setRequiredErrorText("请填写办理意见");//"请填写办理意见"
+            }
+            else {
+                mini.get("txtMindInfo").setRequired(false);
+                mini.get("txtMindInfo").setRequiredErrorText("");
+            }
+
+            form.validate();
+            if (form.isValid() == false) {
+                var sErrInfo = "";
+                for (var itmp = 0; itmp < form.getErrorTexts().length; itmp++)
+                    sErrInfo += form.getErrorTexts()[itmp] + "<br />";
+                Power.ui.error(sErrInfo);
+                return false;
+            }
+            return true;
+        }
+        var onNext = function () {
+
+            switch (tabMain.getActiveTab().name) {
+                case "tabSelectUser":
+                    if (CheckSelectUser() == false) return;   //选择人员
+                    mini.get("btnOK").setEnabled(false);
+
+                    //如果打勾项可以编辑，则记录下最后次打勾项是否打勾了。
+                    if (chkIsReturnRoot.getEnabled() == true && chkIsReturnRoot.getVisible() == true) {
+                        setCookie("Power.WorkFlows.Delegate.IsReturnRoot", chkIsReturnRoot.getValue());
+                    }
+                     
+
+                    WorkFlowUtil.CloseWindow("ok");
+                    return;
+            }
+        }
+        var setMode = function (mode) {
+
+            //并行的话，必须返回给发起人,且不可撤销
+            if (mode == "Parallel") {
+                chkIsReturnRoot.setValue(true);
+                chkIsReturnRoot.setEnabled(false);
+            }
+            else {
+                chkIsReturnRoot.setEnabled(true);
+            }
+        }
+        var onDelegateModeChange = function (e) {
+
+            setMode(e.value);
+            bindNode(MySendData);
+        }
+        var onIsReturnRootChanged = function (e) {
+            bindNode(MySendData);
+        }
+        var onSelectUser = function () {
+
+            if (!MySendData) {
+                MySendData = {};
+                MySendData.DelegateItem = {};
+                MySendData.DelegateItem.UserList = [];
+            }
+            onDesignUser(MySendData.DelegateItem.UserList);
+        }
+        var IsPhoneDevice = function () {
+            return (typeof (sessiondata) != "undefined" && sessiondata.DeviceInfo && sessiondata.DeviceInfo.IsPhone);
+        }
+        var onDesignUser = function (userList) {
+            var workInfoID = currentData.WorkInfoID;  //传入workInfoID ，可以得到历史经办人列表
+            var width = 1200;
+            var height = 600;
+            if (IsPhoneDevice) {
+                width = window.innerWidth || self.innerWidth || (de && de.clientWidth) || document.body.clientWidth;
+                height = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
+            }
+            mini.open({
+                url: "/PowerPlat/WorkFlows/Commons/SelectUser.html",
+                title: '人员选择', width: 1200, height: 700,
+                allowDrag: true, allowResize: true, showCloseButton: true, showMaxButton: true, showModal: true, showInBody: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var tmpNode = {};
+                    tmpNode.SourceMode = "DeptAndUser";   //默认是选择部门
+                    tmpNode.AllowRestore = false;    //是否最后要返还给本人
+                    tmpNode.AllowMulitUser = true;   //是否允许选择多人
+                    tmpNode.WorkInfoID = workInfoID;
+                    iframe.contentWindow.SetData(tmpNode, userList);
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+
+                    var userList = iframe.contentWindow.GetData();
+                    userList = mini.clone(userList);
+                    if (userList.length == 0) {
+                        Power.ui.error("未捕获到任何用户");
+                        return;
+                    }
+                    onSaveUserToInstanNode(userList);
+                }
+            });
+        }
+
+        //保存起草人定义的信息
+        var onSaveUserToInstanNode = function (userList) {
+
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "SaveUserToDelegate";   //子指令集,保存选择的人员到指定节点中
+            CurrentInfo.DelegateItem = {};
+            CurrentInfo.DelegateItem.RootSequeID = currentSequeID;
+            CurrentInfo.DelegateItem.UserList = userList; 
+         //   var DelegateMode = rdoDelegateMode.getValue();
+         //   var IsReturnRoot = chkIsReturnRoot.getValue();
+        //    CurrentInfo.DelegateItem.UserList = DelegateMode;
+         //   CurrentInfo.DelegateItem.IsReturnRoot = IsReturnRoot;
+
+            CurrentInfo.Current = currentData;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;    //提取流程节点信息
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                        return;
+                    }
+
+                    var data = result.data;
+
+                    GetNodesUser(data);
+                    mini.unmask(document.body);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        //blnFlag ==true ,说明已经有记录置红了
+        var setRootUserInfo = function (DelegateMode, delegateItem, blnFlag) {
+
+            var sOutput = '';
+
+            var sUserName = delegateItem.RootUserInfo.UserName;
+            if (delegateItem.RootUserInfo.SourceUserID && delegateItem.RootUserInfo.SourceUserID != delegateItem.RootUserInfo.UserID)
+                sUserName += " 代(" + delegateItem.RootUserInfo.SourceUserName + ")";
+
+            switch (DelegateMode) {
+                case "Serial":  //串行
+                    if (blnFlag == false)
+                        sOutput += '&nbsp;&nbsp;<font color="red"><strong>' + sUserName + '</strong></font>&nbsp;';
+                    else
+                        sOutput += '&nbsp;&nbsp;' + sUserName + '&nbsp;';
+                    break;
+                case "Parallel":  // 并行
+                    if (delegateItem.RootSequeID != currentSequeID)   //如果当前是不是发起人，则把目标发起人置红
+                        sOutput += '&nbsp;&nbsp;<font color="red"><strong>' + sUserName + '</strong></font>&nbsp; <br/>';
+                    else
+                        sOutput += '&nbsp;&nbsp;' + sUserName + '&nbsp;';
+                    break;
+            }
+            return sOutput;
+
+        }
+
+        //绘制到界面上
+        var bindNode = function (data) {
+
+            if (curWin && data.Current && data.Current.PlanEndDate) {
+                var curTitle = curWin.getTitle();
+                //if (data.Current.PlanEndDate.getFullYear() > 1970)
+                //   curWin.setTitle(curTitle + " 期望在 " + fomateDate(data.Current.PlanEndDate, "YYYY-MM-DD hh:mm") + " 之前完成.");
+            }
+
+            var mnuNodeList = document.getElementById("mnuNodeList");
+            //先清除里面的内容
+            mnuNodeList.innerHTML = "";
+
+            var delegateItem = data.DelegateItem;
+
+            var DelegateMode = rdoDelegateMode.getValue();
+            var IsReturnRoot = chkIsReturnRoot.getValue();
+
+            var sOutput = '<table border="1" style="width:100%" cellpadding="2">';
+            sOutput += '<tr>';
+
+            sOutput += '<td  >' + delegateItem.RootUserInfo.UserName + '&nbsp; ---></td> ';
+            sOutput += "<td>";
+            var blnFlag = false;
+            for (var irow = 0; irow < delegateItem.UserList.length; irow++) {
+                var user = delegateItem.UserList[irow];
+
+                switch (DelegateMode) {
+                    case "Serial":  //串行
+                        //串行，则第一个 isPassed=false 的，置红
+                        if (user.IsPassed == false && blnFlag == false) {
+                            blnFlag = true;
+                            sOutput += '&nbsp;&nbsp;<font color="red"><strong>' + getUserName(user) + '</strong></font>&nbsp;';
+                        }
+                        else
+                            sOutput += '&nbsp;&nbsp;' + getUserName(user) + '&nbsp;';
+                        if (irow < delegateItem.UserList.length - 1) sOutput += "--->";
+                        break;
+                    case "Parallel":  //并行
+                        if (delegateItem.RootSequeID == currentSequeID)   //如果当前是发起人，所有目标人都置红
+                            sOutput += '&nbsp;&nbsp;<font color="red"><strong>' + getUserName(user) + '</strong></font>&nbsp; <br/>';
+                        else
+                            sOutput += '&nbsp;&nbsp;' + getUserName(user) + '&nbsp; <br/>';
+                        break;
+                }
+            }
+            sOutput += "</td>";
+
+            if (IsReturnRoot == "true") {
+                sOutput += "<td>--->" + setRootUserInfo(DelegateMode, data.DelegateItem, blnFlag) + "</td>";
+            }
+
+            sOutput += '</tr>';
+            sOutput += '</table>';
+
+            var win_column_obj = $(sOutput);
+            win_column_obj.appendTo(mnuNodeList);
+            mini.parse();
+        }
+
+        var getUserName = function (user) {
+            var sUserName = "";
+
+            if (user.SourceUserID && user.SourceUserID != user.UserID)
+                sUserName = user.UserName + "  代(" + user.SourceUserName + ") ,";
+            else
+                sUserName = user.UserName + "  ,";
+            return sUserName;
+        }
+
+        //提取目标节点可选人员
+        var GetNodesUser = function (data) {
+
+            MySendData = data;
+
+            var tabNode = tabMain.getTab("tabSelectUser");
+            tabNode.enabled = true;
+            tabMain.activeTab(tabNode);
+
+            if (data == null || data == "") {
+                alert("用户信息提取失败"); return;//"提取失败"
+            }
+            mini.get("btnOK").setEnabled(true);
+
+
+            bindNode(data);
+
+            var div = $("#mindList");
+
+            WorkFlowUtil.DrawMindList(div, data.HistoryMind, data.Agreelable, data.DisagreeLabel);
+            mini.get("txtMindInfo").setValue(data.MindInfo);
+
+            //渲染投票
+            MyVoteInfo = data.VoteInfo;
+
+            if (MyVoteInfo && MyVoteInfo.IsTurnVote == true) {
+                var voteType = MyVoteInfo.VoteType;
+                var defaultVoteValue = MyVoteInfo.DefaultVoteValue;
+
+                var listHTML = '<div id="lstVote"  ';
+                if (voteType == "RadioBox")
+                    listHTML += 'class="mini-radiobuttonlist" ';
+                else
+                    listHTML += 'class="mini-checkboxlist" ';
+
+                listHTML += '  repeatItems="0" repeatLayout="flow" repeatDirection="horizontal"  textField="VoteName" valueField="VoteCode"  ></div>';
+
+                var divVoteInfo = document.getElementById("divVoteInfo");
+                var win_column_obj = $(listHTML);
+                win_column_obj.appendTo(divVoteInfo);
+                mini.parse();
+                mini.get("lstVote").setData(MyVoteInfo.VoteList);
+
+                if (defaultVoteValue) mini.get("lstVote").setValue(defaultVoteValue);
+            }
+
+
+        }
+
+        //提取流程列表
+        var onSelectDelegate = function (data) {
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "ReadDelegateUsers";   //  加载目标人员列表
+            if (!data.SequeID) {
+                alert("当前没有节点序号"); return;
+            }
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+                    data.Current = result.data.Current;
+
+                    if (!result.data.DelegateItem) {
+                        mini.get("btnSelectUser").setEnabled(true);
+                        rdoDelegateMode.on("valuechanged", onDelegateModeChange);
+                        chkIsReturnRoot.on("valuechanged", onIsReturnRootChanged);
+                        onDesignUser([]);
+                        return;
+                    }
+
+                    rdoDelegateMode.setValue(result.data.DelegateItem.DelegateMode);
+                    chkIsReturnRoot.setValue(result.data.DelegateItem.IsReturnRoot);
+
+                    //不相等说明不是发起人点击按钮, 选择插件禁用掉，不可修改
+                    if (result.data.DelegateItem.RootSequeID != data.SequeID) {
+                        rdoDelegateMode.setEnabled(false);
+                        chkIsReturnRoot.setEnabled(false);
+                        mini.get("btnSelectUser").setEnabled(false);
+                    }
+                    else {
+                        mini.get("btnSelectUser").setEnabled(true);
+                        rdoDelegateMode.on("valuechanged", onDelegateModeChange);
+                        chkIsReturnRoot.on("valuechanged", onIsReturnRootChanged);
+                    }
+
+                    GetNodesUser(result.data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        //--------------------------意见编辑
+        var onEditMind = function (e) {
+            mini.open({
+                url: "/Form/OpenURL?url=/PowerPlat/WorkFlow/CommonMind.html",
+                width: 600, height: 400, //title: "流程流转",
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+
+                    var iframe = this.getIFrameEl();
+                    var tmpData = iframe.contentWindow.GetData();
+                    mini.get("txtMindInfo").setValue(tmpData);
+                }
+            });
+        }
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data, flowOperate, win) {
+
+            curWin = win;
+
+            currentSequeID = data.SequeID;
+            currentData = data;
+
+            var IsReturnRoot = getCookie("Power.WorkFlows.Delegate.IsReturnRoot");
+            if (IsReturnRoot) chkIsReturnRoot.setValue(IsReturnRoot);
+           
+            onSelectDelegate(data, flowOperate);
+
+        }
+        var GetData = function () {
+            var mindInfo = mini.get("txtMindInfo").getValue();
+
+            var mode = {};
+            mode.DelegateMode = rdoDelegateMode.getValue();
+            mode.IsReturnRoot = chkIsReturnRoot.getValue();
+
+            var voteValue = "";
+            var voteText = "";
+            //提取投票信息
+            if (MyVoteInfo && MyVoteInfo.IsTurnVote == true) {
+                var voteSelected = mini.get("lstVote").getSelecteds();
+                if (!voteSelected) {
+                    alert("异常，未捕获到投票信息"); return;
+                }
+                voteValue = voteSelected[0].VoteCode;
+                voteText = voteSelected[0].VoteName;
+            }
+
+            return { "Current": MySendData.Current, "Mode": mode, "MindInfo": mindInfo, "VoteValue": voteValue, "VoteText": voteText };
+        }
+    </script>
+
+</body>
+</html>

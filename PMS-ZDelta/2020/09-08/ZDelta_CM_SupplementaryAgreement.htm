@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsFormVue.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+        <style>
+            .mini-grid-row-redfont .mini-tree-nodetext{
+                color: #FF0000 !important;
+            }
+            .mini-grid-row-redfont .mini-grid-cell-inner{
+                color: #FF0000 !important;
+            }
+        </style>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box" style="height: 100%">
+            <!--标准按钮-->
+            <div class="portlet-title bottom">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>补充协议
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="ZDelta_CM_SupplementaryAgreement.ViewApproval" style="display: none;" onclick="ViewForm('e848d153-d954-4c2d-8d4c-4a4e26e7653c', currow.ApprovalId)">
+                        <i class="fa fa-eye"></i>查看变更立项
+                    </a>
+                    <a class="mini-button blue" id="ZDelta_CM_SupplementaryAgreement.ViewContract" style="display: none;" onclick="ViewForm('2e2723c3-7719-4dcf-aef2-7871b5ce62ce', currow.ContractId)">
+                        <i class="fa fa-eye"></i>查看合同信息
+                    </a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="ZDelta_CM_SupplementaryAgreement.Save" onclick="PowerForm.OnBtnSave(this)">
+                        <i class="fa fa-save"></i>保存
+                    </a>
+                    <a class="mini-button blue" id="ZDelta_CM_SupplementaryAgreement.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭
+                    </a>
+                </div>
+            </div>
+            <div class="mini-fit scroll">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb0')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>基本信息
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb0">
+                            <div id="ZDelta_CM_SupplementaryAgreement" name="ZDelta_CM_SupplementaryAgreement" class="form">
+                                <table id="ZDelta_CM_GuaranteeSubmit_table" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.Code" name="Code" readOnly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">状态</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.Status" name="Status" readonly class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" required>标题</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.Title" name="Title" required class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr class="Approval" style="display: none;">
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">变更立项编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.ApprovalCode" name="ApprovalCode" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">变更立项名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.ApprovalName" name="ApprovalName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同编号</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.ContractCode" name="ContractCode" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同名称</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.ContractName" name="ContractName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">乙方单位</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3" id="PartyBTd">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.PartyBName" name="PartyBName" readonly class="design mini-textbox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">补充前金额</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.TotalContractAmount" readonly name="TotalContractAmount" changeOnMouseWheel="false" minValue="-9999999999"
+                                                       maxValue="9999999999" class="design mini-spinner" format="n2" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">补充后金额</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.AfterContractAmount" readonly name="AfterContractAmount" changeOnMouseWheel="false" minValue="-9999999999"
+                                                       maxValue="9999999999" class="design mini-spinner" format="n2" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">补充金额</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.SumAgreementDtl" readonly name="SumAgreementDtl" changeOnMouseWheel="false" minValue="-9999999999"
+                                                       maxValue="9999999999" class="design mini-spinner" format="n2" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">合同类型</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.ContractType" name="ContractType" readonly class="design mini-combobox" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel">补充说明</label>
+                                            </td>
+                                            <td class="cell td-ctrl" colspan="3">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.Memo" name="Memo" height="80" class="design mini-textarea" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegHumName">录入人</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.RegHumName" name="RegHumName" readonly class="design mini-textbox" />
+                                            </td>
+                                            <td class="cell td-label">
+                                                <label class="design mini-powerlabel" id="lbl_RegDate">录入日期</label>
+                                            </td>
+                                            <td class="cell td-ctrl">
+                                                <input id="ZDelta_CM_SupplementaryAgreement.RegDate" name="RegDate" readonly class="design mini-datepicker" timeformat="yyyy-MM-dd" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+
+                    <div class="section" title="补充明细">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>补充明细
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb1">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_SupplementaryAgreementDtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_SupplementaryAgreementDtl.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_SupplementaryAgreementDtl.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_SupplementaryAgreementDtl.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                            </div>
+                            <div id="ZDelta_CM_SupplementaryAgreementDtl" class="mini-datagrid" style="width: 100%; height:400px;" idField="Id" sortField="Sequ" sortOrder="asc"
+                                 multiSelect="true" allowCellSelect="true" allowCellEdit="true" allowresize="true" allowAlternating="true" showPager="false">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" width="30" header="序号" headerAlign="center"></div>
+                                    <div field="Name" name="Name" header="名称" width="120" headerAlign="center" align="left">
+                                        <input property="editor" class="mini-textbox" />
+                                    </div>
+                                    <div field="UnitPrice" name="UnitPrice" header="单价(元)" width="90" headerAlign="center" align="right" numberFormat="n2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false" class="mini-spinner" />
+                                    </div>
+                                    <div field="Quantity" name="Quantity" header="数量" width="90" headerAlign="center" align="right" numberFormat="n2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false" class="mini-spinner" />
+                                    </div>
+                                    <div field="Amount" name="Amount" header="金额(元)" width="110" headerAlign="center" align="right" numberFormat="n2"></div>
+                                    <div type="comboboxcolumn" field="TaxRate" name="TaxRate" header="税率" width="80" headerAlign="center" align="right" numberFormat="p2">
+                                        <input property="editor" allowInput="false" class="mini-combobox" />
+                                    </div>
+                                    <div field="ExcludeTaxUnitPrice" name="ExcludeTaxUnitPrice" header="不含税单价(元)" width="120" headerAlign="center" align="right" numberFormat="n2"></div>
+                                    <div field="ExcludeTaxAmount" name="ExcludeTaxAmount" header="不含税金额(元)" width="120" headerAlign="center" align="right" numberFormat="n2"></div>
+                                    <div field="TaxAmount" name="TaxAmount" header="税额(元)" width="110" headerAlign="center" align="right" numberFormat="n2"></div>
+                                    <div field="Memo" name="Memo" header="说明" width="120" headerAlign="center" align="left">
+                                        <input property="editor" class="mini-textarea" minHeight="80" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" title="工程量明细" id="ZDelta_Chg_SupplementaryAgreementBOQSection" name="ZDelta_Chg_SupplementaryAgreementBOQ">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb1')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>工程量明细
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb1">
+                            <div class="mini-splitter" vertical="false" style="width: 100%; height: 400px;">
+                                <div size="25%" showcollapsebutton="false">
+                                    <div class="mini-toolbar" style="width:100%;">
+                                        <span>合同工程量清单</span>
+                                        <a class="mini-checkbox" id="TreeFilter" iconcls="fa-trash-o" style="padding-left:5px;" onclick="FilterTreeData(this.checked)">仅显示含工程量清单的项</a>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="ZDelta_CM_ContractBOQ" class="mini-treegrid" style="width: 100%; height: 100%" virtualScroll="true" showtreeicon="true" treecolumn="Code" allowAlternating="true"
+                                            idfield="Id" parentfield="ParentId" resultastree="false" allowresize="true"
+                                            expandonload="true" showpager="false">
+                                            <div property="columns">
+                                                <div field="Code" name="Code" header="编号" width="130" headeralign="center"></div>
+                                                <div field="Name" name="Name" header="名称" width="170" headeralign="center"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="75%" showcollapsebutton="false">
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_Chg_SupplementaryAgreementBOQ.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_Chg_SupplementaryAgreementBOQ.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                        <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_Chg_SupplementaryAgreementBOQ.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                        <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_Chg_SupplementaryAgreementBOQ.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                                    </div>
+                                    <div id="ZDelta_Chg_SupplementaryAgreementBOQ" class="mini-datagrid" style="width: 100%; height: 400px;" allowresize="true" sortField="Sequ" allowAlternating="true"
+                                        multiSelect="true" allowcellselect="true" allowcelledit="true" pageSize="20" sortField="Sequ" sortOrder="asc" showPager="true" data-options="{canImport:true}"
+                                        showSummaryRow="true" ondrawsummarycell="SummaryRowFunc.DrawSummaryCell">
+                                        <div property="columns">
+                                            <div type="checkcolumn"></div>
+                                            <div type="indexcolumn" width="40" header="序号" headerAlign="center"></div>
+                                            <div field="Code" name="Code" header="编号" width="150" headeralign="center" align="left">
+                                                <input property="editor" class="mini-textbox"/>
+                                            </div>
+                                            <div field="Name" name="Name" header="名称" width="150" headeralign="center" align="left">
+                                                <input property="editor" class="mini-textbox"/>
+                                            </div>
+                                            <div field="Unit" name="Unit" header="单位" width="70" headeralign="center" align="left">
+                                                <input property="editor" class="mini-textbox"/>
+                                            </div>
+                                            <div header="申报" headerAlign="center">
+                                                <div property="columns">
+                                                        <div field="BeforeApplyUnitPrice" name="BeforeApplyUnitPrice" header="单价(元)" width="100" headeralign="center" align="right" numberFormat="n2">
+                                                            <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="-9999999999" maxValue="9999999999" style="width:100%;" />
+                                                        </div>
+                                                        <div field="BeforeApplyQuantity" name="BeforeApplyQuantity" header="工程量" width="100" headeralign="center" align="right" numberFormat="n2">
+                                                            <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="-9999999999" maxValue="9999999999" style="width:100%;" />
+                                                        </div>
+                                                        <div field="BeforeApplyAmount" name="BeforeApplyAmount" header="金额(元)" width="100" headeralign="center" align="right" numberFormat="n2"></div>
+                                                </div>
+                                            </div>
+                                            <div header="确认" headerAlign="center">
+                                                <div property="columns">
+                                                        <div field="BeforeApprUnitPrice" name="BeforeApprUnitPrice" header="单价(元)" width="100" readOnly="true" headeralign="center" align="right" numberFormat="n2">
+                                                            <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="-9999999999" maxValue="9999999999" style="width:100%;" />
+                                                        </div>
+                                                        <div field="BeforeApprQuantity" name="BeforeApprQuantity" header="工程量" width="100" readOnly="true" headeralign="center" align="right" numberFormat="n2">
+                                                            <input property="editor" class="mini-spinner" changeOnMouseWheel="false" minValue="-9999999999" maxValue="9999999999" style="width:100%;" />
+                                                        </div>
+                                                        <div field="BeforeApprAmount" name="BeforeApprAmount" header="金额(元)" width="100" headeralign="center" align="right" numberFormat="n2"></div>
+                                                </div>
+                                            </div>
+                                            <!-- <div field="ChgAmount" name="ChgAmount" header="变更增减金额(元)" width="120" headeralign="center" align="right" numberFormat="n2"></div> -->
+                                            <div field="Memo" name="Memo" header="备注" width="100" headeralign="center" align="left">
+                                                <input property="editor" class="mini-textarea" style="width:100%;" minHeight="100" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" title="支付节点" id="PayNodeSection">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb2')" style="cursor:pointer;">
+                                <i class="fa fa-folder-open"></i>支付节点
+                            </div>
+                        </div>
+                        <div class="section-content section-content-info" id="tb2">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="ZDelta_CM_SupplementaryAgreementPayNode.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="ZDelta_CM_SupplementaryAgreementPayNode.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-up" id="ZDelta_CM_SupplementaryAgreementPayNode.MoveUp" onclick="PowerForm.OnBtnMoveUp(this)">上移</a>
+                                <a class="mini-button blue" iconcls="fa-arrow-down" id="ZDelta_CM_SupplementaryAgreementPayNode.MoveDown" onclick="PowerForm.OnBtnMoveDown(this)">下移</a>
+                            </div>
+                            <div id="ZDelta_CM_SupplementaryAgreementPayNode" class="mini-datagrid" style="width: 100%; height: 400px;" allowresize="true"
+                                 multiSelect="true" allowcellselect="true" allowcelledit="true" pageSize="50" showPager="true" sortField="Sequ" sortOrder="asc">
+                                <div property="columns">
+                                    <div type="checkcolumn" width="15"></div>
+                                    <div type="indexcolumn" width="30" header="序号" headerAlign="center"></div>
+                                    <div type="comboboxcolumn" field="PayType" name="PayType" header="付款类型" width="70" headerAlign="center" align="left">
+                                        <input property="editor" allowInput="false" class="mini-combobox" />
+                                    </div>
+                                    <div field="PayPercent" name="PayPercent" header="付款比例" width="50" headerAlign="center" align="right" numberFormat="p2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false" class="mini-spinner" />
+                                    </div>
+                                    <div field="PayAmount" name="PayAmount" header="付款金额(元)" width="100" headerAlign="center" align="right" numberFormat="n2">
+                                        <input property="editor" allowlimitvalue="false" changeonmousewhere="false" class="mini-spinner" />
+                                    </div>
+                                    <div field="Memo" name="Memo" header="说明" width="300" headerAlign="center" align="left">
+                                        <input property="editor" class="mini-textarea" minHeight="80" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb3')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>附件</div>
+                        </div>
+                        <div class="section-content" id="tb3">
+                            <iframe id="attachfile" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="WorkFlowSection" style="display: none;">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb5')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程</div>
+                        </div>
+                        <div class="section-content" id="tb5" style="height:400px;">
+                            <iframe id="workflow" style="height:100%;width:100%;" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="section" id="div_workflowInfo">
+                        <div class="section-title">
+                            <div class="lefttools" onclick="ShowHide(this,'tb8')" style="cursor:pointer;"><i class="fa fa-folder-open"></i>流程处理</div>
+                        </div>
+                        <div class="section-content notool" id="tb8" style="height:600px;">
+                            <div id="workflowInfo" class="mini-panel" style="height:100%;width:100%; padding-top:0px !important;" showHeader="false"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+
+        /********************************************开始：变量定义********************************************/
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var partyBCmbText = '<input id="ZDelta_CM_SupplementaryAgreement.PartyBId" name="PartyBId" allowInput="false" valueField="Id" textField="Name" class="design mini-combobox" />';
+        var partyBText = '<input id="ZDelta_CM_SupplementaryAgreement.PartyBName" name="PartyBName" readOnly class="design mini-textbox" />';
+        var partyBName = null;
+        var viewApproval = mini.get("ZDelta_CM_SupplementaryAgreement.ViewApproval");//查看变更立项
+        var viewContract = mini.get("ZDelta_CM_SupplementaryAgreement.ViewContract");//查看合同信息
+        var dtlGrid = mini.get("ZDelta_CM_SupplementaryAgreementDtl");//补充明细
+        var payNodeGrid = mini.get("ZDelta_CM_SupplementaryAgreementPayNode");//支付节点
+        var activeFlowCheck = false;
+        // var WFRight ={"DocFile":[{"BookMarkCode":"FinallyCon","Btn":["Upload","Del"]}]};
+        var WFRight ={"DocFile":[{"BookMarkCode":"FinallyCon","Btn":["Upload","Del"]}],"ZDelta_CM_SupplementaryAgreement":[{"BookMarkCode":"BJ","Btn":["Save"]}],"ZDelta_Chg_SupplementaryAgreementBOQ":[{"BookMarkCode":"BJ","Btn":["Add","Del","MoveUp","MoveDown"],"Column":["Code","Name","Unit","BeforeApplyUnitPrice","BeforeApplyQuantity","ApplyUnitPrice","ApplyQuantity","Memo"]}]};
+
+        var conType = mini.get("ZDelta_CM_SupplementaryAgreement.ContractType");//合同类型
+        var BOQTree = mini.get("ZDelta_CM_ContractBOQ");//工程量清单树
+        var BOQTreeSelected = null;//工程量清单树选中行
+        var treeFilter = mini.get("TreeFilter");
+        var dtlGridBOQ = mini.get("ZDelta_Chg_SupplementaryAgreementBOQ"); //明细表格
+
+        /********************************************结束：变量定义********************************************/
+
+        /********************************************开始：平台事件重写********************************************/
+
+        //表单加载后事件
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+
+            FormLoadCommomMethod(e, data);
+
+            if (FormState == 'add') {
+                //联合体，乙方单位要可选
+                if (currow.IsConsortium) {
+                    var cmbData = [];
+                    cmbData.push({ "Id": currow.PartyBId, "Name": currow.PartyBName });
+                    var array = ["C", "D", "E", "F", "G", "H", "I", "J", "K"];
+                    var index = 0;
+                    if (IsEmpty(currow.PartyCId))
+                        index = 1;
+                    else if (IsEmpty(currow.PartyDId))
+                        index = 2;
+                    else if (IsEmpty(currow.PartyEId))
+                        index = 3;
+                    else if (IsEmpty(currow.PartyFId))
+                        index = 4;
+                    else if (IsEmpty(currow.PartyGId))
+                        index = 5;
+                    else if (IsEmpty(currow.PartyHId))
+                        index = 6;
+                    else if (IsEmpty(currow.PartyIId))
+                        index = 7;
+                    else if (IsEmpty(currow.PartyJId))
+                        index = 8;
+                    else if (IsEmpty(currow.PartyKId))
+                        index = 9;
+                    for (var i = 0; i < index - 1; i++) {
+                        eval('cmbData.push({"Id":currow.Party' + array[i] + 'Id,"Name":currow.Party' + array[i] + 'Name});');
+                    }
+                    $("#PartyBTd").html(partyBCmbText);
+                    mini.parse();
+                    mini.get("ZDelta_CM_SupplementaryAgreement.PartyBId").setData(cmbData);
+                    mini.get("ZDelta_CM_SupplementaryAgreement.PartyBId").setValue(currow.PartyBId);
+                    mini.get("ZDelta_CM_SupplementaryAgreement.PartyBId").on("valuechanged", function (e) {
+                        currow.PartyBName = e.selected.Name;
+                    });
+                }
+            } else {
+                if (mini.get("ZDelta_CM_SupplementaryAgreement.PartyBId")) {
+                    $("#PartyBTd").html(partyBText);
+                    mini.parse();
+                    mini.get("ZDelta_CM_SupplementaryAgreement.PartyBName").setValue(currow.PartyBName);
+                }
+            }
+
+            //设置显示按钮
+            if (currow.ApprovalId == null) {
+                $(".Approval").hide();
+                viewApproval.setVisible(false);
+                viewContract.setVisible(true);
+            } else{
+                $(".Approval").show();
+                viewApproval.setVisible(true);
+                viewContract.setVisible(false);
+            }
+
+            //如果是施工合同才显示
+            if(conType.value !="C")
+            {
+                $("#ZDelta_Chg_SupplementaryAgreementBOQSection").hide();
+            }
+        }
+
+        //保存，服务器返回成功后
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            if (e.id == "ZDelta_CM_SupplementaryAgreementDtl.Del") {
+                PowerForm.OnBtnRefresh({ id: "ZDelta_CM_SupplementaryAgreement.xxx" });
+            } else if (e.id == "ZDelta_Chg_SupplementaryAgreementBOQ.Del"){
+                PowerForm.OnBtnRefresh({id:"ZDelta_CM_SupplementaryAgreement.xxx"});
+            }
+        }
+        //选择流程前
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            if (e.KeyWord == "ZDelta_CM_SupplementaryAgreement" && ((currow.Status == 0 || CheckIsStartNodeFlow() == true))) {
+               if (activeFlowCheck == false) {
+                    e.isValid = false;
+                    var buttonOption = {};
+                    var yes = "是",
+                        no = "否";
+                    buttonOption[yes] = {
+                        theme: 'primary',
+                        handler: function (ret) {
+                            if (ret) {
+                                activeFlowCheck = true;
+                                $("#btnActive").trigger("click");
+                            }
+                        }
+                    };
+                    buttonOption[no] = function () { };
+                    var info = "当前支付节点付款金额为0,是否送审？";
+                    if (currow.AfterAmount == 0) {
+                        //补充金额为0，不让送审
+                        // Power.ui.info("当前补充明细金额是否为0，不允许送审！");
+                        Power.ui.confirm("当前补充明细金额是否为0，是否送审？", { button: buttonOption });
+                    } else {
+                        //支付节点为0的话，弹出确认框
+                        var totalPayNodeAmount = 0, payNodeData = payNodeGrid.getData();
+                        payNodeData.forEach(function (item) {
+                            totalPayNodeAmount = Number(totalPayNodeAmount) + Number(item.PayAmount);
+                        });
+                        if (totalPayNodeAmount == 0) {
+                            //Power.ui.info("当前支付节点付款金额为0，不允许送审！");
+                            
+                            Power.ui.confirm(info, { button: buttonOption });
+                        } else {
+                            e.isValid = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        //09-02add
+        //加载数据前
+        PowerForm.EventBeforeLoadData = function(e){
+            if(e.sender.id == BOQTree.id){
+                if(FormState == "add"){
+                    e.cancel = true;
+                    return ;
+                }
+            }
+        }
+
+        //tree/grid加载数据后
+        PowerForm.EventAfterLoadData = function(e){
+            if(e.sender.id == "ZDelta_CM_ContractBOQ"){
+                //默认选中第一个叶子节点
+                if(BOQTreeSelected != null){
+                    BOQTree.select(BOQTreeSelected);
+                }else{
+                    var treeData = BOQTree.getData();
+                    if(treeData.length > 0){
+                        BOQTree.selectFirst();
+                        BOQTreeSelected = BOQTree.getData()[0];
+                    }
+                }
+
+                //判断是否要过滤已有项
+                if(!ValidEditRight("ZDelta_Chg_SupplementaryAgreementBOQ")){
+                    treeFilter.setValue(1);
+                    FilterTreeData(1);
+                    //选中有数据行，没有编辑权限时执行
+                    var dataList = BOQTree.getDataView();
+                    for(var i = 0; i < dataList.length; i ++){
+                        if(dataList[i].IsExistsChild=="1"){
+                            BOQTreeSelected = dataList[i];
+                            BOQTree.select(BOQTreeSelected);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        //行新增前
+        PowerForm.EventBeforeAddRow = function(e,row){
+            if(e.id == dtlGridBOQ.id){
+                e.canNext = true;
+                if(BOQTreeSelected != null){
+                    row.ApplyUnitPrice = 0;
+                    row.ApplyQuantity = 0;
+                    row.ApplyAmount = 0;
+                    row.ApprUnitPrice = 0;
+                    row.ApprQuantity = 0;
+                    row.ApprAmount = 0;
+                    row.BeforeApplyUnitPrice = 0;
+                    row.BeforeApplyQuantity = 0;
+                    row.BeforeApplyAmount = 0;
+                    row.BeforeApprUnitPrice = 0;
+                    row.BeforeApprQuantity = 0;
+                    row.BeforeApprAmount = 0;
+                    row.ChgQuantity = 0;
+                    row.ChgAmount = 0;
+                    row.ParentId = BOQTreeSelected.Id;
+                    row.MasterId = currow.Id;
+                    row.PartyBId = currow.PartyBId;
+                    row.PartyBName = currow.PartyBName;
+                }else{
+                    e.canNext = false;
+                    Power.ui.warning("请选择左侧工程量清单树");
+                }
+            }        
+            else if (e.id == dtlGrid.id) {
+                row.UnitPrice = 0;
+                row.Quantity = 0;
+                row.Amount = 0;
+                row.TaxRate = "0.0000";
+                row.ExcludeTaxUnitPrice = 0;
+                row.ExcludeTaxAmount = 0;
+                row.TaxAmount = 0;
+            } else if (e.id == payNodeGrid.id) {
+                row.PayPercent = 0;
+                row.PayAmount = 0;
+            }
+        }
+
+        //数据渲染前
+        PowerForm.EventBeforeRenderData = function (e, data) {
+            //拆分数据
+            if(e.sender.id == BOQTree.id){
+                if(data.length == 0) return data;
+                var idStr = "";
+                data.forEach(function(item){
+                    idStr += "'" + item.Id + "',";
+                });
+                idStr = idStr.substring(0,idStr.length - 1);
+                var params = {};
+                params.idStr = idStr;
+                params.applyId = formconfig.config.joindata.currow.Id;
+                APIExecSync("ZDelta_Chg_SupplementaryAgreementBOQ", "BO", "GetBOQIsExistsChild", params, function (text) {
+                    var tmp = mini.decode(text);
+                    if (tmp.success) {
+                        var rltData = tmp.data.value.split(",");
+                        //兼容IE
+                        if(!Array.prototype.find){
+                            Array.prototype.find = function(callback) {
+                                return callback && (this.filter(callback)|| [])[0];
+                            };
+                        }
+                        data.forEach(function(item){
+                            var tmp = rltData.find(function(n){return n == item.Id;});
+                            if(tmp != undefined){
+                                item.IsExistsChild = 1;
+                            }else{
+                                item.IsExistsChild = 0;
+                            }
+                        });
+                    } else
+                        Power.ui.warning(tmp.message);
+                });
+            }
+            if(e.sender.id == dtlGridBOQ.id){
+                //汇总行
+                var beforeApplyAmountSum = 0,applyAmountSum = 0,beforeApprAmountSum = 0,apprAmountSum = 0,chgAmountSum = 0;
+                var BOQSummary = {};
+                BOQSummary.GridId = e.sender.id;
+                BOQSummary.TextField = "Name";;
+                BOQSummary.TextValue = "合计:";
+                data.forEach(function(item){
+                    beforeApplyAmountSum = Number(beforeApplyAmountSum) + Number(item.BeforeApplyAmount);
+                    applyAmountSum = Number(applyAmountSum) + Number(item.ApplyAmount);
+                    beforeApprAmountSum = Number(beforeApprAmountSum) + Number(item.BeforeApprAmount);
+                    apprAmountSum = Number(apprAmountSum) + Number(item.ApprAmount);
+                    chgAmountSum = Number(chgAmountSum) + Number(item.ChgAmount);
+                });
+                BOQSummary.SummaryData = {"BeforeApplyAmount":{"Value":beforeApplyAmountSum},"ApplyAmount":{"Value":applyAmountSum},"BeforeApprAmount":{"Value":beforeApprAmountSum},"ApprAmount":{"Value":apprAmountSum},"ChgAmount":{"Value":chgAmountSum}};
+                SummaryRowFunc.InitData(BOQSummary);
+            }
+            return data;
+        }
+
+        /********************************************结束：平台事件重写********************************************/
+
+        /********************************************开始：miniui拦截事件********************************************/
+
+        //补充明细表单元格编辑
+        dtlGrid.on("cellendedit", function (e) {
+            var record = e.record;
+            if (e.field == "UnitPrice" || e.field == "Quantity" || e.field == "TaxRate") {
+                var amount = Number(record.UnitPrice * record.Quantity).toFixed(2);
+                var excludeTaxAmount = (amount / (1 + Number(record.TaxRate))).toFixed(2);
+                var excludeUnitPrice;
+                if (record.Quantity == 0)
+                    excludeUnitPrice = 0;
+                else
+                    excludeUnitPrice = (excludeTaxAmount / record.Quantity);
+                dtlGrid.updateRow(record, { "Amount": amount, "ExcludeTaxUnitPrice": excludeUnitPrice, "ExcludeTaxAmount": excludeTaxAmount, "TaxAmount": amount - excludeTaxAmount });
+            }
+        });
+        //支付节点表单元格编辑
+        payNodeGrid.on("cellendedit", function (e) {
+            var record = e.record;
+            if (e.field == "PayPercent") {
+                payNodeGrid.updateRow(record, { "PayAmount": currow.AfterContractAmount* e.value });
+            } else if (e.field == "PayAmount") {
+                var payPercent = 0;
+                if (currow.AfterAmount != 0)
+                    payPercent = e.value / currow.AfterContractAmount;
+                payNodeGrid.updateRow(record, { "PayPercent": payPercent });
+            }
+        });
+        payNodeGrid.on("cellbeginedit", function (e) {
+            var record = e.record;
+            if (e.field == "PayPercent") {
+                e.value = e.value * 100;
+            }
+        });
+        payNodeGrid.on("cellcommitedit", function (e) {
+            var record = e.record;
+            if (e.field == "PayPercent") {
+                e.value = e.value / 100.0;
+            }
+        });
+
+
+
+        //09-02add
+        //单元格绘制
+        BOQTree.on("drawcell",function(e){
+            var record = e.record;
+            if (e.field == "Code") {
+                if(record.IsExistsChild == 1){
+                    e.rowCls = "mini-grid-row-redfont";
+                }
+            }
+        });
+
+        //选中前
+        BOQTree.on("beforenodeselect",function(e){
+            var record = e.record;
+            BOQTreeSelected = record;//记录选中行
+        });
+
+         //单元格编辑后
+         dtlGridBOQ.on("cellendedit",function(e){
+            var record = e.record;
+            if(e.field == "BeforeApplyUnitPrice"){
+                dtlGridBOQ.updateRow(record, {"BeforeApplyAmount":e.value * record.BeforeApplyQuantity,"BeforeApprUnitPrice":e.value,
+                    "BeforeApprAmount":e.value * record.BeforeApprQuantity,ChgAmount:record.ApprUnitPrice * record.ApprQuantity - e.value * record.BeforeApprQuantity});
+            }
+            if(e.field == "BeforeApplyQuantity"){
+                dtlGridBOQ.updateRow(record, {"BeforeApplyAmount":e.value * record.BeforeApplyUnitPrice,"BeforeApprQuantity":e.value,
+                    "BeforeApprAmount":e.value * record.BeforeApprUnitPrice,"ChgQuantity":record.ApprQuantity - e.value,"ChgAmount":record.ApprQuantity * record.ApprUnitPrice - e.value * record.BeforeApprUnitPrice});
+            }
+            if(e.field == "ApplyUnitPrice"){
+                dtlGridBOQ.updateRow(record, {"ApplyAmount":e.value * record.ApplyQuantity,"ApprUnitPrice":e.value,
+                    "ApprAmount":e.value * record.ApprQuantity,"ChgAmount":e.value * record.ApprQuantity - record.BeforeApprUnitPrice * record.BeforeApplyQuantity});
+            }
+            if(e.field == "ApplyQuantity"){
+                dtlGridBOQ.updateRow(record, {"ApplyAmount":e.value * record.ApplyUnitPrice,"ApprQuantity":e.value,
+                    "ApprAmount":e.value * record.ApprUnitPrice,"ChgQuantity":(e.value - record.BeforeApprQuantity),"ChgAmount":e.value * record.ApprUnitPrice - record.BeforeApprQuantity * record.BeforeApprUnitPrice});
+            }
+            if(e.field == "BeforeApprUnitPrice" || e.field == "BeforeApprQuantity"){
+                dtlGridBOQ.updateRow(record,{"BeforeApprAmount":record.BeforeApprUnitPrice * record.BeforeApprQuantity,"ChgQuantity":record.ApprQuantity - record.BeforeApprQuantity,"ChgAmount":record.ApprQuantity * record.ApprUnitPrice - record.BeforeApprQuantity * record.BeforeApprUnitPrice});
+            }
+            if(e.field == "ApprUnitPrice" || e.field == "ApprQuantity"){
+                dtlGridBOQ.updateRow(record,{"ApprAmount":record.ApprUnitPrice * record.ApprQuantity,"ChgQuantity":record.ApprQuantity - record.BeforeApprQuantity,"ChgAmount":record.ApprQuantity * record.ApprUnitPrice - record.BeforeApprQuantity * record.BeforeApprUnitPrice});
+            }
+        });
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+        /********************************************开始：自定义事件********************************************/
+
+        var FilterTreeData = function(isChecked){
+            if(isChecked){
+                BOQTree.filter(function(node){
+                    if(node.IsExistsChild == 1) return true;
+                });
+            }else{
+                BOQTree.clearFilter();
+            }
+        }
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+</html>
+
+
+
+
+
+

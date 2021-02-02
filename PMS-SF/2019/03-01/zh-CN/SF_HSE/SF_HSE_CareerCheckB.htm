@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>岗职体检
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="SF_HSE_CareerCheck.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="SF_HSE_CareerCheck.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="SF_HSE_CareerCheck.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="SF_HSE_CareerCheck" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            体检发起人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.HumanName" name="HumanName" class="mini-textbox" />
+                                            <!--<input id="SF_HSE_CareerCheck.CheckType" name="CheckType" class="mini-textbox" />-->
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            体检时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.CheckDate" name="CheckDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_HSE_CareerCheck.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_HSE_CareerCheck.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title='明细' name="SF_HSE_CareerCheck_dtl">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_HSE_CareerCheck_dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_HSE_CareerCheck_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_HSE_CareerCheck_dtl" class="mini-datagrid" style="height:100%;" showsummaryrow="true" multiselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="30"></div>
+                                        <div type="indexcolumn" width="30">序号</div>
+                                        <div type="checkboxcolumn" field="IsTerr" truevalue="1" falsevalue="0" headeralign="center">是否有异常</div>
+                                        <div field="HumanCode" headeralign="center">
+                                            工号
+                                            <!--<input id="SF_HSE_CareerCheck_dtl.HumanCode" name="HumanCode" textname="HumanCode" class="mini-buttonedit" property="editor"
+               emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" />-->
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="HumanName" headeralign="center">
+                                            姓名
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="HumanGender" headeralign="center" type="comboboxcolumn">
+                                            性别
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" readonly />
+                                        </div>                                       
+                                        <div field="HumanIdentity" headeralign="center">
+                                            身份证号码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="HumanDept" headeralign="center">
+                                            部门
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="HumanType" headeralign="center" type="comboboxcolumn">
+                                            工种
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" readonly />
+                                        </div>
+                                        <div field="DangerReason" headeralign="center">
+                                            职业病危害因素
+                                            <!--<input property="editor" class="mini-textbox" style="width: 100%;"  />-->
+                                            <input id="SF_HSE_CareerCheck_dtl.DangerReason" name="DangerReason" textname="DangerReason" class="mini-buttonedit" property="editor"
+                                                   emptytext="请选择危害因素..." onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </div>
+                                        <div field="CheckWay" headeralign="center" type="comboboxcolumn">
+                                            体检类别
+                                            <input property="editor" class="mini-combobox" style="width: 100%;"  />
+                                        </div>
+                                        <div field="CheckDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                            体检日期
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;"  />
+                                        </div>
+                                        <div field="CheckReport" headeralign="center">
+                                            报告编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                        <div header="岗中体检" headerAlign="Center">
+                                            <div property="columns">
+                                                <div field="ACheck" headeralign="center">
+                                                    一检结果
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                                <div field="Recheck" headeralign="center">
+                                                    复检结果
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

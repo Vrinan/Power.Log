@@ -1,0 +1,856 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>流程设计</title>
+    <!--[if lt IE 9]>
+        <?import namespace="v" implementation="#default#VML" ?>
+    <![endif]-->
+    <script src="/scripts/boot.js" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+    <link href="/PowerPlat/WorkFlows/Design/css/jquery.contextmenu.css" rel="stylesheet" type="text/css" />
+    <link href="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow2.css" rel="stylesheet" type="text/css" />
+    <script src="/PowerPlat/WorkFlows/Design/js/workflowdesigner.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFunc.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/json2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/PowerPlat/WorkFlows/Design/js/GooFlow/default.css" />
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow.js"></script>
+    <script type="text/javascript" src="/PowerPlat/WorkFlows/Design/js/GooFlow/GooFlow/codebase/GooFlow_color.js"></script>
+    <script src="/PowerPlat/WorkFlows/Design/js/jquery.contextmenu.js" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+
+
+    <script src="/PowerPlat/WorkFlows/Design/codejs/codemirror.js"></script>
+    <link href="/PowerPlat/WorkFlows/Design/codejs/codemirror.css" rel="stylesheet" />
+    <script src="/PowerPlat/WorkFlows/Design/codejs/jsformat.js"></script>
+    <script src="/PowerPlat/WorkFlows/Design/codejs/javascript/javascript.js"></script> 
+
+    <style type="text/css">
+        .mini-panel-body {
+            overflow: hidden;
+            padding: 0;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var WorkFlowID = getParameter("WorkFlowID");
+        var CurrentVersion = getParameter("Version");
+        var WorkInfoID = getParameter("WorkInfoID");  //实例ID
+        var WorkFlowMode = getParameter("WorkFlowMode");
+        if (!WorkFlowMode) WorkFlowMode = "";
+
+
+        var hidetoolbar = false;    //是否隐藏左侧按钮
+        var hideheaderbar = false;  //是否隐藏上测按钮
+
+        switch (WorkFlowMode) {
+            case "WorkFlowDesign":  //设计模式下
+                break;
+            case "WorkingDesign":// 动态设计模式
+                // $.each(property.headBtns,function(item,index){
+                //    if (this.id == "GraphExport") {
+                //        item = 0;
+                //    }
+                // });
+
+                break;
+            case "WorkFlowHistoryDesign":   //打开历史流程图模式下
+                hidetoolbar = true;
+                break;
+            case "WorkFlowView":  //只读浏览
+                hideheaderbar = true;
+                hidetoolbar = true; //不是设计模式，则隐藏toolbar,不可保存等操作
+                break;
+            default:
+                hideheaderbar = true;
+                hidetoolbar = true; //不是设计模式，则隐藏toolbar,不可保存等操作
+                break;
+        }
+
+        var workFlowData = {};
+        var ExportCodeMirror = null;
+        var ImportCodeMirror = null;
+        console = window.console || {};
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow)
+                return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+
+        //获取当前可视区域高度
+        var property = {
+            width: CoreEntlib.GetInnerWidth(),
+            height: CoreEntlib.GetInnerHeight(),
+            WorkFlowMode: WorkFlowMode,      //传入当前的显示模式 wsl 追加
+            toolBtns: ["start round", "end round",
+                /*"task", "node", "chat", "state", "plug",*/
+                "GeneralNode",
+                "GeneralMultiNode",
+                "ConcurrentNode",
+                "ConvergeNode",
+                "SubNode",   //子流程
+                "BranchNode"//分支节点
+                    /*, "complex mix"*/],
+            haveHead: !hideheaderbar,
+            headBtns: [
+                { id: "save", icon: "s fa fa-save", text: "保存" },
+                { id: "undo", icon: "s fa fa-reply", text: "撤销" },
+                { id: "redo", icon: "s fa fa-share", text: "重做" },
+                { id: "reload", icon: "s fa fa-refresh", text: "刷新" },
+                {
+                    id: "winclose", icon: "close fa fa-power-off", text: "关闭", click: function () {
+                        CloseWindow('close');
+                    }
+                },
+                {
+                    text: "导出",
+                    id: "GraphExport", icon: "s fa fa-sign-in",
+                    click: function (GooFlowObject) {
+                        var winExport = mini.get("winExport");
+                        var json = ExportWorkflow(demo);
+                        var txt = js_beautify(JSON.stringify(json));
+
+                        ExportCodeMirror.setValue(txt);
+                        winExport.show();
+                        $(".CodeMirror").css("height", $("#txtExport").height() + "px");
+                        ExportCodeMirror.refresh();
+                    }
+                },
+                {
+                    id: "GraphImport",
+                    text: "导入", icon: "s fa fa-sign-out", click: function (GooFlowObject) {
+                        if (!ImportCodeMirror) {
+                            alert("导入对象不可访问，请随便先绘制一个节点");
+                            return;
+                        }
+                        var winImport = mini.get("winImport");
+                        ImportCodeMirror.refresh();
+                        winImport.show();
+                        $("#btnImportData").click(function () {
+                            var _json = ImportCodeMirror.getValue();
+                            try {
+                                var _jsonObject = $.parseJSON(_json);
+                                _jsonObject = PrepareWorkflowData(_jsonObject);
+                                GooFlowObject.clearData();
+                                GooFlowObject.loadData(_jsonObject);
+                                winImport.hide();
+                            }
+                            catch (e) {
+                                alert("导入异常：" + e.message);
+                            }
+                            return false;
+                        });
+                    }
+                }], //如果haveHead=true，则定义HEAD区的按钮
+            haveTool: !hidetoolbar,
+            //haveGroup: true,
+            useOperStack: true
+        };
+        var NodeTypeMap = {
+            StartNode: "start",
+            EndNode: "end"
+            //SubNode:""
+        }
+        var NodeTypeMapForPower = {};
+        for (var i in NodeTypeMap) {
+            var node = NodeTypeMap[i];
+            if (typeof (node) == "function")
+                continue;
+            NodeTypeMapForPower[node] = i;
+        }
+        var remark = {
+            cursor: "选择指针",
+            direct: "结点连线",
+            mutiselect: "多选",
+            start: "入口结点",
+            "end": "结束结点",
+            "task": "任务结点",
+            node: "自动结点",
+            chat: "决策结点",
+            state: "状态结点",
+            plug: "附加插件",
+            GeneralNode: "普通节点",
+            GeneralMultiNode: "分发节点",
+            ConcurrentNode: "会签节点",
+            "ConvergeNode": "聚合结点",
+            "complex mix": "复合结点",
+            group: "组织划分框编辑开关",
+            BranchNode: "分支节点",
+            SubNode: "子流程节点"
+        };
+
+        //更新节点和连线的 标签
+        function ExportBookMark(GooFlowObject) {
+            var json = GooFlowObject.exportData();
+            json = $.extend({}, json);
+
+            var result = {};
+            result.NodeList = {};
+            result.LineList = {};
+
+            $.each(json["NodeList"], function (i, node) {
+                if (!node.BookMarkCode) return;
+                var tmp = {};
+                tmp.NodeCode = node.NodeCode;
+                tmp.BookMarkCode = node.BookMarkCode;
+                tmp.BookMarkName = node.BookMarkName;
+                result.NodeList[node.NodeCode] = tmp;
+            });
+            $.each(json["LineList"], function (i, line) {
+                if (!line.BookMarkCode) return;
+                var tmp = {};
+                tmp.LineCode = line.LineCode;
+                tmp.BookMarkCode = line.BookMarkCode;
+                tmp.BookMarkName = line.BookMarkName;
+                result.LineList[line.LineCode] = tmp;
+            });
+
+            return result;
+        }
+        function ExportWorkflow(GooFlowObject) {
+
+            var json = GooFlowObject.exportData();
+            json = $.extend({}, json);
+
+            $.each(json["NodeList"], function (i, n) {
+
+                if (WorkFlowMode == "WorkingDesign" && this.IsFromInstance == false)  //动态定义模式下，且节点并非来自实例的
+                {
+                    //只记录下节点的长宽高等必要信息,其他属性一律删除
+                    var tmpNode = mini.clone(this);
+                    var tmpPropertys = ["NodeCode", "NodeType", "width", "height", "left", "top", "IsDisabled"];
+                    //只保留 数组中的四个属性， 其余的全部删除，以便 保存数据库json 小一点
+                    RemovePropertys(this, tmpPropertys);
+
+                    return;
+                }
+
+
+
+                delete this["class"];
+                delete this["classname"];
+                if (!this.title)
+                    this.title = this.name;
+                this.NodeName = this.name;
+
+                if (!this.NodeType) {
+                    var mapType = NodeTypeMapForPower[this.type.split(" ")[0]] || this.type;
+                    this.NodeType = mapType;//this.nodetype;
+                }
+                if (!this.NodeType) {
+                    alert("严重异常，节点类型无法获取"); return;
+                }
+                if (!this.id) {
+                    this.id = i;
+                }
+                this.NodeCode = this.id;
+
+
+                var curNodeType = null;
+                for (var irow = 0; irow < workFlowData.SelectData.NodeType.length; irow++) {
+                    if (workFlowData.SelectData.NodeType[irow].Code != this.NodeType) continue;
+                    curNodeType = workFlowData.SelectData.NodeType[irow];
+                    break;
+                }
+                //如果本节点没有属性定义，属性定义栏目删掉
+                if (curNodeType.IsAllowProperty == false) {
+                    delete this["NodeProperty"];
+                    delete this["NodeConfig"];
+                    delete this["RightConfigure"];
+                    delete this["VoteInfo"];
+                }
+                //删除人员定义
+                if (curNodeType.IsAllowDesignUser == false) delete this["UserConfig"];
+
+                if (curNodeType.IsAllowDesignCopyUser == false) delete this["CopyUserConfig"];
+
+                //非子流程节点
+                if (curNodeType.Code != "SubNode") delete this["SubInfo"];
+
+            });
+            $.each(json["LineList"], function (key, item) {
+
+                if (WorkFlowMode == "WorkingDesign" && this.IsFromInstance == false)  //动态定义模式下，且节点并非来自实例的
+                {
+                    // 无关连线，删除所有属性
+                    var tmpNode = mini.clone(this);
+                    var tmpPropertys = ["LineCode", "LineType", "from", "to", "FromNode", "ToNode", "ActiveType", "IsDisabled"];
+                    //只保留 数组中的 属性， 其余的全部删除，以便 保存数据库json 小一点
+                    RemovePropertys(this, tmpPropertys);
+                    return;
+                }
+                if (!this.name)
+                    this.name = this.title;
+
+                //连线类型如果不存在，则默认
+                if (!item.LineType) item.LineType = "MainLine";
+
+                this.marked = (!!this.IsSign);
+                if (!this.ActiveType)
+                    this.ActiveType = "Normal";
+                if (!this.IsMuiltLine)
+                    this.IsMuiltLine = "false";
+                if (!this.title)
+                    this.title = this.name;
+                if (!this.id) {
+                    this.id = key;
+                    this.LineCode = this.id;
+                }
+                this.LineName = item.name;
+                this.LineType = item.LineType;
+                this.FromNode = item.from;
+                this.ToNode = item.to;
+            });
+
+            //删除所有属性为null的连线
+            while (true) {
+                var flag = false;
+                for (var line in json["LineList"]) {
+                    if (json["LineList"][line] != null) continue;
+                    delete json["LineList"][line];
+                    flag = true;
+                }
+                if (flag == false) break;
+            }
+
+            return json;
+        }
+        //预处理JSON 数据，以方便加载
+        function PrepareWorkflowData(json) {
+            if (!json) return;
+            if (json["LineList"])
+                $.each(json["LineList"], function () {
+                    if (!this.name || $.trim(this.name) == "")
+                        this.name = this.title;
+                    this.marked = (!!this.IsSign);
+                    if (!this.ActiveType)
+                        this.ActiveType = "Normal";
+                    if (!this.IsMuiltLine)
+                        this.IsMuiltLine = "false";
+                    delete this["title"]
+                    if (!this.name)
+                        this.name = "";
+                });
+            if (json["NodeList"])
+                $.each(json["NodeList"], function () {
+                    switch (this.type) {
+                        case "node":
+                        case "task":
+                        case "state":
+                            this.type = "GeneralNode";
+                            break;
+                    }
+                    if (!this.name || $.trim(this.name) == "")
+                        this.name = this.title;
+                    delete this["title"];
+                });
+            return json;
+        }
+
+        //将源对象属性，逐个赋值给 目标对象， IgnoreList 中存放无视赋值的属性
+        function RemovePropertys(SourceObj, IgnoreList) {
+            //只保留 数组中的四个属性， 其余的全部删除，以便 保存数据库json 小一点
+            for (var p in SourceObj) { // 方法
+                var flag = false;
+                for (var tmp in IgnoreList) {
+                    if (p == IgnoreList[tmp]) { flag = true; break; }
+                }
+                if (flag == false) delete SourceObj[p];
+            }
+        }
+        //将源对象属性，逐个赋值给 目标对象， IgnoreList 中存放无视赋值的属性
+        function UpdatePropertys(SourceObj, TargetObj, IgnoreList) {
+            //只保留 数组中的四个属性， 其余的全部删除，以便 保存数据库json 小一点
+            for (var p in SourceObj) { // 方法
+                var flag = false;
+                for (var tmp in IgnoreList) {
+                    if (p == IgnoreList[tmp]) { flag = true; break; }
+                }
+                if (flag == false) TargetObj[p] = SourceObj[p];
+            }
+        }
+        var demo;
+        //加载完毕后
+        var EndLoadFlow = function (data) {
+
+            workFlowData = mini.decode(data);
+            workFlowData.BookMarkList = mini.decode(workFlowData.BookMarkList);
+            workFlowData.VarList = mini.decode(workFlowData.VarList);
+            workFlowData.SelectData = mini.decode(workFlowData.SelectData);
+
+            var json = data.JsonInfo;
+            if (!json) return;
+            json = $.parseJSON(json);
+
+
+            //动态定义模式下，需要将动态追加的节点，格式化为 js 认可的模式
+            if (WorkFlowMode == "WorkingDesign") {
+                var instanceInfo = mini.decode(data.InstanceInfo);
+                if (!instanceInfo.NodeList) instanceInfo.NodeList = [];
+                if (!instanceInfo.LineList) instanceInfo.LineList = [];
+                var workFlowInfo = mini.decode(data.WorkFlowInfo);
+                for (var MyNodeCode in json.NodeList) {
+                    var MyNode = json.NodeList[MyNodeCode];
+                    MyNode.id = MyNode.NodeCode;
+                    MyNode.name = MyNode.NodeName;
+                    MyNode.title = MyNode.NodeName;
+                    MyNode.type = MyNode.NodeType;
+
+                    if (MyNode.IsFromInstance == undefined) MyNode.IsFromInstance = false;
+
+                    var tmpPropertys = ["NodeCode", "NodeType", "LineCode", "LineType", "IsFromInstance", "IsInstanced", "ConfigUserList", "width", "height", "left", "top"];
+                    //只保留 数组中的四个属性， 其余的全部删除，以便 保存数据库json 小一点
+
+                    //将实例中的 UserConfig/CopyUserConfig 嫁接到当前信息中
+                    $.each(instanceInfo.NodeList, function (nodecode, data) {
+                        if (MyNode.NodeCode != nodecode) return;
+                        if (MyNode.IsFromInstance == false) return;  //只嫁接 来自 实例的 json
+
+                        UpdatePropertys(this, MyNode, tmpPropertys);
+
+                    });
+                    //将流程图的 json 嫁接进来
+                    $.each(workFlowInfo.NodeList, function (nodecode, data) {
+                        if (MyNode.NodeCode != nodecode) return;
+                        if (MyNode.IsFromInstance == true) return;  //只嫁接 来自流程图 json
+
+                        UpdatePropertys(this, MyNode, tmpPropertys);
+
+                    });
+                    if (MyNode.type == "StartNode") MyNode.type = "start round";
+                    if (MyNode.type == "EndNode") MyNode.type = "end round";
+
+                }
+
+                $.each(json.LineList, function () {
+                    this.id = this.LineCode;
+                    this.name = this.LineName;
+                    this.title = this.name;
+                    this.from = this.FromNode;
+                    this.to = this.ToNode;
+                });
+            }
+            //设置线
+            json = PrepareWorkflowData(json);
+
+            $.each(json.NodeList, function () {
+                switch (WorkFlowMode) {
+                    case "WorkFlowDesign":  //设计模式下
+                        this.allowDraggable = true; //允许拖拽
+                        this.allowRemove = true;  //允许删除节点
+                        break;
+                    case "WorkingDesign":// 动态设计模式
+                        this.allowDraggable = true; //允许拖拽
+                        //来自流程图的节点，不允许删除
+                        if (this.IsFromInstance == false) {
+                            this.allowRemove = false;  //不允许删除节点
+                            this.iconCls = "fa-lock";   //加锁
+                        }
+                        //走过实例的节点，不允许删除
+                        if (this.IsInstanced == true) {
+                            this.allowRemove = false;  //不允许删除节点
+                            this.iconCls = "fa-lock";   //加锁
+                            this.iconStyle = "color:red";  //强制标红，说明此节点已经走过实例
+                        }
+                        break;
+                    case "WorkFlowHistoryDesign":   //打开历史流程图模式下
+                        this.allowDraggable = false; //不允许拖拽
+                        this.allowRemove = false;  //不允许删除节点
+                        break;
+                    case "WorkFlowView":  //只读浏览
+                        break;
+                    default:
+                        alert("无法识别的处理模式[" + WorkFlowMode + "]");
+                        return;
+                }
+            });
+
+            $.each(json.LineList, function () {
+                switch (WorkFlowMode) {
+                    case "WorkFlowDesign":  //设计模式下
+                        this.allowDraggable = true; //允许拖拽
+                        this.allowRemove = true;  //允许删除节点
+                        break;
+                    case "WorkingDesign":// 动态设计模式
+                        this.allowDraggable = true; //允许拖拽
+                        //来自流程图的节点，不允许删除
+                        if (this.IsFromInstance == false) {
+                            //       this.allowRemove = false;  //不允许删除节点
+                            this.iconCls = "fa-lock";   //加锁
+                        }
+                        //走过实例的节点，不允许删除
+                        if (this.IsInstanced == true) {
+                            this.allowRemove = false;  //不允许删除节点
+                            this.iconCls = "fa-lock";   //加锁
+                            this.iconStyle = "color:red";  //强制标红，说明此节点已经走过实例
+                        }
+                        break;
+                    case "WorkFlowHistoryDesign":   //打开历史流程图模式下
+                        this.allowDraggable = false; //不允许拖拽
+                        this.allowRemove = false;  //不允许删除节点
+                        break;
+                    case "WorkFlowView":  //只读浏览
+                        break;
+                    default:
+                        alert("无法识别的处理模式[" + WorkFlowMode + "]");
+                        return;
+                }
+            });
+
+            demo.loadData(json);
+
+            //如果有连线属性是 IsDiabled=true,则设置为虚线
+            $.each(json.LineList, function () {
+                if (!this.IsDisabled) this.IsDisabled = false;
+                if (this.IsDisabled == false) return;
+                var lineObj = $(demo.$lineDom[this.id])[0];
+                lineObj.setAttribute("stroke", "black");
+                lineObj.setAttribute("stroke-dasharray", "20,10,5,5,5,10");
+            });
+        }
+        $(document).ready(function () {
+            if (WorkFlowMode == "WorkFlowHistoryDesign") Power.ui.info("当前是维护[历史流程图]模式，此模式下只能对节点和连线设置[标签]");
+
+            demo = $.createGooFlow($("#demo"), property);
+            demo.setNodeRemarks(remark);
+            demo.onItemDel = function (id, type) {
+                if (confirm("确定要删除该单元吗?")) {
+                    this.blurItem();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            demo.onBtnSaveClick = function () {
+
+                switch (WorkFlowMode) {
+                    case "WorkFlowDesign":   //正常保存
+                        var json = ExportWorkflow(demo);
+                        WorkflowDesigner.SaveWorkFlow(WorkFlowMode, WorkFlowID, CurrentVersion, json);
+                        return false;
+                    case "WorkingDesign":  //动态修正流程图
+                        if (!WorkInfoID) { alert("当前模式下，必须传入实例WorkInfoID，才可保存"); return false; }
+                        var json = ExportWorkflow(demo);
+                        WorkflowDesigner.SaveWorkingFlow(WorkFlowMode, WorkInfoID, json);
+                        return false;
+                    case "WorkFlowHistoryDesign":    // 保存历史流程图，此时只允许保存 bookMark
+                        var json = ExportBookMark(demo);
+                        WorkflowDesigner.SaveWorkFlowBookMark(WorkFlowMode, WorkFlowID, CurrentVersion, json);
+                        return false;
+                    case "WorkFlowView":  //只读浏览
+                        break;
+                    default:
+                        alert("模式[" + WorkFlowMode + "]下不允许保存操作");
+                        return false;
+                }
+            }
+            demo.popLinePropertyWindow = function (id) {
+                var line = demo.$lineData[id];
+                var buildLine = $.extend({ id: id, title: (line.name || line.title) }, line);
+                demo.blurItem();
+                mini.open({
+                    url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/LineProperty.html",
+                    width: 680, height: 400,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        iframe.contentWindow.SetData(buildLine, workFlowData, WorkFlowMode);
+                    },
+                    ondestroy: function (action) {
+                        if (action != "ok") return;
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.GetData();
+                        data = mini.clone(data);
+                        if (!data.name)
+                            data.name = data.title;
+                        delete data.title;
+                        demo.setName(id, data.name, "line");
+                        demo.$lineData[id] = $.extend(buildLine, data);
+                        //删除不需要的title 属性
+                        delete demo.$lineData[id]["title"];
+                    }
+                });
+            }
+            //禁用某个连线,将连线设置为虚线。。。。  返回 true，则允许删除，  返回 false 不允许
+            demo.CheckLineDelete = function (id) {
+                var line = demo.$lineData[id];
+                if (!line) return;
+
+                if (WorkFlowMode != "WorkingDesign") return true;  //非自定义模式， 一切照旧
+
+
+                if (line.IsFromInstance == true && line.IsInstanced == false) return true;  //自定义模式下， 来自实例的，或者尚未走过实例路径的连线，允许删除
+
+                if (line.IsInstanced == true)  //如果已经走过流程了， 则既不能删，也不能虚化
+                {
+                    Power.ui.info("此连线已经途径过流程实例，不可删除");
+                    return false;
+                }
+
+                //其余模式，设置虚线许可
+                //连线设为禁用
+                if (!line.IsDisabled) line.IsDisabled = false;
+
+                var lineObj = $(demo.$lineDom[id])[0];
+                if (line.IsDisabled == false) {
+                    line.IsDisabled = true;
+                    lineObj.setAttribute("stroke", "black");
+                    lineObj.setAttribute("stroke-dasharray", "20,10,5,5,5,10");
+                    Power.ui.info("已设为虚线，禁用模式");
+                }
+                else {
+                    line.IsDisabled = false;
+                    lineObj.setAttribute("stroke", "black");
+                    lineObj.setAttribute("stroke-dasharray", "");
+                    Power.ui.info("已设为实线，启用模式");
+                }
+                return false;  //其余模式，设置虚线许可
+            }
+            demo.onItemAdd = function (id, type, json) {
+                setTimeout(function () {
+                    if ($(".GooFlow_item#" + id).size() > 0) {
+                        bindPopMenu($(".GooFlow_item#" + id));
+                    }
+                }, 500);
+                return true;
+            }
+            //绑定弹出菜单
+            var bindPopMenu = function (obj) {
+                onPropertyConfig = function (e, currentNode) {
+                    if (!currentNode.NodeType && currentNode.type)
+                        currentNode.NodeType = currentNode.type;
+
+                    var nodeList = [];
+                    for (var i in demo.$nodeData) {
+                        if (typeof (demo.$nodeData[i]) == "function")
+                            continue;
+                        nodeList.push({
+                            NodeCode: demo.$nodeData[i].id,
+                            NodeName: (demo.$nodeData[i].title || demo.$nodeData[i].name)
+                        });
+                    }
+
+                    var nodeId = $(e.currentTarget).attr("id");
+                    mini.open({
+                        url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/NodeProperty.html",
+                        width: 1050, height: 600, //title: "节点属性",
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+
+                            iframe.contentWindow.SetData(currentNode, (currentNode.name || currentNode.title), workFlowData, WorkFlowMode, nodeList);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+                            var data = iframe.contentWindow.GetData(currentNode);
+                            data = mini.clone(data);
+                            var oldNodeType = currentNode.NodeType;
+
+                            demo.setName(nodeId, (data.name || data.title), "node");
+                            demo.$nodeData[nodeId] = $.extend(currentNode, data);
+                            delete demo.$nodeData[nodeId]["title"];
+
+                            //处理节点类型
+                            if (oldNodeType != data.NodeType) {
+                                demo.$nodeData[nodeId]["type"] = (NodeTypeMapForPower[demo.$nodeData[nodeId]["NodeType"]] || demo.$nodeData[nodeId]["NodeType"]);
+                                demo.$nodeDom[nodeId].find(".ico i").removeClass("ico_" + oldNodeType).addClass("ico_" + data.NodeType);
+                            }
+                        }
+                    });
+                }
+                //人员定义
+                onUserConfig = function (e, propertyName, Title) {
+                    var nodeId = $(e.currentTarget).attr("id");
+                    var currentNode = demo.$nodeData[nodeId];
+
+                    var userConfigList = mini.clone(workFlowData.SelectData.UsersConfig);
+                    var nodeList = [];
+                    for (var i in demo.$nodeData) {
+                        if (typeof (demo.$nodeData[i]) == "function")
+                            continue;
+                        nodeList.push({
+                            NodeCode: demo.$nodeData[i].id,
+                            NodeName: (demo.$nodeData[i].title || demo.$nodeData[i].name)
+                        });
+                    }
+
+                    mini.open({
+                        url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/UserConfigList.html",
+                        width: 850, height: 530, title: Title,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                            var curNodeUserConfig = currentNode[propertyName];
+                            iframe.contentWindow.SetData(curNodeUserConfig, userConfigList, nodeList, currentNode, WorkFlowMode);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+                            var result = iframe.contentWindow.GetData();
+                            var data = {};
+                            data[propertyName] = mini.clone(result);
+
+                            demo.$nodeData[nodeId] = $.extend(currentNode, data);
+                        }
+                    });
+                }
+                onSubNodeConfig = function (e, propertyName, Title) {
+                    var nodeId = $(e.currentTarget).attr("id");
+                    var currentNode = demo.$nodeData[nodeId];
+                    mini.open({
+                        url: "/Form/OpenURL?url=/PowerPlat/WorkFlows/Design/SubNodeProperty.html",
+                        width: 1050, height: 600, //title: "节点属性",
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+
+                            iframe.contentWindow.SetData(currentNode, (currentNode.name || currentNode.title), workFlowData, WorkFlowMode);
+                        },
+                        ondestroy: function (action) {
+                            if (action != "ok") return;
+                            var iframe = this.getIFrameEl();
+                            var result = iframe.contentWindow.GetData();
+                            var data = {};
+                            data[propertyName] = mini.clone(result);
+
+                            demo.$nodeData[nodeId] = $.extend(currentNode, data);
+                        }
+                    });
+                }
+
+                $(obj).contextPopup({
+                    items: function (e) {
+                        var nodeId = $(e.currentTarget).attr("id");
+                        var currentNode = demo.$nodeData[nodeId];
+                        var nodeType = currentNode.NodeType;
+
+                        if (!nodeType) {
+                            nodeType = NodeTypeMapForPower[currentNode.type.split(" ")[0]] || currentNode.type;
+                        }
+                        var curNodeType = null;
+
+                        for (var irow = 0; irow < workFlowData.SelectData.NodeType.length; irow++) {
+                            if (workFlowData.SelectData.NodeType[irow].Code != nodeType) continue;
+                            curNodeType = workFlowData.SelectData.NodeType[irow];
+                            break;
+                        }
+
+                        if (curNodeType == null) {
+                            alert("严重异常，当前 节点没有节点类型[" + nodeType + "]");
+                            return [];
+                        }
+
+                        var result = [];
+                        var propertyItem = {
+                            label: "属性",
+                            action: function (e) {
+                                onPropertyConfig(e, currentNode);
+                                return false;
+                            }
+                        };
+                        var userItem = {
+                            label: "人员定义",
+                            action: function (e) {
+                                onUserConfig(e, "UserConfig", "人员定义");
+
+                                return false;
+                            }
+                        };
+                        var userCopyItem = {
+                            label: "人员抄送",
+                            action: function (e) {
+                                onUserConfig(e, "CopyUserConfig", "人员抄送");
+
+                                return false;
+                            }
+                        };
+
+                        var subNodeItem = {
+                            label: "子流程定义",
+                            action: function (e) {
+                                onSubNodeConfig(e, "SubInfo", "子流程定义");
+
+                                return false;
+                            }
+                        };
+
+                        switch (WorkFlowMode) {
+                            case "WorkFlowDesign":    //常规模式
+                            case "WorkingDesign":    //动态定义模式
+                                if (curNodeType.IsAllowProperty == true) result.push(propertyItem);  //允许显示属性项
+                                if (curNodeType.IsAllowDesignUser == true) result.push(userItem);     //允许显示人员定义项 (起草节点不允许定义)
+                                if (curNodeType.IsAllowDesignCopyUser == true) result.push(userCopyItem);  //允许显示抄送人员定义项
+
+                                if (curNodeType.Code == "SubNode") result.push(subNodeItem); //如果是子流程
+                                break;
+                            case "WorkFlowHistoryDesign":   //历史流程图,只允许显示 [属性页]
+                                if (curNodeType.IsAllowProperty == true) result.push(propertyItem);  //允许显示属性项
+                                break;
+                            case "WorkFlowView":  //只读浏览
+                                break;
+                            default:
+                                break;
+                        }
+                        return result;
+                    }
+                });
+
+                ExportCodeMirror = CodeMirror.fromTextArea(document.getElementById("txtExport"), {
+                    lineNumbers: true, mode: "text/javascript"
+                });
+
+                ImportCodeMirror = CodeMirror.fromTextArea(document.getElementById("txtImport"), {
+                    lineNumbers: true, mode: "text/javascript"
+                });
+            }
+
+            switch (WorkFlowMode) {
+                case "WorkFlowDesign":  //设计模式下
+                case "WorkFlowHistoryDesign":   //打开历史流程图模式下
+                case "WorkFlowView":  //只读浏览
+                    WorkflowDesigner.LoadWorkFlow(WorkFlowID, CurrentVersion, EndLoadFlow);
+                    break;
+                case "WorkingDesign":// 动态设计模式
+                    $("#demo").attr("id", "instance");   //动态将 id=demo 改成 id=instance, 以使 拖动的 所有对象，前缀改变
+                    WorkflowDesigner.LoadWorkingFlow(WorkInfoID, EndLoadFlow);
+                    break;
+
+                default:
+                    alert("无法识别的 WorkFlowMode[" + WorkFlowMode + "]");
+                    return;
+            }
+
+
+            demo.onItemFocus = function (id, model) {
+                //bindNodeProperty($(".GooFlow_item#"+id));
+                return true;
+            };
+            demo.onItemBlur = function (id, model) {
+                return true;
+            };
+            //demo.onItemAdd = function (id, model) {
+            //    var _prev = "";
+            //    switch (WorkFlowMode) {
+            //        case "1":
+            //            break;
+            //        case "2":
+            //            _prev = "Inst";
+            //            break;
+            //    }
+            //    id = id.replace("demo_", "Inst_");
+            //    return true;
+            //}
+        });
+    </script>
+</head>
+<body style="background: #EEEEEE; margin: 0; padding: 0;">
+    <div id="demo" style="margin: 0px; padding: 0;">
+    </div>
+    <div id="winExport" class="mini-window" title="导出" style="width: 80%; height: 80%;" showfooter="true" showmodal="false">
+        <textarea rows="5" style="width: 100%; height: 100%;" id="txtExport"></textarea>
+    </div>
+    <div id="winImport" class="mini-window" title="导入" style="width: 80%; height: 80%;" showfooter="true" showmodal="false">
+        <textarea rows="5" style="width: 100%; height: 100%;" id="txtImport"></textarea>
+        <div property="footer" style="text-align: center; padding: 20px; padding-right: 15px;">
+            <button id="btnImportData" class="btn blue" value='导入' style='vertical-align: middle;'>导入</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/TouchSlide.1.1.js"></script>
+    <script src="/Apps/Common.js"></script>
+
+    <script src="/Apps/js/jquery-1.8.3.min.js"></script>
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/wizardstyle.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power") < 0 ? {} : $Model.data.params;
+        var BizAreaId = '$Model.data.bizareaid';
+    </script>
+</head>
+<body>
+    <div class="search">
+
+        <div class="searchbutton">
+            <!--此处可修改提示文字-->
+            <span onclick="OnSearchClick()"><i class="fa fa-search" aria-hidden="true"></i></span>
+            <input id="search_name" type="text" style="color:#000" value="" placeholder="工号/姓名" />
+            <a href="#" id="ok" onclick="OnOK()">确定</a>
+        </div>
+        <ul id="node">
+            <!--<li>
+                <a href="#">
+                    <span class="left"><input name="" class="check" type="checkbox" value="" /></span>
+                    <div>
+                        <p class="title">姓名</p>
+                        <p class="group">
+                            <span>日期</span>
+                            <span>时间</span>
+                            <span>编号</span>
+                        </p>
+                    </div>
+                </a>
+            </li>-->
+
+        </ul> 
+    </div>
+
+    <script type="text/javascript">
+        mini.parse(); 
+        $(function () {
+
+        });
+        var where = "";
+        var btnid = "";
+        function FirstLoad(w, i) {
+            where = w;
+            btnid = i;
+            OnSearchClick();
+        }
+        function GetData() {
+
+            var result = new Array();
+            var radio = $("input:radio");
+            for (var i = 0; i < radio.length; i++) {
+                if (radio[i].checked) {
+                    var id = radio[i].id;
+                    for (var j = 0; j < redata.length; j++) {
+                        if (id == redata[j].Id) {//此处修改主键字段
+                            result.push(redata[j]);
+                            return result;
+                        }
+                    }
+                }
+            }
+            return result;
+
+        } 
+        var redata = [];
+
+        var DataP = {};
+
+        function LoadData(dataparams) {
+            dataparams.size = "8";
+            dataparams.index = "0";
+            DataP = dataparams;
+            PowerM3AppCallBack.loadpage = onLoadList;
+
+            onLoadList(dataparams);
+        }
+        function onLoadList(dataparams) {
+            dataparams = dataparams || DataP;
+            var one = {};
+            one.url = "/Form/GridPageLoad";
+            one.select = ""
+            one.KeyWord = "Organize"; //此处修改KeyWord
+            one.KeyWordType = "BO";//此处修改KeyWordType
+            var swhere = " 1=1 ";
+            if (where)
+                swhere += " and " + where;
+            if ($("#search_name").val() != "")
+                swhere += " and Name like '%" + $("#search_name").val() + "%'";//此处修改上方查询字段
+            one.swhere = swhere;
+            one.size = dataparams.size;
+            one.index = dataparams.index;
+            one.order = "";
+            FormFuns.GridPageLoad(one, function (o) {
+                var data = mini.decode(o.data.value);
+                redata = data;
+                if (data.length < 8) {
+                    $("#next").removeAttr('onclick');
+                }
+                else {
+                    $("#next").attr('onclick', "ReLoad('down')");
+                }
+                BuildHTML(data);
+				   if (data.length > 0)
+                        DataP.index = parseInt(DataP.index) + 1;
+            })
+        }
+        function BuildHTML(data) {
+            var html = "";
+            for (var i = 0; i < data.length; i++) {
+                var u = data[i];
+                //此处修改主键字段与显示字段
+                html += ' <li onclick="CheckRadio(\'' + u.Id + '\')">' +
+                    '<a href="javascript:void(0)">' +
+                        '<span class="left"><input id=\'' + u.Id + '\' name="user" type="radio" value="" /></span>' +
+                        '<div>' +
+                        '<p class="title">' + u.Name + '</p>' +
+                        '<p class="group">' +
+                         '   <span>' + u.Code + '</span>' +
+                         '</p>' +
+                         '</div>' +
+                         '</a>' +
+                         '</li>'
+            }
+            $("#node").append(html);
+        }
+        function CheckRadio(id) {
+            if ($("#" + id)[0].checked) {
+                $("#" + id).prop("checked", false);
+            }
+            else
+                $("#" + id).prop("checked", true);
+        }
+        function OnSearchClick() {
+            DataP.index = 0;
+            $("#node").html("");
+            LoadData({ index: "0", size: "10" });
+
+        }
+        function OnOK() {
+            var data = GetData();
+            var r = {};
+            r.action = "ok";
+            r.btnid = btnid;
+            r.data = data;
+            CallAppFunction("appCloseNewWebView", JSON.stringify(r),"","WizardResultData");
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("appCloseNewWebView", "");
+        }
+    </script>
+</body>
+
+</html>

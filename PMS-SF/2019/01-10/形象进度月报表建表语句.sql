@@ -1,0 +1,42 @@
+--形象进度月报表
+CREATE TABLE SF_FK_ImageProgress(
+	[Id] [uniqueidentifier] NOT NULL,
+	[Code] [nvarchar](500) NULL,
+	[Title] [nvarchar](500) NULL,
+	[SubContractCode] [nvarchar](500) NULL,
+	[SubContractTitle] [nvarchar](500) NULL,
+	[SubContractId] [uniqueidentifier] NULL,
+	ProjectId uniqueidentifier null,
+	ProjectCode nvarchar(500) null,
+	ProjectName nvarchar(500) null,
+	PartyBId uniqueidentifier null,
+	PartyB nvarchar(500) null,
+	SignDate datetime null,
+	[UpdHumId] [uniqueidentifier] NULL,
+	[UpdHumName] [nvarchar](80) NULL,
+	[UpdDate] [datetime] NULL,
+	[RegDate] [datetime] NULL,
+	[RegHumName] [nvarchar](80) NULL,
+	[RegHumId] [uniqueidentifier] NULL,
+	[OwnProjName] [nvarchar](255) NULL,
+	[OwnProjId] [uniqueidentifier] NULL,
+	[EpsProjId] [uniqueidentifier] NULL,
+	[ApprHumId] [uniqueidentifier] NULL,
+	[ApprHumName] [nvarchar](80) NULL,
+	[ApprDate] [datetime] NULL,
+	[Status] [tinyint] NULL,
+	[Memo] [nvarchar](1000) NULL
+)
+CREATE TABLE SF_FK_ImageProgress_dtl(
+	[Id] [uniqueidentifier] NOT NULL,
+	[MasterId] [uniqueidentifier] NULL,
+	PartyName nvarchar(500) null,
+	Schdul nvarchar(500) null,
+	SendAmount numeric(17,2) null,
+	ApprAmount numeric(17,2) null,
+	TotalContractAmount numeric(12,2) null,
+	rate float null,
+	[Sequ] [int] NULL,
+	[UpdDate] [datetime] NULL,
+	Remark nvarchar(4000) null
+)

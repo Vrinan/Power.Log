@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+
+    <script src="/Apps/js/MobileWorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/WorkNodeSelect.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/Common.js"></script>
+    <style>
+        .slidediv {
+            width: 100%;
+            position: fixed;
+            top:0;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            overflow-y: auto;
+        }
+
+        .slidediv h3 {
+            width: 100%;
+            text-align: center;
+            line-height: 40px;
+            color: #4b8df8;
+            font-size: 2rem;
+            border-bottom: 1px solid #4b8df8;
+        }
+
+        .slidediv ul li {
+            background-color: #fff;
+            border-bottom: 1px solid #dadada;
+            font-size: 14px;
+        }
+
+        .slidediv ul li a {
+            padding: 0px 10px;
+            color: #666;
+            font-size: 14px;
+            display: block;
+            height: 36px;
+            line-height: 36px;
+            position: relative;
+        }
+
+        .slidediv ul li a span {
+            float: right;
+            display: block;
+            line-height: 36px;
+            font-size: 2rem;
+        }
+
+        .fa-toggle-on {
+            color: #4b8df8;
+        }
+
+
+        .slidediv .slidedivs {
+            background-color: #fff;
+            display: none;
+            border: 1px solid #4b8df8;
+            margin: 10px 10px;
+        }
+
+        .slidediv .slidedivs ul li {
+            line-height: 30px;
+            padding: 0px 10px;
+            margin: 0 10px;
+        }
+
+        .slidediv .slidedivs ul li input {
+            float: right;
+            margin-top: 8px;
+        }
+
+        .footbutton {
+            width: 100%;
+            display: -webkit-flex;
+            display: flex;
+            height: 50px;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            text-align: center;
+            background-color: #ffffff;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+        }
+
+        .footbutton .button {
+            flex: 1;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            border-right: 1px solid #ddd;
+        }
+
+        .footbutton .button:last-child{
+            border-right: 0px solid #ddd;
+        }
+
+        .footbutton .button a {
+            color: #666;
+        }
+
+        .footbutton .button span {
+            margin-left: 3px;
+        }
+
+        .select {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow-y: auto;
+            background-color: #fff;
+            z-index: 1000;
+        }
+
+        .select ul li {
+            line-height: 30px;
+            padding: 0px 10px;
+            margin: 0 10px;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .select ul li input {
+            float: right;
+            margin-top: 8px;
+        }
+
+        .select .selectbutton {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            margin: 0;
+            z-index: 2000;
+            border-top: 1px solid #ddd;
+        }
+
+        .select .selectbutton a {
+            display: inline-block;
+            flex: 1;
+            line-height: 50px;
+            text-align: center;
+            color: rgba(0 , 0, 0, 0.8);
+            font-size: 1.4rem;
+            border-right: 1px solid #ddd;
+        }
+
+        .select .selectbutton a:last-child{
+            border-right: 0px solid #ddd;
+        }
+
+        textarea{
+            width: 100%;
+            border: 1px solid #dddddd;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.inactive').click(function () {
+
+            })
+
+            $('#ok').click(function () {
+                // onNext();
+            })
+
+        });
+    </script>
+</head>
+
+<body id="body" onselectstart="return false">
+    <div class="slidediv" id="mnuNodeList">
+        <!--<h3>中国美协章程hhh</h3>
+        <ul class="yiji">
+            <li>
+                <a href="#" class="inactive">PPT示例文件<span class="fa fa-toggle-off"></span></a>
+                <div class="slidedivs">
+                    <ul>
+                        <li>1、PPT示例文件1<input type="checkbox" /></li>
+                        <li>2、PPT示例文件2<input type="checkbox" /></li>
+                        <li>3、PPT示例文件3<input type="checkbox" /></li>
+                        <li>4、PPT示例文件4<input type="checkbox" /></li>
+                        <li>5、PPT示例文件5<input type="checkbox" /></li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>-->
+    </div>
+    <div class="select">
+        <ul id="gdWorkFlowList"></ul>
+        <p class="selectbutton">
+            <a href="javascript:void(0);" id="ok">确定</a>
+            <a href="javascript:void(0);" onclick="WindowClose()">取消</a>
+        </p>
+    </div>
+    <div class="footbutton">
+        <div class="button active">
+            <a href="javascript:void(0);" onclick="SubmitFlow()">
+                <span>提交</span>
+            </a>
+        </div>
+
+        <div class="button">
+            <a href="javascript:void(0);" onclick="WindowClose()">
+                <span>取消</span>
+            </a>
+        </div>
+    </div>
+
+
+    <script language="javascript">
+        mini.parse();
+        //var form = new mini.Form("frmMain");
+
+        //var tabMain = mini.get("tabMain");
+
+        var curWin = null; //当前窗体
+        var FormInfo = null; // 表单信息
+        var curFlowOperate = null;
+        var AllData = null; //所有节点列表
+
+
+        $(function () {
+            var SequeID = getParameter("SequeID");
+            var WorkInfoID = getParameter("WorkInfoID");
+            var flowOperate = getParameter("flowOperate");
+            var data = {
+                SequeID: SequeID,
+                WorkInfoID: WorkInfoID
+            };
+
+            onSelectNode(data, flowOperate, "ReadReturnNodeList");
+            $(".select").css('display', 'none');
+        });
+
+        //调取选择人员处理
+        var CheckSelectUser = function () {
+
+            // form.validate();
+            if ($("#txtMindInfo").val() == "") {
+                Power.ui.info("非发送操作，请您录入意见信息"); //"非发送操作，必须录入意见信息"
+                return false;
+            }
+
+            var len = AllData.NextNodeList.length;
+            var OtherUserInfo = ""; //回退操作中，如果干扰别人，则信息放入此变量
+            var iCount = 0;
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = AllData.NextNodeList[iTmp];
+                var rdoNode = document.getElementById("rdoNode" + node.NodeCode);
+                if (rdoNode.checked != true) continue;
+                var rdoNodeUser = document.getElementsByName("rdoNodeUser" + node.NodeCode);
+                var selectedUser = '';
+                for (var i = 0; i < rdoNodeUser.length; i++) {
+                    if (!rdoNodeUser[i].checked) continue;
+                    selectedUser = AllData.NextNodeList[iTmp].ItemList[i];
+                    break;
+                }
+
+                if (!selectedUser) {
+                    Power.ui.error("对不起，节点[" + node.NodeName + "]没有选择目标人");
+                    return false;
+                }
+
+                for (var irow = 0; irow < selectedUser.OtherUserList.length; irow++)
+                    OtherUserInfo += selectedUser.OtherUserList[irow].UserName + ",";
+                if (OtherUserInfo.length > 0) OtherUserInfo = OtherUserInfo.substring(0, OtherUserInfo.length - 1);
+
+                iCount++;
+            }
+            if (iCount == 0) {
+                alert("对不起，请至少选择一个目标节点");
+                return false; //"对不起，退回操作只能选择一个目标节点"
+            }
+            if (iCount > 1) {
+                alert("对不起，退回操作只能选择一个目标节点");
+                return false; //"对不起，退回操作只能选择一个目标节点"
+            }
+            if (OtherUserInfo) {
+                if (confirm("您的此项退回操作，将会将 : [" + OtherUserInfo +
+                        "] 手中的待办记录一并回退到目标节点，请问是否要继续? \r\n\r\n(相关人员会自动收到一份告知单)") == false) return false;
+            }
+            return true;
+        }
+
+        //绘制到界面上
+        var bindNode = function (data) {
+
+            //if (curWin && data.Current && data.Current.PlanEndDate) {
+            //    var curTitle = curWin.getTitle();
+            //    if (data.Current.PlanEndDate.getFullYear() > 1970)
+            //       curWin.setTitle(curTitle + " 期望在 " + fomateDate(data.Current.PlanEndDate, "YYYY-MM-DD hh:mm") + " 之前完成.");
+            //}
+
+            AllData = data;
+
+            var mnuNodeList = document.getElementById("mnuNodeList");
+            //先清除里面的内容
+            mnuNodeList.innerHTML = "";
+
+            var len = data.NextNodeList.length;
+
+            var sOutput = ' <ul class="yiji">';
+            var sUserPut = '';
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = data.NextNodeList[iTmp];
+                sOutput += " <li>" +
+                    "<a href=\"#\" class=\"inactive\" id=\"check" + node.NodeCode +
+                    "\" onclick=\"onInActiveClick('check" + node.NodeCode + "')\">" + node.NodeName +
+                    "<span class=\"fa fa-toggle-off\"></span></a>" +
+                    "<div class=\"slidedivs\">" +
+                    " <ul id=\"lstNode" + node.NodeCode + "\" name=\"" + node.SelectNodeMode + "\">";
+
+                //sOutput += '<tr>';
+                //sOutput += '<td style="width:120px">';
+                //sOutput += '<label ><input id="rdoNode' + node.NodeCode + '" name="ReturnGroup"  type="radio" onclick="onSelectedNode(\'' + node.NodeCode +'\')"  />&nbsp;';
+                //sOutput +=  node.NodeName + '</label></td>';
+
+                //var sItemStr = '<td>';
+
+                for (var irow = 0; irow < node.ItemList.length; irow++) {
+
+                    var sUserInfo = '';
+                    var item = node.ItemList[irow];
+                    for (var icol = 0; icol < item.UserList.length; icol++) {
+                        var user = item.UserList[icol];
+                        var sendDate = new Date(user.SendDate).format("MM-dd HH:mm");
+                        if (new Date(user.SendDate).getFullYear() <= 1901)
+                            sendDate = new Date(user.RecvDate).format("MM-dd HH:mm");
+                        if (user.SourceUserID && user.SourceUserID != user.UserID)
+                            sUserInfo += user.UserName + "  代(" + user.SourceUserName + ") (" + sendDate + ") ,";
+                        else
+                            sUserInfo += user.UserName + "  (" + sendDate + ") ,";
+                    }
+                    if (sUserInfo.length > 0) sUserInfo = sUserInfo.substring(0, sUserInfo.length - 1);
+                    //if (irow != 0) sItemStr += '<br/>';
+                    sOutput += '<li onclick="SelectChecked(\'rdoNode' + node.NodeCode + '_' + item.BeforeSequeID +
+                        '\')">' + sUserInfo + '<input id="rdoNode' + node.NodeCode + '_' + item.BeforeSequeID +
+                        '" name="rdoNodeUser" type="radio" /></li>';
+                    // sItemStr += '<label ><input id="rdoNode' + node.NodeCode + '_' + item.BeforeSequeID + '" name="rdoNodeUser' + node.NodeCode + '"  type="radio"  />&nbsp;' + sUserInfo + '</label>';
+                }
+                sOutput += "</ul>" +
+                    "</div>" +
+                    "</li>";
+                //sItemStr += '</td>';
+                //sOutput += sItemStr;
+                //sOutput += '</tr>';
+
+            }
+            sOutput += '</ul>';
+            sOutput +=
+                '<label><input name="ReturnedSendMode" id="Normal" checked="checked" type="radio" value="Normal" />正常流转 </label> <label><input id="MustSendCurrent" name="ReturnedSendMode" type="radio" value="MustSendCurrent" />直接送还本节点 </label> ';
+            sOutput += '<textarea id="txtMindInfo" rows="5"  style="width:100%"></textarea>';
+
+            var win_column_obj = $(sOutput);
+            win_column_obj.appendTo(mnuNodeList);
+            mini.parse();
+
+            if (len == 1) {
+                //var rdoNode = document.getElementById("rdoNode" + data.NextNodeList[0].NodeCode);
+                //rdoNode.checked = true;
+                if (data.NextNodeList[0].ItemList.length == 1) {
+                    var rdoNodeUser = document.getElementById("rdoNode" + data.NextNodeList[0].NodeCode + '_' +
+                        data.NextNodeList[0].ItemList[0].BeforeSequeID);
+                    rdoNodeUser.checked = true;
+                }
+            }
+        }
+        //提取目标节点可选人员
+        var GetNodesUser = function (data) {
+
+            //var tabNode = tabMain.getTab("tabSelectUser");
+            //tabNode.enabled = true;
+            //tabMain.activeTab(tabNode);
+
+            if (data == null || data == "") {
+                alert("用户信息提取失败");
+                return; //"提取失败"
+            }
+            //mini.get("btnOK").setEnabled(true);
+
+            curFlowOperate = data.FlowOperate;
+
+            bindNode(data);
+
+
+            // //判断是否有期望完成时间要手工定义的，如果有，放开选择日期框
+            // var len = data.NextNodeList.length;
+            // for (var iTmp = 0; iTmp < len; iTmp++) {
+            //     var node = data.NextNodeList[iTmp];
+            //     if (node.IsCancel == true) continue;     //自定义事件中，强制指定此节点无视掉
+            //     if (node.InputLimitDaysByRun != true) continue;
+
+            //     document.getElementById("spnPlanEndDate").style.display = "";
+            //     mini.get("dtPlanEndDate").setVisible(true);
+            //     mini.get("dtPlanEndDate").setRequired(true);
+            //     mini.get("dtPlanEndDate").setRequiredErrorText("请填写期望完成时间");//"请填写办理意见"
+            //     break;
+            // }
+
+            // var div = $("#mindList");
+            // WorkFlowUtil.DrawMindList(div,data.HistoryMind);
+            // mini.get("txtMindInfo").setValue(data.MindInfo);
+
+            ////如果当前节点意见必填,或者不是发送操作，则意见必填
+            // mini.get("txtMindInfo").setRequired(true);
+            // mini.get("txtMindInfo").setRequiredErrorText("请填写办理意见");//"请填写办理意见"
+        }
+
+        var SelectChecked = function (id) {
+            if ($("#" + id)[0].checked) {
+                $("#" + id).prop("checked", false);
+            } else
+                $("#" + id).prop("checked", true);
+        }
+
+        var onInActiveClick = function (id) {
+            if ($('#' + id).siblings('.slidedivs').css('display') == 'none') {
+
+                $('#' + id).children('span').addClass('fa-toggle-on');
+                $('#' + id).siblings('.slidedivs').slideDown(500);
+                $('#' + id).parent().siblings().find(".slidedivs").slideUp(500);
+                $('#' + id).parent().siblings().find("span").removeClass('fa-toggle-on');
+            } else {
+                $('#' + id).children('span').removeClass('fa-toggle-on');
+                $('#' + id).siblings('.slidedivs').slideUp(500);
+
+            }
+        }
+        //提取流程列表
+        var onSelectNode = function (data, MyFlowOperate, subOperate) {
+            var self = this;
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = subOperate; //选择目标流程人员信息
+            if (data.SequeID) CurrentInfo.SequeID = data.SequeID;
+
+            CurrentInfo.Current = data;
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+                html: '加载中...'
+            });
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyInstance;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    result.data.FlowOperate = MyFlowOperate;
+
+                    GetNodesUser(result.data);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, {
+                        timeout: 0,
+                        position: "center center",
+                        closeable: true
+                    });
+                }
+            });
+        }
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data, flowOperate, win) {
+
+            curWin = win;
+            onSelectNode(data, flowOperate, "ReadReturnNodeList");
+            $(".select").css('display', 'none');
+
+        }
+        var SubmitFlow = function () {
+
+            var mindInfo = $("#txtMindInfo").val();
+
+            if (mindInfo == "") {
+                Power.ui.info("非发送操作，请您录入意见信息"); //"非发送操作，必须录入意见信息"
+                return false;
+            }
+            var selectNode = [];
+            var user = null;
+            var planEndDate = new Date();
+            var len = AllData.NextNodeList.length;
+
+            var sReturnedSendMode = "Normal";
+
+            if (!$("#Normal")[0].checked)
+                sReturnedSendMode = "MustSendCurrent";
+            for (var iTmp = 0; iTmp < len; iTmp++) {
+                var node = AllData.NextNodeList[iTmp];
+                var nodeCode = node.NodeCode;
+                //var rdoNode = document.getElementById("rdoNode" + node.NodeCode);
+                // if (rdoNode.checked != true) continue;
+
+                var radio = $("#lstNode" + nodeCode + " input:radio");
+
+                var selectedUser = [];
+                for (var i = 0; i < radio.length; i++) {
+                    if (radio[i].checked) {
+                        selectedUser = AllData.NextNodeList[iTmp].ItemList[i];
+                    }
+                }
+                //var rdoNodeUser = document.getElementsByName("rdoNodeUser" + node.NodeCode);
+
+                if (!selectedUser && !selectedUser.UserList) {
+                    Power.ui.error("对不起，节点[" + node.NodeName + "]没有选择目标人");
+                    return false;
+                }
+                if (selectedUser.length == 0)
+                    continue;
+                if (node.InputLimitDaysByRun == true) {
+                    for (var irow = 0; irow < selectedUser.UserList.length; irow++)
+                        selectedUser.UserList[irow].PlanEndDate = planEndDate;
+                }
+                var sendNode = {};
+                sendNode.ItemList = [];
+                sendNode.ItemList.push(selectedUser);
+                sendNode.NodeCode = node.NodeCode;
+                sendNode.NodeName = node.NodeName;
+
+                sendNode.ReturnedSendMode = sReturnedSendMode;
+                selectNode.push(sendNode);
+            }
+
+            if (selectNode.length == 0) {
+                Power.ui.info("对不起，请选择一个目标节点"); //"非发送操作，必须录入意见信息"
+                return false;
+            }
+
+
+            var voteValue = '';
+            var tmpData = {
+                "Current": AllData.Current,
+                "SelectedNode": selectNode,
+                "MindInfo": mindInfo
+            };
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = tmpData;
+            msg.data.FlowOperate = EFlowOperate.Return; //执行发送操作
+
+            //result.data = msg;
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: {
+                    json: mini.encode(msg)
+                },
+                cacha: false,
+                success: function (text) {
+                    var t = mini.decode(text);
+                    if (t.success) {
+                        CallAppFunction("appCloseNewWebView", '{"reload":"true"}', "");
+                        //    if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+                        //    window.m3app.AppCall('appCloseNewWebView', '{"reload":"true"}', function XXX(outparam) {
+
+                        //    });
+                        //}
+                    } else {
+                        Power.ui.alert(t.message);
+                    }
+                }
+            });
+        }
+
+        function WindowClose() {
+            CallAppFunction("appCloseNewWebView", '{"reload":"false"}', "");
+            //if (typeof (window.m3app != undefined && window.m3app.AppCall) == "function") {
+            //    window.m3app.AppCall('appCloseNewWebView', '{"reload":"false"}', function XXX(outparam) {
+
+            //    });
+            //}
+        }
+    </script>
+
+</body>
+
+</html>

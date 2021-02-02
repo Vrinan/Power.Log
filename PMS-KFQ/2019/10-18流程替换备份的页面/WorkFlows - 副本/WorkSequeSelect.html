@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title> 
+
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>   
+      
+</head>
+
+<body id="body" onselectstart="return false">
+ 
+                                                    
+             <div id="gdSequeList" class="mini-datagrid"  style="width: 100%; height: 100%;" idfield="NodeCode" showpager="false" showemptytext="true">
+                <div property="columns"> 
+                    <div type="indexcolumn"></div>
+                    <div name="NodeName" field="NodeName" width="70" headeralign="center">节点名称</div><!--名称-->
+                    <div name="BeforeUserName" field="BeforeUserName" width="50" headeralign="center">发送人</div><!--名称-->   
+                    <div name="UserName" field="UserName" width="50" headeralign="center">接收人</div>
+                    <div name="RecvDate" field="RecvDate" width="50" headeralign="center"  dateFormat="yyyy-MM-dd HH:mm">接收时间</div>
+                            
+                    <div   width="30" headeralign="center" renderer="onSequeRenderer">操作  </div>        
+                </div>
+             </div>
+ 
+                        
+
+    <script language="javascript">
+
+        mini.parse();
+       
+        var parentInfo = {};   //父对象信息
+      
+        var gdSequeList = mini.get("gdSequeList");
+       
+        var onSelectedSequeRow = function () {
+            var row = gdSequeList.getSelected();
+            if (!row) return;
+             
+            parentInfo.onSelectedSeque(row);
+        }
+        var onSequeRenderer = function (e) {
+            var s = '';
+            s = '<a class="New_Button" href="javascript:onSelectedSequeRow()">选择</a>';
+            return s;
+        } 
+      
+        //---------------------------出入接口-------------------------------------------
+        //流程激活入口
+        var SetData = function (data ) {
+              
+        }
+        var GetData = function () {
+            
+        }
+
+        if (parent && parent.GetSequeList)
+        {
+            parentInfo = parent.GetSequeList();
+            gdSequeList.setData(parentInfo.SequeList);
+        }
+    </script>
+
+</body>
+</html>

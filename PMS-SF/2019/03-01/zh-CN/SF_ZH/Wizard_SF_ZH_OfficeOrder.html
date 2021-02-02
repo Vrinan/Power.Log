@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power") < 0 ? {} : $Model.data.params;
+        var currentHumanId = "$!CurrentSession.HumanId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtCode" class="mini-textbox" style="width: 200px;" emptytext="编号" onenter="OnSearchClick" />
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="编码/名称/描述/" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>
+                </div>
+                <!--<div class="caption">
+                    <a class="mini-button blue" id="View_XLX_PUR_Request.Search" onclick="PowerForm.OnBtnSearch(this)"><i class="fa fa-search"></i>查询</a>
+                </div>-->
+                <!--<div class="caption">
+                    <div class="btn-group customfilter" gridid="View_XLX_PUR_Request"><i class="fa fa-check"></i>过滤</div>
+                </div>
+                <div class="btn-group customcolumn" gridid="View_XLX_PUR_Request"><i class="fa fa-check"></i>栏位</div>
+                <div class="btn-group customfilter" gridid="View_XLX_PUR_Request"><i class="fa fa-check"></i>过滤</div>-->
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="View_SF_ZH_OfficeOrder" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                 allowresize="true" multiselect="true" idfield="Id"
+                                 onbeforeload="OnGridBeforeLoad" pagesize="50" autoload="false" url="/Form/GridPageLoad">
+                                <div property="columns">
+                                    <div type="indexcolumn" width="45">序号</div>
+                                    <div type="checkcolumn" name="checkcolumn"></div>
+                                    <div field="BomType" width="150" allowsort="true">物资类型</div>
+                                    <div field="Code" width="150" allowsort="true">编号</div>
+                                    <div field="MatBSName1" width="100" allowsort="true">物资类别名称</div>
+                                    <div field="MatCode" width="100" allowsort="true">物料编码</div>
+                                    <div field="MatName" width="100" allowsort="true">物料名称</div>
+                                    <div field="MatModle" width="100" allowsort="true">物料描述</div>
+                                    <div field="MatUnit" width="100" allowsort="true">单位</div>
+                                    <div field="Amount" width="100" allowsort="true">采买数量</div>
+                                    <div field="BuyAmount" width="100" allowsort="true">可领数量</div>
+                                    <div field="Remark" width="100" allowsort="true">备注</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="MatCode">物料编码</div>
+                                    <div field="MatName">物料名称</div>
+                                    <div name="action" width="50px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;">
+                <tr>
+                    <td>年度</td>
+                    <td><input class="mini-textbox" id="Year" name="Year" /></td>
+                </tr>
+            </table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        $(function () {
+        });
+        var RightGrid = mini.get("View_SF_ZH_OfficeOrder");
+        var gridselected = mini.get("GridSelected");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        //如果打开向导前指定了e.where，则需要这个方法，否则Select.GetWhere()取不到值
+        Select.LoadStepFirst = function () {
+            RightGrid.reload();
+        }
+
+        $(function () {
+            var bmulti = "1";
+            RightGrid.multiSelect = bmulti;
+            RightGrid.onlyCheckSelection = bmulti;
+            if (bmulti)
+                RightGrid.showColumn("checkcolumn");
+            else {
+                RightGrid.hideColumn("checkcolumn");
+            }
+            //冻结列
+            //var grid = mini.get("View_XLX_PUR_Request");
+            //grid.frozenColumns(0, 3);
+        });
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function GetData() {
+            if (RightGrid.multiSelect) {
+                return RightGrid.getSelecteds();
+            }
+            else {
+                var result = new Array();
+                var node = RightGrid.getSelected();
+                result.push(node);
+                return result;
+            }
+        }
+        RightGrid.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.ListId == row.ListId)
+                    return true;
+            });
+            //if (!cRow) {
+            if (RightGrid.multiSelect)
+                gridselected.addRow(row);
+            else {
+                var data = [];
+                data.push(row);
+                gridselected.setData(data);
+            }
+            //}
+        })
+        RightGrid.on("deselect", function (e) {
+            OnDelGridSelected(e.record.ListId);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+				+ e.record.ListId + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].ListId == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+
+        //列表绑定前事件
+        function OnGridBeforeLoad(e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var swhere = Select.GetWhere() || "1=1";
+            if (WizardParams.filter) {
+                swhere += " and " + base64decode(WizardParams.filter);
+            }
+            var p = { KeyWord: sender.id, KeyWordType: "ViewEntity", index: e.params.pageIndex, size: e.params.pageSize, sort: "" };
+            var txt = mini.get("txtName");
+            var txtCode = mini.get("txtCode");
+            if (txt.value.length > 0)
+                swhere += " and (MatCode like '%" + txt.value + "%' or MatName like '%" + txt.value + "%' or MatModel like '%" + txt.value + "%')";
+            if (txtCode.value.length > 0)
+                swhere += " and (Code  like '%" + txtCode.value + "%')";
+            p.swhere = swhere;
+            p.sort = RightGrid.sortField + " " + RightGrid.sortOrder;
+            if (p.sort.length == 1) {
+                p.sort = ""
+            }
+            //alert(p.swhere);
+            var pgindex = e.params.pageIndex;
+            sender.mask();
+            FormFuns.GridPageLoad(p, function (o) {
+                sender.unmask();
+                if (o.success) {
+                    var data = mini.decode(o.data.value);
+                    sender.setData(data);
+                    sender.setTotalCount(o.data.totalcount);
+                    sender.setPageIndex(pgindex);
+                }
+            })
+        }
+
+        function OnSearchClick(e) {
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+</html>

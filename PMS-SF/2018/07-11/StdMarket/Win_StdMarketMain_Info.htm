@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var longcode="$!CurrentSession.EpsProjLongCode";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <!--end col-md-3-->
+            <div class="mini-splitter" vertical="true" style="width: 100%; height: 100%">
+                <div size="70%" showcollapsebutton="true">
+                    <div class="portlet box blue" style="height: 100%">
+                        <div class="portlet-title">
+                            <div class="captiontools">
+                                <!--<a class="mini-button blue" id="V_PS_ProjectInfo.Adds" onclick="PowerForm.OnBtnAddForm(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="V_PS_ProjectInfo.Trail" onclick="PowerForm.OnBtnEditForm(this)"><i class="fa fa-plus"></i>跟进</a>
+                                <a class="mini-button blue" id="PS_RiskReview.Adds" onclick="PS_RiskReviewAdds()"><i class="fa fa-plus"></i>风险评估</a>
+                                <a class="mini-button blue" id="PS_isBidReview.Adds" onclick="PS_isBidReviewAdds()"><i class="fa fa-plus"></i>报价评审</a>
+                                <a class="mini-button blue" id="PS_Prequalification.Adds" onclick="PS_PrequalificationAdds()"><i class="fa fa-plus"></i>资格预审</a>
+                                <a class="mini-button blue" id="PS_BidTask.Adds" onclick="PS_BidTaskAdds()"><i class="fa fa-plus"></i>投标任务书</a>
+                                <a class="mini-button blue" id="PS_BidTrack.Adds" onclick="PS_BidTrackAdds()"><i class="fa fa-plus"></i>投标跟踪</a>
+                                <a class="mini-button blue" id="PS_ContractReview.Adds" onclick="PS_ContractReviewAdds()"><i class="fa fa-plus"></i>合同评审</a>-->
+
+                                项目名称:<input id="V_PS_ProjectInfo.ProjectName" class="mini-textbox" style="width: 150px;" />
+                                项目类型:<input id="V_PS_ProjectInfo.QProjectType" class="mini-combobox" style="width: 150px;" />
+                                产品类型:<input id="V_PS_ProjectInfo.QProductType" class="mini-combobox" style="width: 150px;" />
+                                跟进状态:<input id="V_PS_ProjectInfo.QFollowStatus" class="mini-combobox" style="width: 150px;" />
+                                跟进人:<input id="V_PS_ProjectInfo.FollowHuman" class="mini-textbox" style="width: 150px;" />
+                                <a class="mini-button blue" id="V_PS_ProjectInfo.search" onclick="mini.get('V_PS_ProjectInfo').reload()"><i class="fa fa-search"></i>搜索</a>
+                            </div>
+                            <div class="tools">
+                            </div>
+                        </div>
+                        <div class="portlet-body" style="height: 100%;padding-bottom: 45px;">
+                            <div id="V_PS_ProjectInfo" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" ondrawgroup="onDrawGroup" summarycolumns="" fitcolumns="" idfield="Id">
+                                <div property="columns">
+                                    <div field="ProjectId" name="ProjectId" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目编号" align="left">项目编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div type="comboboxcolumn" field="ProjectType" name="ProjectType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目类型" align="left">项目类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                    <div field="ProjectLocation" name="ProjectLocation" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目地点" align="left">项目地点<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div type="comboboxcolumn" field="ProductType" name="ProductType" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="产品类型" align="left">产品类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                    <div field="ProjectInvestAmount" name="ProjectInvestAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="投资规模" align="left">投资规模<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div type="comboboxcolumn" field="FollowLevel" name="FollowLevel" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟踪级别" align="left">跟踪级别<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                    <div type="comboboxcolumn" field="FollowStatus" name="FollowStatus" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟进状态" align="left">跟进状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                    <div field="FollowHuman" name="FollowHuman" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟进人名称" align="left">跟进人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div field="comentnum" name="comentnum" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="跟进次数" align="left">跟进次数<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div field="FollowDate" name="FollowDate" headeralign="center" accesskey="60" guideid="" datatype="" allowsort="true" currencyunit="" header="最新跟进日期" dateformat="yyyy-MM-dd" align="left">最新跟进日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                    <div field="CommentText" name="CommentText" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="最新动态" align="left">最新动态<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div type="checkboxcolumn" field="isBid" truevalue="1" falsevalue="0" headeralign="center">是否投标</div>
+
+                                    <div type="comboboxcolumn" field="BidResult" name="BidResult" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="投标结果" align="left">投标结果<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+
+                                    <div field="reviewStatus" name="reviewStatus" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同评审状态" align="left">合同评审状态<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                    <div field="RegDate" name="RegDate" headeralign="center" accesskey="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div showcollapsebutton="true">
+                    <div class="portlet box gray" style="height: 100%">
+                        <div class="mini-tabs" id="maintabs" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                            <div title="风险评估">
+                                <div class="mini-fit">
+                                    <div id="PS_RiskReview" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" showpager="false" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目" align="left">项目<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                            <div field="RegHumName" name="RegHumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+
+                                            <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="报价评审">
+                                <div class="mini-fit">
+                                    <div id="PS_isBidReview" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" showpager="false" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ProjectSize" name="ProjectSize" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目规模" align="left">项目规模<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                            <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div title="资格预审">
+                                <div class="mini-fit">
+                                    <div id="PS_Prequalification" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" showpager="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目" align="left">项目<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ClientName" name="ClientName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="客户" align="left">客户<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="投标任务书">
+                                <div class="mini-fit">
+                                    <div id="PS_BidTask" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" showpager="false" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="ProjectName" name="ProjectName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="项目" align="left">项目<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ClientName" name="ClientName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="客户" align="left">客户<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="RegHumName" name="RegHumName" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="RegDate" name="RegDate" headeralign="center" width="60" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="投标跟踪">
+                                <div class="mini-fit">
+                                    <div id="PS_BidTrack" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" pagesize="15" showpager="false" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="BidResult" type="comboboxcolumn" headeralign="center" align="left" name="PS_BidTrack.BidResult" width="100" allowsort="true">开标结果<input property="editor" class="mini-combobox" style="width: 100%;" /></div><!--所属角色-->
+                                            <div field="BidAmount" name="BidAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="开标金额" align="left">开标金额<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="WinCompany" name="WinCompany" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="中标单位" align="left">中标单位<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="BidDate" name="BidDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="开标日期" dateformat="yyyy-MM-dd" align="left">开标日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div title="合同评审">
+                                <div class="mini-fit">
+                                    <div id="PS_ContractReview" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="601" allowalternating="false" showpager="false" pagesize="15" summarycolumns="" fitcolumns="" idfield="Id">
+                                        <div property="columns">
+                                            <div field="ContractCode" name="ContractCode" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同编号" align="left">合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ContractName" name="ContractName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同名称" align="left">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ContractType" type="comboboxcolumn" headeralign="center" name="PS_ContractReview.ContractType" width="100" header="合同类型" align="left" allowsort="true">合同类型<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                            <div field="ClientName" name="ClientName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="客户姓名" align="left">客户姓名<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="ContractAmount" name="ContractAmount" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合同金额" align="left">合同金额<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                            <div field="Status" type="comboboxcolumn" headeralign="center" headeralign="center" name="PS_ContractReview.Status" width="100" header="状态" align="left" allowsort="true">状态<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                            <div field="RegDate" name="RegDate" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入日期" dateformat="yyyy-MM-dd" align="left">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                            <div field="RegHumName" name="RegHumName" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="录入人名称" align="left">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+			GetClickandMenu("V_PS_ProjectInfo");
+			GetClickandMenu("PS_RiskReview");
+			GetClickandMenu("PS_isBidReview");
+            GetClickandMenu("PS_Prequalification");
+			GetClickandMenu("PS_BidTask");
+			GetClickandMenu("PS_BidTrack");
+			GetClickandMenu("PS_ContractReview");
+
+        });
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "V_PS_ProjectInfo") {
+                if (mini.get("V_PS_ProjectInfo.ProjectName").getValue() != "") {
+                    var where = " ProjectName like '%" + mini.get("V_PS_ProjectInfo.ProjectName").getValue() + "%'";
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+                if (mini.get("V_PS_ProjectInfo.QProjectType").getValue() != "") {
+                    var where = " ProjectType= '" + mini.get("V_PS_ProjectInfo.QProjectType").getValue() + "'";
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+                if (mini.get("V_PS_ProjectInfo.QProductType").getValue() != "") {
+                    var where = " ProductType= '" + mini.get("V_PS_ProjectInfo.QProductType").getValue() + "'";
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+               if (mini.get("V_PS_ProjectInfo.QFollowStatus").getValue() != "") {
+                    var where = " FollowStatus= '" + mini.get("V_PS_ProjectInfo.QFollowStatus").getValue() + "'";
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+                if (mini.get("V_PS_ProjectInfo.FollowHuman").getValue() != "") {
+                  var where = " FollowHuman like '%" + mini.get("V_PS_ProjectInfo.FollowHuman").getValue() + "%'";
+
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+                var Client_Guid = getParameter("Client_Guid");
+                if(Client_Guid){
+                    var where = " Client_Guid = '" + Client_Guid + "'";
+
+                    if (e.params.swhere != "")
+                        e.params.swhere += " and " + where;
+                    else
+                        e.params.swhere = where;
+                }
+
+                var Nofilter=getParameter("Nofilter");
+			    if (Nofilter){
+			    var exp = {defaultright:false};
+			    var str = mini.encode(exp);
+			    str = base64encode(str);
+			    e.params.extparams= str;
+			    var where =" EpsProjId in(select project_guid from PLN_project where LongCode like '"+longcode+"%' )"
+			    if (e.params.swhere != "")
+                e.params.swhere += " and " + where;
+                else
+                 e.params.swhere = where;
+
+			    }
+            }
+
+        }
+        function onDrawGroup(e) {
+            e.cellHtml = "项目名称：" + e.value;
+        }
+
+
+		 function GetClickandMenu(miniid){
+	      var ids=Getids(miniid);
+		
+			 var gridEl = typeof miniid == 'string' ? mini.get(miniid) : miniid;
+			 gridEl.on("rowdblclick",function(){
+			 PowerForm.OnBtnViewForm({id:miniid+".ViewForm"},ids);
+			});
+		
+		 }
+		 function Getids(miniid){
+		 	 var ids=null;
+		  switch(miniid){
+				  case "V_PS_ProjectInfo"://项目跟进
+					  ids="1ce86783-1a7b-45b5-95ff-b6d1afdaa56b";
+					  break;
+				  case "PS_RiskReview"://风险评估
+					  ids="524ec553-6cb7-42a9-8fdb-d7ba920e886c";
+					  break;
+				  case "PS_isBidReview"://报价评审
+				      ids="9b283e34-b426-4506-b917-7a23e95a7385";
+					  break;
+				  case "PS_Prequalification"://资格预审
+				      ids="cd02572e-3175-480c-96c6-f21052e4ff29";
+					  break;
+				  case "PS_BidTask"://投标任务书
+				      ids="bebc7969-bb42-47f3-8fbc-fb7d91b606fb";
+					  break;
+				  case "PS_BidTrack"://投标跟踪
+				      ids="9ea575df-87e7-47b5-9a1f-b091e09785f7";
+					  break;
+				  case "PS_ContractReview"://合同评审
+				      ids="696ec71e-d26a-46d4-9ed2-6d6de2c4f9ff";
+					  break;
+				}
+
+		    return ids;
+		 }
+		 function PS_RiskReviewAdds(){
+		   var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfoId:rows.Id};
+		 FormFuns.OnAddForm("524ec553-6cb7-42a9-8fdb-d7ba920e886c",data,{id:"PS_RiskReview.Adds"})
+		 }
+		 function PS_isBidReviewAdds(){
+		  var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfo_Guid:rows.Id,ClientName:rows.ClientName};
+		 FormFuns.OnAddForm("9b283e34-b426-4506-b917-7a23e95a7385",data,{id:"PS_isBidReview.Adds"})
+		 }
+		 function PS_PrequalificationAdds(){
+		 var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfo_Guid:rows.Id,Client_Guid:rows.Client_Guid,ClientName:rows.ClientName};
+		 FormFuns.OnAddForm("cd02572e-3175-480c-96c6-f21052e4ff29",data,{id:"PS_Prequalification.Adds"})
+		 }
+		 function PS_BidTaskAdds(){
+		 var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfo_Guid:rows.Id,Client_Guid:rows.Client_Guid,ClientName:rows.ClientName};
+		 FormFuns.OnAddForm("bebc7969-bb42-47f3-8fbc-fb7d91b606fb",data,{id:"PS_BidTask.Adds"})
+		 }
+		 function PS_BidTrackAdds(){
+		  var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfo_Guid:rows.Id,Client_Guid:rows.Client_Guid,ClientName:rows.ClientName};
+		 FormFuns.OnAddForm("9ea575df-87e7-47b5-9a1f-b091e09785f7",data,{id:"PS_BidTrack.Adds"})
+		 }
+		 function PS_ContractReviewAdds(){
+		 var rows =mini.get("V_PS_ProjectInfo").getSelected();
+		   if (typeof(rows)=="undefined"){
+		   Power.ui.alert("请先选择一条项目!"); return false;
+		 }
+		 var data={ProjectName:rows.ProjectName,ProjectInfo_Guid:rows.Id,Client_Guid:rows.Client_Guid,ClientName:rows.ClientName};
+		 FormFuns.OnAddForm("696ec71e-d26a-46d4-9ed2-6d6de2c4f9ff",data,{id:"PS_ContractReview.Adds"})
+		 }
+        </script>
+</body>
+</html>
+

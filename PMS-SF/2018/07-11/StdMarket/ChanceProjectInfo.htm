@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目机会
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                    <!--    <a class="mini-button blue" id="btnActive" onclick ="WorkFlowUtils.ActiveWorkFlow(this)" style="display:none"><i class="fa fa-save"></i>送审</a>-->
+                        <a class="mini-button blue" id="PS_ProjectInfo.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_ProjectInfo.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                   <!--     <a class ="btn-group" id="btnPrint"></a>-->
+                        <a class="mini-button blue" id="PS_ProjectInfo.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_ProjectInfo" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectId" name="ProjectId" class="mini-textbox" required="true" requiredErrorText="项目编号不能为空!" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_ProjectInfo.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectInfo.ProjectName" name="ProjectName" class="mini-textbox" required="true" requiredErrorText="项目名称不能为空!" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            项目简称
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectShortName" name="ProjectShortName" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            信息来源
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.InfoSources" name="InfoSources" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectType" name="ProjectType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            项目规模
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectSize" name="ProjectSize" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目地点
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectLocation" name="ProjectLocation" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            项目区域
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectArea" name="ProjectArea" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            产品类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProductType" name="ProductType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            投资规模
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.ProjectInvestAmount" name="ProjectInvestAmount" class="mini-spinner" allowlimitvalue="false" changeonmousewhee="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="ContractReview.ClientName">客户名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectInfo.ClientName" name="ClientName" textname="ClientName" class="mini-buttonedit"
+                                                   emptytext="请选择客户..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            跟进人名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.FollowHuman" name="FollowHuman" textname="FollowHuman" class="mini-buttonedit"
+                                                   emptytext="请选择跟进人..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            跟进部门
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo.FollowDept" name="FollowDept" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+      
+    </script>
+</body>
+</html>
+

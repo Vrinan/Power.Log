@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+	
+	<script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+	<script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+	<script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+	<script type="text/javascript" hasvelocity="true">
+		var KeyValue = "$Model.data.KeyValue";
+		var FormId = "$Model.data.FormId";
+		var FormState = "$Model.data.FormState";
+		var FormParams = $Model.data.FormParams;
+
+		var DeptName = "$!CurrentSession.DeptName";
+		var ProjectID="$!CurrentSession.EpsProjId";
+		var ProjectName = "$!CurrentSession.EpsProjName";
+		var HumanId = "$!CurrentSession.HumanId";
+		var HumanName = "$!CurrentSession.HumanName";
+
+		var NowDate=getdate();	//ComTools 获取当前日期 2013-01-02
+		var now = new Date();
+		var NYear = now.getFullYear();
+		var NMonth = now.getMonth()+1;
+	</script>
+</head>
+<body>
+	<div class="row" style="height: 100%">
+		<div class="portlet box blue" style="height: 100%">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-cogs"></i><span>供应商评审</span>
+					<a class='mini-button blue' id='EditAllBtn' onclick='EditAll()'><i class='fa fa-pencil'></i>编辑</a>				
+				</div>
+				<div class="actions">
+	$!WorkFlowButtons
+					<a class="mini-button blue" id="XLX_PUR_SupplieHeGe.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+					<a class="mini-button blue" id="XLX_PUR_SupplieHeGe.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+					<div id="btnPrint" class="btn-group"></div>
+					<a class="mini-button blue" id="XLX_PUR_SupplieHeGe.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+				</div>
+			</div>
+			<div class="mini-fit">
+				<div class="portlet-body" style="height: 100%;">
+					<div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+						<div title="通常" iconcls="fa fa-h-square">
+							<div id="XLX_PUR_SupplieHeGe" class="form">
+								<table class="table table-bordered">
+									<tr>
+                                        <td>标题</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Title" name="Title" class="mini-textbox" required="true" /></td>
+                                        <td>状态</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Status" name="Status" class="mini-combobox" readonly="readonly" /></td>
+                                    </tr>
+									<tr>
+										
+										<td>一次性供应商</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.YCX" name="YCX" class="mini-combobox" /></td>
+										<td>是否准入</td><td><input id="XLX_PUR_SupplieHeGe.QuaStatus" name="QuaStatus" class="mini-combobox" required="true" /></td>
+									</tr>
+									<tr>
+										<td>供应商名称</td><td><input id="XLX_PUR_SupplieHeGe.Name" name="Name" class="mini-textbox" required="true"/></td>
+                                        <td>供应商简称</td><td><input id="XLX_PUR_SupplieHeGe.ShortName" name="ShortName" class="mini-textbox" required="true" requirederrortext="供应商简称不能为空"/></td>
+									</tr>
+									<!-- <tr>
+										<td>英文名称</td><td><input id="EName" name="EName" class="mini-textbox" /></td>
+										<td>供应商编码</td><td><input id="Code" name="Code" class="mini-textbox" /></td>
+									</tr> -->
+									<tr>
+										<td>供应商类型</td><td><input id="XLX_PUR_SupplieHeGe.TypeName" name="TypeName" class="mini-combobox" required="true" /></td>
+										<td>准入物资分类</td><td><input id="XLX_PUR_SupplieHeGe.ClassName" name="ClassName" class="mini-combobox" /></td>
+									</tr>
+                                    <tr>
+                                        <td>所属城市</td>
+                                        <td>
+                                            <!--<input id="XLX_PUR_SupplieHeGe.CompanyAdress" name="CompanyAdress" class="mini-combobox" />-->
+                                            <input id="XLX_PUR_SupplieHeGe.CompanyAddressName" name="CompanyAddressName" textname="CompanyAddressName" class="mini-buttonedit"
+                                                   emptytext="请选择地区..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" requirederrortext="所属地区不能为空" allowinput="false"/>
+
+                                        </td>
+                                        <td>供应商等级</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.SupplieLevel" name="SupplieLevel" class="mini-combobox" /></td>
+                                        <!--<td>法人</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Legalperson" name="Legalperson" class="mini-textbox" /></td>-->
+                                    </tr> 
+
+                                    <!-- <tr>                                      
+                                        <td>报关号</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Baoguanhao" name="Baoguanhao" class="mini-textbox" /></td>
+                                        <td>身份证号</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.IDnumber" name="IDnumber" class="mini-textbox" /></td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>社会统一征信代码</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.TaxpayerNumber" name="TaxpayerNumber" class="mini-textbox" required="true" /></td>
+										<td>联系地址</td><td><input id="XLX_PUR_SupplieHeGe.Address" name="Address" class="mini-textbox" required="true"/></td>
+										<!-- <td>客户领域1</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Customer1" name="Customer1" class="mini-textbox" /></td> -->
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>客户领域2</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Customer2" name="Customer2" class="mini-textbox" /></td>
+                                        <td>客户领域3</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Customer3" name="Customer3" class="mini-textbox" /></td>
+                                    </tr> -->
+									<!-- <tr>
+										
+										<td>邮政编码</td><td><input id="PostCode" name="PostCode" class="mini-textbox" /></td>
+									</tr> -->
+									<tr>
+										<td>联系人</td><td><input id="XLX_PUR_SupplieHeGe.Linkman" name="Linkman" class="mini-textbox" required="true" /></td>
+										<td>电话</td><td><input id="XLX_PUR_SupplieHeGe.Phone" name="Phone" class="mini-textbox" required="true" /></td>
+									</tr>
+                                    <!-- <tr>
+                                        <td>手机</td>
+                                        <td><input id="Mobilephone" name="Mobilephone" class="mini-textbox" /></td>
+                                        <td>销售渠道</td>
+                                        <td><input id="Channel" name="Channel" class="mini-textbox" /></td>
+                                    </tr> -->
+									<!-- <tr>
+										<td>传真</td><td><input id="Fax" name="Fax" class="mini-textbox" /></td>
+										<td>网址</td><td><input id="URL" name="URL" class="mini-textbox" /></td>
+									</tr> -->
+									<tr>
+										<td>开户银行</td>
+										<td><input id="XLX_PUR_SupplieHeGe.BankName" name="BankName" textname="BankName" class="mini-buttonedit"
+                                                   emptytext="请选择开户行..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" requirederrortext="开户银行不能为空"/></td>
+										<td>银行账户</td>
+										<td><input id="XLX_PUR_SupplieHeGe.BankAccount" name="BankAccount" class="mini-textbox" required="true"/></td>
+									</tr>
+                                    <tr>
+                                        <td>开户银行类别</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.BankType" name="BankType" class="mini-textbox" readonly="readonly"/></td> 
+										<td>EMail地址</td><td><input id="XLX_PUR_SupplieHeGe.Email" name="Email" class="mini-textbox" /></td>
+										<!-- <td>供应商等级</td><td><input id="XLX_PUR_SupplieHeGe.SupplieLevel" name="SupplieLevel" class="mini-combobox" /></td>-->   
+                                    </tr>
+									<!-- <tr>
+										<td>币种</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.Currency" name="Currency" class="mini-combobox" /></td>
+                                        <td>开户日期</td>
+                                        <td><input id="XLX_PUR_SupplieHeGe.BankDate" name="BankDate" class="mini-datepicker" /></td>
+									</tr>
+									<tr>
+										<td>结算方式</td><td><input id="ClearingForm" name="ClearingForm" class="mini-textbox" /></td>
+										<td>运输方式</td><td><input id="XLX_PUR_SupplieHeGe.Transport" name="Transport" class="mini-combobox" /></td>
+									</tr>-->
+									<tr>
+										<td>采购部门</td><td><input id="XLX_PUR_SupplieHeGe.BuyDept" name="BuyDept" class="mini-textbox" /></td>
+										<td>采购员</td><td><input id="XLX_PUR_SupplieHeGe.BuyStaff" name="BuyStaff" class="mini-textbox" /></td>
+									</tr>
+
+									<tr>
+                                        <td>询价人员</td>
+                                        <td>
+                                            <input id="XLX_PUR_SupplieHeGe.InquiryHumanName" name="InquiryHumanName" textname="InquiryHumanName" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="false"  allowinput="false"/>
+                                        </td>
+                                    </tr>
+									<!-- <tr>
+										<td>工程专业</td><td><input id="XLX_PUR_SupplieHeGe.ProjectCategory" name="ProjectCategory" class="mini-combobox" /></td>
+										<td>供应商等级</td><td><input id="XLX_PUR_SupplieHeGe.SupplieLevel" name="SupplieLevel" class="mini-combobox" /></td>
+									</tr>  -->
+									
+									<tr>
+										<td>代理授权书产品</td><td><input id="XLX_PUR_SupplieHeGe.ProxyLicense" name="ProxyLicense" class="mini-textbox" /></td>
+										<td>代理证书有效期</td><td><input id="XLX_PUR_SupplieHeGe.ProxyLiceseIndate" name="ProxyLiceseIndate" class="mini-textbox" /></td>
+									</tr>
+									<tr>
+										<td>营业执照有效期</td><td><input id="XLX_PUR_SupplieHeGe.BusinessLicense" name="BusinessLicense" class="mini-textbox" required="true"/></td>
+										<td>注册资金</td><td><input id="XLX_PUR_SupplieHeGe.RegisteredCapital" name="RegisteredCapital" class="mini-spinner" required="true" allowlimitvalue="true" minvalue="0" maxvalue="999999999999" changeonmousewhere="false" format="n2"/></td>
+										<!-- 注册资金由原来的最大999999999改为999999999999 -->
+									</tr>
+									<tr>
+										<td>是否现场考察</td><td><input id="XLX_PUR_SupplieHeGe.IsInspect" name="IsInspect" class="mini-combobox" /></td>
+										<td>考察人员名单</td><td><input id="XLX_PUR_SupplieHeGe.InspectHumList" name="InspectHumList" class="mini-textbox" /></td>
+									</tr>
+									<tr>
+										<td>准入时间</td><td><input id="XLX_PUR_SupplieHeGe.AccessTime" allowInput="false" name="AccessTime" class="mini-datepicker" /></td>
+										<td>准入供应物质范围</td><td><input id="XLX_PUR_SupplieHeGe.AccessRestriction" name="AccessRestriction" class="mini-textbox" required="true"/></td>
+									</tr>
+									<tr>
+										<td>是否合作厂商</td>
+										<td colspan="3" > 
+											<div id="XLX_PUR_SupplieHeGe.IsZSH" name="IsZSH" class="mini-checkbox" readOnly="false" text="中石化" width="20%"  truevalue="是" falsevalue="否"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsZSY" name="IsZSY" class="mini-checkbox" readOnly="false" text="中石油" width="20%"  truevalue="是" falsevalue="否"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsZHY" name="IsZHY" class="mini-checkbox" readOnly="false" text="中海油" width="20%"  truevalue="是" falsevalue="否"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsZH" name="IsZH" class="mini-checkbox" readOnly="false" text="中化" width="20%"  truevalue="是" falsevalue="否"></div>
+										</td>
+									</tr>
+									<tr>
+										<td>集团共用状况</td>
+										<td colspan="3">
+											<div id="XLX_PUR_SupplieHeGe.IsJJ" name="IsJJ" class="mini-checkbox" readOnly="false" text="锦江" width="20%"  truevalue="V" falsevalue="x"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsJF" name="IsJF" class="mini-checkbox" readOnly="false" text="景丰" width="20%"  truevalue="V" falsevalue="x"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsCZZ" name="IsCZZ" class="mini-checkbox" readOnly="false" text="创造者" width="20%"  truevalue="V" falsevalue="x"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsZJ" name="IsZJ" class="mini-checkbox" readOnly="false" text="中锦" width="20%"  truevalue="V" falsevalue="x"></div>
+											<div id="XLX_PUR_SupplieHeGe.IsYRKJ" name="IsYRKJ" class="mini-checkbox" readOnly="false" text="永荣科技"  width="20%"  truevalue="V" falsevalue="x"></div>	 
+										</td>
+									</tr>
+
+									<tr>
+										<td>备注说明</td><td colspan="3"><input id="XLX_PUR_SupplieHeGe.Remark" name="Remark" class="mini-textarea" height="40px" /></td>
+									</tr>
+									<tr>
+										<td><label>录入人</label></td>
+										<td><input id="XLX_PUR_SupplieHeGe.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+										<td><label>录入日期</label></td>
+										<td><input id="XLX_PUR_SupplieHeGe.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" /></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div title="联系人名单">
+							<div class="mini-toolbar">
+								<a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_SupplieHeGe_Linkman.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+								<a class="mini-button blue" iconcls="fa-trash-o" id="XLX_PUR_SupplieHeGe_Linkman.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+								<div id="XLX_PUR_SupplieHeGe_Linkman-Print" class="btn-group"></div>
+								<div id="XLX_PUR_SupplieHeGe_Linkman-Export" class="btn-group"></div>
+							</div>
+							<div class="mini-fit">
+								<div id="XLX_PUR_SupplieHeGe_Linkman" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" 
+								showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true" 
+								editNextOnEnterKey="true" data-options="{canImport:true}">
+								<!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+								显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+									<div property="columns">
+										<div type="checkcolumn"></div><!--多选框-->
+										<div type="indexcolumn" width="35"></div><!--序号-->
+										<div field="Name" width="100" allowSort="true" vtype="required">联系人姓名<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+										<div field="ZW" width="120" allowSort="true">职务<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+										<div field="Phone" width="120" allowSort="true">电话<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+										<div field="Fax" width="120" allowSort="true">传真<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+										<div field="Email" width="120" allowSort="true">邮箱<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+										<div field="Remark" width="200" allowSort="true">备注<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="attachfile" name="attachfile" title="附件" url=""></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var Pms_Sex = [{ id: '男', text: '男' }, { id: '女', text: '女'}];
+		var PowerForm = new WebForm();
+		$(function () {
+			PowerForm.Init();
+			//冻结列
+			//var grid = mini.get("XLX_PUR_Supplie_Linkman");
+			//grid.frozenColumns(0, 2);
+		});
+		// $("#EditAllBtn").hide();
+		mini.parse();
+
+		PowerForm.EventAfterFormLoad = function () {
+			if (FormState == "add") 	//新增时设置默认值
+			{
+				mini.get("Title").setValue(NowDate+"_供应商评审");
+				mini.get("XLX_PUR_SupplieHeGe.QuaStatus").disable();
+				//mini.get("XLX_PUR_Supplie.DeptName").getValue(DeptName);
+				//mini.get("XLX_PUR_Supplie.DeptName").setValue(DeptName);
+				//mini.get("XLX_PUR_Supplie.Date").setValue(NDate);
+				//mini.get("XLX_PUR_Supplie.Year").setValue(NYear);
+				//mini.get("XLX_PUR_Supplie.Month").setValue(NMonth);
+			}
+			if(FormState == "edit")
+			{
+			//	FormFuns.SetFormEnabled("DJ_HR_Salary_YNS_Main",false);
+			//	FormFuns.SetFormEnabled("DJ_HR_Salary_YNS_List",false);
+				mini.get("XLX_PUR_SupplieHeGe.QuaStatus").enable();
+			//	mini.get("DJ_HR_Salary_YNS_Main.Refresh").disable();
+			//	mini.get("DJ_HR_Salary_YNS_List.Add").disable();
+			//	mini.get("DJ_HR_Salary_YNS_List.Delete").disable();
+			}
+		};
+		
+		//控制表单中向导的尺寸
+		//PowerForm.EventWizardWhere = function (e) {
+			//alert(e.id);
+			//通过判断向导ID,分别控制向导的尺寸
+			//if(e.id=='DJ_VM_HZ_Plan_List.Add')
+			//{
+				//e.iwidth=1000;
+				//e.iheight=800;
+			//}
+		//}
+
+		//发起流程前检查数据正确性
+		function PMS_WorkFlow(e) {
+			var ID = formconfig.KeyValue;
+			if (ID != '') {
+				var par = {"ID": ID};
+				FormFuns.APIExec("DJ_HR_Salary_KQ_Day_Main","BO","Proc_DJ_HR_Salary_KQ_Day_Main_ResetList", par, function(text){
+						if (mini.decode(text).data.value == "") {
+							WorkFlowUtils.ActiveWorkFlow(e);
+						}
+						else {
+							//Power.ui.info(mini.decode(text).data.value);
+							Power.ui.alert(mini.decode(text).data.value);
+							//Power.ui.warning("内容");    //黄色小方块,自动消失.
+							//Power.ui.error("sfsdf");    //bug提示.
+							//Power.ui.info( '您点击了"确定"' ); 
+						}
+				});
+			}
+			else {
+				Power.ui.error("错误!");
+			}
+		}
+		
+		//执行后台代码
+		function PMS_ResetHumList(e)
+		{
+			var ID = formconfig.KeyValue;
+			if (ID!='')
+			{		  
+				var par = {"ID": ID};
+				FormFuns.APIExec("DJ_HR_Salary_KQ_Day_Main","BO","Proc_DJ_HR_Salary_KQ_Day_Main_ResetList", par, function(text){
+					Power.ui.alert(mini.decode(text).data.value);
+					mini.get("DJ_HR_Salary_KQ_Day_Main.Refresh").doClick();
+				});
+			}
+			else
+			{
+				Power.ui.error("错误!");
+			}	
+		}
+		//绘制汇总单元格事件
+		function onDrawSummaryCell(e) 
+		{
+			if (e.field == undefined && e.column.type == "indexcolumn"){
+				e.cellHtml = "总计："
+			}
+		}
+		
+		//送审前判断子表是否有数据
+		PowerForm.EventBeforeOnBtnFlow = function (e) 
+		{
+			e.isValid = true;
+			var grid = mini.get("DJ_HR_Labor_Phone_List");
+			if (grid) {
+				if (grid.data.length == 0 || grid.data.length == undefined) {
+					Power.ui.alert("人员名单无内容,请填报后再审批!");
+					e.isValid = false;
+				}
+				else {
+					//for (var i = 0; i < grid.data.length; i++) {
+					//    if (grid.data[i].jhsl == 0 || grid.data[i].jhsl == null) {
+					//        Power.ui.alert("请输入计划数量");
+					//        e.isValid = false;
+					//        break;
+					//    }
+					//}
+				}
+			}
+		}
+	</script>
+</body>
+</html>

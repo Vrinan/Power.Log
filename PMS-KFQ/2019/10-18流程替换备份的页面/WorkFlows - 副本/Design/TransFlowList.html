@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/TreeManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+</head>
+
+<body>
+    
+        
+        <div class="col-md-12" style="height: 100%;">
+            <div class="portlet box blue" style="height: 100%;">
+                <div class="portlet-title">
+                    <div class="captiontools">
+                        <a class="mini-button blue" iconcls="fa-plus" onclick="onAttachTrans">批量转换</a>  
+                        <a class="mini-button blue" iconcls="fa-pencil" onclick="onLoad">检索</a>&nbsp;&nbsp;&nbsp;
+                        <a class="mini-checkbox" iconcls="fa-refresh" id="chkOnlyTrans" checked="true">只显示未迁移</a> 
+                        <span></span>
+                         <a class="mini-button blue" iconcls="fa-plus" id="btnTransPastUsers" onclick="onTransPastUsers">更新PW_PastUsers表</a> 
+                         <a class="mini-button blue" iconcls="fa-plus" id="btnTransPastsUsers" onclick="onTransPastsUsers" >更新PWF_PastUsers表</a> 
+                        <span></span> 
+                     <a class="mini-button blue" iconcls="fa-plus" id="btnCheckOldFlow" onclick="onCheckOldFlow" >验证旧版图</a>  
+                      <a class="mini-button blue" iconcls="fa-plus" id="btnCheckNodeTypeAndBookMark" onclick="onCheckNodeTypeAndBookMark" >补全nodetype/bookmark系列字段</a>  
+                   
+                    </div>
+                </div>
+                <div class="mini-fit" style="background: #FFF;">
+                    <div class="portlet-body" style="height:100%">
+                        <div id="gdTransWorkFlow" style="width: 100%; height: 100%;" class="mini-datagrid" sortMode="client" multiSelect="true"  >
+                            <div property="columns">
+                                <div type="checkcolumn" ></div>   
+                                <div field="KeyWord" width="80" headeralign="center" allowSort="true" >关键词</div>
+                                <div field="Description" width="100" headeralign="center" allowSort="true" >说明</div> 
+                                <div field="Htmls" width="100" headeralign="center" allowSort="true" >表单文件</div> 
+                                <div field="OldFlowInfo" width="140" headeralign="center">旧版流程信息</div> 
+                                <div field="OldWorkInfo" width="140" headeralign="center">旧版业务信息</div> 
+                                <div field="NewFlowInfo" width="140" headeralign="center">新版流程信息</div> 
+                                <div field="NewWorkInfo" width="140" headeralign="center">新版业务信息</div> 
+                                <div field="Status" width="25" headeralign="center">状态</div> 
+                                <div  headeralign="center" renderer="onShowRenderer">操作</div> 
+                            </div>
+                        </div>
+                    </div>
+                    <!--portlet-body-->
+                </div>
+            </div>
+        </div>
+    
+    <script type="text/javascript">
+        mini.parse();
+          
+        var gdTransWorkFlow = mini.get("gdTransWorkFlow");
+
+        function onAttachTrans() {
+            var rows = gdTransWorkFlow.getSelecteds();
+            if (rows.length == 0) {
+                alert("一个勾都没打");
+                return;
+            }
+            if (rows.length >5) {
+                alert("一次最多5个勾");
+                return;
+            }
+
+            var keyWords = "";
+            for (var irow = 0; irow < rows.length; irow++) {
+                if (rows[irow].Status != "false") continue;
+                keyWords += rows[irow].KeyWord + ",";
+            }
+            onTransKeyWords(keyWords);
+        }
+        function onTransKeyWords(keyWords) {
+            var row = gdTransWorkFlow.getSelected();
+            if (!row) return;
+
+            var keyWord = row.KeyWord;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "TransWorkFlows";
+            msg.data.KeyWords = keyWords;
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    var tmp = tmpData.data.Result;
+                    alert("成功");
+                    onLoad();
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+        function onTrans() {
+            var row = gdTransWorkFlow.getSelected();
+            if (!row) return;
+
+            var keyWord = row.KeyWord;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "TransWorkFlow";
+            msg.data.KeyWord = keyWord;
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    var tmp = tmpData.data.Result;
+                    alert("转换成功，旧版流程都已被设为禁用，请确保表单html 文件已改为新版格式");
+                    onRefresh();
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+       
+        
+        function onRefresh() {
+            var row = gdTransWorkFlow.getSelected();
+            if (!row) return;
+
+            var keyWord = row.KeyWord;
+            
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "ReadKeyWord";
+            msg.data.KeyWord = keyWord;
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    var tmp = tmpData.data.Result;
+                    gdTransWorkFlow.updateRow(row, { "OldFlowInfo": tmp.OldFlowInfo, "OldWorkInfo": tmp.OldWorkInfo, "NewFlowInfo": tmp.NewFlowInfo, "NewWorkInfo": tmp.NewWorkInfo,"Status":tmp.Status });
+
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+
+        function onShowRenderer(e) {
+            var row = e.record;
+            var s = '<a class="New_Button" href="javascript:onRefresh()">刷新</a>&nbsp;&nbsp;';
+             
+            if (row.Status == "false" || row.Status == "False") 
+                s += '<a class="New_Button" href="javascript:onTrans()">迁移</a>';
+            return s;
+        }
+
+        var onTransPastUsers = function (e) {
+
+            if (confirm("此项操作会扫描所有的流程业务数据，请喝杯茶，耐心等候....您是否要继续？") == false) return;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "TransPastUsers";
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert("生成完毕");
+
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            }); 
+        }
+        var onTransPastsUsers = function (e) {
+
+            if (confirm("此项操作会扫描所有的流程业务数据，请喝杯茶，耐心等候....您是否要继续？") == false) return;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "TransPastsUsers";
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert("生成完毕");
+
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+        var onLoad = function () {
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "LoadKeyWordList";
+            msg.data.OnlyTrans = mini.get("chkOnlyTrans").getValue();
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    gdTransWorkFlow.setData(tmpData.data.List);
+
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+
+        var onResetJsonFormat = function () {
+
+            alert("此按钮针对 2016.8月之前绘制的流程图json ，因后台类格式调整，如果引发了无法打开流程图的错误，点击此按钮即可根治所有的图。此功能针对历史数据调整，执行一次足矣 ");
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "ResetJsonFormat";
+          
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert("格式调整完毕");
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+
+        var onCheckOldFlow = function () {
+
+            alert("此功能负责验证旧版流程pw_workflowList.jsonInfo/xmlInfo 字段，是否有配置不合理之处，如果有，输出结果请参看LOG最新文件");
+
+
+             var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "CheckOldFlow";
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert(tmpData.data.Result);
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+
+        var onResetPastNodeCode = function () {
+
+            alert("此功能负责修正因为旧版流程实例，存在动态添加的节点，新版不支持此功能，对应记录修正为【委派操作】");
+
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "ResetPastNodeCode";
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert(tmpData.data.Result);
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+
+        var onCheckNodeTypeAndBookMark = function () {
+
+            alert("此功能负责补全历史的新旧版 inbox/pastnode 的  NodeType,BookMarkCode,BookMarkName 字段，这些字段只对统计报表有意义...请喝一杯茶，或抽一根烟");
+
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Tools.TransWorkFlow";
+            msg.data = {};
+            msg.data.FlowOperate = "CheckNodeTypeAndBookMark";
+
+            mini.mask({
+                el: document.body,
+                cls: 'mini-mask-loading',
+
+                html: '加载中...'
+            });
+            $.ajax({
+                type: "POST",
+                url: "/API/APIMessage",
+                data: { json: mini.encode(msg) },
+                dataType: "json",
+                success: function (data) {
+                    mini.unmask(document.body);
+                    var tmpData = mini.decode(data);
+                    if (tmpData.success == false) {
+                        alert(tmpData.message);
+                        return;
+                    }
+                    alert(tmpData.data.Result);
+                },
+                error: function (e, r, h) {
+                    alert(e.responseText, "错误！", "info");
+                }
+            });
+        }
+        $(function () {
+            
+            onLoad();
+        });
+      
+    </script>
+
+</body>
+</html>

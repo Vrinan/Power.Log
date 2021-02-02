@@ -1,0 +1,223 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="js/TouchSlide.1.1.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script src="/Apps/Common.js"></script>
+
+    <link href="style/style.css" rel="stylesheet" type="text/css" />
+    <link href="style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            background-color: #ebebeb;
+        }
+        .sendlist-title {
+            line-height: 40px;
+            font-size: 1.6rem;
+            background-color: #fff;
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            color: #666;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sendlist-content {
+            margin-top: 5px;
+        }
+
+        .sendlist {
+            border: 1px solid #ddd;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+            .sendlist h3 {
+                margin: 0px 10px;
+                line-height: 40px;
+                font-size: 1.6rem;
+            }
+
+            .sendlist p {
+                margin: 0px 10px;
+                line-height: 30px;
+            }
+
+            .sendlist .date {
+                font-size: 1.2rem;
+                color: #aaa;
+            }
+
+            .sendlist .time {
+                font-size: 1.4rem;
+            }
+
+            .sendlist .read {
+                font-size: 1.4rem;
+                line-height: 35px;
+                margin-top: 10px;
+                border-top: 1px solid #dedede;
+                font-weight: bold;
+            }
+
+                .sendlist .read span {
+                    float: right;
+                }
+    </style>
+
+</head>
+<body> 
+    <div class="sendlist-content" id="content">
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    var DataP = {};
+    var url = "";// MyWorkInfos、MyNotifyInfos
+    var types = "";//infos,actived,join
+    $(function () {
+        url = getParameter("wfnotify");
+        types = getParameter("types");
+        if (url == "" || types == "") {
+            alert("没有传入必要数据");
+            return;
+        }
+        url = url == "MyWorkInfos" ? "/WorkFlow/MyWorkInfos" : "/Message/MyNotifyInfos";
+        //获取审批情况
+
+        //获取我的文档
+        //LoadData({ size: "10", index: "0" });
+        ReLoad();
+    })
+    function ReLoad() {
+        LoadData({ size: "10", index: "0" });
+    }
+    function LoadData(dataparams) {
+        dataparams.size = "10";
+        dataparams.index = "0";
+        DataP = dataparams;
+        PowerM3AppCallBack.loadpage = doLoadData;
+
+        doLoadData(dataparams);
+    }
+    function doLoadData(dataparams) {
+        dataparams = dataparams || DataP;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: { types: types, index: dataparams.index, size: dataparams.size, swhere: "" },
+            cacha: false,
+            success: function (text) {
+                var o = jQuery.parseJSON(text);
+                BuildHTML(o.data[types]);
+            }
+        });
+    }
+    function OpenMessage(id) {
+        var url = url = "/Message/Show/" + id;
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"true","showTabbar":"false","title":"","selfreload":"true"}', url);
+        //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+        //    window.m3app.AppCall('appOpenNewWebView', '{"url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":""}', function XXX(outparam) {
+
+        //    });
+        //}
+        //else {
+        //    window.open(url, "_self")
+        //}
+    }
+    function OpenForm(HtmlPath, KeyValue) {
+        var url = "/Form/ValidForm/" + HtmlPath + "/edit/" + KeyValue + "/";
+        //打开表单前先判断有没有pho和配置文件，如果啥都没有的话 ，就用和微信一样的路径
+        $.ajax({
+            url: "/APPAccount/IsOpenWeixin",
+            data: { FormId: HtmlPath },
+            type: "POST",
+            cache: false,
+            success: function (text) {
+                var tmp = JSON.parse(text);
+                if (tmp.success && tmp.data.wx == true)
+                    url = "/Form/ValidForm/650540a6-af98-4669-b1c3-925691912d79/view/" + KeyValue + "/" + Base64.encode(HtmlPath) + "?FormId=" + HtmlPath + "&KeyValue=" + KeyValue;
+                CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"false","pullDown":"true","showTabbar":"false","title":"","selfreload":"true"}', url);
+            }
+        })
+       
+        //if (window.m3app != undefined && typeof (window.m3app.AppCall) == "function") {
+        //    window.m3app.AppCall('appOpenNewWebView', '{"url":"' + url + '","pullUp":"false","pullDown":"false","showTabbar":"false","title":""}', function XXX(outparam) {
+
+        //    });
+        //}
+        //else {
+        //    window.open(url, "_self")
+        //}
+    }
+    function BuildHTML(data) {
+        var html = "";
+        if (url == "/WorkFlow/MyWorkInfos") {
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+                var time = "";
+                if (typeof (row.wfDate.Format) == "function")
+                    time = row.wfDate.Format("yyyy-MM-dd");
+                else
+                    time = row.wfDate.toString().split('T')[0];
+                var name = "";
+                if (row.FromHumanName != undefined && row.FromHumanName != null)
+                    name = row.FromHumanName;
+                html += '<div class="sendlist" onclick="OpenForm(\'' + row.HtmlPath + '\',\'' + row.KeyValue + '\')">' +
+                '<h3>' + row.Title + '</h3>	' +
+                '<p class="date">' + name + '</p>' +
+                '<p class="time">到达日期：' + time + '</p>' +
+                '<p class="read" >阅读全文<span><i class="fa fa-angle-right"></i><span></p>' +
+                '</div> ';
+            }
+        }
+        else {
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+                var time = "";
+                if (typeof (row.wfDate.Format) == "function")
+                    time = row.wfDate.Format("yyyy-MM-dd");
+                else
+                    time = row.wfDate.toString().split('T')[0];
+                var name = "";
+                if (row.FromHumanName != undefined && row.FromHumanName != null)
+                    name = row.FromHumanName;
+                html += '<div class="sendlist" onclick="OpenMessage(\'' + row.Id + '\')">' +
+                '<h3>' + row.Title + '</h3>	' +
+                '<p class="date">' + name + '</p>' +
+                '<p class="time">到达日期：' + time + '</p>' +
+                '<p class="read" >阅读全文<span><i class="fa fa-angle-right"></i><span></p>' +
+                '</div> ';
+            }
+        }
+        $("#content").append(html);
+
+        if (data.length > 0)
+            DataP.index = parseInt(DataP.index) + 1;
+
+    }
+    var PowerM3AppCallBack = PowerM3AppCallBack || {};
+    PowerM3AppCallBack.pagepullup = function () {
+        //Power.ui.success("上拉触发成功");
+        //alert(typeof (loadpage));
+        PowerM3AppCallBack.loadpage(null, null);
+    }
+    PowerM3AppCallBack.loadpage = function () {
+    }
+</script>
+
+</html>

@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/Projects/apptest/js/TouchSlide.1.1.js"></script>
+    <script src="/Projects/apptest/js/jquery-1.8.3.min.js"></script>
+
+    <link href="/Projects/apptest/style/style.css" rel="stylesheet" type="text/css" />
+    <link href="/Projects/apptest/style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body {
+            background-color: #fff;
+        }
+
+        .listfile {
+            background-color: #fff;
+        }
+
+            .listfile .buttonlist {
+                width: 100%;
+                display: box;
+                height: 50px;
+                -webkit-box-orient: horizontal;
+                -moz-box-orient: horizontal;
+                box-orient: horizontal;
+                text-align: center;
+                background-color: #ffffff;
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                border-bottom: 1px solid #ddd;
+                z-index: 10;
+            }
+
+                .listfile .buttonlist .button {
+                    margin: 5px 0px;
+                    width: 20%;
+                    float: left;
+                    -webkit-box-flex: 1;
+                    -moz-box-flex: 1;
+                    box-flex: 1;
+                    border-right: 1px solid #ddd;
+                    display: box;
+                    box-sizing: border-box;
+                    font-size: 1.4rem;
+                    text-align: center;
+                    height: 40px;
+                    line-height: 40px;
+                    vertical-align: middle;
+                }
+
+                    .listfile .buttonlist .button a {
+                        color: #666;
+                    }
+
+                    .listfile .buttonlist .button span {
+                        margin-left: 3px;
+                    }
+
+        #tablist {
+            width: 100%;
+            height: 100%;
+            margin-top: 51px;
+        }
+
+        #ul1 {
+            height: 49px;
+            width: 100%;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            display: box;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            color: #333;
+        }
+
+            #ul1 li {
+                display: inline-block;
+                line-height: 20px;
+                text-align: center;
+                width: 20%;
+                float: left;
+                -webkit-box-flex: 1;
+                -moz-box-flex: 1;
+                box-flex: 1;
+                padding: 5px 0px;
+            }
+
+                #ul1 li i {
+                    font-size: 1.6rem;
+                }
+
+                #ul1 li.active {
+                    background-color: #4b8df8;
+                    color: #fff;
+                }
+
+        #tablist div {
+        }
+
+            #tablist div table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 55px;
+            }
+
+                #tablist div table td {
+                    border: 1px solid #ddd;
+                    line-height: 25px;
+                    font-size: 1rem;
+                    color: #000;
+                    padding-left: 5px;
+                }
+
+                    #tablist div table td input {
+                        width: 95%;
+                        height: 23px;
+                        margin: 5px 0px;
+                        border: 1px solid #ccc;
+                    }
+
+            #tablist div li {
+                height: 30px;
+                line-height: 30px;
+                text-indent: 8px;
+            }
+
+        .show {
+            display: block;
+            margin: 55px 5px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+        .listdiv {
+            position: fixed;
+            top: 0;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 1000;
+        }
+
+            .listdiv .navbg {
+                filter: alpha(opacity=30);
+                -moz-opacity: 0.5;
+                opacity: 0.5;
+                background-color: #000;
+                width: 100%;
+                height: 100%;
+            }
+
+            .listdiv .navlist {
+                height: 93px;
+                background-color: #fff;
+                width: 90px;
+                position: absolute;
+                top: 50px;
+                right: 5px;
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }
+
+                .listdiv .navlist ul li {
+                    line-height: 30px;
+                    border-bottom: 1px solid #ddd;
+                    text-align: center;
+                }
+
+                    .listdiv .navlist ul li:last-child {
+                        border-bottom: 0px;
+                    }
+
+                    .listdiv .navlist ul li span {
+                        margin-left: 5px;
+                    }
+
+        .triangle-up {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #fff;
+            position: absolute;
+            top: -10px;
+            left: 40%;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#nav").click(function () {
+                $("#listdiv").show();
+            });
+            $("#listdiv").click(function () {
+                $("#listdiv").hide();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // JS实现选项卡切换
+        window.onload = function () {
+            var oul = document.getElementById("ul1");
+            var oli = oul.getElementsByTagName("li");
+            var otab = document.getElementById("tablist");
+            var odiv = otab.getElementsByTagName("div");
+            for (var i = 0; i < oli.length; i++) {
+                oli[i].index = i;
+                oli[i].onclick = function () {
+                    for (var i = 0; i < oli.length; i++) {
+                        oli[i].className = "";
+                    }
+                    this.className = "active";
+                    for (var j = 0; j < odiv.length; j++) {
+                        odiv[j].className = "hide";
+                    }
+                    odiv[this.index].className = "show";
+                }
+            }
+
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="listfile">
+        <div class="buttonlist">
+            <div class="button"><a href="#"><i class="fa fa-save"></i><span>保存</span></a></div>
+            <div class="button"><a href="#"><i class="fa fa-cloud-upload"></i><span>上传</span></a></div>
+            <div class="button"><a href="#"><i class="fa fa-sliders"></i><span>排序</span></a></div>
+            <div class="button"><a href="#"><i class="fa fa-list"></i><span>列表</span></a></div>
+            <div class="button" style="border:0px;"><a href="#" id="nav"><i class="fa fa-github-square"></i><span>列表</span></a></div>
+        </div>
+        <div id="tablist">
+            <div id="PS_IncomeContract" class="show">
+                <table border="0" cellspacing="1">
+                    <tr>
+                        <td width="50%">合同编号</td>
+                        <td width="50%">
+                            <input id="PS_IncomeContract.ContractCode" name="ContractCode" class="mini-textbox" required="true" requirederrortext="合同编号不能为空" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">合同状态</td>
+                        <td width="50%">
+                            <input id="PS_IncomeContract.Status" name="Status" class="mini-combobox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">合同编号</td>
+                        <td width="50%">
+                            <input id="PS_IncomeContract.ContractName" name="ContractName" class="mini-textbox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">合同金额</td>
+                        <td width="50%">
+                            <input id="PS_IncomeContract.ContractAmount" name="ContractAmount" class="mini-spinner" llowlimitvalue="true" minvalue="0" maxvalue="999999999999999" changeonmousewhere="false" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hide">
+                <ul id="PS_IncomeContract_PayNodes"></ul>
+            </div>
+            <div class="hide">
+                <iframe id="file" src="" style="width:100%;height:100%;"></iframe>
+            </div>
+            <ul id="ul1">
+                <li class="active"><i class="fa fa-home"></i><br /><span>基本信息</span></li>
+                <li><i class="fa fa-cogs"></i><br /><span>收款节点</span></li>
+                <li><i class="fa fa-file"></i><br /><span id="filecount">附件(0)</span></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="listdiv" id="listdiv">
+        <div class="navbg"></div>
+        <div class="navlist">
+            <div class="triangle-up"></div>
+            <ul>
+                <li><a href="index.html"><i class="fa fa-star-o"></i><span>收藏列表</span></a></li>
+                <li><a href="#"><i class="fa fa-reply-all"></i><span>分享列表</span></a></li>
+                <li><a href="#"><i class="fa fa-arrows-h"></i><span>传输列表</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () { 
+            loadmain();
+
+        });
+        mini.parse();
+        function loadmain() {
+            var params = new Object();
+            params.KeyWord = KeyWord;
+            params.KeyWordType ="BO";
+            params.keyvalue = formconfig.KeyValue;
+            params.select = "";
+            params.formstate = formconfig.FormState;
+
+            jQuery.ajax({
+                url: "/Form/FormLoad",
+                data: params,
+                success: function (text) {
+
+                    var tmpdata = mini.decode(text);
+                    if (!tmpdata.success) {
+                       
+                        Power.ui.error(tmpdata.message, { detail: tmpdata.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                    else {
+                        var data = mini.decode(tmpdata.data.value);
+                        mini.get("PS_IncomeContract.Status").setData(mini.encode(comboboxdata["PS_IncomeContract.Status"].Data));
+                        mini.get("PS_IncomeContract.ContractCode").setValue(data.ContractCode);
+                        mini.get("PS_IncomeContract.Status").setValue(data.Status);
+                        mini.get("PS_IncomeContract.ContractName").setValue(data.ContractName);
+                        mini.get("PS_IncomeContract.ContractAmount").setValue(data.ContractAmount);
+                        loadlist();
+                        $("#file").attr("src", "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/FileOperate.htm&KeyWord=" + KeyWord + "&KeyValue=" + formconfig.KeyValue + "&canEdit=true");
+                        if (formconfig.KeyValue != "") {
+                            $.ajax({
+                                url: "/Form/GetFileCount",
+                                data: { KeyWord: KeyWord, KeyValue: formconfig.KeyValue },
+                                success: function (text) {
+                                    var t = mini.decode(text);
+                                    var c = t.data.value;
+                                    $("#filecount").html("附件(" + c + ")");
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+        } 
+        function loadlist() {
+            var one = {};
+            one.KeyWord = "PS_IncomeContract_PayNodes"; //数据集的名字
+            if (formconfig.KeyValue == "")
+                one.swhere = " 1=0 ";
+            else
+                one.swhere = "MasterId='" + KeyValue + "'";
+            one.size = "10";
+            FormFuns.GridPageLoad(one, function (o) {
+                var PS_IncomeContract_PayNodes = mini.decode(o.data.value);
+                var html = "";
+                for (var j = 0; j < PS_IncomeContract_PayNodes.length; j++) {
+                    var row = PS_IncomeContract_PayNodes[j];
+                    html += " <li>" + row["PayNodes"] +"</li>";
+                }
+                $("#PS_IncomeContract_PayNodes").html(html);
+
+            })
+        }
+    </script>
+</body>
+</html>

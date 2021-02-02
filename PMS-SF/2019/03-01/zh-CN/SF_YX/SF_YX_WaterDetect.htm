@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>水质指标
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_YX_Waterquality.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_Waterquality.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_YX_Waterquality.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_Waterquality" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_Waterquality.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_Waterquality.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_Waterquality.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_Waterquality.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            部门
+                                        </td>
+                                        <td>
+                                            <!--<input id="SF_YX_Waterquality.Department" name="Department" textname="Department" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />-->
+                                            <input id="SF_YX_Waterquality.Department" name="Department" class="mini-textbox" readonly />
+                                            <input id="SF_YX_Waterquality.DeptId" name="DeptId" class="mini-textbox" style="display:none;" />
+
+                                        </td>
+                                        <td>
+                                            填报日期
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_Waterquality.Date" name="Date" class="mini-datepicker" format="yyyy-MM-dd" valueType="string"  required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_Waterquality.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_Waterquality.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_Waterquality.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <label style="color:red;">&nbsp;&nbsp;填报说明：填报日期指填报哪天的数据，系统默认为前一天日期，若补录其他日期数据，请正确选择填报日期；</label>
+                                <label style="color:red;">&nbsp;&nbsp;相同站点相同填报日期只能录入一次,请正确选择填报日期；</label>
+                            </div>
+                        </div>
+                        <div title='数据明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_YX_Waterquality_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_YX_Waterquality_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <div id="SF_YX_Waterquality_dtl.importxls"></div>
+                                <a class="mini-button blue" iconcls="fa-apple" href="/Upload/水质指标.xlsx">导入模板下载</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_YX_Waterquality_dtl" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" pagesize="14" onload="OnLoad">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div header="调节池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div field="A1" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="A2" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="UASB池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="B1" headeralign="center">
+                                                            MLSS(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="B2" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="B3" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="B4" headeralign="center">
+                                                            MLSS(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="B5" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="B6" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="反硝化池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="C1" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="C2" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="C3" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="C4" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="硝化池出水" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="D1" headeralign="center">
+                                                            MLSS(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D2" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D3" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D4" headeralign="center">
+                                                            温度（℃）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="D5" headeralign="center">
+                                                            MLSS(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D6" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D7" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="D8" headeralign="center">
+                                                            温度（℃）
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="STRO" headeralign="center">
+                                            <div property="columns">
+                                                <div header="1#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="E1" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="E2" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div header="2#" headeralign="center">
+                                                    <div property="columns">
+                                                        <div field="E3" headeralign="center">
+                                                            COD(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                        <div field="E4" headeralign="center">
+                                                            氨氮(mg/L)
+                                                            <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div header="总排" headeralign="center">
+                                            <div property="columns">
+                                                <div field="F1" headeralign="center">
+                                                    COD(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="F2" headeralign="center">
+                                                    氨氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                                <div field="F3" headeralign="center">
+                                                    总氮(mg/L)
+                                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div title="附件" name="attachfile" url=""></div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            //var grid = mini.get("SF_YX_Waterquality_dtl");
+            //grid.load();
+            //FileUp("SF_YX_Waterquality_dtl", CreateGUID())//此处修改关键词
+
+        });
+        function OnLoad(e) {
+            var grid = mini.get("SF_YX_Waterquality_dtl");
+            grid.mergeColumns(["Name"]);
+        }
+        //function FileUp(keyword, keyvalue) {
+        //    mini.parse();
+        //    if (keyword == "")
+        //        keyword = "SF_YX_Waterquality_dtl";//此处修改关键词
+        //    if (keyvalue == undefined || keyvalue == "")
+        //        keyvalue = "00000000-0000-0000-0000-000000000000";
+        //    var grid = mini.get("SF_YX_Waterquality_dtl");//此处修改关键词
+        //    $("#btnUpload").html("");
+        //    $("#btnUpload").uploadify({
+        //        "height": 30,
+        //        width: "56",
+        //        fileSizeLimit: 0,
+        //        auto: true,
+        //        blocksize: 2048 * 500, //分块大小
+        //        "buttonText": "<i class=\"fa fa-retweet\"></i>导入水质检测数据",
+        //        "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+        //        "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+        //        formData: {
+        //            KeyWord: keyword,
+        //            KeyValue: keyvalue
+        //        },
+        //        onUploadStart: function () {
+        //            if (formconfig.FormState == "add") {
+        //                Power.ui.alert("请先保存主表");
+        //                return;//新增时，不能导入
+        //            }
+        //            grid.loading("上传中，请稍后.....");
+        //        },
+        //        onUploadComplete: function () {
+        //            grid.loading("导入中,请稍后.....");
+        //            var exec = {};  //对象
+        //            exec.KeyWord = "SF_YX_Waterquality";   //bo的KeyWord//此处修改关键词
+        //            exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+        //            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+        //            exec.MethodParams = {}; //方法参数
+        //            var params = exec.MethodParams;
+        //            params.KeyWord = keyword;
+        //            params.KeyValue = keyvalue;
+        //            params.Id = formconfig.KeyValue;
+        //            var txt = mini.encode(exec); //对象转换成字符串
+        //            $.ajax({
+        //                url: "/API/Exec",
+        //                type: "POST",
+        //                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+        //                cache: false,
+        //                success: function (text) {
+        //                    var tmp = mini.decode(text);
+        //                    if (!tmp.success)
+        //                        Power.ui.error(tmp.message);
+        //                    else if (tmp.data.value != "")
+        //                        Power.ui.alert(tmp.data.value);
+        //                    grid.reload();
+        //                }
+        //            });
+        //        },
+        //        onDialogClose: function () {
+        //        }
+        //    });
+        //    $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        //}
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (mini.get("SF_YX_Waterquality.Department").value == '') {
+                var DeptId = sessiondata.DeptId;
+                var Department = sessiondata.DeptName;
+                var myDate = new Date();
+                mini.get("SF_YX_Waterquality.Date").setValue(getBeforeDay(-1));
+                mini.get("SF_YX_Waterquality.DeptId").setValue(DeptId);
+                mini.get("SF_YX_Waterquality.Department").setValue(Department);
+                //这段干嘛的？？  
+                //借调部门
+                //$.ajax({
+                //   url:"/zyx/GetHumSecondDept" ,
+                //   type:"POST" ,
+                //   data:{HumId:sessiondata.DeptId},
+                //   cache:false,
+                //   success:function(text){
+                //       debugger;
+                //       result=mini.decode(text);
+                //       if(result.data.Message!="Not Find!"){
+                //            mini.get("SF_YX_Waterquality.Department").setValue(result.data.Message.split(",")[0]);
+                //            mini.get("SF_YX_Waterquality.DeptId").setValue(result.data.Message.split(",")[1]);
+                //       }
+                //   }
+                //});
+
+                //借调部门  
+                //****10-15前 借调部门代码被注释,导致部门没出来,现将注释去除,留上面做证据***//
+                $.ajax({
+                  url:"/zyx/GetHumSecondDept" ,
+                  type:"POST" ,
+                  data:{HumId:sessiondata.DeptId},
+                  cache:false,
+                  success:function(text){
+                      debugger;
+                      result=mini.decode(text);
+                      if(result.data.Message!="Not Find!"){
+                           mini.get("SF_YX_Waterquality.Department").setValue(result.data.Message.split(",")[0]);
+                           mini.get("SF_YX_Waterquality.DeptId").setValue(result.data.Message.split(",")[1]);
+                      }
+                  }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

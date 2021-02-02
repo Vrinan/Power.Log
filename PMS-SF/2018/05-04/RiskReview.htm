@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目风险评估
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="PS_RiskReview.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_RiskReview.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="PS_RiskReview.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_RiskReview" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.Code" name="Code" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            <label for="PS_RiskReview.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.Title" name="Title" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.ProjectName" name="ProjectName" textname="ProjectName" class="mini-buttonedit"
+                                                   emptytext="请项目机会..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.ProjectCode" name="ProjectCode" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            项目规模
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.Projectscale" name="Projectscale" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_RiskReview.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='评估详情'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_RiskReview_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_RiskReview_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_RiskReview_Dtl" class="mini-treegrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <!--     <div field="Sequ"  headeralign="center" >
+                                                 序号
+                                                 <input property="editor" class="mini-spinner" allowlimitvalue="true" minValue="0" changeonmousewhee="false" style="width: 100%;" />
+                                             </div>-->
+                                        <!--名称 Price-->
+                                        <div field="RiskClass" headeralign="center">
+                                            风险类别
+                                            <input property="editor" class="mini-textbox" readonly="readonly" style="width: 100%;" />
+                                        </div>
+                                        <!--    <div field="RiskClass" type="comboboxcolumn" headeralign="center" name="RiskReview_Dtl.RiskClass" width="100" allowsort="true">风险类别
+                                                <input property="editor" class="mini-combobox" style="width: 100%;" readonly="readonly"  /></div><!--所属角色-->
+                                        <!--其他信息-->-->
+                                        <div field="RiskName" headeralign="center">
+                                            风险名称
+                                            <input property="editor" id="RiskReview_Dtl.RiskName" class="mini-buttonedit" name="RiskName" textname="RiskName" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="RiskLevel" headeralign="center">
+                                            风险等级
+                                            <input property="editor" class="mini-textbox" readonly="readonly" style="width: 100%;" />
+                                        </div>
+                                        <div field="probability" headeralign="center">
+                                            发生概率（%）
+                                            <input property="editor" class="mini-spinner" minValue="0" maxValue="100" changeonmousewhee="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="PossibleAffection" headeralign="center">
+                                            可能影响
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+
+                                        </div>
+                                        <div field="PossiblePhase" headeralign="center">
+                                            发生阶段
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+
+                                        </div>
+                                        <div field="HandingMethod" headeralign="center">
+                                            控制措施
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        
+        PowerForm.EventWizardAfterUpdateRow = function (sender, currow, btnid) {
+            if (btnid == "PS_RiskReview.ProjectName") {
+                mini.get("PS_RiskReview.Save").doClick();
+            }
+        }
+    </script>
+</body>
+</html>
+

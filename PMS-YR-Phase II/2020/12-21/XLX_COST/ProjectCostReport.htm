@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script> 
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <!--<a class="mini-button blue" id="V_PS_PUR_MatStoreBalance.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>-->
+                            <a class="mini-button blue" id="ProjectCostReport.Refresh" onclick="mini.get('ProjectCostReport').reload()"><i class="fa fa-refresh"></i>刷新</a>
+							<a class="mini-button blue" id="ProjectCostReport.Export" onclick="PowerForm.OnExportDataToXls('ProjectCostReport', '项目成本报告表_按装置','CbsClassName','','255,255,204')"><i class="fa fa-sign-out"></i>导出</a>
+                            <!--<span>物资编码:</span>
+                            <input id="QMatCode" class="mini-textbox" width="120px"></input>
+                            <span>品名:</span>
+                            <input id="Qpinming" class="mini-textbox" width="100px"></input>
+                            <span>长描述:</span>
+                            <input id="QMatLongName" class="mini-textbox" width="100px"></input>
+                            
+                            <a class="mini-button yellow" onclick="mini.get('V_PS_PUR_MatStoreBalance').reload();">查询</a>
+                            <div id="V_PS_PUR_MatStoreBalance-Export" class="btn-group"></div>-->
+                            <span style="color:red">注:合同金额大于概算金额字体颜色变红，合同付款金额大于合同金额字体颜色变红</span>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="ProjectCostReport" class="mini-datagrid" style="width: 100%; height: 100%;"  virtualScroll="true"
+                              allowalternating="false" allowHeaderWrap="true" idfield="Id" showpager="false" url="/xlxreport/GetProjectCostReport" onbeforeload="OnBeforeLoad" autoload="false" ondrawcell="OnDrawcell">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div name="CbsClassName" field="CbsClassName" width="200">装置名称</div>
+                                <div field="CbsTitle" width="100">费用类别</div>
+                                <div field="BudgetMoney" numberformat="n2" width="120">概算金额</div>
+                                <div field="ContractMoney" numberformat="n2" width="120">已签合同完工成本</div>
+                                <div field="ContractPercent" width="120">合同完成百分比</div> 	
+                                <div field="CostMoney" numberformat="n2" width="120">合同已支付金额</div>
+                                <div field="CostPercent" width="120">合同支付百分比</div>
+                                <div field="BudgetMoreMoney" numberformat="n2" width="120">超概算金额</div>
+                                <div field="BudgetMorePercent" width="120">超概算百分比</div>                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div> 
+    <script type="text/javascript"> 
+		var PowerForm = new SingleForm();
+        $(function () { 
+		mini.get("ProjectCostReport").reload();
+        }); 
+		function OnBeforeLoad(e){
+			e.cancel=true;
+			Power.ui.loading("加载中");
+			$.ajax({
+				url:"/xlxreport/GetProjectCostReport",
+				data:{},
+				type:"POST",
+				cache:false,
+				success:function(text){
+					Power.ui.loading.close();
+					var tmp=mini.decode(text);
+					if(!tmp.success)
+					{
+						Power.ui.error(tmp.message);
+						return;
+					}
+					var data=mini.decode(tmp.data.value);
+					var d=data.clone();
+					//删除全部为0的记录
+					for(var i=0;i<d.length;i++){
+						var x=d[i];
+						if(x.BudgetMoney==0&&x.ContractMoney==0&&x.CostMoney==0)
+						data.remove(x);
+					}
+					
+					for(var i=0;i<data.length;i++){
+						var d=data[i];						
+						var BudgetMoney=d.BudgetMoney||0;
+						var ContractMoney=d.ContractMoney||0;
+						var CostMoney = d.CostMoney || 0;
+						var BudgetMoreMoney = d.BudgetMoreMoney || 0;
+						if(BudgetMoney==0)
+							d.ContractPercent="0.00%";
+						else 
+							d.ContractPercent=parseFloat( ContractMoney*100/BudgetMoney).toFixed(2)+"%";
+						if(BudgetMoney==0)
+							d.CostPercent="0.00%";
+						else 
+						    d.CostPercent = parseFloat(CostMoney * 100 / BudgetMoney).toFixed(2) + "%";
+						
+						if (BudgetMoreMoney < 0) {
+						    //d.BudgetMoreMoney = 0;
+						    d.BudgetMorePercent = "0.00%";
+						}
+						else  if (BudgetMoney == 0)
+						    d.BudgetMorePercent = "0.00%";
+						else
+						    d.BudgetMorePercent = parseFloat(BudgetMoreMoney * 100 / BudgetMoney).toFixed(2) + "%";
+					}
+					var cdata = data.clone();
+					//计算小计
+					//先算出有几种装置
+					var types = [];
+					for (var i = 0; i < cdata.length; i++) {
+						var c = cdata[i];
+						if (c.CbsClassName == "")
+							continue;
+						if (types.indexOf(c.CbsClassName) == -1)
+							types.push(c.CbsClassName);
+					}
+					for (var i = 0; i < types.length; i++) {
+						var cont = types[i];
+						//计算每个装置的小计值
+						var BudgetMoney_Sum = 0;
+						var ContractMoney_Sum = 0;
+						var CostMoney_Sum = 0;
+						var BudgetMoreMoney_Sum = 0;
+						var CbsClass_Guid="";
+						for (var j = 0; j < cdata.length; j++) {
+							var c = cdata[j];
+							if (c.CbsClassName == cont) {
+								BudgetMoney_Sum += parseFloat(c.BudgetMoney || 0);
+								ContractMoney_Sum += parseFloat(c.ContractMoney || 0);
+								CostMoney_Sum += parseFloat(c.CostMoney || 0);
+								BudgetMoreMoney_Sum += parseFloat(c.BudgetMoreMoney || 0);
+								CbsClass_Guid=c.CbsClass_Guid;
+							}
+						}
+						var index = 0;//插入位置
+						var insert = false;
+						for (var j = 0; j < data.length; j++) {
+							var d = data[j];//源数据是排序好的
+							if (d.CbsClassName == cont)
+								insert = true;
+							else if (insert) {
+								break;
+								index = j;
+							}
+						}
+						var nd = {};
+						nd.Id = CreateGUID();
+						nd.CbsClassName = cont;
+						nd.CbsClass_Guid = CbsClass_Guid;
+						nd.CbsTitle = "小计";
+						nd.ApplyCbs_Guid="";
+						nd.BudgetMoney = BudgetMoney_Sum;
+						nd.ContractMoney = ContractMoney_Sum;
+						nd.CostMoney = CostMoney_Sum;
+						nd.BudgetMoreMoney = BudgetMoreMoney_Sum;
+						if(BudgetMoney_Sum==0)
+						    nd.ContractPercent = "0.00%";
+						else 
+							nd.ContractPercent=parseFloat( ContractMoney_Sum*100/BudgetMoney_Sum).toFixed(2)+"%";
+						//计算合同支付百分比
+						if(BudgetMoney_Sum==0)
+						    nd.CostPercent = "0.00%";
+						else 
+						    nd.CostPercent = parseFloat(CostMoney_Sum * 100 / BudgetMoney_Sum).toFixed(2) + "%";
+                        //超概算百分比
+						//if (BudgetMoney_Sum == 0)
+						//    nd.BudgetMorePercent = "0.00%";
+						//else
+						//    nd.BudgetMorePercent = parseFloat(BudgetMoreMoney_Sum * 100 / BudgetMoney_Sum).toFixed(2) + "%";
+
+						if (BudgetMoreMoney_Sum < 0) {
+						    nd.BudgetMoreMoney = 0;
+						    nd.BudgetMorePercent = "0.00%";
+						}
+						else if (BudgetMoney_Sum == 0)
+						    nd.BudgetMorePercent = "0.00%";
+						else
+						    nd.BudgetMorePercent = parseFloat(BudgetMoreMoney_Sum * 100 / BudgetMoney_Sum).toFixed(2) + "%";
+						data.splice(j, 0, nd);
+					}
+					//计算合计
+					var CostMoney_SumAll = 0;
+					var ContractMoney_SumAll = 0;
+					var BudgetMoney_SumAll = 0;
+                    //超概算合计
+					var BudgetMoreMoney_SumAll = 0;
+					for (var i = 0; i < data.length; i++) {
+						var h = data[i];
+						if (h.CbsTitle == "小计") {
+							CostMoney_SumAll += parseFloat(h.CostMoney || 0);
+							ContractMoney_SumAll += parseFloat(h.ContractMoney || 0);
+							BudgetMoney_SumAll += parseFloat(h.BudgetMoney || 0);
+							//BudgetMoreMoney_SumAll += parseFloat(h.BudgetMoreMoney || 0);
+						}
+					}
+					var hd = {};
+					hd.Id = CreateGUID();
+					hd.CbsClassName = "合计";
+					hd.CbsTitle = "";
+					hd.CostMoney = CostMoney_SumAll;
+					hd.ContractMoney = ContractMoney_SumAll;
+					hd.BudgetMoney = BudgetMoney_SumAll;
+				    // 超概算合计
+				    //hd.BudgetMoreMoney = BudgetMoreMoney_SumAll;
+					BudgetMoreMoney_SumAll = ContractMoney_SumAll - BudgetMoney_SumAll;
+					if(BudgetMoney_SumAll==0)
+						hd.ContractPercent="0.00%";
+					else 
+						hd.ContractPercent=parseFloat( ContractMoney_SumAll*100/BudgetMoney_SumAll).toFixed(2)+"%";
+					//计算合同支付百分比
+					if(BudgetMoney_SumAll==0)
+					    hd.CostPercent = "0.00%";
+					else 
+					    hd.CostPercent = parseFloat(CostMoney_SumAll * 100 / BudgetMoney_SumAll).toFixed(2) + "%";
+				    //超概算百分比
+					//if (BudgetMoney_SumAll == 0)
+					//    hd.BudgetMorePercent = "0.00%";
+					//else
+					//    hd.BudgetMorePercent = parseFloat(BudgetMoreMoney_SumAll * 100 / BudgetMoney_SumAll).toFixed(2) + "%";
+					if (BudgetMoreMoney_SumAll < 0) {
+					    hd.BudgetMoreMoney = 0;
+					    hd.BudgetMorePercent = "0.00%";
+					}
+					else if (BudgetMoney_SumAll == 0)
+					    hd.BudgetMorePercent = "0.00%";
+					else
+					    hd.BudgetMorePercent = parseFloat(BudgetMoreMoney_SumAll * 100 / BudgetMoney_SumAll).toFixed(2) + "%";
+
+					data.splice(0, 0, hd);
+
+					for (var i = 0; i < data.length; i++) {
+					    var d = data[i];
+					    var BudgetMoney = d.BudgetMoney || 0;
+					    var ContractMoney = d.ContractMoney || 0;
+					    var CostMoney = d.CostMoney || 0;
+					    var BudgetMoreMoney = d.BudgetMoreMoney || 0;
+
+					    if (BudgetMoreMoney < 0) {
+					        d.BudgetMoreMoney = 0;
+					        d.BudgetMorePercent = "0.00%";
+					    }
+					    else if (BudgetMoney == 0)
+					        d.BudgetMorePercent = "0.00%";
+					    else
+					        d.BudgetMorePercent = parseFloat(BudgetMoreMoney * 100 / BudgetMoney).toFixed(2) + "%";
+					}
+					mini.get("ProjectCostReport").setData(data);
+					mini.get("ProjectCostReport").mergeColumns(["CbsClassName"]);
+				}
+			})
+		}
+		function OnDrawcell(e){  
+		    if (e.field == "CostMoney" && e.record.CbsClassName != "合计" && e.record.CostMoney - e.record.ContractMoney < 0) {
+				//点击合同已支付金额时，打开付款申请窗体，增加默认过滤条件为分摊属于这个
+				e.cellHtml='<a href="javascript:void(0)" onclick="OpenApply(\''+e.record.CbsClass_Guid+'\',\''+e.record.ApplyCbs_Guid+'\')">'+mini.formatNumber(e.value, "n2")	+'</a>';
+		    }
+		    //合同付款金额大于合同金额字体颜色变红
+		    if (e.field == "CostMoney" && e.record.CbsClassName != "合计" && e.record.CostMoney - e.record.ContractMoney > 0) {
+		        //点击合同已支付金额时，打开付款申请窗体，增加默认过滤条件为分摊属于这个
+		        e.cellHtml = '<a href="javascript:void(0)" style="color:red" onclick="OpenApply(\'' + e.record.CbsClass_Guid + '\',\'' + e.record.ApplyCbs_Guid + '\')">' + mini.formatNumber(e.value, "n2") + '</a>';
+		    }
+		    if (e.field == "ContractMoney" && e.record.CbsClassName != "合计" && e.record.ContractMoney - e.record.BudgetMoney < 0) {
+			    //点击合同已支付金额时，打开付款申请窗体，增加默认过滤条件为分摊属于这个
+			    e.cellHtml = '<a href="javascript:void(0)" onclick="OpenSubContract(\'' + e.record.CbsClass_Guid + '\',\'' + e.record.ApplyCbs_Guid + '\',\'' + e.record.CbsTitle + '\')">' + mini.formatNumber(e.value, "n2") + '</a>';
+			}
+            //合同金额大于概算金额字体颜色变红
+			if (e.field == "ContractMoney" && e.record.CbsClassName != "合计" && e.record.ContractMoney - e.record.BudgetMoney > 0) {
+			    //点击合同已支付金额时，打开付款申请窗体，增加默认过滤条件为分摊属于这个
+			    e.cellHtml = '<a href="javascript:void(0)" style="color:red"  onclick="OpenSubContract(\'' + e.record.CbsClass_Guid + '\',\'' + e.record.ApplyCbs_Guid + '\',\'' + e.record.CbsTitle + '\')">' + mini.formatNumber(e.value, "n2") + '</a>';
+			}
+		}
+		function OpenSubContract(CbsClass_Guid, Cbs_Guid, CbsTitle) {
+		    Power.ui.loading("正在查询");
+		    if (CbsTitle == "小计") {
+		        Power.ui.warning("当前没有合同付款申请的费用分摊至此");
+		    }
+		    var P = { "CbsClass_Guid": CbsClass_Guid, "Cbs_Guid": Cbs_Guid };
+		    FormFuns.APIExec("View_XLX_PUR_Request", "BO", "GetSubIds", P, function (text) {
+		        Power.ui.loading.close();
+		        var tmp = mini.decode(text)
+		        if (!tmp.success) {
+		            Power.ui.error(tmp.message);
+		            return;
+		        }
+		        var tmp1 = mini.decode(tmp.data.value)
+		        var url = "/Form/ViewForm/880cfc7d-6c71-40b1-9b25-d76b82464926/";
+		            var t = mini.open({
+		                url: url,
+		                width: 900,
+		                height: 550,
+		                showMaxButton: true,
+		                onload: function () {
+		                    if (tmp.data.value) {
+		                        //弹出页面加载完成，设置新增默认值
+		                        var iframe = this.getIFrameEl();
+		                        //调用弹出页面方法进行初始化
+		                        iframe.contentWindow.SetValue("Id in (" + tmp1.data.value + ")");
+		                    }
+		                }
+		            })
+		            t.max();
+		    });
+		}
+		function OpenApply(CbsClass_Guid,Cbs_Guid){
+			Power.ui.loading("正在查询");
+			$.ajax({
+				url:"/xlxreport/GetApplyIds",
+				data:{CbsClass_Guid:CbsClass_Guid,Cbs_Guid:Cbs_Guid},
+				type:"POST",
+				cache:false,
+				success:function(text){
+					Power.ui.loading.close();
+					var tmp=mini.decode(text);
+					if(!tmp.success)
+					{
+						Power.ui.error(tmp.message);
+						return;
+					}
+					var url="/Form/ViewForm/bfcb082c-1e8a-4f2b-82bf-6bbd16ad8406/";
+					var t=mini.open({
+						url:url,
+						width:900,
+						height:550,						
+						showMaxButton: true,
+						onload: function () {
+							if (tmp.data.value) {
+								//弹出页面加载完成，设置新增默认值
+								var iframe = this.getIFrameEl();
+								//调用弹出页面方法进行初始化
+								iframe.contentWindow.SetValue( "Id in ("+tmp.data.value+")");
+							}
+						}
+					})
+					t.max();
+				}
+			});
+		}
+
+
+    </script>
+</body>
+</html>
+

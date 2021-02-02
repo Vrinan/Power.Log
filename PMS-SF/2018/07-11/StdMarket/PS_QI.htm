@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>质量检查项
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_QI.Save" onclick="OnSave(this)">导入数据</a><!--保存-->
+                    <a class="mini-button blue" id="PS_QI.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--
+                    <div id="btnPrint" class="btn-group"></div>
+                        -->
+                    <a class="mini-button blue" id="PS_QI.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left"  style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_QI" class="mini-datagrid" showpager="false" multiselect="true">
+                                <div property="columns">
+                                    <div type="indexcolumn"></div>
+
+                                    <div type="checkcolumn"></div>
+                                    <div field="QiCode" headeralign="center">
+                                        编号
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="QiName" headeralign="center" summarytype="sum">
+                                        检查项名称
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="InspectionLevel" headeralign="center" type="comboboxcolumn">
+                                        控制等级
+                                        <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        var InspectionLotCode, InspectionRecord;
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function OnSave(e) {
+            var exec = {};  //对象
+            exec.KeyWord = "PS_QL";//bo的KeyWord
+
+            var grid = mini.get("PS_QI");
+            var d = grid.getSelecteds();
+            for (var i = 0; i < d.length; i++) {
+                var row = d[i];
+                debugger
+               
+                grid.updateRow(row, { InspectionLotId: getParameter("InspectionLotId") });
+                grid.updateRow(row, { InspectionLotCode: InspectionLotCode });
+                grid.updateRow(row, { InspectionRecord: InspectionRecord });
+            }
+            PowerForm.OnBtnSave(e);
+            PowerForm.OnBtnRefresh(e);
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            
+            if (e.sender.id == "PS_QI") {
+                var MasterId = getParameter("MasterId");
+                if (e.params.swhere == "") {
+                    e.params.swhere = " MasterId ='" + MasterId + "'";
+                }
+                else {
+                    e.params.swhere += " MasterId ='" + MasterId + "'";
+                }
+               
+            }
+
+        }
+
+        PowerForm.EventAfterLoadData = function (e) {
+            InspectionRecord = getParameter("InspectionRecord");
+            InspectionRecord = decodeURI(decodeURI(InspectionRecord));
+            InspectionLotCode = getParameter("InspectionLotCode");
+            InspectionLotCode = decodeURI(InspectionLotCode)
+            var grid = mini.get("PS_QI");
+            var a = grid.data;
+            for (var j = 0; j < a.length; j++) {
+                var row = grid.getRow(a[j]);
+                
+                if (row.InspectionLotCode != null) {
+                    grid.hideColumn(a[j]);
+                }
+            }
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            PowerForm.OnBtnRefresh(e);
+        }
+
+    </script>
+</body>
+</html>

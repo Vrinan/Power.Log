@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = '';
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>物资处置
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+
+                    <a class="mini-button blue" id="XLX_PUR_MatDisposal.Save" onclick="PowerForm.OnBtnSave(this);"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="XLX_PUR_MatDisposal.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="XLX_PUR_MatDisposal.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="XLX_PUR_MatDisposal" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.Code" name="Code" textname="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" allowinput="true" />
+                                        </td>
+                                        <td>
+                                            <label for="XLX_PUR_MatDisposal.Status">审批状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XLX_PUR_MatDisposal.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处置金额
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.DisposalAmount" name="DisposalAmount" class="mini-spinner" minvalue="0" maxvalue="999999999999999" />
+                                        </td>
+                                        <td>
+                                            <label for="XLX_PUR_MatDisposal.DisposalWay">处置方式</label>
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.DisposalWay" name="DisposalWay" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="XLX_PUR_MatDisposal.PriceMethod">定价方式</label>
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.PriceMethod" name="PriceMethod" class="mini-combobox" />
+                                        </td>
+                                        <td>处置日期</td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.DisposalDate" name="DisposalDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>买方</td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.Buyer" name="Buyer" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            代理人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.Agent" name="Agent" textname="Agent" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="XLX_PUR_MatDisposal.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='详细信息'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XLX_PUR_MatDisposal_Dtl.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XLX_PUR_MatDisposal_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XLX_PUR_MatDisposal_Dtl" class="mini-datagrid" style="height: 100%;" showpager="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" />
+                                <div property="columns">
+                                    <div type="indexcolumn"></div>
+                                    <!--序号-->
+
+                                    <div field="MatName" headeralign="center">
+                                        物资名称
+                                        <input property="editor" class="mini-textbox" style="width: 120%;" readonly />
+                                    </div>
+                                    <div field="MatDescription" headeralign="center">
+                                        物资描述
+                                        <input property="editor" id="XLX_PUR_MatDisposal_Dtl.MatDescription" class="mini-textbox" style="width: 120%;" readonly />
+                                    </div>
+                                    <div field="Specifi" headeralign="center">
+                                        规格型号
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="Standard" headeralign="center">
+                                        制造标准
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="Texture" headeralign="center">
+                                        材质
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="Pattern" headeralign="center">
+                                        型式
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                    </div>
+                                    <div field="MatUnit" headeralign="center">
+                                        单位
+                                        <input property="editor" class="mini-textbox" style="width: 120%;" />
+                                    </div>
+                                    <div field="UnitPrice" headeralign="center">
+                                        单价
+                                        <input property="editor" class="mini-spinner" minvalue="0" maxvalue="999999999999999" style="width: 100%;" />
+                                    </div>
+                                    <div field="UnitNum" headeralign="center">
+                                        数量
+                                        <input property="editor" class="mini-spinner" minvalue="0" maxvalue="999999999999999" style="width: 100%;" />
+                                    </div>
+                                    <div field="TotalPrice" headeralign="center">
+                                        合计
+                                        <input property="editor" class="mini-spinner" minvalue="0" maxvalue="999999999999999" style="width: 100%;" readonly />
+                                    </div>
+                                    <div field="Storage" headeralign="center">
+                                        仓库
+                                        <input property="editor" id="XLX_PUR_MatDisposal_Dtl.Storage" class="mini-buttonedit" name="Storage" textname="Storage" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div title="附件" name="attachfile" url=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "XLX_PUR_MatDisposal_Dtl.Add") {
+                if (formconfig.FormState == "add") {
+                    e.canOpen = false;
+                    Power.ui.warning("请先保存主表.");
+                    return;
+                }
+            }
+        }
+        //function EndEdit(e) {
+        //    if (e.field == "ActualNum") {
+        //        var record = e.record;
+        //        var sender = e.sender;
+        //        var ActualNum = record.ActualNum == null ? 0 : parseFloat(record.ActualNum);
+        //        var StoreNum = record.StoreNum == null ? 0 : parseFloat(record.StoreNum);
+        //        var UnitPrice = record.UnitPrice == null ? 0 : parseFloat(record.UnitPrice);
+
+        //        var OverageNum = ActualNum - StoreNum;
+        //        var OverageAmount = OverageNum * UnitPrice;
+        //        var ActualAmount = ActualNum * UnitPrice;
+        //        sender.updateRow(record, { OverageNum: OverageNum, OverageAmount: OverageAmount, ActualAmount: ActualAmount });
+
+        //    }
+        //}
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";//
+		 var EpsProjName = "$!CurrentSession.EpsProjName";
+		
+    </script>
+	<style>
+	.portlet.box.blue > .portlet-title.gray{
+		background-color:#F5F5F5;
+	}
+	.mini-button.gray{
+		    background-color: #E5E5E5;
+			
+	}
+	.portlet.blue > .portlet-title.gray > .captiontools{
+		color: #444242;
+	}
+	.portlet-title.gray > .captiontools > .mini-button.gray{
+		color: #444242;
+	}
+	.mini-calendar-menu-year{
+		width: 36px;
+	}
+	.portlet.box.blue{
+	    border: 0px;
+		border-top: 0;
+	}
+	</style>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+					<div class="portlet box blue" style="height: 28px;">
+						<div class="portlet-title gray">
+                        <div class="captiontools">
+                            <a class="mini-button gray" id="Major"><i class="fa fa-line-chart"></i>专业工时统计</a>
+							<a class="mini-button gray" id="Annual"><i class="fa  fa-bar-chart"></i>月份工时统计</a>
+                        </div>
+                    </div>
+					</div>
+					<div class="portlet box blue" style="height: 90%;">
+                    <div class="portlet-title gray">
+                        <div class="captiontools">
+                            <span>切换EPS</span>
+                            <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="150px" />
+                            <span id="SstartDate">起始日期</span>
+                            <input id="QStartDate" class="mini-monthpicker" format="yyyy-MM-dd" width="120px"></input> 
+							 <span id="SEndDate">结束日期</span>
+                            <input id="QEndDate" class="mini-monthpicker" format="yyyy-MM-dd" width="120px"></input>  
+                            <a class="mini-button gray" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div  class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+                            </div>
+                        </div>
+                    </div>
+					</div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var currentplan, currenttask,Types;
+        $(function () {
+            currenttask = currentproj;
+			currentplan=longcode;
+            var firstDate = new Date();
+            var StartDate = new Date(firstDate);
+            var EndDate = new Date(firstDate);
+            EndDate.setMonth(firstDate.getMonth() + 1);
+            EndDate.setDate(0);
+            firstDate.setDate(1);
+            StartDate.setMonth(firstDate.getMonth() - 10);
+            StartDate.setDate(1);
+            mini.get("QStartDate").setValue(StartDate);
+            mini.get("QEndDate").setValue(EndDate);
+			SetBtnEditValue("txtPlanName",EpsProjName);
+			Types="Major";
+			ShowCharts(Types);
+           LoadDatas();
+        });
+
+        mini.get("txtPlanName").on("buttonclick", function (e) {
+            OnWiardPlan();
+        })
+
+        function OnWiardPlan() {
+            var p = { title: "选择项目计划", multi: "0" };
+            p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+            p.swhere = " LongCode Like '" + longcode + ".%' or LongCode='" + longcode + "'";
+            p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+            OpenWizard(p, function (data) {
+                currenttask = data[0].project_guid;
+				currentplan = data[0].LongCode;
+                SetBtnEditValue("txtPlanName", data[0].project_name);
+            })
+        }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+        mini.get("btnSearch").on("click", function (e) {
+            LoadDatas();
+        })
+		mini.get("Major").on("click", function (e) {
+            //LoadData();
+			Types="Major";
+			ShowCharts(Types);
+			LoadDatas();
+        })
+		  mini.get("Annual").on("click", function (e) {
+            //LoadData();
+			Types="Annual";
+			ShowCharts(Types);
+			LoadDatas();
+        })
+	     function ShowCharts(type){
+		   if(type=="Major"){
+		     $("#SstartDate").hide();
+			$("#SEndDate").hide();
+		    $("#QStartDate").hide();
+			$("#QEndDate").hide();
+		   }else{
+		    $("#SstartDate").show();
+			$("#SEndDate").show();
+			$("#QStartDate").show();
+			$("#QEndDate").show();
+		   }
+		 
+		 }
+		function LoadDatas(){
+		 if(Types=="Major")
+		 {
+		   GetMajorChartData();
+		 }
+		 if(Types=="Annual"){
+			GetMonthChart();
+		 }
+		}
+		function GetMonthChart(){
+			var p = {};
+            p.EpsProjId = currenttask;
+            p.StratData = mini.get("QStartDate").getFormValue();
+            p.EndData = mini.get("QEndDate").getFormValue();
+            $.ajax({
+                url: "/Design/GetMonthChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart(o.list);
+                    }
+                },
+				 error:function(XMLResponse){alert(XMLResponse.responseText)}
+
+            });
+
+		}
+		function LoadChart(data) {
+            //标题 
+            var xaxis = { type: 'category', data: [] };
+            var actcur = { "name": "工作工时", type: 'bar', data: [] };
+            var actsum = { "name": "加班工时", type: 'bar', data: [] };
+           
+            $.each(data, function () {
+                xaxis.data.push(this.StratData);
+                actcur.data.push(this.WorkHour);
+                actsum.data.push(this.ExtraHour);               
+            })
+            var opt = {};
+            opt.title = { text: "月份工时统计" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["工作工时", "加班工时"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '小时', min: 0}];
+            opt.series = [actcur, actsum];
+            InitEChart("charthere", opt);
+
+        }
+
+	    function GetMajorChartData(){
+			var p = {};
+            p.EpsProjId = currenttask;
+           $.ajax({
+                url: "/Design/GetMajorChart",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        GetMajorChart(o.list);
+                    }
+                }
+
+            });
+		}
+		//加载前期前期项目动态
+		function GetMajorChart(list){
+			var opt = {};
+            var xaxis = { type: 'category', data: [] };          
+				
+		
+			var itme = { "name": "实际工时", type: 'bar', data: [] };
+			var itme2 = { "name": "预算工时", type: 'bar', data: [] };	
+			var sumitme2 = { "name": "累计预算工时", type: 'line', data: [], yAxisIndex: 1};				
+			 $.each(list, function () {
+				itme.data.push(this.actualHour);
+				itme2.data.push(this.budgetHour);
+				sumitme2.data.push(this.SumbudgetHour);
+				xaxis.data.push(this.Name);
+			})
+			opt.title = { text: "专业工时统计" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+			opt.legend = { data: ["实际工时","预算工时","累计预算工时"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '小时', min: 0 }, { type: 'value', name: '小时', min: 0 }];
+            opt.series = [itme,itme2,sumitme2];
+            InitEChart("charthere", opt);
+
+		}
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+
+      
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar',
+				'echarts/chart/funnel',
+				'echarts/chart/pie'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+    </script>
+</body>
+</html>

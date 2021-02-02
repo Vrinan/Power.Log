@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?version=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_YX_DrugsControlLedger.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-datepicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-datepicker" width="120">
+
+                            <span>部门/运行站</span>
+                            <input id="Department" class="mini-textbox" width="120"></input>
+                            <span>药品种类</span>
+                            <input id="FillType" class="mini-combobox" shownullitem="true" width="120"></input>
+                            <a class="mini-button yellow" onclick="search();">获取</a>
+
+                            <div id="View_SF_YX_DrugsControlLedger-Export" title="易制毒、易制爆化学品出入库记录" class="btn-group"></div>
+                            <a class="mini-button blue" id="View_SF_YX_DrugsControlLedger.Export" onclick="PowerForm.AlExport('View_SF_YX_DrugsControlLedger', '易制毒、易制爆化学品出入库记录', 'DrugsType,DrugsName','Name')"><i class="fa fa-sign-out"></i>导出</a>
+                        </div>
+						 <div class="tools">
+                            <input id="View_SF_YX_DrugsControlLedger-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 120px;" />
+                            <span id="View_SF_YX_DrugsControlLedger-search">
+                            <input id="View_SF_YX_DrugsControlLedger-search-value" class="mini-textbox" style="width: 130px;" />
+                            </span><a class="mini-button blue" id="View_SF_YX_DrugsControlLedger-btn-search" onclick="PowerForm.OnPageChanged(this)">
+                            <i class="fa fa-search"></i>搜索
+                            </a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_YX_DrugsControlLedger" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" onload="OnLoad" sortField="Name,DayTime,DrugsType,DrugsName ASC"
+                             showpager="true" pagesize="100" sizelist="[100,200,500]" allowcellselect="true" multiselect="true" allowalternating="true" ondrawgroup="onDrawGroup">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <!-- <div field="Name" name="Name" width="80" allowsort="true">部门</div> -->
+                                <div field="DayTime" name="DayTime" dateformat="yyyy-MM-dd" allowsort="true"> 日期</div><!--日期-->
+                                <div field="DrugsType" name="DrugsType" headeralign="center" header="药品种类" type="comboboxcolumn">药品种类<input property="editor" name="DrugsType" class="mini-combobox" /></div>
+                                <div field="DrugsName" name="DrugsName" allowsort="true" width="130">化学品名称</div>
+                                <div field="Allowance" header="前期余量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                    前期余量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                </div>
+                                <div field="EstorageNumber" header="入库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                    入库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                </div>
+                                <div field="OstorageNumber" header="出库数量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                    出库数量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                </div>
+                                <div field="BalanceNumber" header="结存量" allowsort="true" numberformat="n2" headerAlign="center" width="120" align="right">
+                                    结存量<input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                </div>
+
+                                <div field="RegHumName" allowsort="true" width="100">登记人</div><!--名称-->
+                                <div field="RecordsCode" allowsort="true" width="160">易制毒购买备案证号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                <div field="TransportUnit" allowsort="true" width="150">运输单位及车牌号<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                <div field="Memo" allowsort="true" width="150">备注<input property="editor" class="mini-textbox" style="width: 100%;"></div>
+                                <div field="UpdHuman" allowsort="true" width="100">最后更新人</div>
+                                <div field="UpdDate" dateformat="yyyy-MM-dd" allowsort="true">最后更新时间</div><!--日期-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        mini.parse();
+        $(function () {
+            PowerForm.Init();
+
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+
+            var grid = mini.get("View_SF_YX_DrugsControlLedger");
+            grid.groupBy("Name");
+        });
+
+        function onDrawGroup(e) {
+            if(e.field=="Name")
+            {
+                // Allowance,前期余量
+                // EstorageNumber,入库数量
+                // OstorageNumber,出库数量
+                // BalanceNumber,结存量
+                var allowance = new Number(0);
+                var estorageNumber = new Number(0);
+                var ostorageNumber = new Number(0);
+                var balanceNumber = new Number(0);
+                for(var i = 0;i<e.rows.length;i++)
+                {
+                    allowance+=parseFloat(e.rows[i].Allowance);
+                    estorageNumber+=parseFloat(e.rows[i].EstorageNumber);
+                    ostorageNumber+=parseFloat(e.rows[i].OstorageNumber);
+                    balanceNumber+=parseFloat(e.rows[i].BalanceNumber);
+                }
+                allowance = allowance.toFixed(2);
+                estorageNumber = estorageNumber.toFixed(2);
+                ostorageNumber = ostorageNumber.toFixed(2);
+                balanceNumber = balanceNumber.toFixed(2);
+                e.cellHtml = "<span style='color:#0000ff;font-size:15px;'>"+e.value+"</span><span style='color:#3366ff;font-size:13px;'>" + "前期余量:"+allowance+" "+"入库数量:"+estorageNumber+" "+"出库数量"+ostorageNumber+" "+"结存量:"+balanceNumber+" " + "</span>";
+            }
+        }
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function search() {
+            mini.get('View_SF_YX_DrugsControlLedger').reload();
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "View_SF_YX_DrugsControlLedger") {
+                debugger;
+                if (e.params.swhere == "") {
+                    e.params.swhere = " DayTime between '" + mini.get("QStartDate").getFormValue() + "' and '" + mini.get("QEndDate").getFormValue() + "' and Name like '%" + mini.get("Department").getFormValue() + "%' and DrugsType like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+                else {
+                    e.params.swhere += "and DayTime between '" + mini.get("QStartDate").getFormValue() + "' and '" + mini.get("QEndDate").getFormValue() + "' and Name like '%" + mini.get("Department").getFormValue() + "%' and DrugsType like '%" + mini.get("FillType").getFormValue() + "%' ";
+                }
+            }
+        }
+        function OnLoad(e) {
+            var grid = e.sender;
+            //mini.get("View_SF_YX_DrugsControlLedger").mergeColumns(["Name", "DayTime", "DrugsType", "DrugsName"]);
+            mini.get("View_SF_YX_DrugsControlLedger").mergeColumns(["DayTime", "DrugsType", "DrugsName"]);
+        }
+    </script>
+</body>
+</html>

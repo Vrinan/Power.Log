@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var EpsProjId = "$!CurrentSession.EpsProjId";
+        var SingleParams = ""
+    </script>
+
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                             <span>入库单号</span>
+                            <input id="Codes" class="mini-textbox"  width="150px" />
+                            <span>入库起始日期</span>
+                            <input id="Stardate" class="mini-datepicker" width="120px" />
+							<span>入库结束日期</span>
+                            <input id="Enddate" class="mini-datepicker" width="120px" />
+                            <a class="mini-button blue" id="btnSearch"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_MatInStoreDtlAl" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;"
+                             ondrawgroup="onDrawGroup" ondrawgroup="onDrawGroupsum" multiselect="true" allowresize="true" allowcelledit="true" allowcellselect="true" pageSize="20">
+                            <div property="columns">
+                                <div field="Code" name="text" allowsort="true" header="入库单号" align="left" headeralign="center">入库单号</div>
+                                <div field="InStoreDate" dateformat="yyyy-MM-dd" allowsort="true" header="入库时间" align="left" headeralign="center">入库时间</div>
+                                <div field="Supplier" visible="false" allowsort="true" header="供应商" align="center" headeralign="center">供应商</div>
+                                <div field="MatCode" allowsort="true" header="材料编码" align="center" headeralign="center">材料编码</div>
+                                <div field="MatName" allowsort="true" header="材料名称" align="center" headeralign="center">材料名称</div>
+                                <div field="MatDescription" allowsort="true" header="物资描述" align="center" headeralign="center">物资描述</div>
+                                <div field="Specifi" allowsort="true" header="规格型号" align="center" headeralign="center">规格型号</div>
+                                <div field="Standard" allowsort="true" header="制造标准" align="center" headeralign="center">制造标准</div>
+                                <div field="Texture" allowsort="true" header="材质" align="center" headeralign="center">材质</div>
+                                <div field="Pattern" allowsort="true" header="型式" align="center" headeralign="center">型式</div>
+                                <div field="MatUnit" allowsort="true" header="单位" align="center" headeralign="center">单位</div>
+                                <div field="UnitPrice" allowsort="true" header="单价" align="center" headeralign="center">单价</div>
+                                <div field="InStoreNum" allowsort="true" header="数量" align="center" headeralign="center">数量</div>
+                                <div field="InStoreAmount" allowsort="true" header="金额" align="center" headeralign="center">金额</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        var grid = mini.get("V_PS_MatInStoreDtlAl");
+		function onDrawGroupsum(e) {
+			e.cellHtml ="物资金额合计：" + getGenderTextsum(e.field);
+        }
+		function getGenderTextsum(Type)
+        {
+            var grid3 = mini.get("V_PS_MatInStoreDtlAl");
+            var TotalMoney=0;
+            var MinPrice=0;
+            var SupplieName="";
+            var ReturnValue="";
+
+            if(1==1)
+            {
+                for (var i = 0; i < grid3.data.length; i++)
+                {    
+                   TotalMoney=TotalMoney+parseFloat(grid3.data[i].InStoreAmount);
+                }
+                ReturnValue = TotalMoney;
+            }
+
+            return ReturnValue;
+        } 
+		grid.groupBy("Supplier", "asc");
+        grid.load();
+        function onDrawGroup(e) {
+            e.cellHtml = "供应商：" + e.value  + "（金额合计:" + getGenderText(e.value, e.field) + ")";
+        }
+		function getGenderText(id,Type)
+        {
+            var grid3 = mini.get("V_PS_MatInStoreDtlAl");
+            var TotalMoney=0;
+            var MinPrice=0;
+            var SupplieName="";
+            var ReturnValue="";
+
+            if(1==1)
+            {
+                for (var i = 0; i < grid3.data.length; i++)
+                {    
+                    if(id == grid3.data[i].Supplier)
+                    {
+                        TotalMoney=TotalMoney+parseFloat(grid3.data[i].InStoreAmount);
+                    }
+                }
+                ReturnValue = TotalMoney;
+            }
+
+            return ReturnValue;
+        } 
+
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+      
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "V_PS_MatInStoreDtlAl") {
+                var wheres = " EpsProjId ='" + EpsProjId + "' ";
+                var code = mini.get("Codes").getValue();
+                var Stardate = mini.get("Stardate").getFormValue();
+				var Enddate = mini.get("Enddate").getFormValue();
+               
+                if (code != "") {
+                    wheres = wheres + " and Code like '%" + code + "%'";
+                }
+                if (Stardate != "" && Enddate != "") {
+                    wheres = wheres + "and InStoreDate>='" + Stardate + "' and InStoreDate<='" + Enddate + "'";
+                }
+                if (e.params.swhere != "")
+                    e.params.swhere += " and " + wheres;
+                else
+                    e.params.swhere = wheres;
+            }
+        }
+
+        mini.get("btnSearch").on("click", function (e) {
+
+            GoPad();
+            mini.get("V_PS_MatInStoreDtlAl").load()
+        })
+        
+        function GoPad() {
+            var grid = mini.get("V_PS_MatInStoreDtlAl");
+            if (grid.showPager)
+                grid.gotoPage(0);
+        }
+        
+    </script>
+</body>
+</html>

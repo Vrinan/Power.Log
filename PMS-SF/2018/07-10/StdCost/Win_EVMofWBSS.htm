@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        //var OpenFormId = "$Model.data.OpenFormId";
+        //var FormId = "$Model.data.FormId";
+        //var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var currentplan, currenttask, currentcolhead = "yyyy.MM", curincludewbs2 = 0;
+        var currgirdheight = "165px"; var mychart = null;
+        var fl = "month";
+        var Measure;
+        $(function () {
+            $.ajax({
+                url: "/Cost/GetPeriod",
+                data: { EpsProjId: currentproj },
+                type: "POST",
+                success: function (text) {
+                    debugger;
+                   if(text=="月")
+                       fl = "month";
+                   else
+                       fl = "week";
+                }
+
+            });
+           
+            LoadData();
+        });
+
+        
+
+        function LoadData() {
+            $.ajax({
+                url: "/Cost/GetEVM",
+                data: { EpsProjId: currentproj,fl:fl },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success)
+                        return;
+                    else
+                        LoadChart(o.data.value);
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart(data) {
+            //标题
+            var charttitle = "";//"进度:" + mini.get("txtPlanName").text;
+            //if (mini.get("txtTaskName").text.length != 0) {
+            //    charttitle += ("/" + mini.get("txtTaskName").text);
+            //}
+            var xaxis = { type: 'category', data: [] };
+            var actsum = { "name": "BCWP", type: 'line', data: [] };
+            var plnsum = { "name": "BCWS", type: 'line', data: [] };
+            var ACWP = { "name": "ACWP", type: 'line', data: [] };
+            var actsumwbs2 = { "name": "累计实际2", type: 'line', data: [] };
+            $.each(data, function () {
+
+                var md = mini.formatDate(this.enddate, "yyyy-MM-dd");
+                xaxis.data.push(md);
+                actsum.data.push(Math.round(this.plnsumpct * 100) / 100);
+                plnsum.data.push(Math.round(this.actsumpct * 100) / 100);
+                ACWP.data.push(Math.round(this.ACWP * 100) / 100);
+                if (this.actsumwbs2)
+                    actsumwbs2.data.push(Math.round(this.actsumpct * 100) / 100);
+                else
+                    actsumwbs2.data.push(0);
+            })
+            var opt = {};
+            //opt.calculable = true;
+            opt.title = { text: charttitle };
+            opt.dataZoom = { show: true, realtime: true, start: 0, end: 100 }
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '累计',axisLabel: { formatter: '{value}'}  }];
+            opt.legend = { data: [plnsum.name, actsum.name, ACWP.name] };
+            opt.series = [plnsum, actsum, ACWP];
+            if (curincludewbs2 == "1") {
+                opt.legend.data.push(actsumwbs2.name);
+                opt.series.push(actsumwbs2);
+            }
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                mychart = ec.init(document.getElementById(chartid), theme);
+                mychart.setOption(option);
+            })
+        }
+
+    </script>
+</body>
+</html>

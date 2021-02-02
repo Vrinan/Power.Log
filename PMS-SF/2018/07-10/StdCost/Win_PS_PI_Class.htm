@@ -1,0 +1,229 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-4 col-hd-12">
+                <div class="portlet blue box" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <a class="mini-button blue" id="SF_LoopHuman.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="SF_LoopHuman.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="SF_LoopHuman.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <!--<a class="mini-button blue" id="SF_LoopHuman.Edit" onclick="PowerForm.OnBtnEdit(this)"><i class="fa fa-pencil"></i>编辑</a>-->
+                            <a class="mini-button blue" id="SF_LoopHuman.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height:100%">
+                        <div id="SF_LoopHuman" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;" showtreeicon="true"
+                             treecolumn="text" parentfield="ParentId" resultastree="false" multiselect="true"
+                             allowresize="true" expandonload="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div name="text" field="Code" header="编号" allowsort="true">编号<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                <div field="Title" header="名称" allowsort="true">名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+
+                                <div field="Position" header="岗位" allowsort="true">
+                                    岗位<input id="SF_LoopHuman.Position" name="Position" textname="Position" class="mini-buttonedit" property="editor"
+                                             emptytext="请选择岗位..." onbuttonclick="PowerForm.OnBtnWizard(this)" required />
+                                </div>
+                                <div field="LoopHumanName" header="抽取人" allowsort="true">抽取人<input property="editor" class="mini-textbox" style="width: 100%;" readonly /> </div>
+                                <div field="LoopDate" header="抽取时间" allowsort="true" dateformat="yyyy-MM-dd">抽取时间<input property="editor" class="mini-datepicker" dateformat="yyyy-MM-dd" style="width: 100%;" readonly /> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-md-5-->
+            <div class="col-md-8 col-hd-12">
+                <div class="portlet blue box" style="height: 50%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="PS_PI.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="PS_PI.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="PS_PI.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                            <a class="mini-button blue" id="PS_PI.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <a class="mini-button blue" href="/Upload/支付项导入.xls">模版下载</a>
+                            <div id="PS_PI_Class.Upload"></div>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_LoopHuman_dtl" class="design mini-datagrid" visible="true" showpager="false" idfield="Id" allowcelledit="true" allowcellselect="true"
+                             style="width:100%;height:100%;" masterfield="Id" detailfield="ParentId" multiselect="true" ondrawcell="Drawcell">
+                            <!--oncellendedit="SF_LoopHuman_dtl_EndEdit"-->
+                            <div property="columns">
+                                <div type="checkcolumn" width="10"></div>
+                                <div type="indexcolumn" width="10">序号</div>
+                                <div name="HumanCode" class="design mini-datagridcolumn" field="HumanCode" width="80" headeralign="center" type="textboxcolumn">
+                                    工号
+                                </div>
+                                <div name="HumanName" class="design mini-datagridcolumn" field="HumanName" width="80" headeralign="center" type="textboxcolumn">
+                                    姓名
+                                </div>
+                                <div name="IsInvalid" class="design mini-datagridcolumn" field="IsInvalid" width="80" headeralign="center" type="comboboxcolumn">
+                                    <input id="SF_LoopHuman_dtl.IsInvalid" property="editor" class="mini-combobox" style="width: 100%;" />
+                                    生效/作废
+                                </div>
+                                <div name="Memo" class="design mini-datagridcolumn" field="Memo" width="80" headeralign="center" type="textboxcolumn">
+                                    备注
+                                    <input id="SF_LoopHuman_dtl.Memo" property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="portlet blue box" style="height: 50%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="SF_LoopHuman_dtl.GetLoopHuman" onclick="GetLoopHuman"><i class="fa fa-plus"></i>抽取人员</a>
+                            <!--<a class="design mini-button blue" iconcls="fa fa fa-plus" id="sf_loophuman_dtl.add" onclick="powerform.onbtnadd(this)">新增</a>-->
+                            <a class="design mini-button blue selected" iconcls="fa fa fa-save" id="SF_LoopHuman_dtl.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                            <a class="design mini-button blue" iconcls="fa fa fa-trash-o" id="SF_LoopHuman_dtl.Del" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            <a class="design mini-button blue" iconcls="fa fa fa-refresh" id="SF_LoopHuman_dtl.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="SF_LoopHuman_dtl" class="design mini-datagrid" visible="true" showpager="false" idfield="Id" allowcelledit="true" allowcellselect="true"
+                             style="width:100%;height:100%;" masterfield="Id" detailfield="ParentId" multiselect="true" ondrawcell="Drawcell">
+                            <!--oncellendedit="SF_LoopHuman_dtl_EndEdit"-->
+                            <div property="columns">
+                                <div type="checkcolumn" width="10"></div>
+                                <div type="indexcolumn" width="10">序号</div>
+                                <div name="HumanCode" class="design mini-datagridcolumn" field="HumanCode" width="80" headeralign="center" type="textboxcolumn">
+                                    工号
+                                </div>
+                                <div name="HumanName" class="design mini-datagridcolumn" field="HumanName" width="80" headeralign="center" type="textboxcolumn">
+                                    姓名
+                                </div>
+                                <div name="IsInvalid" class="design mini-datagridcolumn" field="IsInvalid" width="80" headeralign="center" type="comboboxcolumn">
+                                    <input id="SF_LoopHuman_dtl.IsInvalid" property="editor" class="mini-combobox" style="width: 100%;" />
+                                    生效/作废
+                                </div>
+                                <div name="Memo" class="design mini-datagridcolumn" field="Memo" width="80" headeralign="center" type="textboxcolumn">
+                                    备注
+                                    <input id="SF_LoopHuman_dtl.Memo" property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end col-md-6-->
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="查询面板" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>清空</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>关闭</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+        function Drawcell(e) {
+            if (e.field == "IsInvalid") {
+                if (e.row.IsInvalid == "2") {
+                    e.rowStyle = "background:yellow";
+                }
+            }
+        }
+
+        function GetLoopHuman() {
+            var len = mini.get("SF_LoopHuman_dtl").data.length;
+            if (len >= 5) {
+                Power.ui.warning("已抽取五个人员");
+            }
+            else {
+                var gdSelected = mini.get("SF_LoopHuman").getSelected();
+                if (IsEmpty(gdSelected)) {
+                    Power.ui.warning("未选择数据");
+                }
+                else {
+                    masterId = gdSelected.Id;
+                    posiId = gdSelected.PositionId;
+                    if (IsEmpty(masterId) || IsEmpty(posiId)) {
+                        Power.ui.warning("未选择岗位_(:зゝ∠)_")
+                    }
+                    else {
+                        Power.ui.loading("人员获取中……");
+                        var par = { "MasterId": masterId, "PosiId": posiId };
+                        FormFuns.APIExec("SF_LoopHuman", "BO", "getHumans", par, function (text) {
+                            var tem = mini.decode(text).data.value;
+                            Power.ui.loading.close();
+                            Power.ui.success(tem);
+                            mini.get("SF_LoopHuman.Refresh").doClick();
+                        });
+                    }
+                }
+            }
+        }
+
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            var grid = mini.get("SF_LoopHuman");
+            var humId = sessiondata.HumanId;
+            var humName = sessiondata.HumanName;
+            var myDate = new Date();
+            var d = myDate.toLocaleDateString();
+            data.LoopDate = myDate;
+            data.LoopHumanName = humName;
+            data.LoopHumanId = humId;
+
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>
+

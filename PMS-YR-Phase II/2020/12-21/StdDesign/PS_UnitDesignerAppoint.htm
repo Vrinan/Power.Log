@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>单体设计人配置
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_UnitDesignerAppoint.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_UnitDesignerAppoint.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="PS_UnitDesignerAppoint.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_UnitDesignerAppoint" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                              <input id="PS_UnitDesignerAppoint.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_UnitDesignerAppoint.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_UnitDesignerAppoint.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr> 
+									<tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_UnitDesignerAppoint.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                    </tr>
+		
+                                   
+                                    <tr>
+                                        <td>
+                                            设计专业
+                                        </td>
+                                        <td>
+                                            <input id="PS_UnitDesignerAppoint.DesignMajor" name="DesignMajor"  textname="DesignMajor" class="mini-buttonedit"
+                                                   emptytext="请选择设计专业..." onbuttonclick="PowerForm.OnBtnWizard(this)"  allowinput="false"  required="true"/>
+                                        </td>
+                                        <td>关联计划                                         
+                                        </td>
+                                        <td>
+										 <input id="PS_UnitDesignerAppoint.Plan_Name" name="Plan_Name"  textname="Plan_Name" class="mini-buttonedit"
+                                                   emptytext="请选择关联计划..." onbuttonclick="PowerForm.OnBtnWizard(this)"  allowinput="false"  required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_UnitDesignerAppoint.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_UnitDesignerAppoint.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细'>
+                             <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_UnitDesignerAppoint_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_UnitDesignerAppoint_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+
+                            <div class="mini-fit">
+                                <div id="PS_UnitDesignerAppoint_Dtl" class="mini-treegrid" editnextonenterkey="true" visible="true" allowcellselect="true" name="TreeColumn"
+                             checkrecursive="false" expandonload="true" idfield="Wbs_Guid" treecolumn="text"  allowcelledit="false" fitcolumns=""
+                             parentfield="Parent_Wbs_Guid" height="631" allowresize="true" checkmodel="multiple" style="width: 100%; height: 100%;" expandonload="true">
+
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>                           
+                                        <div field="WbsCode" headeralign="center">
+                                            WBS编码
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                        <div field="WbsName" headeralign="center">
+                                            WBS名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+										<div field="Designer" headeralign="center">
+                                            设计人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                        <div field="Proofreader" headeralign="center">
+                                            校对人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+										<div field="Auditor" headeralign="center">
+                                            审核人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+										<div field="Authorizer" headeralign="center">
+                                            审定人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"  />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					  
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+    </script>
+</body>
+</html>

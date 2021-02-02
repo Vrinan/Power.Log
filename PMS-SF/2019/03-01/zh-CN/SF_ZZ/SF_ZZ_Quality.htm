@@ -1,0 +1,282 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>质量检验联系单
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <a class="mini-button blue" id="SF_ZZ_Quality.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存</a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Quality.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新</a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="SF_ZZ_Quality.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭</a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Quality" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Quality.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.ProjectInformation" name="ProjectInformation" textname="ProjectInformation" class="mini-buttonedit"
+                                                allowinput="false" emptytext="项目名称..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                allowinput="false" required />
+                                            
+                                        </td>
+                                        <td>
+                                            供应商
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.SupplyUnit" name="SupplyUnit" textname="SupplyUnit" class="mini-buttonedit" allowinput="false" emptytext="供应商..."
+                                                onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                            <input id="SF_ZZ_Quality.SupplyUnitId" name="SupplyUnitId" textname="SupplyUnitId" class="mini-hidden">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            进厂时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.RecipientsDate" name="RecipientsDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            技术负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.ProjectLeader" name="ProjectLeader" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            规格、型号
+                                        </td>
+                                        <td>
+                                            <input property="editor" id="SF_ZZ_Quality.Specifications" class="mini-textbox" name="Specifications" style="width: 100%;"
+                                            />
+                                        </td>
+
+                                        <td>
+                                            物资名称
+                                            
+                                        </td>
+                                        <td>
+                                            <input property="editor" id="SF_ZZ_Quality.Model" class="mini-textbox" name="Model" style="width: 100%;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            总金额
+                                        </td>
+                                        <td>
+                                            <input property="editor" id="SF_ZZ_Quality.TotalMoney" class="mini-Spinner" name="TotalMoney" style="width: 100%;" minValue="0"
+                                                maxValue="999999999999999" />
+                                        </td>
+                                        <td>
+                                            数量
+                                        </td>
+                                        <td>
+                                            <input property="editor" id="SF_ZZ_Quality.Amount" class="mini-Spinner" name="Amount" style="width: 100%;" minValue="0" maxValue="999999999999999" changeOnMousewheel="false"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            资料
+                                        </td>
+                                        <td colspan="3">
+                                            <input property="editor" id="SF_ZZ_Quality.Data" class="mini-TextArea" name="Data" style="width: 100%;" emptytext="1、送货单/装箱单：          2、合格证明书：          3、特检证明书：          4、报关单： 
+ 5：操作维护手册：           6、图纸：                     7、备件：                     8、其他：        " readonly="readonly" />
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            是否扣款
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.IsDeduct" name="IsDeduct" truevalue="1" falsevalue="0" class="mini-checkbox" onvaluechanged="valuechanged"/>
+                                        </td>
+                                        <td id="Deductions1">
+                                            扣款金额（元）
+                                        </td>
+                                        <td id="Deductions2">
+                                            <input property="editor" id="SF_ZZ_Quality.Deductions" class="mini-Spinner" name="Deductions" style="width: 100%;" minValue="0" maxValue="999999999999999" changeOnMousewheel="false"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            校验内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Quality.Other" name="Other" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            存在问题
+                                        </td>
+                                        <td colspan="3">
+
+                                            <input id="SF_ZZ_Quality.Improve" name="Improve" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处理意见
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Quality.Instructions" name="Instructions" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            处理结果
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Quality.Packing" name="Packing" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+
+                                            <input id="SF_ZZ_Quality.Memo" name="Memo" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>接受部门</td>
+                                        <td>
+
+                                            <input id="SF_ZZ_Quality.DepartmentName" name="DepartmentName" class="mini-textbox" allowInput="false" />
+                                            <input id="SF_ZZ_Quality.DepartmentId" name="DepartmentId" textname="DepartmentId" class="mini-hidden" allowInput="false"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Quality.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            
+        });
+        PowerForm.EventAfterFormLoad  = function (e) {
+            if (mini.get("SF_ZZ_Quality.Status").value == 0) {
+                if (mini.get("SF_ZZ_Quality.DepartmentName").value == null || mini.get("SF_ZZ_Quality.DepartmentName").value == "") {
+                    var DeptId = sessiondata.DeptId == null ? "" : sessiondata.DeptId;
+                    var DeptName = sessiondata.DeptName == null ? "" : sessiondata.DeptName;
+                    mini.get("SF_ZZ_Quality.DepartmentId").setValue(DeptId);
+                    mini.get("SF_ZZ_Quality.DepartmentName").setValue(DeptName);
+                }
+            }
+            valuechanged();
+        }
+        function valuechanged(e){
+            if(mini.get("SF_ZZ_Quality.IsDeduct").value=="1")
+            {
+                $("#Deductions1").show();
+                $("#Deductions2").show();
+            }else{
+                $("#Deductions1").hide();
+                $("#Deductions2").hide();
+            }
+        }
+    </script>
+</body>
+
+</html>

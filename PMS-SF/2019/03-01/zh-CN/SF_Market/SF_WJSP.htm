@@ -1,0 +1,208 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Scripts/KindEditor/kindeditorboot.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>文件审批
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="SF_WJSP.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+             
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_WJSP.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_WJSP.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_WJSP" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.Code" name="Code" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_WJSP.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            填报部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.DeptName" class="mini-textbox" name="DeptName" readonly/>
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            通知类型
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.NotificationType" name="NotificationType" class="mini-combobox" required="true" onvaluechanged="valuechanged"/>
+                                        </td>
+                                        <td class="aa">
+                                            通知部门
+                                        </td>
+                                        <td class="aa">
+                                            <input id="SF_WJSP.NotificationDepartment" name="NotificationDepartment" textname="NotificationDepartment" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                            <input id="SF_WJSP.NotificationDepartmentIds" name="NotificationDepartmentIds" class="mini-textbox" Visible="false" />
+                                        </td>
+                                        <td class="bb">
+                                            通知人员
+                                        </td>
+                                        <td class="bb">
+                                            <input id="SF_WJSP.NotificationHuman" name="NotificationHuman" textname="NotificationHuman" class="mini-buttonedit"
+                                                   emptytext="请选择人员..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" />
+                                            <input id="SF_WJSP.NotificationHumanIds" name="NotificationHumanIds" class="mini-textbox" Visible="false" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td colspan="4">
+                                            <div id="SF_WJSP_EeventsMemo" style="width:100%;height:100%"></div>
+
+                                            <input id="content1" name="content1" data-options="{kename:'content1'}" class="mini-textarea" style="width:100%;height:300px;visibility:hidden;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_WJSP.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+
+        //PowerForm.EventAfterLoadRight = function (o) {
+        //    $(".aa").hide();//隐藏
+        //    $(".bb").hide();
+        //    var NotificationType = mini.get("SF_WJSP.NotificationType").getValue();
+        //    if (NotificationType == "01") {
+        //        $(".aa").hide();
+        //        $(".bb").hide();
+        //    }
+        //    if (NotificationType == "02") {
+        //        $(".aa").show();
+        //    }
+        //    if (NotificationType == "03") {
+        //        $(".bb").show();
+        //    } 
+        //}
+
+        //function valuechanged() {
+        //    var NotificationType = mini.get("SF_WJSP.NotificationType").getValue();
+        //    if (NotificationType == "01") {
+        //        $(".aa").hide();
+        //        $(".bb").hide();
+        //    }
+        //    if (NotificationType == "02") {
+        //        $(".aa").show();
+        //        $(".bb").hide();
+        //    }
+        //    if (NotificationType == "03") {
+        //        $(".bb").show();
+        //        $(".aa").hide();
+        //    }
+        //}
+
+        //PowerForm.EventWizardData = function (e, data) {
+        //    e.cancel = true;
+        //    var NotificationDepartments = "";
+        //    var NotificationHumans = "";
+        //    var arr1 = new Array();
+        //    var arr2 = new Array();
+        //    if (e.id == "SF_WJSP.NotificationDepartment") {
+        //        for (var i = 0; i < data.length; i++) {
+        //            if (i < data.length - 1) {
+        //                NotificationDepartments += data[i]["Name"] + "，";
+        //                arr1[i] = data[i]["Id"];
+        //            } else {
+        //                NotificationDepartments += data[i]["Name"];
+        //                arr1[i] = data[i]["Id"];
+        //            }
+
+        //        }
+        //        mini.get("SF_WJSP.NotificationDepartment").setValue(NotificationDepartments);
+        //        mini.get("SF_WJSP.NotificationDepartmentIds").setValue(arr1);
+        //    }
+        //    if (e.id == "SF_WJSP.NotificationHuman") {
+        //        for (var i = 0; i < data.length; i++) {
+        //            if (i < data.length - 1) {
+        //                NotificationHumans += data[i]["Name"] + "，";
+        //                arr2[i] = data[i]["Id"];
+        //            } else {
+        //                NotificationHumans += data[i]["Name"];
+        //                arr2[i] = data[i]["Id"];
+        //            }
+
+        //        }
+        //        mini.get("SF_WJSP.NotificationHuman").setValue(NotificationHumans);
+        //        mini.get("SF_WJSP.NotificationHumanIds").setValue(arr2);
+        //    }
+        //}
+
+
+    </script>
+</body>
+</html>

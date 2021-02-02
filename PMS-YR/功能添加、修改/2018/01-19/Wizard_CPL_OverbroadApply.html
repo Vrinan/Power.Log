@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = $Model.data.params;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="请输入概算科目编码" onenter="OnSearchClick" />
+                    <input id="txtName1" class="mini-textbox" style="width: 200px;" emptytext="请输入概算科目名称" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="40%" showcollapsebutton="true">
+                                    <div id="PS_CBS_Class" class="mini-treegrid" idfield="Id" treecolumn="text" parentfield="ParentId"
+                                         allowresize="true" style="width: 100%; height: 100%;" expandonload="true" url="/Form/GridPageLoad"
+                                         autoload="false" onbeforeload="OnTreeBeforeLoad">
+                                        <div property="columns">
+                                            <div name="text" field="CbsClassCode" headeralign="center" header="长代码" allowsort="true">长代码<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                            <div field="CbsClassName" header="代码名称" headeralign="center" allowsort="true">代码名称<input property="editor" class="mini-textbox" style="width: 100%;" /> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div showcollapsebutton="true">
+                                    <div id="PS_ContractBudget_CBS" idfield="Id" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                         url="/Form/GridPageLoadEx" onbeforeload="OnGridBeforeLoad" allowresize="true" showpager="false" autoload="false">
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="20"></div>
+                                            <div type="checkcolumn" name="checkcolumn"></div>
+                                            <div field="CbsCode" headeralign="center" width="60">
+                                                编码
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="CbsName" headeralign="center">
+                                                名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="CbsValue" headeralign="center">
+                                                名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="CbsTitle" headeralign="center">
+                                                名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="CbsCode">已选中概算科目</div>
+                                    <div field="CbsName">名称</div>
+                                    <div name="action" width="50px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var RightGrid = mini.get("PS_CBS");
+        var LeftGrid = mini.get("PS_ContractBudget_CBS");
+        var gridselected = mini.get("GridSelected");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        Select.LoadStepFirst = function () {
+            LeftGrid.reload();
+        }
+
+        $(function () {
+            var bmulti = (WizardParams.multi == "1");
+            RightGrid.multiSelect = bmulti;
+            RightGrid.onlyCheckSelection = bmulti;
+            if (bmulti)
+                RightGrid.showColumn("checkcolumn");
+            else {
+                RightGrid.hideColumn("checkcolumn");
+            }
+            LeftGrid.on("nodeselect", OnSelectNode);
+        });
+        RightGrid.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var rw = LeftGrid.getSelectedNode();
+            row.CBS_Class_Id = rw.Id;
+            row.CBS_Class_Name = rw.CbsClassName;
+            row.CBSPath = rw.CbsClassName;
+            //获取CBS路径,向上1层
+            var p1 = LeftGrid.getParentNode(rw);
+            if (p1) {
+                row.CBSPath = p1.CbsClassName + "/" + row.CBSPath;
+            }
+            //获取装置
+            var n = null;
+            LeftGrid.bubbleParent(rw, function (node) {
+                if (node.XLX_Type == "单项工程" && n == null) {
+                    n = node;
+                    return false;
+                }
+            })
+            if (n != null)
+                row.DecviceNameA = n.CbsClassName;
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (!cRow) {
+                if (RightGrid.multiSelect)
+                    gridselected.addRow(row);
+                else {
+                    var data = [];
+                    data.push(row);
+                    gridselected.setData(data);
+                }
+            }
+        })
+        RightGrid.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+				+ e.record.Id + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].Id == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+        function Onbeforeexpand(e) {
+            var node = e.node;
+            if (node.isLeaf) return;
+            if (node.children) return;
+            OnTreeBeforeLoad(e);
+        }
+
+        function OnTreeBeforeLoad(e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+
+            var p = { KeyWord: sender.id, KeyWordType: "BO", select: "", sort: "Sequ", swhere: "", index: 0, size: 0, extparams: "" };
+
+            $.ajax({
+                url: sender.url,
+                data: p, type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (!o.success) {
+                        return;
+                    }
+                    var data = mini.decode(o.data.value);
+
+                    data = mini.arrayToTree(data, sender.nodesField, sender.idField, sender.parentField);
+                    sender.setData(data);
+                }
+            })
+        }
+
+        function OnGridBeforeLoad(e) {
+            e.cancel = true;
+            var node = LeftGrid.getSelectedNode();
+            if (!node) return;
+            var sender = e.sender;    //树控件
+            var swhere = Select.GetWhere() || "1=1";
+            if (WizardParams.filter) {
+                swhere += " and " + base64decode(WizardParams.filter);
+            }
+            var p = { KeyWord: sender.id, KeyWordType: "BO", select: "", sort: "Sequ", swhere: "", index: 0, size: 0, extparams: "" };
+            //swhere += " and CbsClass_Guid='" + node.Id + "'";
+            var txt = mini.get("txtName");
+            var txt1 = mini.get("txtName1");
+            if (txt.value.length > 0)
+                swhere += " and (CbsCode like '%" + txt.value + "%')";
+            if (txt1.value.length > 0)
+                swhere += " and (CbsName like '%" + txt1.value + "%')";
+            p.swhere = swhere;
+            var pgindex = e.params.pageIndex;
+            sender.mask();
+            FormFuns.GridPageLoad(p, function (o) {
+                sender.unmask();
+                if (o.success) {
+                    var data = mini.decode(o.data.value);
+                    sender.setData(data);
+                    sender.setTotalCount(o.data.totalcount);
+                    sender.setPageIndex(pgindex);
+                }
+            })
+        }
+
+        function OnSearchClick(e) {
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+</html>
+

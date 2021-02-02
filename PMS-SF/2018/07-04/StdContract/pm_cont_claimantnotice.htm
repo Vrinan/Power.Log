@@ -1,0 +1,401 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <!--标准按钮-->
+
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同索赔意向
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <!--<a class="mini-button blue" id="btnActive" style="display: none;" onclick="WorkFlowUtils.ActiveWorkFlow(this);"><i class="fa fa-save"></i>送审</a>--> 
+                    <a class="mini-button blue" id="PS_ContractClaimApplication.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>
+                        保存</a> <!--<a class="mini-button blue" id="PS_ContractClaimApplication.SaveAdd" onclick="PowerForm.OnBtnSaveAdd(this)">
+                            <i class="fa fa-save"></i>保存&amp;新增</a>--> <a class="mini-button blue" id="PS_ContractClaimApplication.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                   <!-- <div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_ContractClaimApplication.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                        <i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <!--tab 通常 -->
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="PS_ContractClaimApplication" class="form">
+                                <table class="table table-bordered">
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目编号' id='lbl_1' class=' mini-powerlabel design' data-options=''>
+                                                项目编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='ProjCode' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='ProjCode' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='PS_ContractClaimApplication.ProjCode' class="mini-textbox design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='审批状态' id='lbl_2' class=' mini-powerlabel design' data-options=''>
+                                                审批状态
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='Status' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='Status' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='1000' popupminheight='30' popupmaxheight='200' popupminwidth='50' popupmaxwidth='2000' popupwidth='100%' popup='[object Object]' pinyinfield='tag' id="PS_ContractClaimApplication.Status" class="mini-combobox design" data-options='' readonly="readonly">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='项目名称' id='lbl_3' class=' mini-powerlabel design' data-options=''>
+                                                项目名称
+                                            </div>
+                                        </td>
+                                        <td class="cell" valign="middle" rowspan="1" colspan="3">
+                                            <input datafield='OwnProjName' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='OwnProjName' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='PS_ContractClaimApplication.OwnProjName' class="mini-textbox design" data-options=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同编号' id='lbl_4' class=' mini-powerlabel design' data-options=''>
+                                                合同编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='ContractCode' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ContractCode' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' textname='ContractCode' allowinput='false' maxlength='1000' onbuttonclick='PowerForm.OnBtnWizard(this)' id="PS_ContractClaimApplication.ContractCode" class="mini-buttonedit design" data-options='' required>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='合同名称' id='lbl_5' class=' mini-powerlabel design' data-options=''>
+                                                合同名称
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='ContractName' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ContractName' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='PS_ContractClaimApplication.ContractName' class="mini-textbox design" data-options='' readonly="readonly">
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='通知单号' id='lbl_6' class=' mini-powerlabel design' data-options=''>
+                                                编号
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='Code' loadingmsg='Loading...' name='Code' requirederrortext='不能为空' allowinput='true' id='PS_ContractClaimApplication.Code' class="mini-textbox design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='标题' id='lbl_7' class=' mini-powerlabel design' data-options=''>
+                                                标题
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input id="PS_ContractClaimApplication.Title" name="Title" class="mini-textbox design"
+                                                style="width: 100%" />
+
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='申请提交日期' id='lbl_8' class=' mini-powerlabel design' data-options=''>
+                                                申请提交日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='ApplyDate' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ApplyDate' format='yyyy-MM-dd' id="PS_ContractClaimApplication.ApplyDate" class="mini-datepicker design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='报告及资料实际提交日期' id='lbl_8' class=' mini-powerlabel design' data-options=''>
+                                                报告及资料实际提交日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='DocumentSubmitDate' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='DocumentSubmitDate' format='yyyy-MM-dd' id="PS_ContractClaimApplication.DocumentSubmitDate" class="mini-datepicker design" data-options=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='主货币' id='lbl_6' class=' mini-powerlabel design' data-options=''>
+                                                主货币
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='CurrencyType' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='CurrencyType' requirederrortext='不能为空' errormode='icon' validateonleave='true' id='PS_ContractClaimApplication.CurrencyType' class="mini-combobox design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='预计索赔金额' id='lbl_7' class=' mini-powerlabel design' data-options=''>
+                                                预计索赔金额
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input id="PS_ContractClaimApplication.ClaimAmount" name="ClaimAmount" class="mini-spinner design" maxvalue="9999999999" minvalue="0" format="n2"
+                                                style="width: 100%" />
+
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='索赔答复日期' id='lbl_8' class=' mini-powerlabel design' data-options=''>
+                                                索赔答复日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='ReplyDate' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='ReplyDate' requirederrortext='不能为空' errormode='icon' showtodaybutton='true' timeformat='H:mm' format='yyyy-MM-dd' id="PS_ContractClaimApplication.ReplyDate" class="mini-datepicker design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='索赔对象' id='lbl_9' class=' mini-powerlabel design' data-options=''>
+                                                索赔对象
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input id="PS_ContractClaimApplication.ClaimObj" name="ClaimObj" class="mini-textbox design" style="width: 100%" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='索赔主要内容' id='lbl_10' class=' mini-powerlabel design' data-options=''>
+                                                索赔主要内容
+                                            </div>
+                                        </td>
+                                        <td class="cell" valign="middle" rowspan="1" colspan="3">
+                                            <textarea datafield='ClaimContent' height="100" allowanim='true' visible='true' enabled='true' name='ClaimContent' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' id='PS_ContractClaimApplication.ClaimContent' class='mini-textarea design' data-options=''>
+							</textarea>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='备注' id='lbl_11' class=' mini-powerlabel design' data-options=''>
+                                                备注
+                                            </div>
+                                        </td>
+                                        <td class="cell" valign="middle" rowspan="1" colspan="3">
+                                            <textarea datafield='Memo'  height="100" value='' defaultvalue='' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' name='Memo' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='10000000' allowinput='true' id='PS_ContractClaimApplication.Memo' class='mini-textarea design' data-options=''>
+							</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录入人' id='lbl_12' class=' mini-powerlabel design' data-options=''>
+                                                录入人
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='RegHumName' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='RegHumName' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' maxlength='5000' allowinput='true' id='PS_ContractClaimApplication.RegHumName' class="mini-textbox design" data-options=''>
+                                        </td>
+                                        <td class="cell">
+                                            <div loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' text='录入日期' id='lbl_13' class=' mini-powerlabel design' data-options=''>
+                                                录入日期
+                                            </div>
+                                        </td>
+                                        <td class="cell">
+                                            <input datafield='RegDate' loadingmsg='Loading...' allowanim='true' visible='true' enabled='true' readonly='true' name='RegDate' requirederrortext='不能为空' errormode='icon' validateonleave='true' validateonchanged='true' isvalid='true' allowinput='true' maxlength='1000' popupminheight='30' popupmaxheight='2000' popupminwidth='50' popupmaxwidth='2000' popup='[object Object]' showclearbutton='true' showtodaybutton='true' timeformat='H:mm' format='yyyy-MM-dd' id="PS_ContractClaimApplication.RegDate" class="mini-datepicker design" data-options=''>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title="收发文记录" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="PS_ContractClaimApplication_files.Add" onclick="AddFiles()">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="PS_ContractClaimApplication_files.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="PS_ContractClaimApplication_files.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractClaimApplication_files" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div headeralign="center" type="indexcolumn" width="45" align="center">
+                                            序号
+                                        </div>
+                                        <div headeralign="center" field="Code" header="编号" allowsort="true" align="left">编号<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="Title" header="主题" allowsort="true" align="left">主题<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="FromDept" header="发件方" allowsort="true" align="left">发件方<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="Sender" header="发件人" allowsort="true" align="center">发件人<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="ToDept" header="收件方" allowsort="true" align="left">收件方<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="Receiver" header="收件人" allowsort="true" align="center">收件人<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="RegDate" header="日期" allowsort="true" dateformat="yyyy-MM-dd" align="center">日期<input class="mini-datepicker" style="width: 100%;" readonly="readonly"></div>
+                                        <!--<div field="recedec" header="收文说明" allowsort="true">收文说明<input  class="mini-textbox" style="width: 100%;"></div>
+                                    <div field="remark" header="备注" allowsort="true">备注<input property="editor" class="mini-textarea" style="width: 100%;"></div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="违约通知" iconcls="fa fa-file-text">
+                            <div class="mini-toolbar" id="tab">
+                                <a class="mini-button blue" id="PS_ContractClaimApplication_breachnotice.Add" onclick="AddPayNotice()">
+                                    <i class="fa fa-plus"></i>新增</a> <a class="mini-button blue" id="PS_ContractClaimApplication_breachnotice.Save"
+                                        onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a> <a class="mini-button blue"
+                                            id="PS_ContractClaimApplication_breachnotice.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                                <!--             <a class="mini-button blue" id="PS_ContractClaimApplication_breachnotice.EditForm" onclick="PowerForm.OnBtnEditForm(this)"><i class="fa fa-plus"></i>查看</a>-->
+
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractClaimApplication_breachnotice" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                    allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true"
+                                    idfield="id" showpager="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn" width="40">
+                                        </div>
+                                        <div headeralign="center" type="indexcolumn" width="45" align="center">
+                                            序号
+                                        </div>
+                                        <div headeralign="center" field="Code" header="违约通知单号" allowsort="true" align="left">
+                                            违约通知单号
+                                        <input property="editor" class="mini-textbox" style="width: 100%;" readonly="readonly">
+                                        </div>
+                                        <div headeralign="center" field="Title" header="违约通知单名称" allowsort="true" align="left">违约通知单名称<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="DefaultParty" header="违约方" allowsort="true" align="left">违约方<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="NoticeDate" header="日期" allowsort="true" dateformat="yyyy-MM-dd" align="center">日期<input class="mini-datepicker" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="DefaultRemark" header="违约情况" allowsort="true" align="left">违约情况<input class="mini-textbox" style="width: 100%;" readonly="readonly"></div>
+                                        <div headeralign="center" field="Memo" header="备注" allowsort="true" align="left">备注<input property="editor" class="mini-textarea" style="width: 100%;" readonly="readonly"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (formconfig.FormState == "add")
+                mini.get("PS_ContractClaimApplication.Title").setValue("合同索赔意向");
+        }
+
+
+
+        /* PowerForm.EventWizardWhere = function (e) {
+             var cont_nsid = formconfig.config.joindata.currow["cont_nsid"];
+        
+             if (e.id == "PS_ContractClaimApplication.ClaimObj" && (cont_nsid == null || cont_nsid == "")) {
+                 alert("请先选择合同信息！");
+                 e.canOpen = false;
+             }
+        
+             else e.canOpen = true;
+        
+         }*/
+        function AddPayNotice() {
+            var Grid = mini.get("PS_ContractClaimApplication_breachnotice");
+            var Fid = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/Wizardwin_PS_ContractNotice.htm&multi=1&Fid=" + Fid,
+                showMaxButton: true,
+                width: 600,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.breachnotice_Guid = data[i].Id;
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_ContractClaimApplication.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        function AddFiles() {
+            var Grid = mini.get("PS_ContractClaimApplication_files");
+            var Fid = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/Wizardwin_PS_ContractClaimApplication_files.htm&multi=1&Fid=" + Fid,
+                showMaxButton: true,
+                width: 600,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.file_Guid = data[i].Id;
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_ContractClaimApplication.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_ContractClaimApplication.ContractCode").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/34399717-2ebe-40fe-9fd7-bca7b76f54e4/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+    </script>
+</body>
+</html>

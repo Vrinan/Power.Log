@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="/Scripts/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            Login();
+            
+        })
+        function getParameter(param) {
+            var query = window.location.search;
+            var iLen = param.length;
+            var iStart = query.indexOf("&" + param + "=");
+            if (iStart == -1) {
+                iStart = query.indexOf("?" + param + "=");
+                if (iStart == -1) return "";
+            }
+            iStart += iLen + 1 + 1;
+            var iEnd = query.indexOf("&", iStart);
+            if (iEnd == -1)
+                return query.substring(iStart);
+
+            return query.substring(iStart, iEnd);
+        }
+        function Login() {
+            //url为http://xxxxxxxx?language=zh-CN&usercode=xxx&password=xxx
+            //此处传递的usercode和password的值，通过Base64编码再传递，项目上按照实际情况，可直接传明文或其他加密方式
+            var language = getParameter("language");
+            if (IsEmpty(language))
+            {
+                language = "zh-CN";
+            }
+            //var usercode = Base64.decode(getParameter("usercode"));
+            //var password = Base64.decode(getParameter("password"));
+            var usercode = getParameter("usercode");
+            if (IsEmpty(usercode)) {
+                usercode = "admin";
+            }
+            var password = getParameter("password");
+            if (IsEmpty(password)) {
+                password = "";
+            }
+            $.ajax({
+                url: "/Account/Login",
+                type: "POST",
+                data: {
+                    logintype: "PowerEncode", language: base64swhere(language),
+                    usercode: base64swhere(usercode), userpass: base64swhere(password), verifycode: base64swhere("")
+                },
+                cacha: false,
+                success: function (ret) {
+                    ret = $.parseJSON(ret);
+                    if (ret.success && ret.data.bizareadata.length > 0) {
+                        //$.cookie('menuids', '');
+                        //打开主页
+                        //var url = "/WebCenter/Open/00000000-0000-0000-0000-00000000000a";
+                        //window.location.href = url;
+                        //ajax
+                        Query();
+
+
+                    } else {
+                        alert(ret.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function Query() {
+            var humans = getParameter("humans");
+            var userCode = getParameter("userCode");
+            //使用ajax请求
+            if (humans != "") {
+                $.ajax({
+                    url: "/Al/getHumans",
+                    data: {
+                    },
+                    type: "get",
+                    async: false,
+                    success: function (text) {
+                        document.getElementById("returns").innerHTML = text;
+                    }
+                });
+            }            //清空密码            if (userCode != "") {
+                $.ajax({
+                    url: "/Al/EmptyHumanPwd",
+                    data: {
+                        userCode: userCode
+                    },
+                    type: "post",
+                    success: function (text) {
+                        document.getElementById("returns").innerHTML = text;
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="returns"></div>
+</body>
+</html>

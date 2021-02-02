@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="/Scripts/boot.js?v=694" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=694" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/source/echarts.js" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var EpsProjId = "5472e5b6-437f-4c91-8f6b-d07a77e6c304";
+    </script>
+    <style>
+        *::-webkit-scrollbar {
+            width: 8px;
+            background-color: #fff;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 8px;
+            -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, .3);
+        }
+
+        body {
+            background-color: #eef5f9;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        .clearfix:after {
+            content: ".";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden
+        }
+
+        .clearfix {
+            zoom: 1;
+        }
+
+        .body-item {
+            background: #fff;
+            width: 100%;
+            height: 100%;
+        }
+
+        .menu-box {
+            padding: 15px;
+        }
+
+        .menu-box li {
+            float: left;
+            float: left;
+            padding: 10px 0;
+            width: 16.6%;
+            cursor: pointer;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .menu-box li:hover {
+            background-color: #eef7fd;
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -ms-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+
+        .menu-box li .icon-img-bg {
+            display: inline-block;
+            border-radius: 50%;
+            color: #fff;
+            width: 40px;
+            line-height: 43px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+
+        .menu-box li .icon-img-bg.red {
+            background: #8e7241;
+        }
+
+        .menu-box li .icon-img-bg.blue {
+            background: #4184E8;
+        }
+
+        .menu-box li .icon-img-bg.green {
+            background: #51CF86;
+        }
+
+        .menu-box li .icon-img-bg.blueviolet {
+            background: blueviolet;
+        }
+
+        .menu-box li .icon-img-bg.orange {
+            background: #FFA500;
+        }
+
+        .menu-box li .icon-img-bg i {
+            margin-right: 0;
+            font-size: 18px;
+        }
+
+        .menu-right-box {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+
+
+        .body-title {
+            height: 42px;
+            line-height: 42px;
+            padding: 0 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .body-title>span {
+            padding-left: 5px;
+            border-left: 3px solid #5BAFE9;
+        }
+
+        /*.body-content {
+            padding: 0 10px;
+            overflow: auto;
+        }*/
+
+        .plan-box {
+            overflow: hidden; 
+            height: 100%;
+        }
+
+        .plan-box li {
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .plan-box li:hover {
+            background-color: #eef7fd;
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -ms-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+
+        .plan-box li span {
+            display: block;
+            float: left;
+        }
+
+        .plan-box li span:first-child {
+            color: #5BAFE9;
+            font-size: 16px;
+        }
+
+        .plan-box li span:nth-child(2) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            width: 60%;
+            padding-left: 6px;
+        }
+
+
+        .plan-box li span:last-child {
+            float: right;
+            color: #999;
+        }
+
+        .plan-box li>div {
+            float: left;
+        }
+
+
+        .body-content-height {
+            height: calc(100% - 43px);
+            height: -moz-calc(100% - 43px);
+            height: -webkit-calc(100% - 43px);
+        }
+
+
+        .right-more-box {
+            float: right;
+        }
+
+        .right-more-box .more-text {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .right-more-box .more-text i {
+            margin-left: 3px;
+        }
+
+
+        .mini-buttonedit-border.mini-corner-all,
+        .mini-buttonedit-border.mini-corner-all input {
+            height: 25px;
+            line-height: 25px;
+        }
+
+        .mini-buttonedit-focus .mini-buttonedit-border {
+            /* border: 1px solid transparent; */
+        }
+
+
+
+        .menu-box-right li {
+            float: left;
+            width: 33.33%;
+            padding: 0 5px;
+        }
+
+        .menu-box-right li>div {
+            color: #fff;
+        }
+
+        .blue-bg {
+            background-color: #60B8F6;
+            height: 70px;
+        }
+
+        .blue-bg>div,
+        .purple-bg>div,
+        .green-bg>div,
+        .yellow-bg>div {
+            float: left;
+        }
+
+        .visual-blue {
+            background: #5BAFE9;
+        }
+
+        .menu-left-box {
+            width: 30px;
+            height: 70px;
+            line-height: 70px;
+            text-align: center;
+        }
+
+        .menu-right-box {
+            width: calc(100% - 30px);
+            width: -moz-calc(100% - 30px);
+            width: -webkit-calc(100% - 30px);
+        }
+
+        .menu-right-box>span:first-child {
+            font-size: 16px;
+            line-height: 47px;
+        }
+
+        .menu-right-box>span {
+            display: block;
+            text-align: center;
+            line-height: 35px;
+            height: 35px;
+        }
+
+        .visual-purple {
+            background: #C37DD3;
+        }
+
+        .purple-bg {
+            background-color: #CE84DE;
+        }
+
+        .green-bg {
+            background-color: #55DA8D;
+        }
+
+        .visual-green {
+            background: #51CF86;
+        }
+
+        .menu-box-right {
+            padding: 20px 10px;
+        }
+
+        .menu-left-box i {
+            font-size: 18px;
+        }
+
+        .right-in-put {
+            float: right;
+            display: inline-block;
+            height: 40px;
+        }
+        .btn-time-box{
+            display: inline-block;
+        }
+        .btn-time-box .active,
+        .btn-time-box span:hover {
+            background-color: #0899ed;
+            color: #fff;
+            border-radius: 3px;
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -ms-transition: all .5s;
+            -o-transition: all .5s;
+        }
+
+        .btn-time-box span {
+            padding: 0 5px;
+            height: 20px;
+            line-height: 20px;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .height-content-box{
+            height:calc(100% 155px);
+             height: -moz-calc(100% - 155px);
+            height: -webkit-calc(100% - 155px);
+        }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 0; overflow-x: hidden;">
+    <div class="row" style="height: 100%;">
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:0;height:154px;">
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="body-item" style="height: 154px;">
+                    <div class="body-title">
+                        <span>开始</span>
+                    </div>
+                    <ul class="menu-box clearfix">
+                        <li onclick="formOpen('6b5c9b95-53b0-4cc0-a08d-4829f4e60032')">
+                            <div class="icon-img-bg  green"><i class="fa fa-sun-o"></i></div>
+                            <div>CBS定义</div>
+                        </li>
+                        <li onclick="formOpen('4ff21e09-2356-44f3-be74-0e70a69beecf')">
+                            <div class="icon-img-bg blue"><i class="fa fa-sitemap"></i></div>
+                            <div>概算编制</div>
+                        </li>
+                        <li onclick="formOpen('f0010081-d652-40b6-9bc2-d7b11a680d7c')">
+                            <div class="icon-img-bg orange"><i class="fa fa-gbp"></i></div>
+                            <div>预算编制</div>
+                        </li>
+                        <li onclick="formOpen('aa35030d-3410-48e2-8728-8959eb54460d')">
+                            <div class="icon-img-bg blueviolet"><i class="fa fa-sheqel"></i></div>
+                            <div>费用划拨</div>
+                        </li>
+                        <li onclick="formOpen('68c25cd1-8e78-4e87-8835-c721d97dc8d0')">
+                            <div class="icon-img-bg  red"><i class="fa fa-won"></i></div>
+                            <div>费用登记</div>
+                        </li>
+                        <li onclick="formOpen('01f7396f-2496-4d4b-b0c8-9402b576bb8a')">
+                            <div class="icon-img-bg orange" style="background: #26C6DA;"><i class="fa fa-line-chart"></i></div>
+                            <div>费用报表</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="body-item" style="height: 154px;">
+                    <div class="body-title">
+                        <span>概览</span>
+                    </div>
+                    <ul class="menu-box-right clearfix">
+                        <li>
+                            <div class="blue-bg clearfix">
+                                <div class="menu-left-box visual-blue">
+                                    <i class="fa fa-cny"></i>
+                                </div>
+                                <div class="menu-right-box">
+                                    <span id="mbcb">0万</span>
+                                    <span id="cbtext"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="purple-bg clearfix">
+                                <div class="menu-left-box visual-purple">
+                                    <i class="fa fa-dollar"></i>
+                                </div>
+                                <div class="menu-right-box">
+                                    <span id="zycb">0万</span>
+                                    <span id="cbtext1"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="green-bg clearfix">
+                                <div class="menu-left-box visual-green">
+                                    <i class="fa fa-bitcoin"></i>
+                                </div>
+                                <div class="menu-right-box">
+                                    <span id="cbjy">0万</span>
+                                    <span>成本结余</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12 height-content-box" style="padding:0;">
+            <div class="col-md-8 col-sm-8 col-xs-12" style="padding-top: 10px;height:50%;">
+                <div class="body-item">
+                    <div class="body-title">
+                        <span>动态</span>
+                        <!--<div class="right-in-put">
+                            <div id="btnTimeBox" class="btn-time-box">
+                                <span class="active">近一年</span>
+                                <span>上一年</span>
+                                <span>自定义</span>
+                            </div>
+                            <div id="timeCustom" class="time-custom" style="display: none;">
+                                <input id="date1" width="150px" class="mini-datepicker" value="2010-01-01" /> - <input id="date1" width="150px" class="mini-datepicker" value="2010-01-01" />
+                            </div>
+                        </div>-->
+                        <div class="right-more-box">
+                        </div>
+                    </div>
+                    <div class="body-content body-content-height">
+                        <div id="chart1" style="width:100%;height:100%;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top: 10px;height:50%;">
+                <div class="body-item">
+                    <div class="body-title">
+                        <span>目标</span>
+                    </div>
+                    <div class="body-content body-content-height" style="padding: 10px;">
+                        <div id="chart2" style="width:100%;height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top: 10px;height:50%;">
+                <div class="body-item">
+                    <div class="body-title">
+                        <span>费用登记</span>
+                        <div class="right-more-box">
+                            <a class="more-text" onclick="formOpen('68c25cd1-8e78-4e87-8835-c721d97dc8d0')">更多<i class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="body-content body-content-height" style="">
+                        <ul class="plan-box" id="PS_PmFeeExpense">
+                            <!--<li class="clearfix">
+                                <span>●</span>
+                                href="/Form/EditForm/68c25cd1-8e78-4e87-8835-c721d97dc8d0/"
+                                <span>名名字名字名名名字名字名字名字名字名字字名名字名字名字名字名字名字字字名字名字名字字</span>
+                                <span>2020-02-20</span>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top: 10px;height:50%;">
+                <div class="body-item">
+                    <div class="body-title">
+                        <span>分摊记录</span>
+                        <div class="right-more-box">
+                            <a class="more-text" onclick="formOpen('a0799161-a2ee-4c61-8b1d-a3d06a821624')">更多<i class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="body-content body-content-height" style="">
+                        <ul class="plan-box" id="PS_CostAllocation">
+                            <!--<li class="clearfix">
+                                <span>●</span>
+                                <span>名名字名字名名名字名字名字名字名字名字字名名字名字名字名字名字名字字字名字名字名字字</span>
+                                <span>2020-02-20</span>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top: 10px;height:50%;">
+                <div class="body-item">
+                    <div class="body-title">
+                        <span>费用划拨</span>
+                        <div class="right-more-box">
+                            <a class="more-text" onclick="formOpen('aa35030d-3410-48e2-8728-8959eb54460d')">更多<i class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="body-content body-content-height">
+                        <ul class="plan-box" id="PS_CC_AllocationPlan">
+                            <!--<li class="clearfix">
+                                <span>●</span>
+                                <span>名名字名字名名名字名字名字名字名字名字字名名字名字名字名字名字名字字字名字名字名字字</span>
+                                <span>2020-02-20</span>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mini.parse();
+
+        option1 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: ' '        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                borderWidth: 0,
+                x: 70,
+                x2: 50,
+                y: 50,
+                y2: 30
+            },
+            xAxis: [
+                {
+                    splitLine: { show: false },//去除网格线
+                    type: 'category',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#EEEEEE',
+                            width: 1,//这里是为了突出显示加上的
+                        },
+                    },
+                    axisLabel: {
+                        // formatter: '{value}',
+                        textStyle: { //改变刻度字体样式
+                            color: '#666'
+                        }
+                    },
+                    axisTick: {
+                        show: false //隐藏刻度线
+                    },
+                    type: 'value',
+                    position: 'top',
+                }
+            ],
+            yAxis: {
+                type: 'category',
+                data: [],
+
+                nameTextStyle: {
+                    color: "#0166EB",
+                    fontSize: 13,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#EEEEEE',
+                        width: 1,//这里是为了突出显示加上的
+                    },
+                },
+                axisLabel: {
+                    textStyle: { //改变刻度字体样式
+                        color: '#666'
+                    }
+                },
+                axisTick: {
+                    show: false //隐藏刻度线
+                },
+                splitLine: {    //网格线
+                    lineStyle: {
+                        type: 'dashed',//设置网格线类型 dotted：虚线   solid:实线
+                        color: '#EEEEEE'
+
+                    },
+                    show: true //隐藏或显示
+                }
+            },
+            series: [
+                {
+                    name: '金额（万元）',
+                    type: 'bar',
+                    stack: '总量',
+                    barMaxWidth: 15,//柱子最大宽度 
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: [5, 5, 5, 5],
+                            label: { show: true, position: 'inside' },
+                            color: function (params) {
+                                var colorList = ['#F27714', '#51CF86', '#FFA500', '#0D98FF'];
+                                return colorList[params.dataIndex];
+                            },//柱形显示多种颜色
+                        }
+                    },
+                    data: []
+                }
+            ]
+        };
+        option2 = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b} : <br/>{c}万元 ({d}%)'
+            },
+            color: ['#51CF86', '#4184E8', '#9476F3', '#FFA500'],
+            legend: {
+                orient: 'vertical',
+                x: 'right',
+                y: 20,
+                data: []
+            },
+            series: [
+                {
+                    name: '自开工累计',
+                    type: 'pie',
+                    center: ['40%', '50%'],
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        }
+                    },
+                    data: [
+                    ]
+                }
+            ]
+        };
+
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能  ，别忘了同时加载相应图表
+                'echarts/chart/bar',
+                'echarts/chart/pie',
+                'echarts/chart/gauge',
+                'echarts/chart/funnel'
+            ], function (ec) {
+                var myChart = ec.init(document.getElementById(chartid));
+                $(window).resize(function () {
+                    myChart.resize();
+                });
+                myChart.setOption(option);
+            })
+        }
+
+        //mini.open方法
+        function MiniOpen(title, url, width, height, showMaxButton) {
+            mini.open({
+                title: title,
+                url: url,
+                width: width,
+                height: height,
+                showMaxButton: showMaxButton
+            });
+        }
+
+        function formOpen(formid) {
+            MiniOpen("", "/Form/EditForm/" + formid + "/", "80%", "80%", true);
+        }
+
+        //目标类型data
+        var PS_TargetTypeData = "";
+        var jsonData = [];
+        var one = {};
+        one.KeyWord = "BaseDataList"; //数据集的名字
+        one.Type = "Business"; //类型 枚举型 ViewEntity 数据集  Business 业务对象
+        one.OrderBy = "Sequ desc";
+        one.Where = "BaseDataId='c13c249f-eea3-47a9-a4ff-ae332a995096'";
+        jsonData.push(one); //组装
+        getDataJson(jsonData, function (data) {
+            PS_TargetTypeData = data.data.BaseDataList;
+        });
+
+        //概览、动态
+        $.ajax({
+            url: "/Cost/GetCostReport_CostType",
+            data: { moneyType: "10000" },
+            type: "POST",
+            success: function (text) {
+                var o = mini.decode(text);
+                if (o.success) {
+                    var yAxisData = [];
+                    var seriesData = [];
+                    var mbcbCode = "";
+                    var zycbCode = "";
+                    for (var i = 0; i < PS_TargetTypeData.length; i++) {
+                        if (PS_TargetTypeData[i].OtherInfo != '{"noReport":"1"}') {
+                            yAxisData.push(PS_TargetTypeData[i].Name);
+                            var value = o.data.data[o.data.data.length - 1]["FIELD_" + PS_TargetTypeData[i].Code] == undefined ? 0 : o.data.data[o.data.data.length - 1]["FIELD_" + PS_TargetTypeData[i].Code]
+                            seriesData.push(value.toFixed(2));
+                        }
+                        //目标
+                        if (PS_TargetTypeData[i].OtherInfo == '{"targetCount":"1"}') {
+                            mbcbCode = "FIELD_" + PS_TargetTypeData[i].Code;
+                            $("#cbtext").text(PS_TargetTypeData[i].Name);
+                        }
+                        //占用
+                        else if (PS_TargetTypeData[i].OtherInfo == '{"allocationCount":"1"}') {
+                            zycbCode = "FIELD_" + PS_TargetTypeData[i].Code;
+                            $("#cbtext1").text(PS_TargetTypeData[i].Name);
+                        }
+                    }
+                    //目标成本
+                    var mbcb = o.data.data[o.data.data.length - 1][mbcbCode] == null ? 0 : o.data.data[o.data.data.length - 1][mbcbCode];
+                    //占用成本
+                    var zycb = o.data.data[o.data.data.length - 1][zycbCode] == null ? 0 : o.data.data[o.data.data.length - 1][zycbCode];
+                    
+                    $("#mbcb").text(mbcb.toFixed(2) + "万");
+                    $("#zycb").text(zycb.toFixed(2) + "万");
+                    $("#cbjy").text((mbcb - zycb).toFixed(2) + "万");
+
+                    option1.yAxis.data = yAxisData;
+                    option1.series[0].data = seriesData;
+                    InitEChart("chart1", option1);
+                }
+                else {
+                    Power.ui.error(o.message, { msgList: o.msgList, detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            }
+        })
+
+        var p = {};
+        p.EpsProjId = EpsProjId;
+        //目标
+        $.ajax({
+            url: "/Cost/GetCbsSheetNameList",
+            data: p,
+            type: "POST",
+            success: function (text) {
+                var o = mini.decode(text);
+                if (o.success) {
+                    var legenddata = [];
+                    var series = [];
+                    if (o.data.CbsSheetNameList != undefined) {
+                        for (var i = 0; i < o.data.CbsSheetNameList.length; i++) {
+                            legenddata.push(o.data.CbsSheetNameList[i].CostType_Name == null ? "" : o.data.CbsSheetNameList[i].CostType_Name);
+                            series.push({ value: o.data.CbsSheetNameList[i].CbsValueSum == null ? 0 : (o.data.CbsSheetNameList[i].CbsValueSum / 10000).toFixed(2), name: o.data.CbsSheetNameList[i].CostType_Name == null ? "" : o.data.CbsSheetNameList[i].CostType_Name });
+                        }
+                    }
+                    option2.legend.data = legenddata;
+                    option2.series[0].data = series;
+                    InitEChart("chart2", option2);
+                }
+                else {
+                    Power.ui.error(o.message, { msgList: o.msgList, detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            }
+        })
+
+        //最多显示的条数
+        var divShowNum = parseInt(document.getElementById('PS_PmFeeExpense').offsetHeight / 40);
+
+        //费用登记
+        p.PageSize = "10";
+        p.PageIndex = "0";
+        p.sort = "RegDate desc";
+        $.ajax({
+            url: "/Cost/GetPS_PmFeeExpenseList",
+            data: p,
+            type: "POST",
+            success: function (text) {
+                var o = mini.decode(text);
+                if (o.success) {
+                    var html = "";
+                    for (var i = 0; i < o.data.data.length; i++) {
+                        if (i < divShowNum) {
+                            var RegDate = new Date(o.data.data[i].RegDate).format("yyyy-MM-dd") == null ? "" : new Date(o.data.data[i].RegDate).format("yyyy-MM-dd");
+                            var Title = o.data.data[i].Title == null ? "" : o.data.data[i].Title;
+                            html += "<li class='clearfix' onclick='ViewForm(\"cefaa4af-a7e1-48b7-87b5-9cb46b707642\",\"" + o.data.data[i].Id + "\")'><span>●</span><span>" + Title + "</span><span>" + RegDate + "</span></li>";
+                        } else {
+                            break;
+                        }
+                    }
+                    $("#PS_PmFeeExpense").html(html);
+                }
+            }
+        });
+
+        //分摊记录
+        $.ajax({
+            url: "/Cost/GetPS_CostAllocationList",
+            data: p,
+            type: "POST",
+            success: function (text) {
+                var o = mini.decode(text);
+                if (o.success) {
+                    var html = "";
+                    for (var i = 0; i < o.data.data.length; i++) {
+                        if (i < divShowNum) {
+                            var RegDate = new Date(o.data.data[i].RegDate).format("yyyy-MM-dd") == null ? "" : new Date(o.data.data[i].RegDate).format("yyyy-MM-dd");
+                            var Title = o.data.data[i].Title == null ? "" : o.data.data[i].Title;
+                            html += "<li class='clearfix' onclick='ViewForm(\"4aeda03f-b8a8-4e3c-95e3-4295c0bfcca0\",\"" + o.data.data[i].Id + "\")'><span>●</span><span>" + Title + "</span><span>" + RegDate + "</span></li>";
+                        } else {
+                            break;
+                        }
+                    }
+                    $("#PS_CostAllocation").html(html);
+                }
+            }
+        });
+
+        //费用划拨
+        $.ajax({
+            url: "/Cost/GetPS_CC_AllocationPlanList",
+            data: p,
+            type: "POST",
+            success: function (text) {
+                var o = mini.decode(text);
+                if (o.success) {
+                    var html = "";
+                    for (var i = 0; i < o.data.data.length; i++) {
+                        if (i < divShowNum) {
+                            var RegDate = new Date(o.data.data[i].RegDate).format("yyyy-MM-dd") == null ? "" : new Date(o.data.data[i].RegDate).format("yyyy-MM-dd");
+                            var Name = o.data.data[i].Name == null ? "" : o.data.data[i].Name;
+                            html += "<li class='clearfix' onclick='ViewForm(\"248a5313-7e5f-41c8-b289-4212ce2539bb\",\"" + o.data.data[i].Id + "\")'><span>●</span><span>" + Name + "</span><span>" + RegDate + "</span></li>";
+                        } else {
+                            break;
+                        }
+                    }
+                    $("#PS_CC_AllocationPlan").html(html);
+                }
+            }
+        });
+
+        //详情
+        function ViewForm(FormId, KeyValue) {
+            MiniOpen("", "/Form/ValidForm/" + FormId + "/view/" + KeyValue + "/", "60%", "80%", true);
+        }
+
+    </script>
+</body>
+
+</html>

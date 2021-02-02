@@ -1,0 +1,191 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=298" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=298" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=298" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyValue = "$Model.data.KeyValue";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                                <a class="mini-button blue" iconcls="fa fa-sign-out" id="View_PayContpayRecord.Export" onclick="PowerForm.OnExportDataToXls('View_PayContpayRecord', '合同审查')">导出</a>
+                                <a class="mini-button blue" id="View_PayContpayRecord.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                                <a class="mini-button blue" iconcls="fa fa-minus"  onclick="grid.collapseAll()">收缩</a>
+                                <a class="mini-button blue" iconcls="fa fa-plus"  onclick="grid.expandAll()">展开</a>
+                        </div>
+                        <div class="tools">
+                            <span>合同录入日期</span>
+                            <input id="txtStart" class="mini-monthpicker" shownullitem="true" width="120px" />
+                            ——
+                            <input id="txtFinish" class="mini-monthpicker" shownullitem="true" width="120px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_PayContpayRecord" class="mini-treegrid" style="height:100%;" showsummaryrow="false" multiselect="true" idfield="Id" showCheckBox="false" checkRecursive="true"
+                         showtreeicon="true" treecolumn="Name" parentfield="ParentId" resultastree="false" expandonload="1"
+                        allowresize="true" allowcelledit="true" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="30">序号</div>
+                                <div name="Name" field="Name" headeralign="center" width="200">
+                                    名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Code" headeralign="center" width="130">
+                                    编号
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="ContractPrice" headeralign="center" numberformat="n2">
+                                    本次批准
+                                    <input property="editor" class="mini-spinner" allowlimitvalue="false" style="width: 100%;" changeOnMousewheel="false"/>
+                                </div>
+                                <div field="fukuanrenName" headeralign="center">
+                                    付款人
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="RegDate" headeralign="center" dateformat="yyyy-MM-dd">
+                                    录入日期
+                                    <input property="editor" class="mini-datepicker" />
+                                </div>
+                                <div field="RegHumName" headeralign="center">
+                                    录入人
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        var startDate = "";
+        var endDate = "";
+        //当前年的1-1到当前天
+        startDate = new Date().getFullYear() + "-1-1";
+        endDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+        if (mini.get("txtStart").getValue() == "" && mini.get("txtFinish").getValue() == "") {
+            mini.get("txtStart").setValue(startDate);
+            mini.get("txtFinish").setValue(endDate);
+        }
+        var grid = mini.get("View_PayContpayRecord");
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            var a = mini.get("txtStart").getValue().format("yyyy-MM-dd");
+            var b = mini.get("txtFinish").getValue().format("yyyy-MM-dd");
+            if(IsEmpty(a) || IsEmpty(b))
+            {
+                Power.ui.warning("开始、结束时间不能为空");
+            }
+            else
+            {
+                e.params.swhere=" RegDate='1900-01-01 00:00:00.000' or RegDate between '"+a+"' and '"+b+"' ";
+            }
+        }
+
+        function LoadData() {
+            PowerForm.Init();
+        }
+
+        mini.get("View_PayContpayRecord").on("drawcell", function (e) {
+            if (e.record.type=="A" && (e.column.field == "RegDate" || e.column.field == "Code" || e.column.field == "scheduleEndDate") ) {
+                e.cellHtml = "";
+            }
+            if (e.record.type=="B" && e.column.field == "Code") {
+                var id =e.record.Id;
+            e.cellHtml = "<a href='javascript:;' onclick=\"OnViewForm('7ef93080-dc22-4a3f-b599-53c5be1506ea','" + id + "')\">" + e.record.Code + "</a>";
+            }
+        })
+
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/EditForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 950,
+                height: 630
+            })
+        }
+
+        PowerForm.EventAfterLoadData = function(e){
+            if(e.sender.id == "View_PayContpayRecord")
+            {
+                // var data=formconfig.config.joindata.currow;
+                var data=e.sender.data;
+                if(!IsEmpty(data))
+                {
+                    fnmax(data);
+                    var tree=mini.get("View_PayContpayRecord");
+                    datas=[data];
+                    tree.loadData(datas[0]);
+                }
+            }
+		}
+
+        var fnmax = function (node) {
+            var obj = node;
+            if(obj.children)
+            {
+                for (var i = 0; i < node.children.length; i++) {
+                    var temp = fnmax(node.children[i]);
+                    obj["ContractAmount"] += temp["ContractAmount"] == null ? 0 : parseFloat(temp["ContractAmount"]);
+                }
+            }
+            else
+            {
+                for(var s = 0;s<obj.length;s++)
+                {
+                    if(obj[s].children)
+                    {
+                        var son = obj[s].children;
+                        var sum1 = Number(0);
+                        if(son.length)
+                        {
+                            for (var i = 0; i < son.length; i++) {
+                                var temp = fnmax(son[i]);
+                                sum1+=son[i].ContractAmount==null?0:parseFloat(temp["ContractAmount"]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var sum1 = Number(0);
+                    }
+                    obj[s]["ContractAmount"]+=sum1;
+                }
+            }
+            return obj;
+        }
+
+
+
+    </script>
+</body>
+</html>

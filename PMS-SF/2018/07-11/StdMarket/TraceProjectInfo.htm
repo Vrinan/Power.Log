@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>项目跟踪
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="PS_ProjectInfo2.ViewForms" onclick="ViewForm()"><i class="fa fa-eye"></i>查看客户信息</a>
+                        <a class="mini-button blue" id="PS_ProjectInfo2.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PS_ProjectInfo2.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="PS_ProjectInfo2.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!--通常-->
+                            <div id="PS_ProjectInfo2" class="form">
+                                <table class="table table-bordered">
+                                    <tr bgcolor="#F0F8FF">
+                                        <td class="cell td-label" colspan="4" rowspan="1">
+                                            <label id="lbl_Memo" class="design mini-powerlabel">跟进</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标形式
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.TenderType" name="TenderType" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            预计合同形式
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ContractType" name="ContractType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            预计合同额
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ForcastContractAmount" name="ForcastContractAmount" class="mini-spinner" allowlimitvalue="false" changeonmousewhee="false" />
+                                        </td>
+                                        <td>
+                                            币种
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.CurrencyType" name="CurrencyType" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            跟进状态
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.FollowStatus" name="FollowStatus" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            资格预审截至日期
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.PrequalificationDeadline" name="PrequalificationDeadline" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            是否资格预审
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.isPrequalification" name="isPrequalification" truevalue="1" falsevalue="0" class="mini-checkbox" text="预审" />
+                                        </td>
+                                        <td>
+                                            跟踪级别
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.FollowLevel" name="FollowLevel" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            跟进人名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.FollowHuman" name="FollowHuman" textname="FollowHuman" class="mini-buttonedit"
+                                                   emptytext="请选择跟进人..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            跟进部门
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.FollowDept" name="FollowDept" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr bgcolor="#F0F8FF">
+                                        <td class="cell td-label" colspan="4" rowspan="1">
+                                            <label class="design mini-powerlabel">项目信息</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectId" name="ProjectId" class="mini-textbox" readonly="readonly" />
+                                        </td>
+										 <td>
+                                            <label for="PS_ProjectInfo2.Status2">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.Status2" name="Status2" class="mini-combobox" />
+                                        </td>                                       
+                                        <tr>										
+                                        <td>
+                                            项目简称
+                                        </td>
+                                        <td >
+                                            <input id="PS_ProjectInfo2.ProjectShortName" name="ProjectShortName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+										
+                                        <td>
+                                            信息来源
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.InfoSources" name="InfoSources" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectInfo2.ProjectName" name="ProjectName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                    
+                                    <tr>
+                                        <td>
+                                            项目类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectType" name="ProjectType" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            项目规模
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectSize" name="ProjectSize" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目地点
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectLocation" name="ProjectLocation" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            项目区域
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectArea" name="ProjectArea" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            产品类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProductType" name="ProductType" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            投资规模
+                                        </td>
+                                        <td>
+                                            <input id="PS_ProjectInfo2.ProjectInvestAmount" name="ProjectInvestAmount" class="mini-spinner" allowlimitvalue="false" changeonmousewhee="false" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="ContractReview.ClientName">客户名称</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ProjectInfo2.ClientName" name="ClientName" textname="ClientName" class="mini-buttonedit"
+                                                   emptytext="请选择客户..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="跟进活动" name='tagcomment'></div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+      
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Client_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_ProjectInfo2.ClientName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/415381b5-1566-4e5b-8a59-527f7377ceca/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>
+

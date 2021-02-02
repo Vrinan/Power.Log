@@ -1,0 +1,288 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        //var WizardParams = typeof ($Model) != "undefined" ? $Model.data.params : {};
+		var WizardParams = $Model.data.params;
+        var BizAreaId = '$!CurrentSession.BizAreaId';
+        var currentEpsProjId = "$!CurrentSession.EpsProjId";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <input id="txtname" class="mini-textbox" style="width: 240px;" emptytext="请输入工程量清单名称,回车开始查询" onenter="OnSearchClick" /><!--请输入名称-->
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a><!--查询-->
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('ok')"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a><!--确定-->
+                    <a class="mini-button blue" onclick="ComToolsCloseWindow('cancel')"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a><!--取消-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="25%" showcollapsebutton="true">
+                            <div id="PS_PI_Class" class="mini-tree" style="width: 100%; height: 100%" showtreeicon="true" textfield="PiClassName"
+                                 idfield="Id" parentfield="ParentId" resultastree="false" expandonload="true"
+                                 autoload="false" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad" onload="OnAfterLoad"
+                                 url="/Form/GridPageLoad" virtualscroll="true">
+                            </div>
+                        </div>
+                        <div showcollapsebutton="true">
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="70%" showcollapsebutton="false">
+                                    <div id="V_PS_SubContract_PI" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                         allowcelledit="true" multiselect="true" showpager="true" onlycheckselection="true"
+                                         idfield="Id" autoload="false" onpreload="OnPreLoad" onbeforeload="OnBeforeLoad" 
+                                         url="/Form/GridPageLoadEx" pagesize="12">
+                                        <div property="columns">
+                                            <div type="indexcolumn" width="20"></div>
+                                            <div type="checkcolumn" name="checkcolumn"></div>
+                                            <div field="PiCode" width="60">
+                                                清单编号
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="PiName" width="60">
+                                                清单名称
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="PiUnit" width="60">
+                                                单位
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="PiPrice" width="60">
+                                                单价
+                                                <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                            </div>
+                                            <div field="PiQuantity" width="60">
+                                                合同工程量
+                                                <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                            </div>
+                                            <div field="PiMoney" width="60">
+                                                金额
+                                                <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div showcollapsebutton="false">
+                                    <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                         showpager="false" idfield="Id">
+                                        <div property="columns">
+                                            <div field="PiName">已选中</div>
+                                            <div name="action">操作</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var human = mini.get("V_PS_SubContract_PI");
+        var epsproj = mini.get("PS_PI_Class");
+        var gridselected = mini.get("GridSelected");
+        var ContactId = getParameter("ContactId");
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+        Select.LoadStepFirst = function () { debugger;
+            // var bmulti = (WizardParams.multi == "1");
+            var multi = getParameter("multi");
+            
+            var bmulti = (multi == "1");
+            human.multiSelect = bmulti;
+            human.onlyCheckSelection = bmulti;
+            if (bmulti)
+                human.showColumn("checkcolumn");
+            else
+                human.hideColumn("checkcolumn");
+            epsproj.on("nodeselect", OnSelectNode);
+            epsproj.reload();
+        };
+
+        function OnBeforeLoad(e) {
+            debugger;
+            var AllayId = getParameter("AllayId");
+            var sender = e.sender;    //树控件
+            var params = e.params;  //参数对象
+            params.KeyWord = sender.id;
+           
+            if (sender.id == 'V_PS_SubContract_PI') {
+                params.KeyWordType = "ViewEntity";
+                params.select = "Id,Pi_Guid,PiClass_Guid,PiCode,PiName,PiUnit,PiPrice,PiQuantity,PiAmount,FinishPiAmount ";
+                params.swhere = " 1=1 and MasterId='" + ContactId + "' and Id not in(SELECT Confirm_Guid FROM PS_CM_BOQConfirm_Dtl b WHERE b.MasterId='" + AllayId + "')";
+                params.sort = "Sequ";
+            }
+            if (sender.id == "PS_PI_Class") {
+                params.KeyWordType = "BO";
+                params.select = WizardParams.select || "";
+                params.swhere = " EpsProjId='" + currentEpsProjId + "' and PiClassType='p2'";
+				params.swhere = "  PiClassType='p2'";
+                params.sort = "Sequ";
+            }            
+            params.index = 0;
+            params.size = 0;
+            if (FormFuns.IsMiniTree(sender)) {
+                var node = e.node;      //当前节点
+                if (sender.lazyload)
+                    params.parentid = node[sender.idField];
+            }
+            else {
+                var node = e.record;
+                //拼与主表关联的where条件
+                var txtname = mini.get("txtname");
+                if (txtname.value.length > 0)
+                    params.swhere = params.swhere + " and PiName like '%" + txtname.value + "%'";
+                //外部过滤条件
+                if (WizardParams.filter && WizardParams.filter.length > 0)
+                    params.swhere = params.swhere + " and (" + base64decode(WizardParams.filter) + ")";
+                //eps属性
+                params.swhere = params.swhere + " and  PiClass_Guid= '" + epsproj.currow.Id + "' and MasterId='" + ContactId + "'";
+                if (sender.showPager) {//使用自带的Pager
+                    params.index = params.pageIndex;
+                    params.size = params.pageSize;
+                }
+            }
+            FormFuns.EncodeGridPageLoadswhere(params);
+        }
+        //tree/grid 提取数据到本地之后，尚未赋值给 tree/grid 时触发
+        function OnPreLoad(e) {
+            var tmpdata = mini.decode(e.text);
+            if (tmpdata.success == false) {
+                Power.ui.error(tmpdata.message, { timeout: 0, position: "center center", closeable: true });
+                return;
+            }
+            var data = mini.decode(tmpdata.data.value);
+            if (FormFuns.IsMiniTree(e.sender)) { //树必须使用树结构数据
+                //如果是懒加载，标记节点不展开，否则出现 - 号图标，实际应该是 + 号图标
+                if (e.sender.lazyload) {
+                    for (var i = 0; i < data.length; i++)
+                        data[i].expanded = false;
+                }
+                e.sender.resultAsTree = true;
+                data = mini.arrayToTree(data, e.sender.nodesField, e.sender.idField, e.sender.parentField);
+            }
+            e.data = data;
+            if (e.sender.showPager)
+                e.sender.setTotalCount(tmpdata.data.totalcount);
+        }
+        function OnAfterLoad(e) {
+            //如果是tree懒加载，miniui会自动给节点打上新增标记，需要去掉
+            if (e.sender.lazyload) {
+                for (var i = 0; i < e.data.length; i++)
+                    delete e.data[i]._state;
+            }
+            //数据加载后，自动加载子表数据,前提条件 当前没有选中行，才需要自动加载
+            var sender = e.sender;
+            //第一次加载，默认选中当前eps节点
+            if (sender.currow == undefined) {
+                var data = sender.data;
+                if (!data || data.length == 0)
+                    return;
+                var c = null;
+                for (var i = 0; i < data.length; i++) {
+                    c = data[i];
+                    if (c.Id == currentEpsProjId)
+                        sender.currow = c;
+                    else
+                        sender.currow = getdefaultnode(c);
+                    if (sender.currow) {
+                        sender.selectNode(sender.currow);
+                        human.reload();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function getdefaultnode(n) {
+            var r = null;
+            if (n.children == undefined || n.children.length == 0)
+                return r;
+            for (var i = 0 ; i < n.children.length; i++) {
+                var c = n.children[i];
+                if (c.Id == currentEpsProjId)
+                    return c;
+                r = getdefaultnode(c);
+                if (r)
+                    return r;
+            }
+        }
+
+        function OnSearchClick(e) {
+            mini.get("V_PS_SubContract_PI").setPageIndex(0);
+            human.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            mini.get("V_PS_SubContract_PI").setPageIndex(0);
+            human.reload();
+        }
+
+        human.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (!cRow) {
+                if (human.multiSelect)
+                    gridselected.addRow(row);
+                else {
+                    var data = [];
+                    data.push(row);
+                    gridselected.setData(data);
+                }
+            }
+        })
+        human.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+                + e.record.Id + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].Id == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
+

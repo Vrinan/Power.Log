@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>外委检修申请（需招标）
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_YX_RepairRequestZB.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_YX_RepairRequestZB.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_YX_RepairRequestZB.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_YX_RepairRequestZB.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_YX_RepairRequestZB.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_YX_RepairRequestZB" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_YX_RepairRequestZB.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.Status" name="Status" class="mini-combobox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>
+                                        <td>
+                                            所属运行站/运行部
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.RunStation" name="RunStation" textname="RunStation" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>                                  
+                                    </tr>
+                                    <tr>                                        
+                                        <td>
+                                            工程名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Name" name="Name" textname="Name" class="mini-buttonedit"
+                                                   emptytext="请选择项目..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标计划编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.BidPlanCode" name="BidPlanCode" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            预估(预算)金额
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.Money" name="Money" class="mini-spinner" minvalue="0" maxvalue="999999999999" format="n2"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程地点
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Address" name="Address" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程规模
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Scale" name="Scale" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            投标人资质等级
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Grade" name="Grade" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            质量要求
+                                        </td>
+                                        <td colspan="3"> 
+                                            <input id="SF_YX_RepairRequestZB.Quality" name="Quality" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工期要求
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Duration" name="Duration" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标完成时间
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Date" name="Date" class="mini-datepicker" allowinput="false"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            分包类别
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Type" name="Type" class="mini-textbox" />
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标范围及内容
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_YX_RepairRequestZB.Memo" name="Memo" class="mini-textarea" height="60" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_YX_RepairRequestZB.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+    </script>
+</body>
+</html>

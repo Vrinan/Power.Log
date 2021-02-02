@@ -1,0 +1,384 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+
+    <script src="/Apps/js/TouchSlide.1.1.js"></script> 
+
+    <script src="/Apps/js/jquery-1.8.3.min.js"></script>
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+    <link href="/Apps/style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+
+        .search .searchbutton {
+            width: 100%;
+            display: box;
+            padding: 8px 0px;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            text-align: center;
+            background-color: #4b8df8;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            border-bottom: 1px solid #ddd;
+            z-index: 10;
+            color: #fff;
+            font-size: 2rem;
+        }
+
+            .search .searchbutton input {
+                height: 30px;
+                width: 80%;
+                border: 1px solid #fff;
+                border-radius: 5px;
+                text-indent: 5px;
+                font-size: 1.4rem;
+            }
+
+
+        .search ul {
+            margin: 0 10px;
+            margin-top: 60px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+            .search ul li {
+                height: 60px;
+                line-height: 60px;
+                border-bottom: 1px solid #ccc;
+            }
+
+                .search ul li div {
+                    color: #666;
+                    font-size: 1.4rem;
+                    line-height: 25px;
+                    float: left;
+                    width: 90%;
+                    padding: 5px 0px;
+                }
+
+                    .search ul li div p {
+                        width: 100%;
+                        padding-left: 5px;
+                        margin: 0px;
+                    }
+
+                    .search ul li div .title {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        color: #000;
+                        text-indent: 5px;
+                    }
+
+                    .search ul li div .group {
+                        display: box;
+                        font-size: 1.2rem;
+                        color: #666;
+                        -webkit-box-orient: horizontal;
+                        -moz-box-orient: horizontal;
+                        box-orient: horizontal;
+                    }
+
+                        .search ul li div .group span {
+                            width: 33%;
+                            height: 25px;
+                            display: block;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-indent: 4px;
+                            float: left;
+                            -webkit-box-flex: 1;
+                            -moz-box-flex: 1;
+                            box-flex: 1;
+                        }
+
+                .search ul li .left {
+                    font-size: 3rem;
+                    width: 8%;
+                    float: left;
+                    text-align: center;
+                }
+
+                    .search ul li .left input {
+                    }
+
+                .search ul li .right {
+                    float: right;
+                    width: 2%;
+                }
+        .searchfootbutton {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+            .searchfootbutton a {
+                display: inline-block;
+                padding: 10px 30px;
+                margin: 10px;
+                background-color: #f00;
+                border-radius: 5px;
+                border: 1px solid #f00;
+                color: #fff;
+                font-size: 1.4rem;
+            }
+
+            .searchfootbutton #ok {
+                background-color: #4b8df8;
+                border: 1px solid #4b8df8;
+                color: #fff;
+            }
+        
+    </style>
+</head>
+
+<body>
+    <div class="search">
+        <div class="searchbutton">
+            <input id="search_name" type="text" style="color:#000" value="" placeholder="工号/姓名" />
+            <span onclick="onSearch()"><i class="fa fa-search" aria-hidden="true"></i></span>
+        </div>
+        <ul id="users">
+        </ul>
+        <p class="searchfootbutton">
+            <a href="#" id="ok" onclick="onOK()">确定</a>
+            <a href="#" id="cancel" onclick="CloseWindow('cancel')">取消</a>
+        </p>
+    </div>
+    <script type="text/javascript">
+        mini.parse();  
+        var curNode = null;
+        var currentEpsProjId = "";
+        var AllowMulitUser = false;  //是否多选模式，默认单选，外部可传入参数设置
+        $(function () {
+            $('#search_name').bind('keypress', function (event) {
+                if (event.keyCode == "13") {
+                    onSearch();
+                }
+            });
+        }); 
+        //批量下移 
+    function onSearch() {  
+        DataP.index = 0;
+        $("#users").html("");
+            LoadData({ index: "0", size: "10" });
+        }
+
+         
+        var onOK = function (e) {
+           
+            CloseWindow("ok");   //确定操作
+        }
+
+
+
+        function CloseWindow(action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+
+        var AllResultData;
+        var sourceMode = "PositionAndUser"
+        //标准方法接口定义
+        function SetData(node, canSendUsers) {
+            curNode = node;
+
+            var type="checkbox"
+            if (node.AllowMulitUser == true) {
+                AllowMulitUser = true;   
+            }
+            else {
+                type="radio"
+                AllowMulitUser = false;  
+              //  mini.get("btnSelectAll").setVisible(false);
+            }
+
+             sourceMode = curNode.SourceMode;
+            if (!sourceMode) sourceMode = "PositionAndUser";  //如果是第一次，则默认为 岗位+用户 
+            //mini.get("rdoSourceMode").setValue(sourceMode);
+
+            //如果外部指定不允许切换岗位部门
+            //if (node.AllowSwitchDP == false) {
+            //    mini.get("rdoSourceMode").setEnabled(false);
+            //    document.getElementById("tdSourceMode1").style.display = "none";
+            //    document.getElementById("tdSourceMode2").style.display = "none";
+            //}
+            //onLoadDeptPostionList(sourceMode);
+
+            //如果有默认信息，且允许多选，则将默认信息放入容器。 单选的话，无须选择默认信息
+            if (canSendUsers && AllowMulitUser == true) {
+                html = "";
+                for (var i = 0; i < canSendUsers.length; i++) {
+                    var u = canSendUsers[i];
+                    html += ' <li>' +
+                        '<a href="#" onclick="CheckUser(\'' + u.UserID + '\')">' +
+                            '<span class="left"><input id=\'' + u.UserID + '\' name="user" UserName="' +
+                            u.UserName + '" UserCode="' + u.UserCode + '" DeptPositionName="' +
+                            u.DeptPositionName + '" DeptPositionID="' + u.DeptPositionID +
+                            '" EMail="' + u.EMail + '" IsActived="' + u.IsActived + '" Mobile="' + u.Mobile +
+                            '" Phone="' + u.Phone + '" PlanEndDate="' + u.PlanEndDate + '" SourceMode="' + u.SourceMode +
+                            '" SourceUserID="' + u.SourceUserID + '" SourceUserName="' + u.SourceUserName + '" class="check" type="' + type + '" value="" /></span>' +
+                            '<div>' +
+                            '<p class="title">' + u.UserName + '[' + u.UserCode + ']</p>' +
+                            '<p class="group">' +
+                             '   <span>' + u.DeptPositionName + '</span>' +
+                             '</p>' +
+                             '</div>' +
+                             '</a>' +
+                             '</li>'
+                }
+                $("#users").html(html);
+                //gdSelectedUsers.setData(canSendUsers);
+            }
+        }
+
+        var DataP = {};
+
+        function LoadData(dataparams) {
+            dataparams.size = "10";
+            dataparams.index = "0";
+            DataP = dataparams;
+            PowerM3AppCallBack.loadpage = onLoadUserList;
+
+            onLoadUserList(dataparams);
+        }
+        //加载用户信息
+        var onLoadUserList = function (dataparams) {
+            dataparams = dataparams || DataP;  
+            var CurrentInfo = {};
+ 
+            CurrentInfo.Where = "";
+            if ($("#search_name").val() != "") {
+                var v = $("#search_name").val();
+                CurrentInfo.Where = " and (x1.Code like '%" + v + "%' or x1.Name like'%" + v + "%')";
+            }  
+            CurrentInfo.id = "";
+            CurrentInfo.Order = "x1.Name";  //依据姓名排序
+
+            CurrentInfo.SubOperate = "ReadOnlyUserList";   //子指令集,加载岗位部门树 
+            CurrentInfo.SourceMode = sourceMode;
+
+            CurrentInfo.pageIndex = dataparams.index;
+            CurrentInfo.pageSize = dataparams.size;
+
+            var data = {};
+            CurrentInfo.Current = data;
+
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.SupplyFlow;    //提取流程节点信息
+
+            Power.App.loading.show();
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (data) {
+                    var result = mini.decode(data);
+                    if (result.success == false) {
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    var userlist = mini.decode(result.data.UserList);
+                    html = "";
+                    var type = AllowMulitUser == true ? "checkbox" : "radio";
+                    for (var i = 0; i < userlist.length; i++) {
+                        var u = userlist[i];
+                        html += ' <li>' +
+                        '<a href="#" onclick="CheckUser(\'' + u.UserID + '\')">' +
+                            '<span class="left"><input id=\'' + u.UserID + '\' name="user" UserName="' +
+                            u.UserName + '" UserCode="' + u.UserCode + '" DeptPositionName="' +
+                            u.DeptPositionName + '" DeptPositionID="' + u.DeptPositionID +
+                            '" EMail="' + u.EMail + '" IsActived="' + u.IsActived + '" Mobile="' + u.Mobile +
+                            '" Phone="' + u.Phone + '" PlanEndDate="' + u.PlanEndDate + '" SourceMode="' + u.SourceMode +
+                            '" SourceUserID="' + u.SourceUserID + '" SourceUserName="' + u.SourceUserName + '" class="check" type="' + type + '" value="" /></span>' +
+                            '<div>' +
+                            '<p class="title">' + u.UserName + '[' + u.UserCode + ']</p>' +
+                            '<p class="group">' +
+                             '   <span>' + u.DeptPositionName + '</span>' +
+                             '</p>' +
+                             '</div>' +
+                             '</a>' +
+                             '</li>'
+                    }
+                    $("#users").append(html);
+                    Power.App.loading.hide();
+                    if (data.length > 0)
+                        DataP.index = parseInt(DataP.index) + 1;
+
+                },
+                error: function (e, r, h) {
+                    Power.ui.error("错误消息", "错误", "info");
+                    //消息    错误
+                    Power.App.loading.hide();
+                }
+            });
+        }
+        function CheckUser(id) {
+            if ($("#" + id)[0].checked) {
+                $("#" + id).prop("checked", false);
+            }
+            else
+                $("#" + id).prop("checked", true);
+        }
+        function GetData() {
+            var result = [];
+            var allrows = $("#users input:checkbox");
+            for (var i = 0; i < allrows.length; i++) {
+                var row = allrows[i];
+                if (row.checked) {
+                    var r = {};
+                    r.UserID = row.id;
+                    r.UserName = row.getAttribute("username");
+                    r.UserCode = row.getAttribute("usercode");
+                    r.DeptPositionName = row.getAttribute("deptpositionname");
+                    r.DeptPositionID = row.getAttribute("deptpositionid");
+                    r.EMail = row.getAttribute("email") == "null" ? null : row.getAttribute("email");
+                    r.Mobile = row.getAttribute("mobile") == "null" ? null : row.getAttribute("mobile");
+                    r.Phone = row.getAttribute("phone") == "null" ? null : row.getAttribute("phone");
+                    r.PlanEndDate = row.getAttribute("planenddate") == "null" ? new Date() : mini.parseDate(row.getAttribute("planenddate"));
+                    r.SourceUserID = row.getAttribute("sourceuserid") == "null" ? null : row.getAttribute("sourceuserid");
+                    r.SourceUserName = row.getAttribute("sourceusername") == "null" ? null : row.getAttribute("sourceusername");
+                    r.IsActived = row.getAttribute("isactived") == "false" ? false :true;
+                    r.SourceMode = row.getAttribute("sourcemode");
+                    result.push(r);
+                    
+                } 
+            }
+            return result
+        }
+
+        var PowerM3AppCallBack = PowerM3AppCallBack || {};
+        PowerM3AppCallBack.pagepullup = function () {
+            //Power.ui.success("上拉触发成功");
+            //alert(typeof (loadpage));
+            PowerM3AppCallBack.loadpage(null, null);
+        }
+        PowerM3AppCallBack.loadpage = function () {
+        }
+    </script>
+
+</body>
+</html>

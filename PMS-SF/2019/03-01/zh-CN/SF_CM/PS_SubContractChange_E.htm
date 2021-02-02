@@ -1,0 +1,394 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同变更
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>
+                    <a class="mini-button blue" id="SF_Contract_Change.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_Contract_Change.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_Contract_Change.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_Contract_Change" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_Contract_Change.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同编号
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.SubContractCode" name="SubContractCode" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.SubContractName" name="SubContractName" textname="SubContractName" class="mini-buttonedit"
+                                                   emptytext="请选择合同名称..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_Contract_Change.PartyB">供应商</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.PartyB" name="PartyB" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.ChangeReason" name="ChangeReason" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            变更条款说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_Contract_Change.Memo" name="Memo" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            变更金额
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.ChangeAmount" name="ChangeAmount" class="mini-spinner" allowlimitvalue="true" minvalue="-99999999999999" maxvalue="99999999999999" changeonmousewhere="false" allowLimitValue="false" onvaluechanged="Eidt" />
+                                        </td>
+                                        <td>
+                                            变更后合同额
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.FinalSubContractAmount" name="FinalSubContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_Contract_Change.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='支付节点'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_SubContractChange_PayNodes.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_SubContractChange_PayNodes.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_SubContractChange_PayNodes" class="mini-datagrid" style="height: 100%;" 
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <!--序号-->
+                                        <div field="PayType" type="comboboxcolumn" headeralign="center" align="center">
+                                            付款类型
+                                            <input property="editor" id="PS_SubContract_PayNodes.PayType" name="PayType" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayPercent" headeralign="center" align="center">
+                                            付款比例(%)
+                                            <input property="editor" class="mini-spinner" minvalue="0" maxvalue="100" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayAmount" headeralign="center" align="center" numberformat="n2" summarytype="sum">
+                                            金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-999999999999999" maxvalue="999999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayItem" headeralign="center">
+                                            付款说明
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="金额明细" name="SF_Contract_Change_List">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_Contract_Change_List.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_Contract_Change_List.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_Contract_Change_List" class="mini-datagrid" style="height: 100%;" showsummaryrow="true" oncellendedit="endeditAmountList" oncellbeginedit="begineditAmountList"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="AmountType" headeralign="center" type="comboboxcolumn">
+                                            费用类型
+                                            <input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                        </div>
+                                        <div field="NoTaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            不含税金额
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="TaxRate" headeralign="center">
+                                            税率（%）
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="0" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="TaxAmount" headeralign="center" numberformat="n2" summarytype="sum">
+                                            税费
+                                            <input property="editor" class="mini-spinner" maxvalue="999999999" minvalue="-999999999" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div title='变更明细'>
+                            数据明细
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContractChange_Dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>新增
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContractChange_Dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>删除
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContractChange_Dtl" class="mini-treegrid" style="height: 100%;" oncellendedit="EidtApp"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" showsummaryrow="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+
+                                        编号
+                                        <div field="PiCode" headeralign="center">
+                                            变更项编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        名称
+                                        <div field="PiName" headeralign="center">
+                                            变更项目
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PiUnit" headeralign="center">
+                                            单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PiPrice" headeralign="center">
+                                            单价
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        金额
+                                        <div field="PiAmount" headeralign="center" summarytype="sum">
+                                            数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="PiMoney" headeralign="center" summarytype="sum">
+                                            金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="99999999999999" changeonmousewhere="false" style="width: 100%;" readonly />
+                                        </div>
+                                        其他信息
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        //function EidtApp(e) {
+        //     var record = e.record;
+        //     var grid = mini.get("PS_SubContractChange_Dtl");
+
+        //     var PiPrice = record.PiPrice;
+        //     var PiAmount = record.PiAmount;
+        //     //判断、并进行计算
+        //     if (e.field == "PiPrice" || e.field == "PiAmount") {
+        //         grid.updateRow(record, {PiMoney:(PiPrice * PiAmount)});
+        //     }
+
+        //     //子表向主表传值
+        //     var sum = new Number(0);
+        //     var row = grid.findRow(function (row) {
+        //         sum = sum + parseInt(row.PiMoney);
+        //     });
+        //     mini.get("PS_SubContractChange.ChangeAmount").setValue(sum);
+
+        //}
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode.indexOf("cwjbr") > -1) {
+                if (IsEmpty(mini.get("PS_SubContractApplyMoney.ApprAmount").getValue())) {
+                    Power.ui.alert("批准金额未填")
+                    e.isValid = false;//满足条件时，不允许点击送审或同意
+                }
+            }
+        }
+        function Eidt(e) {
+            var ChangeAmount = mini.get("SF_Contract_Change.ChangeAmount").getValue();
+            var FinalSubContractAmount = mini.get("SF_Contract_Change.FinalSubContractAmount").getValue();
+            mini.get("SF_Contract_Change.FinalSubContractAmount").setValue(FinalSubContractAmount + ChangeAmount);
+        }
+
+        function ViewForm() {
+
+            var id = formconfig.config.joindata.currow["Id"];
+            var InvestorId = formconfig.config.joindata.currow["SubContract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("SF_Contract_Change.SubContractName").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/c56cea22-6dcd-46a7-bceb-57e26ddfb4db/" + "/view/" + InvestorId;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+
+            }
+        }
+        function accMul(arg1, arg2) {
+
+            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+
+            try { m += s1.split(".")[1].length } catch (e) { }
+
+            try { m += s2.split(".")[1].length } catch (e) { }
+
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+
+        }
+
+        //给Number类型增加一个mul方法，调用起来更加方便。
+
+        Number.prototype.mul = function (arg) {
+
+            return accMul(arg, this);
+
+        }
+
+        //function cellendedit(e) {
+        //    debugger;
+        //    var grid = mini.get("SF_SubContractChange_PayNodes");
+        //    var record = e.record;
+        //    var ChangeAmount = mini.get("SF_Contract_Change.ChangeAmount").getValue();
+        //    if (e.field == "PayPercent") {
+        //        if (record.PayPercent != '' && ChangeAmount != undefined && record.PayPercent != undefined) {
+        //            var s = accMul((parseFloat(record.PayPercent) * ChangeAmount), 0.01);
+        //            grid.updateRow(record, { "PayAmount": s });
+        //        }
+        //    }
+        //    if (e.field == "PayAmount") {
+        //        if (record.PayAmount != '' && ChangeAmount != undefined && record.PayAmount != undefined) {
+        //            var s = ((parseFloat(record.PayAmount) / ChangeAmount) * 100).toFixed(2);
+        //            grid.updateRow(record, { "PayPercent": s });
+        //        }
+        //    }
+        //}
+        PowerForm.EventAfterLoadRight = function (o) {
+            if (o.id == "SF_Contract_Change" && !(o.data["Status"] == "0")) {
+                //保存按钮启用
+                mini.get("SF_Contract_Change.RunStatus").setEnabled(true);
+                mini.get("SF_Contract_Change.RunStatus").setReadOnly(false);
+                //保存按钮启用
+                mini.get("SF_Contract_Change.Save").setEnabled(true);
+                debugger;
+            }
+        }
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            if (e.Id = "SF_Contract_Change_List") {
+                data.NoTaxAmount = "0";
+                data.TaxAmount = "0";
+                data.TotalAmount = "0";
+            }
+        }
+        function endeditAmountList(e) {
+            var record = e.record;
+            var grid = mini.get("SF_Contract_Change_List");
+            if (e.field == "NoTaxAmount" || e.field == "TotalAmount") {
+                var s = (parseFloat(record.TotalAmount) - parseFloat(record.NoTaxAmount)).toFixed(2);
+                grid.updateRow(record, { "TaxAmount": s });
+            }
+        }
+        function begineditAmountList(e) {
+            if (e.field == "TaxAmount") {
+                e.cancel = true;
+            }
+        }
+    </script>
+</body>
+</html>

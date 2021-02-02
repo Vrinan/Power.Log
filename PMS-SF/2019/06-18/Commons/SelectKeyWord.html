@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head id="Head1" runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/TreeManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/FormManage.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script> 
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+</head>
+
+<body>
+    <form id="frmMain" runat="server" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>$Helper.GetResource("workflow_manage")						
+                </div><!--工作流管理-->
+                <div class="actions">
+                    <a class="mini-button blue" id="btnSave" iconcls="fa-save" onclick="onSave">$Helper.GetResource("g_save")</a><!--保存-->
+                    <a class="mini-button blue" iconcls="fa-power-off" onclick="window.CloseOwnerWindow('ok')">$Helper.GetResource("g_off")</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; background-color: #fafafa;">
+                    <div id="treeKeyWordList" class="mini-treegrid"   ondrawnode="onDrawNode"
+                        showtreeicon="true" treecolumn="Name" idfield="Id" iconfield="icon" resultastree="true" onnodecheck="onNodeCheck"  expandonload="true">
+                        <div property="columns">
+                            <div type="indexcolumn"></div>
+                            <div name="Name" field="text" width="200" headeralign="center">$Helper.GetResource("g_name")</div><!--名称-->
+                            <div field="KeyWord" width="200" headeralign="center">$Helper.GetResource("g_keyword")</div><!--关键词-->
+                            <div field="Description" width="150" headeralign="center">$Helper.GetResource("g_class_name")</div><!--类全名-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+            mini.parse();
+
+            var treeKeyWordList = mini.get("treeKeyWordList");
+            var tmpManage = new FormManage();
+
+            var saveDataList = {};  //可保存的信息容器
+
+            var onNodeCheck = function (e) {
+                //此事件是 checkbox 点击时事件， 触发必定对应 打钩-> 不打钩， 所以 获取的是 !e.checked
+                var obj = saveDataList[e.node.Id];
+                if (!obj) {
+                    obj = {};
+                    obj.IsChecked = false;   //对象不存在，说明是新对象，和服务端无关
+                    obj.Checked = !e.checked;      //当前是打钩项，打钩了
+                    obj.IsChanged = true;
+                }
+                else {
+                    obj.Checked = !e.checked;
+                    obj.IsChanged = true;
+                }
+                saveDataList[e.node.Id] = obj;
+            }
+            var onDrawNode = function (e) {
+                var row = e.node;
+
+                if (row.Alias != "KeyWord") return;
+
+                e.showCheckBox = true;
+
+                if (row.enabled == "False") treeKeyWordList.disableNode(e);
+
+                if (row.IsSelected == "True") {
+                    row.checked = true;
+                    var obj = {};
+                    obj.IsChecked = true;   //已经被打过勾了
+                    obj.Checked = true;      //当前是打钩项，打钩了
+                    saveDataList[row.Id] = obj;
+                }
+            }
+
+            var onSave = function (e) {
+               
+                var submitData = {};
+                submitData.ResultFormList = [];
+                submitData.KeyFieldName = "KeyValue";  //设定主键
+                for (var sKeyId in saveDataList) {
+                    var obj = saveDataList[sKeyId];
+
+                    if (obj.IsChanged != true) continue;
+
+                    var tmpRow = treeKeyWordList.getNode(sKeyId);
+                    if (obj.IsChecked == false && obj.Checked == false) continue;   //和服务端无关的，打钩且取消了勾，则无视该项
+                    if (obj.IsChecked == false && obj.Checked == true)
+                    {
+                        var data = {};
+                        data.KeyValue = CreateGUID(); //Guid.NewGuid().ToString();
+                        data.KeyWord = tmpRow.KeyWord;
+                        data._state = "added";
+                        submitData.ResultFormList.push(data);
+                    }
+                    if (obj.IsChecked == true && obj.Checked == false) {
+                        var data = {};
+                        if (!tmpRow.WorkFlowKeyWordID) {
+                            alert("严重异常，当前项没有[WorkFlowKeyWordID]");
+                            return;
+                        }
+                        data.KeyValue = tmpRow.WorkFlowKeyWordID;
+                        data.KeyWord = tmpRow.KeyWord;
+                        data._state = "removed";
+                        submitData.ResultFormList.push(data);
+                    }
+                }
+               
+                mini.mask({
+                    el: document.body,
+                    cls: 'mini-mask-loading',
+                    html: '加载中...'
+                });
+
+                var data = {};
+                data.SubOperate = "SaveWorkFlowKeyWord";   //子指令集,保存表单
+                data.KeyWord = "FlowsKeyWord";
+                data.FormData = submitData;
+                var msg = {};
+                msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+                msg.data = data;
+                msg.data.FlowOperate = EFlowOperate.SupplyDesign;    //提取流程节点信息
+
+               
+                $.ajax({
+                    url: "/API/APIMessage",
+                    type: "POST",
+
+                    data: { json: mini.encode(msg) },
+                    cacha: false,
+                    success: function (text) {
+
+                        var result = mini.decode(text);
+                        if (result.success == false) {
+                            mini.unmask(document.body);
+                            Power.ui.error(result.message, { detail: result.detail, timeout: 0, position: "center center", closeable: true });
+                            return;
+                        }
+                        window.CloseOwnerWindow("ok");
+                        mini.unmask(document.body);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        mini.unmask(document.body);
+                        alert(jqXHR.responseText);
+                    }
+                });
+
+            }
+             
+            //////////////////////////////////
+            function CloseWindow(action) {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }
+            //对外方法
+            function GetData() { 
+                var row = treeKeyWordList.getSelected();
+                return row;
+            }
+            //树加载完毕后触发
+            var EndLoad = function (e) {
+                 
+            }
+            var treeManage = new TreeManage();
+            treeManage.setKeyWord("WorkFlowsKeyWordList");
+            treeManage.setControl(treeKeyWordList);
+
+            var treeRenderer = new Object();
+            treeRenderer.RequestParam = new Object();
+
+            treeManage.LoadTreeList(treeRenderer, EndLoad);
+
+        </script>
+    </form>
+</body>
+</html>

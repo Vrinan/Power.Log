@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+        var EpsProjName = "$!CurrentSession.EpsProjName";
+        var LongCode = "$!CurrentSession.EpsProjLongCode";
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+
+                        <div class="captiontools">
+                            <span>签订日期 从</span>
+                            <input id="txtSignFDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()"/>
+                            <span>到</span>
+                            <input id="txtSignTDate" class="mini-datepicker" allowinput="false" shownullitem="true" width="110px" onvaluechanged="LoadData()"/>
+                            <span>项目名称</span>
+                            <!-- <input id="txtPlanName" class="mini-buttonEdit" allowinput="false" shownullitem="true" width="100px" /> -->
+                            <input id="project_name1" class="mini-textbox" allowinput="true"  width="100px" onvaluechanged="LoadData()"/>
+                            <span>合同名称</span>
+                            <input id="txtContractName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" onvaluechanged="LoadData()"/>
+                            <span>甲方</span>
+                            <input id="txtPartyAName" class="mini-textbox" allowinput="true" shownullitem="true" width="100px" />
+                            <a class="mini-button blue" id="btnSearch" onclick="LoadData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_PS_IncomeContractInfoSum" class="mini-treegrid" style="width: 100%; height: 100%;" visible="true" width="917"
+                             height="601" allowalternating="false" showsummaryrow="true"
+                             fitcolumns="" idfield="Id" showpager="false" parentfield="" onnodedblclick="ViewForm(e)" virtualScroll="true">
+                            <div property="columns">
+                                <div type="indexcolumn" width="40px">序号</div>
+                                <!-- <div type="comboboxcolumn" field="Status" name="V_PS_IncomeContractInfoSum.Status" headeralign="center"    header="合同状态" align="center" width="70px">合同状态<input property="editor" class="mini-combobox" width="30px;" /></div> -->
+                                <div field="project_name" name="project_name" headeralign="center"    header="项目名称" align="left">项目名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <!--<div field="AllocationStatus" name="AllocationStatus" headeralign="center"    header="分摊状态" align="left">分摊状态<input property="editor" class="mini-textbox" style="width: 100%;" /></div>-->
+                                <div field="ContractCode" name="ContractCode" headeralign="center"    header="合同编号" align="left" width="160px">合同编号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="ContractName" name="ContractName" headeralign="center"    header="合同名称" align="left" summarytype="count" width="150px">合同名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div field="PartyA" name="PartyA" headeralign="center"    header="甲方" align="left">甲方<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                <div type="comboboxcolumn" field="CurrencyType" name="V_PS_IncomeContractInfoSum.CurrencyType" headeralign="center"    header="币种" align="center">币种<input property="editor" class="mini-combobox" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ContractAmount" name="ContractAmount" headeralign="center"    header="合同金额" align="right" summarytype="sum" width="150px">合同金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ApplyAmount" name="ApplyAmount" headeralign="center"    header="请款金额" align="right" summarytype="sum" width="150px">请款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="InvoiceAmount" name="InvoiceAmount" headeralign="center"    header="开票金额" align="right" summarytype="sum" width="150px">开票金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div numberformat="n2" field="ReceiveAmount" name="ReceiveAmount" headeralign="center"    header="到款金额" align="right" summarytype="sum" width="150px">到款金额<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div field="ReceiveAmountPercent" name="ReceiveAmountPercent" headeralign="center"    header="收款百分比" numberformat="n2" datatype="float" align="right">收款百分比%<input property="editor" class="mini-spinner" style="width: 100%;" /></div>
+                                <div field="SignedDate" name="SignedDate" headeralign="center"    header="签订日期" dateformat="yyyy-MM-dd" align="center">签订日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegDate" name="RegDate" headeralign="center"    header="录入日期" dateformat="yyyy-MM-dd" align="center">录入日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                <div field="RegHumName" name="RegHumName" headeralign="center"    header="录入人名称" align="center">录入人名称<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        var newLongCode = "";
+        var contractName = "";
+        var PartyAName = "";
+        var SignFDate = "";
+        var SignTDate = "";
+
+        $(function () {
+            PowerForm.Init();
+            //SetBtnEditValue("txtPlanName", EpsProjName);
+            SetBtnEditValue("txtSignFDate", new Date().getFullYear() + "-1-1");
+            SetBtnEditValue("txtSignTDate", new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate());
+            //LoadData();
+        });
+        mini.parse();
+        // mini.get("txtPlanName").on("buttonclick", function (e) {
+        //     OnWiardPlan();
+        // })
+
+        // function OnWiardPlan() {
+        //     var p = { title: "选择项目计划", multi: "0" };
+        //     p.url = "/Form/OpenURL?url=/PowerPlat/FormXml/zh-CN/StdSystem/WizardEPSProject.htm";
+        //     p.swhere = " LongCode Like '" + LongCode + ".%' or LongCode='" + LongCode + "'";
+        //     p.select = "project_guid,parent_guid,project_shortname,project_name,LongCode";
+        //     OpenWizard(p, function (data) {
+        //         currenttask = data[0].project_guid;
+        //         newLongCode = data[0].LongCode;
+        //         SetBtnEditValue("txtPlanName", data[0].project_name);
+        //     })
+        // }
+        function SetBtnEditValue(id, value) {
+            var btn = mini.get(id);
+            btn.setText(value);
+            btn.setValue(value);
+        }
+
+        function LoadData() {
+            var project_name = mini.get("project_name1").getValue();
+            contractName = mini.get("txtContractName").getValue();
+            PartyAName = mini.get("txtPartyAName").getValue();
+            SignFDate = mini.get("txtSignFDate").getFormValue();
+            SignTDate = mini.get("txtSignTDate").getFormValue();
+            var swhere = "";
+            swhere = " where 1=1 "
+                //    +" and  LongCode like  '%" + newLongCode + "%'"
+                   +" and project_name like  '%" + project_name + "%'"
+                   +" and ContractName like  '%" + contractName + "%'"
+                   +" and PartyA like  '%" + PartyAName + "%'";
+            if (SignFDate == "") {
+                if (SignTDate != "") {
+                    swhere += " and SignedDate <'" + SignTDate + "'";
+                }
+            }
+            else {
+                if (SignTDate != "") {
+                    swhere += " and SignedDate between '" + SignFDate + "' and '" + SignTDate + "'";
+                }
+                else {
+                    swhere += " and SignedDate >'" + SignFDate + "'";
+                }
+            }
+
+            //数据库视图 V_PS_MK_IncomeContractInfoSum
+            $.ajax({
+                url: "/Contract/GetIncomeContractEPS",
+                data: { sWhere: swhere },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        var grid = mini.get("V_PS_IncomeContractInfoSum");
+                        grid.loadList(o.data.value, "Id", "");
+
+                    }
+                    else
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+        function OpenWizard(e, callback) {
+            mini.open({
+                url: e.url,
+                width: "80%", height: "80%", title: e.title,
+                showMaxButton: true,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    var winpar = iframe.contentWindow.WizardParams;
+                    if (winpar && e.multi) {
+                        winpar.multi = e.multi;
+                    }
+                    var selobj = iframe.contentWindow.Select;
+                    if (selobj) {
+                        if (selobj.SetWhere && e.swhere) selobj.SetWhere(e.swhere);
+                        if (selobj.LoadStepFirst) selobj.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok") return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    data = mini.clone(data);
+                    if (data) {
+                        if (callback) callback(data);
+                    }
+                }
+            });
+        }
+
+        function ViewForm(e) {
+            var SubContractId = e.node["Id"];
+            var url = "/Form/ValidForm/" + OpenFormId + "/" + "/view/" + SubContractId;
+            mini.open({
+                url: url,
+                width: 900,
+                height: 550
+            });
+        }
+        mini.get("V_PS_IncomeContractInfoSum").on("drawsummarycell",function(e){
+            if(e.field=="ContractName"||e.field=="ContractAmount"
+               ||e.field=="ApplyAmount"||e.field=="InvoiceAmount"||e.field=="ReceiveAmount"){
+                e.cellStyle="text-align:right;"
+                e.cellHtml=e.cellHtml.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+            if (e.field == "project_name")
+            {
+                e.cellHtml = "合计";
+            }
+        })
+    </script>
+</body>
+</html>

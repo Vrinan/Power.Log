@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>-->
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var currentproj = "$!CurrentSession.EpsProjId";
+        var longcode = "$!CurrentSession.EpsProjLongCode";//
+		 var EpsProjName = "$!CurrentSession.EpsProjName";
+    </script>
+</head>
+
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%;">
+                    <div class="portlet-title">
+                        <div class="captiontools">                            
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div class="mini-fit">
+                            <div id="charthere" style="width:100%;height:100%">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+       var Contractid,ViewType,Ctype;
+        $(function () {
+            Contractid = getParameter("Contractid");
+			ViewType= getParameter("ViewType");
+			Ctype=getParameter("Ctype");
+            LoadData();
+        });
+        function LoadData() {
+            var p = {};
+            p.Contractid = Contractid;
+            p.ViewType = ViewType;           
+            $.ajax({
+                url: "/Contract/GetContractCharOne",
+                data: p,
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart(o.data);
+                    }
+                }
+
+            });
+        }
+
+
+        //加载图表
+        function LoadChart(datas) {
+          	var opt = {};
+            opt.title = { text: "合同分析" };
+            opt.calculable = true;
+            opt.tooltip = { trigger: 'axis' };
+			opt.legend = { data: ['金额'] },
+            opt.toolbox = { show: false };            
+            opt.yAxis = [{ type: 'value', axisLabel: { formatter: '{value}'  } }];
+			if(ViewType=="IncomeContract"){
+				opt.xAxis = [{type: 'category',data: ["合同金额","变更金额","最终金额","累计请款","累计开票","累计到款","累计索赔","累计结算"]}];
+				opt.series = [{ name: '金额', type: 'bar', data: [datas.ContractAmount,datas.ChangeAmount,datas.FinalContractAmount,datas.TotalApplyAmount,datas.TotalInvoiceAmount,datas.TotalReceiveAmount,datas.TotalClaimAmount,datas.TotalSettlementAmount] }];
+			}else{
+				opt.xAxis = [{type: 'category',data: ["合同金额","变更金额","最终金额","累计支付申请","累计发票","累计付款","累计索赔","累计结算"]}];
+				opt.series = [{ name: '金额', type: 'bar', data: [datas.SubContractAmount,datas.ChangeAmount,datas.FinalSubContractAmount,datas.TotalApplyAmount,datas.TotalInvoiceAmount,datas.TotalPaymentAmount,datas.TotalClaimAmount,datas.TotalSettlementAmount] }];
+			}			
+            InitEChart("charthere", opt);
+
+        }
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+				 myChart.on('click', function(param) {
+				 var url=null;
+				 if (typeof param.seriesIndex != 'undefined') {	
+					var  tesxt=param.seriesName;
+					var  Datad= param.name;
+					if(ViewType=="IncomeContract"){
+						
+						if(Datad=="变更金额"){
+						   url = "/Form/EditForm/e46e3dd0-12b8-44cd-ba54-7dfbd6766c25/?Contractid=" + Contractid ;
+						}
+						if(Datad=="累计请款"){
+						 url = "/Form/EditForm/45446b38-64e4-48a5-b7de-37bbdddfcd6b/?Contractid=" + Contractid ;
+						}
+						if(Datad=="累计开票"){
+						url = "/Form/EditForm/ba16dacf-6403-4398-ba9a-362137496539/?Contractid=" + Contractid ;
+						}
+						if(Datad=="累计到款"){
+						 url = "/Form/EditForm/d33989ee-b527-43a8-a597-f0b3ca56aa11/?Contractid=" + Contractid ;
+						}
+						if(Datad=="累计索赔"){
+							 url = "/Form/EditForm/6caa0871-c796-45e8-9179-4ba48756a019/?Contractid=" + Contractid ;
+						}
+						if(Datad=="累计结算"){
+						url = "/Form/EditForm/aa2dc64b-1290-4bcd-b330-e9e6a84bf24a/?Contractid=" + Contractid ;
+						}
+						
+					
+					}
+					if(ViewType=="SubContract"){
+						switch (Datad)
+					  {
+					   case "变更金额":
+						url = "/Form/EditForm/1722c838-5bb9-4daf-a6db-626b426b2e2f/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  case "累计支付申请":
+						url = "/Form/EditForm/4da14ff0-08ef-414c-a262-6c137b37a6c1/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  case "累计发票":
+						url = "/Form/EditForm/00a5190c-1c4b-4a04-b87e-14e1c958beae/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  case "累计付款":
+						url = "/Form/EditForm/c64d1bca-d69c-494a-bdc7-062cda67b90f/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  case "累计索赔":
+						url = "/Form/EditForm/92b7a9d1-8d49-4a70-87c8-5cd243d5b2a2/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  case "累计结算":
+						url = "/Form/EditForm/d80d15b6-0133-488a-9071-0b0b366e33f9/?SubContract_Guid=" + Contractid+"&Ctype="+Ctype ;
+						break;
+					  }
+					}
+				 }
+				if(url){
+				 
+				mini.open({ url: url, width: "80%", heigth: "160%" })
+
+
+				}
+				 
+				 })
+            })
+        }
+    </script>
+</body>
+</html>

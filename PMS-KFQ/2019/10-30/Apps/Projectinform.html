@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>项目详情</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <script src="/Apps/js/TouchSlide.1.1.js"></script>
+    <script src="/Apps/js/jquery-1.8.3.min.js"></script>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileSingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/plugins/echarts/echarts.js"></script>
+
+    <link href="/Apps/style/style.css" rel="stylesheet" type="text/css" />
+
+    <link href="/Apps/style/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            background-color: #ebebeb;
+        }
+        
+        .send-head {
+            border: 1px solid;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        
+        .send-head .left {
+            width: 50%;
+            float: left;
+            text-indent: 10px;
+            vertical-align: middle;
+            color: #fff;
+            padding: 15px 0px;
+            border-top-left-radius: 5px;
+        }
+        
+        .send-head .right {
+            width: 50%;
+            float: left;
+            text-align: right;
+            padding-right: 15px;
+            padding: 15px 0px;
+            border-top-right-radius: 5px;
+        }
+        
+        .send-head .right h3 {
+            font-size: 3rem;
+            line-height: 34px;
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head .right h4 {
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head .right span {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-right: 15px;
+        }
+        
+        .send-head p {
+            clear: both;
+            background-color: #fff;
+            line-height: 30px;
+            text-indent: 15px;
+            font-size: 1.4rem;
+            color: #2a6496;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            margin-bottom: 0px;
+        }
+        
+        .send-head p span {
+            float: right;
+            margin-right: 15px;
+        }
+        
+        .send {
+            border: 1px solid #ddd;
+            margin: 10px;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .sendline {
+            border: 1px solid #ddd;
+            margin: 10px;
+            height: 250px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .send h3 {
+            font-size: 1.6rem;
+            margin: 5px 0px;
+            margin-left: 15px;
+            border-left: 2px solid;
+            padding-left: 10px;
+        }
+        
+        .send .left {
+            width: 50%;
+            float: left;
+            text-align: center;
+            vertical-align: middle;
+            margin-top: 8px;
+        }
+        
+        .send .left span {
+            display: block;
+        }
+        
+        .send .left .num {
+            font-size: 4.5rem;
+            color: #f00;
+        }
+        
+        .send .left .solve {
+            font-size: 1.6rem;
+            color: #f00;
+        }
+        
+        .send .right {
+            width: 50%;
+            float: left;
+            text-align: center;
+            margin: 10px 0px;
+        }
+        
+        .send .right a {
+            display: block;
+            line-height: 30px;
+            width: 80px;
+            border: 1px solid #ddd;
+            margin: 7px 30px;
+            background-color: #f4f4f4;
+            font-size: 1.4rem;
+        }
+        
+        .send .right a span {
+            padding-left: 5px;
+            color: #f00;
+        }
+        
+        .send .right a .b {
+            color: green;
+        }
+        
+        .panel-green {
+            border-color: #5cb85c !important;
+            background-color: #5cb85c !important;
+        }
+        
+        .panel-blue {
+            border-color: #428bca !important;
+            background-color: #428bca !important;
+        }
+        
+        .send .read span {
+            float: right;
+        }
+        
+        .plansend {
+            border: 1px solid #ddd;
+            margin: 10px;
+            height: 52px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .plansend h3 {
+            font-size: 1.6rem;
+            margin: 5px 0px;
+            margin-left: 15px;
+            border-left: 2px solid;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="send">
+        <h3 class="read" onclick="OpenProjectprogress()">项目进度<span><i class="fa fa-angle-right"></i><span></h3>       
+        <div class="left">
+          <div id="pieleft" style="height:100px;width:100%;"></div>
+        </div>
+        <div class="right">
+            <div id="pieright" style="height:100px;width:100%;"></div>
+        </div>
+    </div>
+	
+    <div class="send sendline" >
+        <h3>项目产值</h3>
+        <div id="line1" style="height:200px;width:100%;">
+
+        </div>
+         
+    </div> 
+	<div class="send sendline" >
+        <h3>进度曲线</h3>
+        <div id="line2" style="height:200px;width:100%;">
+
+        </div>
+         
+    </div> 
+	<div class="send sendline" >
+        <h3>SPI曲线</h3>
+        <div id="line3" style="height:200px;width:100%;">
+
+        </div>
+         
+    </div> 
+    <script type="text/javascript">
+		 var currentplan;
+		 var EpsProjId='';
+		 var act='';
+		 var pln='';
+		 var OpenType='';		 
+        $(function () { 
+			EpsProjId=getParameter("EpsProjId");
+			OpenType=getParameter("OpenType");
+			if ( EpsProjId == "") {
+            alert("没有传入必要数据");
+            return;
+			}
+			GetSession();
+			LoadPlanNameandtaskName();
+			LoadData();
+		    LoadData3();
+            
+        });
+		function GetSession(){
+			$.ajax({
+                url: "/App/GetSession",               
+                type: "POST",
+				async:"true",
+                success: function (text) {
+                  Session = mini.decode(text);
+				  if(OpenType=='P'&&Session.EpsIsProject==0){
+					window.location.href="/Apps/ProjectManager.html"; 
+				  }
+                }
+
+            });
+		}
+
+
+		function LoadData(){
+			var p = { KeyWord: "V_PS_EPM_ProjectList", KeyWordType: "ViewEntity", index: 0, size: 0 };
+            p.swhere = "1=1 and project_guid='" + EpsProjId + "'";;
+			 FormFuns.GridPageLoad(p, function (rlt) {
+                if (!rlt.success) {
+                    Power.ui.alert(rlt.message);
+                    return;
+                }
+                var rs = mini.decode(rlt.data.value);
+				for (var j = 0; j < rs.length; j++) {
+					var row = rs[j];
+					var act=0;
+					var pln=0;					
+				if (row.act_complete_pct != act && row.act_complete_pct != null)
+					 act =row.act_complete_pct.toFixed(2);
+				if (row.plan_complete_pct != pln && row.plan_complete_pct != null)
+					pln =row.plan_complete_pct.toFixed(2);
+				var PV=0;
+				if (row.PV != PV && row.PV != null)
+                    PV = row.PV;
+				var EV=0;
+				if (row.EV != EV && row.EV != null)
+                    EV = row.EV;
+				load_pieleft(pln);
+				load_pieright(act);
+				loadline(EV,PV);
+				}
+			})
+		
+		}
+
+
+		function loadline(EV,PV){
+		 EV = Math.round(EV * 100) / 1000000;
+		 PV = Math.round(PV * 100) / 1000000;
+            var  opt = {   
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    
+                    legend: {
+                        data:['计划产值', '实际产值']
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data:['计划产值', '实际产值']
+                        }
+                        
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    calculable : true,
+                    grid: {
+                        x: 50,
+                        x2: 30,
+                        y: 30,
+                        y2: 30
+
+                    },
+                    series : [
+                        {
+                            name:'计划产值',
+                            type:'bar',
+                            barWidth:30,
+                            data:[PV]
+                        },
+                        {
+                            name:'实际产值',
+                            type:'bar',
+                            barWidth:30,
+                            data:[EV]
+                        }
+                    ]
+                };
+                        
+            InitEChart("line1", opt);
+		
+		}
+
+
+		function LoadPlanNameandtaskName() {
+            var p = { KeyWord: "ProjectPlan", select: "proj_plan_guid,plan_name", sort: "proj_plan_id", size: "1" };
+            p.swhere = "proj_guid='" + EpsProjId + "' and parent_plan_id=0";
+            p.url = "/Form/GridPageLoadEx"
+            FormFuns.GridPageLoad(p, function (o) {
+                var data = mini.decode(o.data.value);
+                if (data.length > 0) {
+                    currentplan = data[0].proj_plan_guid;
+                    
+                    LoadData2();
+                }
+            })
+        }
+
+
+		function LoadData3() {
+            $.ajax({
+                url: "/Plan/GetSPI",
+                data: { proj_guid: EpsProjId, type: "plan" },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+						if(o.list.length>0)
+                          LoadChart3(o.list);
+                    }
+                }
+
+            });
+        }
+
+        
+        function LoadChart3(data) {
+
+            var xaxis = { type: 'category', data: [], axisLabel: { rotate: 45 } };
+            var spi = {
+                "name": "SPI", type: 'line', data: [],
+                markLine: {
+                    data: [
+                       [
+                           { name: '标准SPI', value: 1, xAxis: -1, yAxis: 1 },      // 当xAxis为类目轴时，数值1会被理解为类目轴的index，通过xAxis:-1|MAXNUMBER可以让线到达grid边缘
+                        { name: '', xAxis: 1000, yAxis: 1 }           // 当xAxis为类目轴时，字符串'周三'会被理解为与类目轴的文本进行匹配
+                       ]
+                    ]
+                }
+            };
+            for (var i = 0; i < data.length; i++) {
+                var d = data[i];
+                xaxis.data.push(mini.formatDate(d["periodend"], "yyyy-MM"));
+                spi.data.push(d["SPI"].toFixed(2));
+            }
+            var opt = {};
+			opt.grid={ x: 40,x2: 40,y: 20, y2: 50};
+            opt.title = { text: "" };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+            opt.legend = { data: ["SPI"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', min: 0, max: 2 }];
+            opt.series = [spi];
+            InitEChart("line3", opt);
+        }
+
+		function LoadData2() {
+            if (!currentplan) {
+                Power.ui.warning("请先选择计划");
+                return;
+            }
+            $.ajax({
+                url: "/Plan/GetWBSEVM",
+                data: { plan_guid: currentplan, task_guid:  currentplan },
+                type: "POST",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        LoadChart2(o.list);
+                    }
+                }
+
+            });
+        }
+
+        //加载图表
+        function LoadChart2(data) {
+            //标题
+            var charttitle = "";//"进度:" + mini.get("txtPlanName").text;
+            //if (mini.get("txtTaskName").text.length != 0) {
+            //    charttitle += ("/" + mini.get("txtTaskName").text);
+            //}
+            var xaxis = { type: 'category', data: [] };
+            var actcur = { "name": "实际", type: 'bar', yAxisIndex: 1, data: [] };
+            var actsum = { "name": "累计实际", type: 'line', data: [] };
+            var plncur = { "name": "计划", type: 'bar', yAxisIndex: 1, data: [] };
+            var plnsum = { "name": "累计计划", type: 'line', data: [] };
+            var imax = 0;
+            $.each(data, function () {
+                var md = mini.formatDate(this.startdate, "MM-dd");
+                xaxis.data.push(md);
+                actcur.data.push(Math.round(this.actcurpct * 100) / 100);
+                actsum.data.push(Math.round(this.actsumpct * 100) / 100);
+                plncur.data.push(Math.round(this.plncurpct * 100) / 100);
+                plnsum.data.push(Math.round(this.plnsumpct * 100) / 100);
+                if (this.actcurpct > imax) imax = this.actcurpct;
+                if (this.plncurpct > imax) imax = this.plncurpct;
+            })
+            imax = (imax % 10 == 0) ? (imax + 5) : Math.ceil(imax / 10) * 10;
+            var opt = {};
+
+            opt.title = { text: charttitle };
+            opt.tooltip = { trigger: 'axis' };
+            opt.toolbox = { show: false };
+			 opt.grid={ x: 40,x2: 40,y: 20, y2: 20};
+            opt.legend = { data: ["计划", "实际", "累计计划", "累计实际"] };
+            opt.xAxis = [xaxis];
+            opt.yAxis = [{ type: 'value', name: '累计', min: 0, max: 100 }, { type: 'value', name: '当期', min: 0, max: imax }];
+            opt.series = [plncur, actcur, plnsum, actsum];
+            InitEChart("line2", opt);
+
+        }
+
+
+		var placeHolderStyle = {
+			normal : {
+				color: '#ccc',
+				label: {show:false},
+				labelLine: {show:false}
+			},
+			emphasis : {
+				color: 'rgba(0,0,0,0)'
+			}
+		};
+
+
+		var labelTop = {
+            normal : {
+                label : {
+                    show : true,
+                    position : 'center',
+                    formatter : '{b}',
+                    textStyle: {
+                        baseline : 'bottom'
+                    }
+                },
+                labelLine : {
+                    show : false
+                }
+            }
+        };
+	
+        function load_pieleft(data) {
+			var other=100-data;
+			var text ='计划进度:'+data+'%';
+           var opt = {
+					
+					legend: {
+						
+						x : 'left',
+						data:[text]
+					},
+				    tooltip : {
+						show : false
+					},
+				   
+					series : [
+						{
+							name:'计划进度',
+							type:'pie',
+							radius : ['45%', '55%'],
+							itemStyle : {
+								normal : {
+									label : {
+										show : false
+									},
+									labelLine : {
+										show : false
+									}
+								},
+								emphasis : {
+									label : {
+										show : true,
+										position : 'center',
+										textStyle : {
+											fontSize : '30',
+											fontWeight : 'bold'
+										}
+									}
+								}
+							},
+							data:[
+								{ value: other, name: 'vertical',itemStyle:placeHolderStyle },
+								{value:data, name:text,itemStyle:{normal : {color: '#A4D3EE'}}}
+								
+							]
+						}
+					]
+				};
+
+            InitEChart("pieleft", opt);
+        }
+
+        function load_pieright(data) {
+            var other=100-data;
+			var text ='实际进度:'+data+'%';
+            var opt = {
+					tooltip : {
+						show: false
+					},
+					legend: {
+						
+						x : 'left',
+						data:[text]
+					},
+				   
+				   
+					
+					series : [
+						{
+							name:'实际进度',
+							type:'pie',
+							radius : ['45%', '55%'],
+							itemStyle : {
+								normal : {
+									label : {
+										show : false
+									},
+									labelLine : {
+										show : false
+									}
+								},
+								emphasis : {
+									label : {
+										show : true,
+										position : 'center',
+										textStyle : {
+											fontSize : '30',
+											fontWeight : 'bold'
+										}
+									}
+								}
+							},
+							data:[
+								{ value: other, name: 'vertical',itemStyle:placeHolderStyle },
+								{value:data, name:text,itemStyle:{normal : {color: '#9AFF9A'}}}
+								
+							]
+						}
+					]
+				};
+
+
+            InitEChart("pieright", opt);
+        }
+         
+        
+		function OpenProjectprogress() {
+        var url = "/Apps/Projectprogress.html?EpsProjId="+EpsProjId;
+        CallAppFunction("appOpenNewWebView", '{"url":"' + url + '","pullUp":"true","pullDown":"true","showTabbar":"true","title":"项目进度"}',url);
+		}
+        //渲染图表
+        function InitEChart(chartid, option) {
+            require.config({
+                paths: {
+                    echarts: '/Scripts/plugins/echarts/'
+                }
+            });
+            require([
+                'echarts',
+                'echarts/theme/default',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+                'echarts/chart/bar',
+				 'echarts/chart/pie',
+				'echarts/chart/gauge',
+				'echarts/chart/scatter'
+            ], function (ec, theme) {
+                var myChart = ec.init(document.getElementById(chartid), theme);
+                myChart.setOption(option);
+            })
+        }
+
+    </script>
+</body>
+
+</html>

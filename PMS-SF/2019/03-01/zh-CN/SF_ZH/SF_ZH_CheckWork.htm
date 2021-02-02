@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+					<i class="fa fa-reorder"></i>考勤统计
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="btnActive" onclick="WorkFlowUtils.ActiveWorkFlow(this);" style="display: none"><i class="fa fa-save"></i>送审</a>-->
+                    <!--<a class="mini-button blue" id="SF_ZH_CheckWork.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="SF_ZH_CheckWork.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>-->
+                    <a class="mini-button blue" id="SF_ZH_CheckWork.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_ZH_CheckWork.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="SF_ZH_CheckWork.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="SF_ZH_CheckWork" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" />
+                                        </td>
+                                        <td>
+                                            <label for="SF_ZH_CheckWork.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td >
+                                            <input id="SF_ZH_CheckWork.Title" name="Title" class="mini-textbox" required="true" requirederrortext="名称不能为空" />
+                                        </td> 
+                                        <td>
+                                            部门
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.Department" name="Department" class="mini-textbox" readonly />
+                                        </td>                                  
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            年份
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.Year" name="Year" class="mini-textbox" readonly  />
+                                        </td>
+                                        <td>
+                                            月份
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.Month" name="Month" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            岗位性质
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.PositionType" name="PositionType" class="mini-combobox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZH_CheckWork.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>     
+                        <div title="考勤统计">
+                            <div class="mini-toolbar">
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_CheckWork_list.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>新增-->
+
+                                <!--<a class="mini-button blue" iconcls="fa-plus" id="SF_ZH_CheckWork_list.Add1" onclick="PowerForm.OnBtnWizard(this)">新增(向导)</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZH_CheckWork_list.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>--><!--删除-->
+                                <div id="SF_ZH_CheckWork_All-Export" title="考勤统计" class="btn-group"></div>
+                                <div style="color:blue">说明：●:早班；△：中班；□：晚班；◎：回公司早班</div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZH_CheckWork_All" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="false" allowCellSelect="true" allowCellEdit="true" multiSelect="true" allowCellValid="true" allowAlternating="true"
+                                     editNextOnEnterKey="true" data-options="{canImport:true}" sortField="Department,HumanCode ASC">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--多选框-->
+                                        <div type="indexcolumn" width="20">序号</div>
+                                        <div field="HumanCode" width="40">工号</div>
+                                        <div field="HumanName">姓名</div><!--名称-->
+                                        <div field="Department">部门</div><!--名称-->
+                                        <div field="Day1" name="SF_ZH_CheckWork_All.Day1" type="comboboxcolumn">1号<input property="editor" class="mini-combobox" style="width: 20px;" readonly/></div><!--班次类型-->
+                                        <div field="Day2" name="SF_ZH_CheckWork_All.Day2" type="comboboxcolumn">2号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day3" name="SF_ZH_CheckWork_All.Day3" type="comboboxcolumn">3号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day4" name="SF_ZH_CheckWork_All.Day4" type="comboboxcolumn">4号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day5" name="SF_ZH_CheckWork_All.Day5" type="comboboxcolumn">5号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day6" name="SF_ZH_CheckWork_All.Day6" type="comboboxcolumn">6号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day7" name="SF_ZH_CheckWork_All.Day7" type="comboboxcolumn">7号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day8" name="SF_ZH_CheckWork_All.Day8" type="comboboxcolumn">8号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day9" name="SF_ZH_CheckWork_All.Day9" type="comboboxcolumn">9号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day10" name="SF_ZH_CheckWork_All.Day10" type="comboboxcolumn">10号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day11" name="SF_ZH_CheckWork_All.Day11" type="comboboxcolumn">11号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day12" name="SF_ZH_CheckWork_All.Day12" type="comboboxcolumn">12号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day13" name="SF_ZH_CheckWork_All.Day13" type="comboboxcolumn">13号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day14" name="SF_ZH_CheckWork_All.Day14" type="comboboxcolumn">14号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day15" name="SF_ZH_CheckWork_All.Day15" type="comboboxcolumn">15号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day16" name="SF_ZH_CheckWork_All.Day16" type="comboboxcolumn">16号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day17" name="SF_ZH_CheckWork_All.Day17" type="comboboxcolumn">17号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day18" name="SF_ZH_CheckWork_All.Day18" type="comboboxcolumn">18号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day19" name="SF_ZH_CheckWork_All.Day19" type="comboboxcolumn">19号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day20" name="SF_ZH_CheckWork_All.Day20" type="comboboxcolumn">20号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day21" name="SF_ZH_CheckWork_All.Day21" type="comboboxcolumn">21号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day22" name="SF_ZH_CheckWork_All.Day22" type="comboboxcolumn">22号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day23" name="SF_ZH_CheckWork_All.Day23" type="comboboxcolumn">23号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day24" name="SF_ZH_CheckWork_All.Day24" type="comboboxcolumn">24号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day25" name="SF_ZH_CheckWork_All.Day25" type="comboboxcolumn">25号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day26" name="SF_ZH_CheckWork_All.Day26" type="comboboxcolumn">26号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day27" name="SF_ZH_CheckWork_All.Day27" type="comboboxcolumn">27号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day28" name="SF_ZH_CheckWork_All.Day28" type="comboboxcolumn">28号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day29" name="SF_ZH_CheckWork_All.Day29" type="comboboxcolumn">29号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day30" name="SF_ZH_CheckWork_All.Day30" type="comboboxcolumn">30号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+                                        <div field="Day31" name="SF_ZH_CheckWork_All.Day31" type="comboboxcolumn">31号<input property="editor" class="mini-combobox" style="width: 20px;" readonly></div><!--班次类型-->
+
+                                        <div field="DayShift1" name="DayShift1" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="白班" align="left">白班<input property="editor" class="mini-textbox" style="width: 100%;"  readonly/></div>
+                                        <div field="DayShift2" name="DayShift2" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="中班" align="left">中班<input property="editor" class="mini-textbox" style="width: 100%;"  readonly/></div>
+                                        <div field="DayShift3" name="DayShift3" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="夜班" align="left">夜班<input property="editor" class="mini-textbox" style="width: 100%;" readonly /></div>
+                                        <div field="DayShift4" name="DayShift4" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="加班" align="left">加班<input property="editor" class="mini-textbox" style="width: 100%;"  readonly/></div>
+                                        <div field="Total" name="Total" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="合计" align="left">合计<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="DayShift5" name="DayShift5" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="事假" align="left">事假<input property="editor" class="mini-textbox" style="width: 100%;" readonly /></div>
+                                        <div field="DayShift6" name="DayShift6" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="病假" align="left">病假<input property="editor" class="mini-textbox" style="width: 100%;" readonly /></div>
+                                        <div field="DayShift7" name="DayShift7" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="休假" align="left">休假<input property="editor" class="mini-textbox" style="width: 100%;" readonly /></div>
+                                        <div field="DayShift9" name="DayShift9" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="年休" align="left">年休<input property="editor" class="mini-textbox" style="width: 100%;" readonly /></div>
+                                        <div field="DayShift8" name="DayShift8" headeralign="center" guideid="" datatype="" allowsort="true" currencyunit="" header="旷工" align="left">旷工<input property="editor" class="mini-textbox" style="width: 100%;"  readonly/></div>
+
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" name="Memo" class="mini-textarea" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                 
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        PowerForm.EventAfterLoadRight = function (e, data) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "zhbfzr") {
+                mini.get("SF_ZH_CheckWork.Save").enable();
+                var g = mini.get("SF_ZH_CheckWork_All");
+                if (g && g.columns.length > 0) {
+                    var columns = [];
+                    funsself.GetTreeGridAllHeaders(g.columns, columns);
+                    for (var i = 0; i < columns.length; i++) {
+                        columns[i].readOnly = false;
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

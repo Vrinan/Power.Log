@@ -1,0 +1,582 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>标段进度首页</title>
+	<script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+	<script src="/Scripts/plugins/echarts/source/echarts.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="/Projects/Power.ZDelta/css/demo.css">
+	<style type="text/css">
+		*::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+			background-color: #fff;
+		}
+
+		*::-webkit-scrollbar-thumb {
+			background-color: #ddd;
+			border-radius: 8px;
+			-webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, .3);
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="row" style="margin-bottom:10px;">
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>进度对比</span></div>
+				<div id="chart1" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>SPI</span></div>
+				<div id="chart2" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box">
+				<div class="title"><span>A1标段项目进度情况</span></div>
+				<p class="chart-title">项目总工期<span class="fc-blue">825天</span>，已施工<span
+						class="fc-blue">256天</span>，剩余工期<span class="fc-blue">569天</span></p>
+				<div class="flex">
+					<div id="chart3" style="width:33%;height:180px;"></div>
+					<div id="chart4" style="width:33%;height:180px;"></div>
+					<div id="chart5" style="width:33%;height:180px;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>实际进度</span></div>
+				<div class="flex" style="margin-top:40px;">
+					<div style="width:30%;text-align:center;">累计</div>
+					<div>
+						<div class="line-box"><span class="fc-red" style="margin-left:40px;"><i class="fa fa-flag"
+									aria-hidden="true"></i></span></div>
+						<p class="details">1250/5680张</p>
+					</div>
+				</div>
+				<div class="flex" style="margin-top:40px;">
+					<div style="width:30%;text-align:center;">本月</div>
+					<div>
+						<div class="line-box"><span class="fc-red" style="margin-left:80px;"><i class="fa fa-flag"
+									aria-hidden="true"></i></span></div>
+						<p class="details">80/160张</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="box">
+				<div class="title"><span>功效分析</span></div>
+				<div id="chart6" style="width:100%;height:250px;"></div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="margin-bottom:10px;">
+		<div class="col-md-12">
+			<div class="box" style="width:100%;height:200px;">
+				<div class="timeline">
+					<div class="timeline-left"><i class="fa fa-chevron-circle-left"></i></div>
+					<div class="timelist top" style="left:10%;">
+						<p class="timelist-flag fc-green"><i class="fa fa-flag"></i></p>
+						<p>2020-3-10</p>
+						<p>交通洞盾构始发</p>
+					</div>
+					<div class="timelist bottom" style="left:20%;">
+						<p>2020-9-8</p>
+						<p>LG02#工作井盾构开发</p>
+						<p class="timelist-flag fc-blue"><i class="fa fa-flag"></i></p>
+					</div>
+					<div class="timelist bottom" style="left:40%;">
+						<p>2021-8-30</p>
+						<p>交通同投入使用</p>
+						<p class="timelist-flag fc-blue"><i class="fa fa-flag"></i></p>
+					</div>
+					<div class="timelist top" style="left:60%;">
+						<p class="timelist-flag fc-blue"><i class="fa fa-flag"></i></p>
+						<p>2022-6-30</p>
+						<p>LG02#-01#区间双线盾构隧洞掘进贯通</p>
+					</div>
+					<div class="timelist bottom" style="left:77%;">
+						<p>2022-12-30</p>
+						<p>隧洞内钢管衬砌完成</p>
+						<p class="timelist-flag fc-blue"><i class="fa fa-flag"></i></p>
+					</div>
+					<div class="timelist top" style="left:86%;">
+						<p class="timelist-flag fc-blue"><i class="fa fa-flag"></i></p>
+						<p>2024-4-30</p>
+						<p>完工具备通水条件</p>
+					</div>
+					<div class="timeline-right"><i class="fa fa-chevron-circle-right"></i></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="box">
+				<div class="title"><span>一级控制点完成情况</span></div>
+				<div class="box-pad" style="width: 100%;height: 248px;">
+					<div id="datagrid1" class="mini-datagrid" showLoading="false" style="width: 100%;height:100%;"
+						url="/html/demo/data/Data5.txt" multiSelect="true" showEmptyText="false"
+						showfooter="false" showPager="false">
+						<!-- <div property="columns">
+							<div header="一级控制点完成情况" headerAlign="center"> -->
+						<div property="columns">
+							<div field="data2" name="data2" width="100" headerAlign="center" align="center">
+								里程碑节点
+							</div>
+							<div field="data3" name="data3" width="80" headeralign="center" align="center">
+								最晚完成日期
+							</div>
+							<div field="data1" name="data3" width="80" headeralign="center" align="center">
+								完成状态
+							</div>
+						</div>
+						<!-- </div>
+						</div> -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box">
+				<div class="title"><span>现场图片</span><a href="#" class="link">更多<i
+							class="fa fa-angle-right"></i></a></div>
+				<div class="box-pad" style="width: 100%;height: 248px;">
+					<img src="/html/demo/1.png" style="width:100%;height:100%;" />
+				</div>
+
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="box">
+				<div class="title"><span>二级控制点完成情况</span></div>
+				<div class="box-pad" style="width: 100%;height: 248px;">
+					<div id="datagrid2" class="mini-datagrid" showLoading="false" style="width: 100%;height:100%;"
+						url="/html/demo/data/Data6.txt" multiSelect="true" showEmptyText="false"
+						showfooter="false" showPager="false">
+						<!-- <div property="columns">
+							<div header="二级控制点完成情况" headerAlign="center"> -->
+						<div property="columns">
+							<div field="data2" name="data2" width="100" headerAlign="center" align="center">
+								里程碑节点
+							</div>
+							<div field="data3" name="data3" width="80" headeralign="center" align="center">
+								最晚完成日期
+							</div>
+							<div field="data1" name="data3" width="80" headeralign="center" align="center">
+								完成状态
+							</div>
+						</div>
+						<!-- </div>
+						</div> -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script>
+		mini.parse();
+		var grid1 = mini.get("datagrid1");
+		grid1.load();
+		grid1.on("drawcell", function (e) {
+			var record = e.record,
+				column = e.column,
+				field = e.field,
+				value = e.value;
+			if (field == "data1") {
+				if (e.value == "green") {
+					e.cellHtml = "<span style='color:#00cc00;'><i class='fa fa-check-square'></i></span>"
+				} else if (e.value == "yellow") {
+					e.cellHtml = "<span style='color:#ffcc00;'><i class='fa fa-exclamation-circle'></i></span>"
+				} else {
+					e.cellHtml = " "
+				}
+			}
+		});
+
+		var grid2 = mini.get("datagrid2");
+		grid2.load();
+		grid2.on("drawcell", function (e) {
+			var record = e.record,
+				column = e.column,
+				field = e.field,
+				value = e.value;
+			if (field == "data1") {
+				if (e.value == "green") {
+					e.cellHtml = "<span style='color:#00cc00;'><i class='fa fa-check-square'></i></span>"
+				} else if (e.value == "yellow") {
+					e.cellHtml = "<span style='color:#ffcc00;'><i class='fa fa-exclamation-circle'></i></span>"
+				} else {
+					e.cellHtml = " "
+				}
+			}
+		});
+		var option1 = {
+			series: [
+				{
+					name: '进度对比',
+					type: 'pie',
+					//selectedMode: 'single',
+					radius: ['42%', '50%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 52.6,
+							name: '实际进度',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+									color: '#26C6DA'
+								}
+							}
+						},
+						{
+							value: 47.4,
+							name: '未完成进度',
+							itemStyle: {
+								normal: {
+									color: '#f0f1f6'
+								}
+							}
+						},
+
+					]
+				},
+				{
+					name: '进度对比',
+					type: 'pie',
+					radius: ['53%', '65%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 60,
+							name: '计划进度',
+							itemStyle: {
+								normal: {
+									color: '#1E88E5'
+								}
+							}
+						},
+						{
+							value: 40,
+							name: '未完成进度',
+							itemStyle: {
+								normal: {
+									color: '#f0f1f6'
+								}
+							}
+						},
+
+					]
+				}
+			]
+		};
+		InitEChart("chart1", option1);
+
+		var option2 = {
+			tooltip: {
+				formatter: '{a} <br/>{b} : {c}%'
+			},
+			series: [
+				{
+					name: 'SPI',
+					type: 'gauge',
+					splitNumber: 5,       // 分割段数，默认为5
+					detail: { formatter: '{value}' },
+					axisLine: {            // 坐标轴线  
+						lineStyle: {       // 属性lineStyle控制线条样式  
+							color: [[0.25, '#54BCD7'], [0.75, '#5A7BDE'], [1, '#51CF86']],
+							width: 10
+						}
+					},
+					splitLine: {
+						length: 10
+					},
+					axisTick: {            // 坐标轴小标记
+						show: true,        // 属性show控制显示与否，默认不显示
+						splitNumber: 5,    // 每份split细分多少段
+						length: 3,         // 属性length控制线长
+						lineStyle: {       // 属性lineStyle控制线条样式
+							color: '#eee',
+							width: 1,
+							type: 'solid'
+						}
+					},
+					data: [{ value: 50 }],
+
+				}
+			]
+		};
+		InitEChart("chart2", option2);
+
+
+		var option3 = {
+			title: {
+				text: '一级节点按时完成率',
+				x: 'center',
+				y: 140,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			}, 
+			color: ['#54BCD7', '#f0f1f6'],
+			series: [
+				{
+					name: '一级节点按时完成率',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 85,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 15, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart3", option3);
+
+		var option4 = {
+			title: {
+				text: '二级节点按时完成率',
+				x: 'center',
+				y: 140,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			}, 
+			color: ['#5A7BDE', '#f0f1f6'],
+			series: [
+				{
+					name: '二级节点按时完成率',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 90,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 10, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart4", option4);
+
+		var option5 = {
+			title: {
+				text: '三级节点按时完成率',
+				x: 'center',
+				y: 140,
+				itemGap: 20,
+				textStyle: {
+					color: '#444',
+					fontFamily: '微软雅黑',
+					fontSize: 13,
+					fontWeight: '500'
+				}
+			}, 
+			color: ['#51CF86', '#f0f1f6'],
+			series: [
+				{
+					name: '三级节点按时完成率',
+					type: 'pie',
+					center: ['50%', '45%'],
+					radius: ['50%', '60%'],
+					avoidLabelOverlap: false,
+					itemStyle: {
+						normal: {
+							label: {
+								show: false
+							},
+							labelLine: {
+								show: false
+							}
+						}
+					},
+					data: [
+						{
+							value: 79,
+							name: '已完成',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true,
+										position: 'center',
+										formatter: '{d}%',
+										textStyle: {
+											fontSize: '16',
+											color: '#333',
+										}
+									},
+								}
+							}
+						},
+						{ value: 21, name: '未完成' }
+					]
+				}
+			]
+		}
+		InitEChart("chart5", option5);
+
+		var option6 = {
+			tooltip: {
+				formatter: '{a} <br/>{b} : {c}%'
+			},
+			series: [
+				{
+					name: 'SPI',
+					type: 'gauge',
+					splitNumber: 5,       // 分割段数，默认为5
+					detail: { formatter: '{value}%' },
+					axisLine: {
+						lineStyle: {
+							color: [[0.25, '#54BCD7'], [0.75, '#5A7BDE'], [1, '#51CF86']],
+							width: 10
+						}
+					},
+					axisTick: {            // 坐标轴小标记
+						show: true,        // 属性show控制显示与否，默认不显示
+						splitNumber: 5,    // 每份split细分多少段
+						length: 3,         // 属性length控制线长
+						lineStyle: {       // 属性lineStyle控制线条样式
+							color: '#eee',
+							width: 1,
+							type: 'solid'
+						}
+					},
+					splitLine: {
+						length: 10
+					},
+					data: [{ value: 50, name: '完成率' }],
+
+				}
+			]
+		};
+		InitEChart("chart6", option6);
+
+
+		function InitEChart(chartid, option) {
+			require.config({
+				paths: {
+					echarts: '/Scripts/plugins/echarts/'
+				}
+			});
+			require([
+				'echarts',
+				'echarts/theme/default',
+				'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表gauge
+				'echarts/chart/bar',
+				'echarts/chart/pie',
+				'echarts/chart/gauge'
+			], function (ec, theme) {
+				var myChart = ec.init(document.getElementById(chartid), theme);
+				// 图自动适应大小
+				$(window).resize(function () {
+					myChart.resize();
+				});
+
+				myChart.setOption(option);
+			})
+		}
+
+	</script>
+</body>
+
+</html>

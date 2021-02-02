@@ -1,0 +1,577 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+        var NowDate = getdate();	//ComTools 获取当前日期 2013-01-02
+        var now = new Date();
+        var NYear = now.getFullYear();
+        var NMonth = now.getMonth() + 1;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i><span>请购单</span>
+                </div>
+                <div class="actions">
+                    $!WorkFlowButtons
+                    <a class="mini-button blue" id="XLX_PUR_Request.ToContract" onclick="OnToContract()"><i class="fa fa-save"></i>生成合同</a>
+                    <a class="mini-button blue" id="XLX_PUR_Request.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="XLX_PUR_Request.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="XLX_PUR_Request.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="XLX_PUR_Request.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="XLX_PUR_Request.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="通常" iconcls="fa fa-h-square">
+                            <div id="XLX_PUR_Request" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号</td>
+                                        <td><input id="RequestCode" name="RequestCode" class="mini-textbox" /></td>
+                                        <td>状态</td>
+                                        <td><input id="XLX_PUR_Request.Status" name="Status" class="mini-combobox" readonly="true"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>标题</label></td>
+                                        <td colspan="3"><input id="Title" name="Title" class="mini-textbox" required="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>请购日期</label></td>
+                                        <td><input id="RequestDate" name="RequestDate" class="mini-datepicker" format="yyyy-MM-dd" valuetype="String" allowinput="false" required="true" /></td>
+                                        <td><label>是否紧急</label></td>
+                                        <td><input id="IsUrgency" name="IsUrgency" class="mini-checkbox" text="是否紧急" value="是" trueValue="是" falseValue="否" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>需求类型</label></td>
+                                        <td>
+                                            <input id="XLX_PUR_Request.BomType" name="BomType" class="mini-combobox" required="true" />
+                                        </td>
+                                        <td><label>是否预算内</label></td>
+                                        <td><input id="XLX_PUR_Request.Is_Budget" name="Is_Budget" class="mini-combobox" required="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>金额</label></td>
+                                        <td><input id="XLX_PUR_Request.RequestMoney" name="RequestMoney" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999999" format="n2" /></td>
+                                        <td><label>请购专业</label></td>
+                                        <td><input id="XLX_PUR_Request.ProMajor" name="ProMajor" class="mini-combobox" textField="Name" valueField="Name" class="mini-combobox" url="/Data/ProMajorData/P" /></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td><label style="background-color:white;">装置</label></td>
+                                        <td>
+                                            <input property="editor" id="XLX_PUR_Request.DeviceNameA" name="DeviceNameA" textname="DeviceNameA" class="mini-buttonedit"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>装置编码</td>
+                                        <td><input id="DeviceCodeA" name="DeviceCodeA" class="mini-textbox" allowinput="false" /></td>
+                                    </tr>  -->
+                                    <tr>
+                                        <td><label>请购人</label></td>
+                                        <td>
+                                            <input property="editor" id="XLX_PUR_Request.PurchaseHuman" name="PurchaseHuman" textname="PurchaseHuman" class="mini-buttonedit"
+                                                   onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <!--<td><label>单元</label></td>
+                                        <td><input id="UnitNameA" name="UnitNameA" class="mini-textbox" /></td>     -->
+                                        <td><label>概算科目</label></td>
+                                        <td>
+                                            <input id="XLX_PUR_Request.CBS_Name" name="CBS_Name" textname="CBS_Name" class="mini-buttonedit"
+                                                   onclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>CBS路径</label></td>
+                                        <td>
+                                            <input id="CBSPath" name="CBSPath" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td><label>装置</label></td>
+                                        <td>
+                                            <input id="DeviceNameA" name="DeviceNameA" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>录入人</label></td>
+                                        <td><input id="RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" /></td>
+                                        <td><label>录入日期</label></td>
+                                        <td><input id="RegDate" name="RegDate" class="mini-datepicker" format="yyyy-MM-dd HH:mm:ss" readonly="readonly" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="明细">
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="View_XLX_PUR_Request_List.Add" onclick="PowerForm.OnBtnWizard(this)">从物资库选择</a><!--新增(向导)-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="View_XLX_PUR_Request_List.Add1" onclick="PowerForm.OnBtnWizard(this)">从物资计划选择</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="View_XLX_PUR_Request_List.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="View_XLX_PUR_Request_List-Print" class="btn-group"></div>
+                                <div id="View_XLX_PUR_Request_List-Export" class="btn-group"></div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="View_XLX_PUR_Request_List" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id"
+                                     showpager="fales" allowcellselect="true" allowcelledit="true" multiselect="true" allowcellvalid="true" allowalternating="true"
+                                     editnextonenterkey="true" virtualScroll="true">
+                                    <!--不显示分页/允许选择单元格/允许单元格编辑/允许多选(ctrl)/是否自动验证，当编辑单元格时/显示斑马纹/
+                                    显示汇总行/汇总事件/按回车键进入下一个单元格编辑/粘贴导入/虚拟加载-->
+                                    <div property="columns">
+                                        <div type="checkcolumn"></div><!--复选框组-->
+                                        <div type="indexcolumn" width="50">序号</div><!--序号-->
+                                        <div field="MatBS_Name" width="100" headeralign="center" allowsort="true">物资类别名称</div>
+                                        <div field="MatCode" width="100" headeralign="center">物料编码</div>
+                                        <div field="MatName" width="100" headeralign="center" allowsort="true" summarytype="count">物料名称</div>
+                                        <div field="Model" width="200" headeralign="center" allowsort="true">物资描述</div>
+                                        <div field="Specifi" width="160" headerAlign="center" allowSort="true">规格型号</div>
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">制造标准</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材质</div>
+                                        <div field="Pattern" width="160" headerAlign="center" allowSort="true">型式</div>
+                                        <div field="MatUnit" width="100" headeralign="center" allowsort="true">单位</div>
+                                        <!--<div field="Texture" width="100" headerAlign="center" allowSort="true">材料性能等级</div>
+                                        <div field="MatUnit" width="100" headerAlign="center" allowSort="true">基本计量单位</div>
+                                        <div field="MatUnit2" width="100" headerAlign="center" allowSort="true">辅助计量单位</div>
+                                        <div field="Equ" width="70" headerAlign="center" allowSort="true">换算率</div>
+                                        <div field="Pressure" width="100" headerAlign="center" allowSort="true">压力等级壁厚</div>
+                                        <div field="TaxRate" width="60" headerAlign="center" allowSort="true">税率</div>-->
+                                        <div field="Qty_Bom" width="100" headeralign="center" allowsort="true">需求数量</div>
+                                        <div field="MatAmount" width="100" headeralign="center" allowsort="true">合同数量</div>
+                                        <div field="OutStoreNum" width="100" headeralign="center" allowsort="true">出库数量</div>
+                                        <!--<div field="Qty_Requested" width="100" headerAlign="center" allowSort="true">裕量</div>-->
+                                        <div field="Qty_Req" width="100" headeralign="center" allowsort="true" summarytype="sum">请购数量<input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999999" format="n2" /></div>
+                                        <!--<div field="BeginDate" width="100" headerAlign="center" allowSort="true" dateFormat="yyyy-MM-dd" autoShowPopup="true" vtype="date:yyyy-MM-dd">需求时间<input property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false" valueType="String" /></div>
+                                        <div field="EndDate" width="100" headerAlign="center" allowSort="true" dateFormat="yyyy-MM-dd" autoShowPopup="true" vtype="date:yyyy-MM-dd">最晚需用时间<input property="editor" class="mini-datepicker" style="width: 100%;" allowInput="false" valueType="String" /></div>-->
+                                        <div field="CBSPath" width="100" headeralign="center" allowsort="true">CBS路径</div>
+                                        <div field="DeviceName" width="100" headeralign="center" allowsort="true">装置<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="UnitName" width="100" headeralign="center" allowsort="true">位号<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                        <div field="CBS_Name" width="100" headeralign="center" allowsort="true">概算科目<input id="View_XLX_PUR_Request_List.CBS_Name" property="editor" class="mini-buttonedit" style="width: 100%;" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" allowinput="false" /></div>
+                                        <!--<div field="SpecFileNo" width="100" headerAlign="center" allowSort="true">规格书编号</div>
+                                        <div field="SpecFileName" width="100" headerAlign="center" allowSort="true">技术规格书<input id="XLX_PUR_Request_List.SpecFileName" property="editor" class="mini-buttonedit" style="width: 100%;" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" allowInput="false"/></div>-->
+                                        <div field="BeginDate" width="100" headeralign="center" allowsort="true" dateformat="yyyy-MM-dd">需求时间<input property="editor" class="mini-datepicker" style="width: 100%;" allowinput="false" valuetype="String" /></div>
+                                        <div field="Remark" width="120" headeralign="center" allowsort="true">备注<input property="editor" class="mini-textarea" style="width:100%;" minwidth="200" minheight="50" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title='相关信息'>
+                            <div class="portlet box gray" style="height: 100%">
+                                <div class="mini-tabs" id="Div1" style="width: 100%; height: 100%;" bodystyle="padding:0;border:0;">
+                                    <div title="采购分包">
+                                        <div class="mini-fit">
+                                            <div id="XLX_PUR_Order" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                                 idfield="Id">
+                                                <div property="columns">
+
+                                                    <div field="OrderCode" name="OrderCode" headeralign="center" guideid="" datatype=""
+                                                         allowsort="true" currencyunit="" header="分包编号" align="left">
+                                                        分包编号<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                    </div>
+                                                    <div field="Title" name="Title" headeralign="center" guideid="" datatype="" allowsort="true"
+                                                         currencyunit="" header="标题" align="left">
+                                                        标题<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" name="attachfile" title="附件" url=""></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editWindow" class="mini-window" title="材料数量明细" style="width:650px;" showmodal="true" allowresize="true" allowdrag="true">
+        <div id="editform" class="form">
+            <input class="mini-hidden" name="Id" />
+            <table class="table table-bordered">
+                <tr>
+                    <td style="width:90px;">材料编码：</td>
+                    <td colspan="5"><input name="MatCode" class="mini-textbox" readonly="readonly" /></td>
+                </tr>
+                <tr>
+                    <td>材料描述：</td>
+                    <td colspan="5"><input name="MatDescription" class="mini-textbox" readonly="readonly" /></td>
+                </tr>
+                <tr>
+                    <td>设计数量：</td>
+                    <td><input name="designnum" class="mini-textbox" readonly="readonly" /></td>
+                    <td style="width:90px;">请购数量：</td>
+                    <td><input name="reqnum" class="mini-textbox" readonly="readonly" /></td>
+                    <td style="width:90px;">订单数量：</td>
+                    <td><input name="ordernum" class="mini-textbox" readonly="readonly" /></td>
+                </tr>
+                <tr>
+                    <td>到货数量：</td>
+                    <td><input name="arrivalnum" class="mini-textbox" readonly="readonly" /></td>
+                    <td>入库数量：</td>
+                    <td><input name="instorenum" class="mini-textbox" readonly="readonly" /></td>
+                    <td>领用数量：</td>
+                    <td><input name="outnum" class="mini-textbox" readonly="readonly" /></td>
+                </tr>
+                <tr>
+                    <td>出库数量：</td>
+                    <td><input name="outstorenum" class="mini-textbox" readonly="readonly" /></td>
+                    <td>可用数量：</td>
+                    <td><input name="validnum" class="mini-textbox" readonly="readonly" /></td>
+                    <td>库存数量：</td>
+                    <td><input name="storenum" class="mini-textbox" readonly="readonly" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+            //冻结列
+            var grid = mini.get("View_XLX_PUR_Request_List");
+            grid.frozenColumns(0, 4);
+            //采购分包
+            mini.get("XLX_PUR_Order").on("rowdblclick", function () {
+                PowerForm.OnBtnViewForm({ id: "XLX_PUR_Order.ViewForm" }, "a282f668-a395-4a9f-823e-61a2909aa10e");
+            })
+
+            //绑定字段事件
+            mini.get('View_XLX_PUR_Request_List').on("drawcell", function (e) {
+                if (e.column.field == "SpecFileName") {
+                    if (!e.value) return false;
+                    var record = e.record;
+                    var sender = e.sender;
+                    var id = record.SpecFileId;
+                    e.cellHtml = "<a href='javascript:void(0);' onclick=\"OpenFrom('" + id + "')\">" + e.value + "</a>";
+                }
+                if (e.column.field == "MatName") {
+                    var record = e.record;
+                    var id = record.Mat_Guid;
+                    e.cellHtml = "<a href='javascript:void(0);' onclick=\"LoadMat('" + id + "')\">" + e.value + "</a>";
+                }
+            });
+        });
+        mini.parse();
+
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            var deductionAmount = mini.get("XLX_PUR_Request.RequestMoney").getValue();
+            if (deductionAmount == null) {
+                mini.get("XLX_PUR_Request.RequestMoney").setValue(0);
+            }
+        }
+
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.sender.id == "XLX_PUR_Order") {
+                var swhere = "1=0";
+                if (formconfig.FormState != 'add')
+                    //swhere = "Id in( select FK from  XLX_PUR_Request_List  B where B.id in (select InquirymatList_Id from XLX_PUR_Order_List  where FK='" + formconfig.KeyValue + "'))";
+                    swhere = "id in(select fk from XLX_PUR_Order_list where InquirymatList_Id in(select x.id from XLX_PUR_Request_List x  where fk='" + formconfig.KeyValue + "'))";
+                if (e.params.swhere == "")
+                    e.params.swhere = swhere;
+                else
+                    e.params.swhere += " and " + swhere;
+            }
+        }
+
+        PowerForm.EventAfterFormLoad = function () {
+            if (FormState == "add") 	//新增时设置默认值
+            {
+                mini.get("Title").setValue(NowDate + "_请购单");
+                //mini.get("XLX_PUR_Request.DeptName").getValue(DeptName);
+                //mini.get("XLX_PUR_Request.DeptName").setValue(DeptName);
+                mini.get("RequestDate").setValue(NowDate);
+                //mini.get("XLX_PUR_Request.Year").setValue(NYear);
+                //mini.get("XLX_PUR_Request.Month").setValue(NMonth);
+            }
+            if (formconfig.config.joindata.currow.PurchaseHuman == null ||
+               formconfig.config.joindata.currow.PurchaseHuman == "") {
+                //如果没有设置过请购人时，默认将当前登陆人设置上去
+                formconfig.config.joindata.currow.PurchaseHumanId = sessiondata.HumanId;
+                formconfig.config.joindata.currow.PurchaseHuman = sessiondata.HumanName;
+                mini.get("XLX_PUR_Request.PurchaseHuman").setValue(sessiondata.HumanName);
+                mini.get("XLX_PUR_Request.PurchaseHuman").setText(sessiondata.HumanName);
+            }
+            //if(mini.get("XLX_PUR_Request.Status").getValue()=="50")
+            //{
+            //    mini.get("View_XLX_PUR_Request_List.Add1").disable();
+            //}
+
+            //管理员可见
+            if (sessiondata.HumanId == 'ad000000-0000-0000-0000-000000000000') {
+                mini.get("XLX_PUR_Request.ToContract").setVisible(true);
+            }
+            else {
+                mini.get("XLX_PUR_Request.ToContract").setVisible(false);
+            }
+            mini.get("btnStop").setVisible(false);
+        };
+
+        //控制表单中向导的尺寸
+        PowerForm.EventWizardAfterUpdateRow = function (form, currow, id) {
+            if (id == "XLX_PUR_Request.CBS_Name") {
+                //主表概算科目选择时，将子表的所有概算科目覆
+                var CBS_Id = currow.CBS_Id;
+                var CBS_Name = currow.CBS_Name;
+                var CBSPath = currow.CBSPath;
+                var DeviceNameA = currow.DeviceNameA;
+                var grid = mini.get("View_XLX_PUR_Request_List");
+                var data = grid.getData();
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[i];
+                    grid.updateRow(d, { "CBS_Id": CBS_Id, "CBS_Name": CBS_Name, "CBSPath": CBSPath, "DeviceName": DeviceNameA });
+                }
+            }
+        }
+        PowerForm.EventWizardData = function (e, data) {
+            if (e.id == "View_XLX_PUR_Request_List.Add" || e.id == "View_XLX_PUR_Request_List.Add1") {
+                //子表新增时，默认带上主表的概算科目
+                for (var i = 0; i < data.length; i++) {
+
+                    data[i].CBS_Id = formconfig.config.joindata.currow.CBS_Id;
+                    data[i].CBS_Name = formconfig.config.joindata.currow.CBS_Name;
+                    data[i].CBSPath = formconfig.config.joindata.currow.CBSPath;
+                    data[i].DeviceName = formconfig.config.joindata.currow.DeviceNameA;
+                }
+            }
+            return data;
+        }
+        //执行后台代码
+        function PMS_ResetHumList(e) {
+            var ID = formconfig.KeyValue;
+            if (ID != '') {
+                var par = { "ID": ID };
+                FormFuns.APIExec("XLX_PUR_Request", "BO", "Proc_XLX_PUR_Request_ResetList", par, function (text) {
+                    Power.ui.alert(mini.decode(text).data.value);
+                    mini.get("XLX_PUR_Request.Refresh").doClick();
+                });
+            }
+            else {
+                Power.ui.error("错误!");
+            }
+        }
+
+        //送审前判断子表是否有数据
+        PowerForm.EventBeforeOnBtnFlow = function (e) {
+            e.isValid = true;
+            var grid = mini.get("View_XLX_PUR_Request_List");
+            if (grid) {
+                if (grid.data.length == 0 || grid.data.length == undefined) {
+                    Power.ui.alert("无明细内容,请填报后再审批!");
+                    e.isValid = false;
+                }
+                else {
+                    for (var i = 0; i < grid.data.length; i++) {
+                        if (grid.data[i].Qty_Req == 0 || grid.data[i].Qty_Req == null) {
+                            Power.ui.alert("[" + grid.data[i].MatName + "] 请购数量不能为0！");
+                            e.isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        //点击显示物资明细窗体
+        function LoadMat(id) {
+            var swhere = " Mat_Guid='" + id + "' and EpsProjId='" + formconfig.config.joindata.currow.EpsProjId + "'";
+            $.ajax({
+                url: "/Purchase/MatNumberInfo",
+                data: { swhere: swhere, orderby: "", index: 0, size: 0 },
+                success: function (text) {
+
+                    var o = mini.decode(text);
+                    if (o.success && o.list.length > 0) {
+                        var row = o.list[0];
+                        if (row) {
+                            var editWindow = mini.get("editWindow");
+                            editWindow.show();
+                            var form = new mini.Form("#editform");
+                            form.clear();
+                            form.setData(row);
+                        }
+                    }
+                }
+            })
+        }
+        //显示技术规格书表单
+        function OpenFrom(id) {
+            mini.open({
+                url: '/Form/ViewForm/4e11daa0-cf8e-4091-86ab-d44ef5db9a25/' + id,
+                width: 900,
+                height: 550
+            });
+        }
+
+        //从BOM选择物资 按钮事件（没用）
+        function OnWizardBOM(btn) {
+            var dftdata = { reqqty: 1, reqid: formconfig.KeyValue };
+            dftdata.major = mini.get("XLX_PUR_Request.ProMajor").text;
+            //alert(dftdata.major);
+            var buttonid = btn.id;
+            var url = "/Form/Wizard?wizardid=52f2bc20-d61e-4d66-aadf-3bdec34e9775&formid=&btnid=";
+            mini.open({
+                url: url, title: "选择BOM物资",
+                width: "80%",
+                height: "80%",
+                showMaxButton: true,
+                onload: function () {
+                    var cwin = this.getIFrameEl().contentWindow;
+                    if (cwin.Select) {
+                        cwin.HideMajorFilter();
+                        cwin.SetDefaultMajor(dftdata);
+                        if (cwin.WizardParams) cwin.WizardParams.multi = 1;
+                        if (cwin.Select.LoadStepFirst) cwin.Select.LoadStepFirst();
+                    }
+                },
+                ondestroy: function (action) {
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = null;
+                    if (iframe.contentWindow.Select)
+                        data = iframe.contentWindow.Select.GetData();
+                    else {
+                        if (iframe.contentWindow.GetData)
+                            data = iframe.contentWindow.GetData();
+                    }
+                    if (!data || data.length == 0) {
+                        alert("未选择数据");
+                        return;
+                    }
+                    data = mini.clone(data);
+                    var fields = formconfig[buttonid].fields;
+                    var grid = mini.get("View_XLX_PUR_Request_List");
+                    for (var i = 0; i < data.length; i++) {
+                        var selectrow = data[i];
+                        var row = PowerForm.OnBtnAdd(grid);
+                        if (row == false)
+                            return;
+                        FormFuns.CopyFieldValue(row, selectrow, fields);
+                        grid.updateRow(row);
+                    }
+                }
+            });
+        }
+
+        //给向导加条件
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "View_XLX_PUR_Request_List.Add1") {//此处判断点击的状态按钮，才加判断条件，因为页面可能有多个向导按钮
+                var ProMajor = mini.get("XLX_PUR_Request.ProMajor").text;
+                var type = mini.get("XLX_PUR_Request.BomType").getValue();
+                //e.where = " MainProMajor='" + ProMajor + "'";
+                e.where = " MaterialType='" + type + "'";
+            }
+        }
+        function OnToContract() {
+            var par = { "OrderId": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName };
+            FormFuns.APIExec("XLX_PUR_Request", "BO", "Proc_XLX_Request_SubContract", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("PS_BOMFile.Refresh").doClick();
+            });
+        }
+
+        //function AddMat(e) {
+        //    if (e.id == "View_XLX_PUR_Request_List.Add1") {
+        //        if (formconfig.FormState == "add") {
+        //            e.canOpen = false;
+        //            Power.ui.warning("请先保存主表");
+        //            return;
+        //        }
+        //    }
+        //    var Grid = mini.get("View_XLX_PUR_Request_List");
+        //    //var Fid = formconfig.KeyValue;
+        //    //var MType = formconfig.config.joindata.currow["BuyerId"];;
+        //    var MType = mini.get("XLX_PUR_Request.BomType").getValue();
+        //    mini.open({
+        //        url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/XLX_PUR/Wizard_XLX_BOM.html&multi=1&type=" + MType,
+        //        showMaxButton: true,
+        //        width: 1200,
+        //        height: 600,
+        //        onload: function () {
+        //            var iframe = this.getIFrameEl();
+        //            iframe.contentWindow.WizardParams = { multi: "1" };
+        //            iframe.contentWindow.Select.LoadStepFirst();
+        //        },
+        //        ondestroy: function (action) {
+        //            debugger;
+        //            if (action != "ok")
+        //                return;
+        //            var iframe = this.getIFrameEl();
+        //            var data = iframe.contentWindow.Select.GetData();
+        //            if (!data || data.length == 0) {
+        //                Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+        //                return;
+        //            }
+        //            data = mini.clone(data);
+        //            for (var i = 0; i < data.length; i++) {
+        //                var row = {};
+        //                row.Id = CreateGUID();
+        //                row.MatBS_Code = data[i].MatBsCode;
+        //                row.MatId = data[i].Mat_Guid;
+        //                row.MatCode = data[i].MatCode;
+        //                row.MatName = data[i].MatName;
+        //                row.Model = data[i].MatDescription;
+        //                row.Qty_Bom = data[i].Design_Qty;
+        //                row.Qty_Req = data[i].Design_Qty;
+        //                row.MatUnit = data[i].MatUnit;
+        //                row.DeviceName = data[i].Pur_Major;
+        //                row.UnitName = data[i].UnitName;
+        //                row.BeginDate = data[i].RequestDate;
+        //                row.Remark = data[i].Memo;
+        //                row.BOMId = data[i].Id;
+        //                row.CBS_Id = data[i].CBS_Id;
+        //                row.CBSPath = data[i].CBS_Path;
+        //                row.CBS_Name = data[i].CBS_Name;
+        //                row.Specifi = data[i].Specifi;
+        //                row.Standard = data[i].Standard;
+        //                row.Texture = data[i].Texture;
+        //                row.Pattern = data[i].Pattern;
+
+        //                //row.FK = formconfig.KeyValue;
+        //                //row.InquiryMatList_Id = data[i].Id;
+        //                //row.Matbs_Guid = data[i].MatBs_Guid;
+        //                //row.MatBs_Code = data[i].MatBs_Code;
+        //                //row.MatBs_Name = data[i].MatBs_Name;
+        //                //row.MatUnit = data[i].MatUnit;
+        //                //row.CBS_Guid = data[i].CBS_Id;
+        //                //row.CBS_Name = data[i].CBS_Name;
+        //                //row.CBS_Code = data[i].CBSPath;
+        //                //row.MatSpec = data[i].DeviceName;
+        //                //row.TagNumber = data[i].UnitName;
+        //                //row.Remark = data[i].Remark;
+
+        //                Grid.addRow(row, 0)
+        //            }
+        //            var a = { id: "XLX_PUR_Request.Save" };
+        //                PowerForm.OnBtnSave(a);
+        //        }
+        //    })
+        //}
+    </script>
+</body>
+</html>

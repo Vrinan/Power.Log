@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+
+    <link href="/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js" type="text/javascript"></script>
+    
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+		var EpsId="$!CurrentSession.EpsProjId";	
+		var  EpsName="$!CurrentSession.EpsProjName";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>图纸清单编制
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="SF_DesignTaskAdviceNote.ViewForm" onclick="ViewForm()"><i class="fa fa-eye"></i>查看合同</a>-->
+                    <a class="mini-button blue" id="SF_DrawingListCompile.Up" onclick="Up()"><i class="fa fa-upload"></i>升版</a>
+                    <a class="mini-button blue" id="SF_DrawingListCompile.Save" onclick="PowerForm.OnBtnSave(this, false, FormParams)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="SF_DrawingListCompile.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <a class="mini-button blue" id="SF_DrawingListCompile.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='详细信息'>
+                            <div id="SF_DrawingListCompile" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DrawingListCompile.Code">单据编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.Code" name="Code" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_DrawingListCompile.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题</td>
+                                        <td >
+                                            <input id="SF_DrawingListCompile.Title" name="Title" class="mini-textbox" required="true"/>
+                                        </td>
+                                        <td>
+                                            <label for="SF_DrawingListCompile.ProjectMessage">项目编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.ProjectMessage" name="ProjectMessage" textname="ProjectMessage" class="mini-buttonedit"
+                                                   emptytext="请选择项目编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            版本号
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.VersionNumber" name="VersionNumber" class="mini-textbox" allowlimitvalue="false" readonly />
+                                        </td>
+                                        <td>
+                                            是否最新版
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.IsNew" name="IsNew" truevalue="1" falsevalue="0" class="mini-checkbox" text="" readonly />
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="SF_DrawingListCompile.Memo">备注说明</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_DrawingListCompile.Memo" name="Memo" class="mini-textarea" height="60"/>
+                                        </td>
+                                    </tr>						
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_DrawingListCompile.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='图纸明细'>
+                            <div class="mini-toolbar">
+                                <div id="btnUpload"></div><!--导入-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_DrawingListCompile_Sub.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a><!--新增-->
+                                <a class="mini-button blue" id="SF_DrawingListCompile_Sub.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_DrawingListCompile_Sub.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                                <div id="SF_DrawingListCompile_Sub-Export" class="btn-group"></div><!--导出-->
+                                <a class="mini-button blue" iconcls="fa-ils" href="/Upload/图纸清单编制.xlsx">导入模版下载</a>  
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_DrawingListCompile_Sub" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" multiselect="false" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn">序号</div>
+                                        <div field="Subitem" headeralign="center">
+                                            所属子项
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ParagCrafts" headeralign="center">
+                                            工艺段
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ConStruct" headeralign="center">
+                                            建构筑物
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DrawScope" headeralign="center">
+                                            图号范围
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="MapTitle" headeralign="center">
+                                            图名
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="DrawNum" headeralign="center">
+                                            图号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            计划完成时间
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo1" headeralign="center">
+                                            实际完成时间
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+       
+        //function OnBtnWizard(btn) {
+        //    var record = mini.get("SF_DrawingListCompile_Sub").getSelected();
+        //    if (record) {
+        //        PowerForm.OnBtnAdd(btn);
+        //    }
+        //    else {
+        //        Power.ui.warning("请选择所属子项");
+        //        return;
+        //    }
+        //}
+        var PowerForm = new WebForm();
+        var IsRatifyAmountEditable = true;
+        $(function () {
+            PowerForm.Init();
+            FileUp("SF_DrawingListCompile_Sub", CreateGUID());//此处修改关键词
+        });
+        //mini.parse();
+        //PowerForm.EventAfterLoadData = function (e) {
+        //    getWorkFlowMessage();
+        //    showBtn();
+        //}
+       
+        function showBtn() {
+            debugger;
+            var RegHumId = mini.get("RegHumId").value;
+            if ((mini.get("SF_DrawingListCompile.Status").value == 50) && (sessiondata.HumanId == RegHumId)) {
+                mini.get("SF_DrawingListCompile.CreateQGD").show();
+            }
+        }
+        
+        //导入物料明细Excel
+        function FileUp(keyword, keyvalue) {
+            //mini.parse();
+            if (keyword == "")
+                keyword = "SF_DrawingListCompile_Sub";//此处修改关键词
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("SF_DrawingListCompile_Sub");//此处修改关键词
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                height: "30",
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入图纸明细",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "SF_DrawingListCompile";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+        }
+
+        //新增时为1.0，最新版
+        PowerForm.EventBeforeLoadData = beforeload;
+        function beforeload(e) {
+            if (FormState == "add") {
+                mini.get("SF_DrawingListCompile.VersionNumber").setValue("1.0");
+                mini.get("SF_DrawingListCompile.IsNew").setValue(1);
+            }
+        }
+        //项目只能选一次
+        //PowerForm.EventWizardWhere = function (e) {
+        //    if (e.id == "SF_DrawingListCompile.ProjectMessage") {//此处判断点击的向导按钮，才加判断条件，因为页面可能有多个向导按钮
+        //        e.where = " project_guid not in (select ProjectMessageId from SF_SJ_DrawingListCompile)";
+        //    }
+        //}
+        //升版
+        function Up() {
+            var IsLastVersion = formconfig.config.joindata.currow["IsNew"];
+            if (IsLastVersion != 1) {
+                Power.ui.warning("不是最新版不能进行升版操作");
+                return false;
+            }
+            var status = mini.get("SF_DrawingListCompile.Status").getValue();
+            if (status != "50") {
+                Power.ui.warning("批准后才能升版");
+                return false;
+            }
+            Power.ui.confirm("确定升版？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("升版中……")
+                    var id = formconfig.config.joindata.currow["Id"];
+                    var par = { "id": id };
+                    FormFuns.APIExec("SF_DrawingListCompile", "BO", "InsertBudget", par, function (text) {
+                        var tem = mini.decode(text).data.value
+                        Power.ui.loading.close();
+                        //Power.ui.success(tem);
+                        var a = { id: "SF_DrawingListCompile.CloseForm" };
+                        PowerForm.OnBtnCloseForm(a);
+                        if (tem != "") {
+                            var url = "/Form/ValidForm/fb94556e-c020-4d21-a92f-25e3e82a516f/edit/" + tem;
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 550
+                            });
+                        }
+                    })
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption lanentry">
+                    <i class="fa fa-reorder"></i>图纸会审</div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="Al.View" onclick="ViewForm"><i class="fa fa-eye"></i>查看设计到图</a>
+                    <a class="mini-button blue" id="PS_JointReviewOfDraw.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="PS_JointReviewOfDraw.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="PS_JointReviewOfDraw.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_JointReviewOfDraw" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="lanentry">编号</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.Code" name="Code" class="mini-textbox" required="true">
+                                        </td>
+                                        <td class="lanentry">状态</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.Status" name="Status" class="mini-combobox" readonly="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">名称</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.Name" name="Name" class="mini-textbox" required="true">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">项目名称</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.ProjName" name="ProjName" class="mini-textbox" readonly/="">
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td class="lanentry">图纸编号</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.ToMapAndUseId" allowinput="false" name="DrawingNumber" textname="DrawingNumber" class="mini-buttonedit" emptytext="请选择到图..." onbuttonclick="PowerForm.OnBtnWizard(this)">
+                                        </td>
+                                        <td class="lanentry">图纸名称</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.DrawingName" readonly name="DrawingName" class="mini-textbox">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">设计单位</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.DesignUnit" readonly name="DesignUnit" class="mini-textbox">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">会审地点</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.VenueForJointHear" name="VenueForJointHear" class="mini-textbox">
+                                        </td>
+                                        <td class="lanentry">会审日期</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.DateOfTrial" name="DateOfTrial" class="mini-datepicker">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">会审专业</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.JointExaminaProfess" name="JointExaminaProfess" class="mini-textbox">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">图纸会审事项</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.Matter" name="Matter" class="mini-textarea" height="80px">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">设计答复</td>
+                                        <td colspan="3">
+                                            <input id="PS_JointReviewOfDraw.DesignReply" name="DesignReply" class="mini-textarea" height="80px">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lanentry">录入人</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly">
+                                        </td>
+                                        <td class="lanentry">录入日期</td>
+                                        <td>
+                                            <input id="PS_JointReviewOfDraw.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        var oldcurrow = null;
+
+        PowerForm.EventAfterFormLoad = function (e) {
+        oldcurrow = formconfig.config.joindata.oldcurrow;
+            if (formconfig.FormState == "add") {
+                mini.get("PS_JointReviewOfDraw.ProjName").setValue(sessiondata.EpsProjName);
+                oldcurrow.ProjName = sessiondata.EpsProjName;
+            }
+        }
+
+        function ViewForm()
+        {
+            var ids = formconfig.config.joindata.currow["ToMapAndUseId"];
+            if(IsEmpty(ids))
+            {
+                Power.ui.warning("未选择图纸");
+            }
+            else
+            {
+                OnViewForm('05bca262-b03d-4e07-ab90-ec10869d84bc',ids);
+            }
+        }
+
+        function OnViewForm(formid, keyvalue) {
+            mini.open({
+                url: '/Form/EditForm/' + formid + '/' + keyvalue,
+                showMaxButton: true,
+                width: 950,
+                height: 630,
+                //关闭时刷新原来窗体
+                ondestroy: function () {
+                    var a = {};
+                    a.id = "PS_JointReviewOfDraw.Refresh";
+                    PowerForm.OnBtnRefresh(a);
+                }
+            })
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="View_SF_MonthPlanSLY.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                            <div id="View_SF_MonthPlanSLY-Export" title="生产月度计划-渗滤液处理量计划" class="btn-group"></div>
+
+                            <span>起</span>
+                            <input id="QStartDate" class="mini-monthpicker" width="120">
+                            <span>终</span>
+                            <input id="QEndDate" class="mini-monthpicker" width="120">
+                            <span>运行站</span>
+                            <input id="QDepartment" class="mini-textbox" width="120">
+                            <a class="mini-button yellow" onclick="search();">查询</a>
+
+                        </div>
+                    </div>
+
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="View_SF_MonthPlanSLY" class="mini-datagrid" style="width: 100%; height: 100%;" width="917" height="601" onload="OnBeforeLoad"
+                             allowalternating="false" pagesize="20" summarycolumns="" fitcolumns="" idfield="Id">
+                            <div property="columns">
+                                <div field="RunStation" name="RunStation" headeralign="center" header="运行站">
+                                    运行站
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="MonthDate" name="Date" headeralign="center" dateformat="yyyy-MM">
+                                    填报时间
+                                    <input property="editor" class="mini-datepicker" style="width: 100%;" format="yyyy-MM" />
+                                </div>
+                                <div field="JinShui" headeralign="center">
+                                    系统进水(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="WaiYunLiang" headeralign="center">
+                                    原液外运量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="9999999999" />
+                                </div>
+                                <div field="MoChanShuiLv" width="100" allowSort="true" numberformat="n2">
+                                    膜产水率(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999" />
+                                </div>
+                                <div field="ChanShuiLv" width="100" allowSort="true" numberformat="n2">
+                                    系统产水率(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999" />
+                                </div>
+                                <div field="HuiPeiLiang" width="100" allowSort="true" numberformat="n2">
+                                    浓液回喷量(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999" />
+                                </div>
+                                <div field="ChanShengLiang" width="120" allowSort="true" numberformat="n2">
+                                    浓液非计划产生量(t)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999" />
+                                </div>
+                                <div field="ZhiBiao" width="110" allowSort="true" numberformat="n2">
+                                    水质排放指标(%)
+                                    <input property="editor" class="mini-spinner" style="width: 100%;" minvalue="0" maxvalue="999999999" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div id="win_search" class="mini-window" title="$Helper.GetResource('g_search_panel')" style="width: 375px; height: 290px;" showmodal="false" allowresize="true" allowdrag="true" onbuttonclick="onbuttonclick">
+        <div style="height: 195px; overflow:auto;">
+            <table id="ConditionTable" style="width: 342px; margin-top: 5px; margin-left:auto; margin-right:auto;"></table>
+        </div>
+        <table style="width: 363px; height: 30px; margin-top:8px;">
+            <tr>
+                <td align="center" style="text-align:right;">
+                    <a class="mini-button blue" id="BtnSearch" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>$Helper.GetResource('g_search')</a>
+                    <a class="mini-button blue" id="BtnSearch_Clear" onclick="PowerForm.OnClearSeach(this)"><i class="fa fa-repeat"></i>$Helper.GetResource('g_clear')</a>
+                    <a class="mini-button blue" id="BtnSearch_Close" name="close" onclick="onbuttonclick(this)"><i class="fa fa-close"></i>$Helper.GetResource('g_off')</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+            var firstDate = new Date();
+            firstDate.setDate(1); //第一天
+            var endDate = new Date(firstDate);
+            endDate.setMonth(firstDate.getMonth() + 1);
+            endDate.setDate(0);
+            mini.get("QStartDate").setValue(firstDate);
+            mini.get("QEndDate").setValue(endDate);
+            var grid = mini.get("View_SF_MonthPlanSLY");
+            grid.frozenColumns(0, 1);
+            //PowerForm.setQmenu("view_BOM_All_Report", "view,refresh,delete,edit");
+            //var grid = mini.get("View_SF_ZH_MatRequisitions");
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+
+        function OnBeforeLoad(e) {
+            //mini.get("View_SF_SJ_Overview").mergeColumns(["xmbhCode"], ["ProjectLeader"], ["DesignStage"], ["tdzjTitle"], ["ggspsTitle"]);
+            mini.get("View_SF_MonthPlanSLY").mergeColumns(["Department", "Date"]);
+        }
+        function search() {
+            mini.get('View_SF_MonthPlanSLY').reload();
+
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            var StartMonth = mini.get("QStartDate").getValue().format("yyyy-MM-dd");
+            var EndMonth = mini.get("QEndDate").getValue().format("yyyy-MM-dd");
+            var QDepartment = mini.get("QDepartment").getFormValue();
+            var month = new Date(StartMonth).getMonth() + 1;
+            var month2 = new Date(EndMonth).getMonth() + 1;
+            if (IsEmpty(QDepartment)) {
+                if (e.params.swhere == "") {
+                    e.params.swhere = " MonthDate between'" + StartMonth + "' and '" + EndMonth + "'  ";
+                }
+                else {
+                    e.params.swhere += "and MonthDate between'" + StartMonth + "' and '" + EndMonth + "' ";
+                }
+            }
+            else {
+                if (e.params.swhere == "") {
+                    e.params.swhere = " MonthDate between'" + StartMonth + "' and '" + EndMonth + "'  and RunStation like '%" + QDepartment + "%' ";
+                }
+                else {
+                    e.params.swhere += "and MonthDate between'" + StartMonth + "' and '" + EndMonth + "' and RunStation like '%" + QDepartment + "%' ";
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

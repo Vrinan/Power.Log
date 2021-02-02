@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>变更申请
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="PS_ContractChangeApply.Views" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_ContractChangeApply.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_ContractChangeApply.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_ContractChangeApply.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_ContractChangeApply" class="form">
+                                <table class="table table-bordered">
+								
+                                    <tr>
+										 <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.Code" name="Code" class="mini-textbox"  requirederrortext="编号不能为空" />
+                                        </td>
+                                        
+                                        <td>
+                                            <label for="PS_ContractChangeApply.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractChangeApply.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_ContractChangeApply.ContractCode">合同编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.ContractCode" name="ContractCode" textname="ContractCode" class="mini-buttonedit"
+                                                   emptytext="请选择合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+										<td>
+                                            <label for="PS_ContractChangeApply.ChangeForm">变更形式</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.ChangeForm" name="ChangeForm" class="mini-combobox" readonly="readonly" />
+                                        </td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractChangeApply.Contract_Guid" name="Contract_Guid" class="mini-textbox" style="display:none" />
+                                            <input id="PS_ContractChangeApply.ContractName" name="ContractName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                   
+									<tr>
+                                        <td>
+                                            发起方
+                                        </td>
+                                        <td >
+                                            <input id="PS_ContractChangeApply.SponsorType" name="SponsorType" class="mini-combobox"   />
+                                        </td>
+										 <td>
+                                            变更发起人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.Sponsor" name="Sponsor" class="mini-textbox"  />
+                                        </td>
+                                       	
+
+                                    </tr>
+									<tr>
+                                        <td>
+                                            变更类型
+                                        </td>
+                                        <td >
+                                            <input id="PS_ContractChangeApply.ChangeType" name="ChangeType" class="mini-combobox"   />
+                                        </td>
+										 <td>
+                                            变更等级
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.ChangeLevel" name="ChangeLevel" class="mini-combobox"  />
+                                        </td>
+                                       	
+
+                                    </tr>
+									<tr>
+                                        <td>
+                                            紧急程度
+                                        </td>
+                                        <td >
+                                            <input id="PS_ContractChangeApply.ChangeEmergency" name="ChangeEmergency" class="mini-combobox"   />
+                                        </td>
+										 <td>
+                                            预估变更金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.EstimateAmount" name="EstimateAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0"
+                                                   maxvalue="999999999" changeonmousewhere="false" format="n2" />												  
+                                        </td>  
+                                    </tr>
+                                    <tr>
+                                        <td>备注</td>
+                                        <td colspan="3">
+                                            <input id="PS_ContractChangeApply.Memo" name="Memo" class="mini-textarea" height="100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_ContractChangeApply.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='工程联系单' name="PS_ContractChangeApply_ContractNotes" visible="false">
+                            <div class="mini-toolbar">
+								<a class="mini-button blue" iconcls="fa-plus" id="PS_ContractChangeApply_ContractNotes.Add" onclick="AddConPi()">选择联系单</a>
+                                
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_ContractChangeApply_ContractNotes.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_ContractChangeApply_ContractNotes" class="mini-datagrid" style="height: 100%;"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="ContactNotesCode" headeralign="center">
+                                            联系单编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ContactNotesTitle" headeralign="center">
+                                            联系单名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Sender" headeralign="center">
+                                            发送人
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" readonly="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+
+						
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+
+        });
+        function AddConPi() {
+            var Grid = mini.get("PS_ContractChangeApply_ContractNotes");
+            var ContactId = mini.get("PS_ContractChangeApply.Contract_Guid").getValue();
+            var AllayId = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdCost/WizardWin_PS_ContractChangeApply_ContractNotes.htm&multi=1&ContactId=" + ContactId + "&AllayId=" + AllayId,
+                showMaxButton: true,
+                width: 800,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.ContactNotesId = data[i].Id;
+
+                        row.ContactNotesCode = data[i].Code;
+                        row.ContactNotesTitle = data[i].Title;
+                        row.Sender = data[i].CCHuman;
+
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_ContractChangeApply.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+
+        PowerForm.EventAfterFormLoad = function (e) {
+            if (FormState == "add") {
+                var obj = mini.get("PS_ContractChangeApply.ChangeForm");
+                obj.select(1);
+
+            }
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["Contract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_ContractChangeApply.ContractCode").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/34399717-2ebe-40fe-9fd7-bca7b76f54e4/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>

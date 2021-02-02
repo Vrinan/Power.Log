@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html  >
+<head>
+    <title>实体对象定义</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <script src="/scripts/boot.js" type="text/javascript"></script>
+    
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script src="/scripts/PlatForm/ComTools.js" type="text/javascript"></script>
+    <style type="text/css">
+        body{
+            width:100%;
+            height:100%;
+            overflow:hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="mini-fit">
+        <div id="tabMain" class="mini-tabs" activeIndex="0"  style="width:100%;height:100%" ontabload="onCodeLoad" >
+            <div title ="自定义代码" name="tabCustomCode" url="codejs/CShapeCodePanel.html" scrolling="no">
+            </div>
+           <div title ="代码" name="tabCode" url="codejs/CShapeCodePanel.html">
+            </div>
+           
+        </div>
+    </div>
+      <script type="text/javascript">
+        mini.parse();
+
+        var tabMain = mini.get("tabMain");
+        var tabCode = tabMain.getTab("tabCode");
+        var tabCustomCode = tabMain.getTab("tabCustomCode");
+
+        var KeyWord = getParameter("KeyWord");
+        var KeyValue = getParameter("KeyValue");
+
+        var resultCode = null;  //返回的信息
+        
+        //代码加载
+        var onCodeLoad = function (e) { 
+            var tab = e.tab; 
+            if (!resultCode) return;
+
+            setCode(tab);
+        }
+
+        function setCode(tab) {
+            if (!resultCode) return;
+
+            if (tab.name == "tabCode" && resultCode.BizCode) {
+                top[tab.CodeKey].setCodeData(resultCode.BizCode);
+                return;
+            }
+
+            if (tab.name == "tabCustomCode" && resultCode.CustomCode) {
+                top[tab.CodeKey].setCodeData(resultCode.CustomCode);
+                return;
+            }
+
+        }
+          //读取记录
+        function ReadData( callback) {
+           
+            var CurrentInfo = {};
+            CurrentInfo.SubOperate = "LoadEventCode";        //加载某个流程相关信息
+            CurrentInfo.WorkFlowID = KeyValue;
+            var msg = {};
+            msg.MessageCode = "Power.WorkFlows.Actions.RecvFlowOperate";
+            msg.data = CurrentInfo;
+            msg.data.FlowOperate = EFlowOperate.Events;
+            //先获取到所有可用流程
+            $.ajax({
+                url: "/API/APIMessage",
+                type: "POST",
+                data: { json: mini.encode(msg) },
+                cacha: false,
+                success: function (text) {
+                    mini.unmask(document.body);
+                    var result = mini.decode(text);
+                    if (result.success == false) {
+                        mini.unmask(document.body);
+                        Power.ui.error(result.message);
+                        return;
+                    }
+
+                    resultCode = result.data;
+
+                    var tab = tabMain.getActiveTab();
+                    if (!tab) return;
+
+                    if (callback) callback(tab);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.unmask(document.body);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            });
+        }
+
+        $(function () {
+            var WindowKey = CreateGUID();  //创建个唯一KEY 
+            tabCode.url = "codejs/CShapeCodePanel.html?WindowKey=" + WindowKey;
+            tabCode.CodeKey = WindowKey;
+
+            WindowKey = CreateGUID();  //创建个唯一KEY 
+            tabCustomCode.url = "codejs/CShapeCodePanel.html?WindowKey=" + WindowKey;
+            tabCustomCode.CodeKey = WindowKey;
+
+            ReadData(setCode);
+        });
+       </script>
+        
+</body>
+</html>

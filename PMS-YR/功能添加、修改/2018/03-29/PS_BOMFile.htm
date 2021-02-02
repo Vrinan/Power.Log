@@ -1,0 +1,924 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <link href="/Scripts/plugins/uploadify/uploadify.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/plugins/uploadify/jquery.uploadify.html5.js?v=$AppVersion" type="text/javascript"></script>
+
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+
+        var DeptName = "$!CurrentSession.DeptName";
+        var ProjectID = "$!CurrentSession.EpsProjId";
+        var ProjectName = "$!CurrentSession.EpsProjName";
+        var HumanId = "$!CurrentSession.HumanId";
+        var HumanName = "$!CurrentSession.HumanName";
+
+        var NowDate = getdate();	//ComTools 获取当前日期 2013-01-02
+        var now = new Date();
+        var NYear = now.getFullYear();
+        var NMonth = now.getMonth() + 1;
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+
+
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>物资需求计划
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!--<a class="mini-button blue" id="XLX_PUR_Request.ToContract" onclick="OnToContract()"><i class="fa fa-save"></i>生成请购单</a>-->
+                    <!--<a class="mini-button blue" id="PS_BOMFile.RequestTest" onclick="RequestTest()"><i class="fa fa-arrow-up"></i>请购单测试</a>-->
+                    <a class="mini-button blue" id="PS_BOMFile.ChangeStatus" onclick="ChangeStatus()"><i class="fa fa-arrow-up"></i>调整物资计划</a>
+                    <a class="mini-button blue" id="PS_BOMFile.ChangeBom" onclick="ChangeBom()"><i class="fa fa-arrow-up"></i>生成调整物资计划</a>
+                    <a class="mini-button blue" id="PS_BOMFile.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_BOMFile.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<a class="mini-button blue" id="Release" onclick="UpgradeRelase('release')"><i class="fa fa-arrow-up"></i>升版</a>-->
+                    <!--<a class="mini-button blue" id="Upgrade" onclick="UpgradeRelase('upgrade')"><i class="fa fa-exchange"></i>变更</a>-->
+                    <a class="mini-button blue" id="PS_BOMFile.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='物资需求计划'>
+                            <div id="PS_BOMFile" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            <label for="PS_BOMFile.Status">状态</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.Status" name="Status" class="mini-combobox" readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.Title" name="Title" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            版本号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.Version" name="Version" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.OwnProjName" name="OwnProjName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            需求类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.MaterialType" name="MaterialType" class="mini-combobox" required="true" />
+
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            文件编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.FileNo" name="FileNo" class="mini-textbox" />
+                                        </td>
+                                        <td>
+                                            料表类型
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.BomType" name="BomType" class="mini-combobox" readonly="true" />
+                                        </td>
+                                    </tr>-->
+                                    <!--<tr>
+                                        <td>
+                                            所属专业
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.ProMajor" name="ProMajor" textField="Name" valueField="Name" class="mini-combobox"  required="true"/>
+                                        </td>
+                                        <td>
+                                            版本号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.Version" name="Version" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            需求单位类型
+                                        </td>
+                                        <td>
+                                            <div id="PS_BOMFile.is_bumen" name="is_bumen" class="mini-combobox" readOnly="false" onvaluechanged="is_bumenchange"> </div>
+                                            <!--<div id="is_yifang" name="is_yifang" class="mini-checkbox" truevalue="1" falsevalue="0" width="50%" readOnly="false" text="乙方" onValueChanged="onValueChanged_ForeignCurrency2"></div>-->
+                                        </td>
+                                        <td id="bumen">
+                                            <label for="PS_BOMFile.PartyBName">部门</label>
+                                        </td>
+                                        <td id="bumen1">
+                                            <input id="PS_BOMFile.PartyBdept" name="DeptName" textname="DeptName" class="mini-buttonedit"
+                                                   emptytext="请选择部门..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                        </td>
+                                        <td id="yifang">
+                                            <label for="PS_BOMFile.PartyBName">施工单位</label>
+                                        </td>
+                                        <td id="yifang1">
+                                            <input id="PS_BOMFile.PartyBName" name="PartyBName" textname="PartyBName" class="mini-buttonedit"
+                                                   emptytext="请选择施工单位..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            施工编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.sgCode" name="sgCode" class="mini-textbox" />
+                                        </td>
+                                        <td id="caigou">
+                                            采购员
+                                        </td>
+                                        <td id="caigou1">
+                                            <input id="PS_BOMFile.PurchashHuman" name="PurchashHuman" textname="PurchashHuman" class="mini-buttonedit"
+                                                   emptytext="请选择采购员..." onbuttonclick="PowerForm.OnBtnWizard(this)" required="true" allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_BOMFile.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
+                                    <!--<tr id="PS_BOMFile1.Memo" >
+                                        <td>
+                                        调整物资计划备注
+                                        </td>
+                                        <td colspan="3">
+                                            <textarea class="mini-textarea" id="PS_BOMFile.Memo" name="Memo" height="100px" readonly="readonly" ></textarea>
+                                        </td>
+                                    </tr>-->
+                                </table>
+                                <span style="color:red">
+                                        <!--注意事项:<br />
+                                        1、请确保编号与施工单位提交的请购单号一致<br />
+                                        2、标题请规范填写，如xx物资需求计划表<br />
+                                        3、需求类型务必填写正确<br /><br />-->
+                                        调整注意事项:<br />
+                                        1、点击“调整物资计划”，表单状态变为新增，需要重新打开页面才能编辑明细<br />
+                                        2、明细内需要调整的选中作废，点击保存<br />
+                                        3、点击“生成物资调整计划”，系统会发送消息给对应请购人
+                                </span>
+                            </div>
+                        </div>
+                        <div title='BOM明细'>
+                            <div class="mini-toolbar">
+                                <!--<div id="PS_BOM.importxls">导入BOM</div>-->
+                                <div id="btnUpload">  </div>
+                                <div id="btnUpload1">  </div><!--第二次导入，不改变结构-->
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_BOM.Add" onclick="PowerForm.OnBtnWizard(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_BOM.Delete" onclick="PowerForm.OnBtnDel(this)"> 删除</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_BOM.Delall" onclick="OnBtnDelAll()"> 删除所有</a>
+                                <!--<a class="mini-button blue" iconcls="fa-trash-o" id="PS_BOM.PMS_AddMat" onclick="PMS_AddMat(this)">导入物资</a>
+                                <a class="mini-button blue" iconcls="fa-check" id="matching" onclick="matching(this)">物资编码匹配</a>-->
+                                <div class="btn-group">
+                                    <!--<a href='#' class='btn blue' data-toggle='dropdown'>
+                                        <i class='fa fa-check-circle-o'></i>校验
+                                    </a>-->
+                                    <ul class='dropdown-menu pull-right'>
+                                        <li>
+                                            <a href='javascript:;' onclick='MatCheckReLoad(this,false)'>
+                                                <i></i>显示校验未通过物资
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href='javascript:;' onclick='MatCheckReLoad(this,true)'>
+                                                <i class='fa fa-check'></i>显示全部
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div id="btnhisversion" class="btn-group open">
+                                    <!--<a href='#' class='btn blue' data-toggle='dropdown'>
+                                        <i class='fa fa-file-o'></i>与历史版本比较
+                                    </a>-->
+                                    <ul class='dropdown-menu pull-right'></ul>
+                                    <a class="mini-button blue" iconcls="fa-ils" href="/Upload/材料清单.xlsx">模版下载</a>
+                                    <a class="mini-button blue" id="PS_BOM.Export" onclick="PowerForm.OnExportDataToXls('PS_BOM', '物资需求计划','材料清单')"><i class="fa fa-sign-out"></i>导出</a>
+                                </div>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_BOM" class="mini-datagrid" style="height: 100%;" multiSelect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" pagesize="100" ondrawcell="MatDrawcell">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div type="checkcolumn"></div>
+                                        <div field="Id" headeralign="center" width="0">
+                                            物资主键
+                                        </div>
+                                        <div field="MatBsCode" headeralign="center" allowSort="true">
+                                            物资分类码
+                                        </div>
+                                        <div field="MatBsName" headeralign="center" allowSort="true">
+                                            物资分类名称
+                                        </div>
+                                        <div field="MatCode" headeralign="center" width="120" allowSort="true">
+                                            物资编码
+                                        </div>
+                                        <div field="MatName" headeralign="center" width="200" allowSort="true">
+                                            物资名称
+                                        </div>
+
+                                        <div field="Specifi" width="160" headerAlign="center" allowSort="true">规格型号</div>
+
+                                        <div field="Standard" width="100" headerAlign="center" allowSort="true">制造标准</div>
+                                        <div field="Texture" width="100" headerAlign="center" allowSort="true">材质</div>
+                                        <div field="Pattern" width="160" headerAlign="center" allowSort="true">型式</div>
+
+                                        <div field="MatDescription" headeralign="center" width="200">
+                                            物资描述
+                                        </div>
+                                        <!--单位-->
+                                        <div field="MatUnit" headeralign="center" width="70">
+                                            单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--数量-->
+                                        <div field="Design_Qty" headeralign="center" width="70">
+                                            数量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <!-- <div field="Surplus_Qty" headeralign="center">
+                                             裕量
+                                             <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                         </div>-->
+                                        <div field="TotalDesign_Qty" headeralign="center">
+                                            设计总量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="DesignUnit" headeralign="center">
+                                            设计单位
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="ConversionFactor" headeralign="center">
+                                            换算系数
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" format="n2" style="width: 100%;" />
+                                        </div>
+                                        <!--单价-->
+                                        <!--<div field="Total_Qty" headeralign="center">
+                                            总量
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" readonly />
+                                        </div>-->
+                                        <!--金额-->
+                                        <!--<div field="UnitWeight" headeralign="center" summarytype="sum">
+                                            单重
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="TotalWeight" headeralign="center" summarytype="sum">
+                                            总重
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="-10000" maxvalue="999999999" changeonmousewhere="false" readonly="readonly" style="width: 100%;" />
+                                        </div>-->
+                                        <div field="CBS_Path" headeralign="center">
+                                            CBS路径
+                                        </div>
+                                        <div field="Pur_Major" headeralign="center" required="true">
+                                            装置
+                                        </div>
+                                        <!--<div field="CBS_Name" headeralign="center">
+                                            概算专业
+                                        </div>-->
+                                        <div field="CBS_Name" width="100" headeralign="center" allowsort="true">
+                                            概算专业
+                                            <input id="PS_BOM.CBS_Name" property="editor" class="mini-buttonedit" style="width: 100%;" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" allowinput="false" />
+                                        </div>
+                                        <div field="UnitName" headeralign="center">
+                                            位号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="RequestDate" headeralign="center" dateFormat="yyyy-MM-dd">
+                                            需求时间
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="Pur_Major" headeralign="center" style="display:none">
+                                            专业
+                                            <input id="PS_BOM.Pur_Major" property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <!--<div field="IsLastedVersion" type="checkboxcolumn" truevalue="1" falsevalue="0" headeralign="center" readonly="true">
+                                            是最新版
+                                        </div>-->
+                                        <div field="DrawingCode" headeralign="center" type="comboboxcolumn">
+                                            是否作废
+                                            <input id="PS_BOM.DrawingCode" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Memo" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textbox" style="width: 200%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        var matfilter = "";
+        $(function () {
+            PowerForm.Init();
+            builderhisversion();
+            FileUp("PS_BOM", CreateGUID())//此处修改关键词
+        });
+        function MatDrawcell(e) {
+            if (e.field == "DrawingCode") {
+                if (parseFloat(e.row.DrawingCode) == "0") {
+                    e.rowStyle = "background:#66ccff";
+                }
+            }
+        }
+
+        //自定义Excel上传
+        function FileUp(keyword, keyvalue) {
+            mini.parse();
+
+            if (keyword == "")
+                keyword = "PS_BOM";//此处修改关键词
+
+            if (keyvalue == undefined || keyvalue == "")
+                keyvalue = "00000000-0000-0000-0000-000000000000";
+            var grid = mini.get("PS_BOM");//此处修改关键词
+            //发起人导入
+            $("#btnUpload").html("");
+            $("#btnUpload").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入BOM",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "PS_BOM";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            //流程中，第二次导入，不改变结构
+            $("#btnUpload1").html("");
+            $("#btnUpload1").uploadify({
+                "height": 30,
+                width: "56",
+                fileSizeLimit: 0,
+                auto: true,
+                blocksize: 2048 * 500, //分块大小
+                "buttonText": "<i class=\"fa fa-retweet\"></i>导入BOM",
+                "swf": '/Scripts/plugins/uploadify/uploadify.swf',
+                "uploader": '/PowerPlat/Control/File.ashx?_type=ftp&action=upload',
+                formData: {
+                    KeyWord: keyword,
+                    KeyValue: keyvalue
+                },
+                onUploadStart: function () {
+                    if (formconfig.FormState == "add") {
+                        Power.ui.alert("请先保存主表");
+                        return;//新增时，不能导入
+                    }
+                    grid.loading("上传中，请稍后.....");
+                },
+                onUploadComplete: function () {
+                    grid.loading("导入中,请稍后.....");
+                    var exec = {};  //对象
+                    exec.KeyWord = "PS_BOM";   //bo的KeyWord//此处修改关键词
+                    exec.MethodName = "ImportExcel2"; //方法名称//此处修改方法名称
+                    //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                    exec.MethodParams = {}; //方法参数
+                    var params = exec.MethodParams;
+                    params.KeyWord = keyword;
+                    params.KeyValue = keyvalue;
+                    params.Id = formconfig.KeyValue;
+
+                    var txt = mini.encode(exec); //对象转换成字符串
+
+                    $.ajax({
+                        url: "/API/Exec",
+                        type: "POST",
+                        data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                        cache: false,
+                        success: function (text) {
+                            var tmp = mini.decode(text);
+                            if (!tmp.success)
+                                Power.ui.error(tmp.message);
+                            else if (tmp.data.value != "")
+                                Power.ui.alert(tmp.data.value);
+                            grid.reload();
+                        }
+                    });
+                },
+                onDialogClose: function () {
+                }
+            });
+            $(".uploadify-button-text").addClass("btn").addClass("btn-primary");
+
+        }
+
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            data.ConversionFactor = "1";//子表要增加默认值的字段名称
+        }
+        PowerForm.EventAfterFormLoad = function () {
+            //if (sessiondata.HumanId == 'ad000000-0000-0000-0000-000000000000') {
+            //    mini.get("PS_BOMFile.ChangeStatus").setVisible(true);
+            //	mini.get("PS_BOMFile.ChangeBom").setVisible(true);
+            //}
+            //else {
+            //    mini.get("PS_BOMFile.ChangeStatus").setVisible(false);
+            //	mini.get("PS_BOMFile.ChangeBom").setVisible(false);
+            //}
+            //if (formconfig.FormState == "add" && formconfig.FormState == "edit") {
+            //    mini.get("PS_BOMFile.ChangeBom").setVisible(false)
+            //}
+            //else {
+            //    mini.get("PS_BOMFile.ChangeBom").setVisible(true)
+            //}
+            is_bumenchange();
+            if (mini.get("PS_BOMFile.Version").value == "0.0") {
+                $("#caigou").hide();
+                $("#caigou1").hide();
+            }
+            else {
+                $("#caigou").show();
+                $("#caigou1").show();
+                mini.get("PS_BOMFile.Code").setReadOnly(true);
+                mini.get("PS_BOMFile.Title").setReadOnly(true);
+            }
+            //mini.get("PS_BOMFile.Memo").setVisible(false)
+        }
+        function ChangeStatus() {
+            if (formconfig.config.joindata.currow.Status == '50' || formconfig.config.joindata.currow.Status == '35') {
+                //var editWindow = mini.get("editWindow");
+                //editWindow.show();
+                var par = { "OrderId": formconfig.KeyValue, "HumanName": HumanName, "HumanId": HumanId };
+
+                Power.ui.loading("调整中……");
+                FormFuns.APIExec("PS_BOMFile", "BO", "ChangeStatus", par, function (text) {
+                    Power.ui.loading.close();
+                    Power.ui.alert(mini.decode(text).data.value);
+                    //mini.get("PS_BOMFile.ChangeBom").setVisible(true);
+                    mini.get("PS_BOMFile.Refresh").doClick();
+                    //mini.get("PS_BOMFile.CloseForm").doClick();
+                    
+                    
+                });
+            }
+            else {
+                Power.ui.alert("请先批准！");
+            }
+        }
+
+        function ChangeBom() {
+            //var BuyerId = mini.get("BuyerId").getValue();
+            //var Memo = mini.get("Memo").getValue();
+            //var ListIds = "";
+            //if (Memo == "") {
+            //    Power.ui.error("请填写调整原因！");
+            //    return;
+            //}
+            //var grid = mini.get("PS_BOMFile");
+            //var Rows = grid.getSelecteds();	//取得选中的行
+            //for (var i = 0; i < Rows.length; i++) {
+            //    ListIds = ListIds + Rows[i].ListId + ",";
+            //}
+            //ListIds = ListIds.substr(0, ListIds.length - 1);
+
+            //var major = mini.get("PS_ProMajor");
+            //var majorRow = major.getSelected();
+            //if (!majorRow)
+            //    majorRow = major.getRow(0);
+
+            var par = { "OrderId": formconfig.KeyValue, "HumanName": HumanName, "HumanId": HumanId };
+
+            Power.ui.loading("调整中……");
+            FormFuns.APIExec("PS_BOMFile", "BO", "ChangeBom", par, function (text) {
+                Power.ui.loading.close();
+                var R = mini.decode(text).data.value;
+                if (R != undefined & R != '') {
+                    if (R == "当前没有作废的明细，不可生成物资计划调整!") {
+                        Power.ui.alert("当前没有作废的明细，不可生成物资计划调整!");
+                    }
+                    else if (R.length == 36) {
+                        var p = { formid: "9963eeb2-03c5-4620-bce4-e09782d27db1", keyvalue: R, action: "edit" };
+                        FormFuns.OnOpenForm(p);
+                    }
+                    else {
+                        Power.ui.alert("已生成调整物资需求计划，不可重复生成！");
+                    }
+                }
+                //mini.get("PS_BOMFile.ChangeBom").setVisible(false);
+                //var tmp = mini.decode(text);
+                //if (!tmp.success)
+                //    Power.ui.error(tmp.message);
+                //else
+                //    mini.get("PS_BOMFile").reload();
+
+                //获取录入人Id，判断录入人是否为当前登陆人，如果不是就发消息
+                var reghumid = formconfig.config.joindata.currow.RegHumId;
+                if (sessiondata.HumanId != reghumid) {
+                    var tohumId = formconfig.config.joindata.currow.RegHumId;
+                    var tohumName = formconfig.config.joindata.currow.RegHumName;
+                    var title = "【物资计划调整】";
+                    var widgetId = "4a93a5ca-acc1-491e-80ea-1f80292aaa5f";
+                    var senderId = sessiondata.HumanId;
+                    var senderName = sessiondata.HumanName;
+                    var keyWord = "PS_BOMFile";
+                    var mainId = R;                    var par = { "TohumId": tohumId, "TohumName": tohumName, "Title": title, "WidgetId": widgetId, "SenderId": senderId, "SenderName": senderName, "KeyWord": keyWord, "MainId": mainId, };
+
+                    Power.ui.loading("发送中……");
+                    FormFuns.APIExec("PS_BOMFile", "BO", "SendTo", par, function (text) {
+                        Power.ui.success(mini.decode(text).data.value);
+                        Power.ui.loading.close();
+                        mini.get("PS_BOMFile.Refresh").doClick();
+                    });
+                }
+            });
+           
+            
+        }
+
+
+        // mini.get("PS_BOM").on("cellendedit", function (e) {
+        //   if (e.field == "Design_Qty" || e.field == "Surplus_Qty" || e.field == "TotalDesign_Qty" || e.field == "ConversionFactor" || e.field == "Total_Qty" || e.field == "UnitWeight") {
+        //        var d = parseFloat(e.record.Design_Qty) + parseFloat(e.record.Surplus_Qty);
+        //       e.sender.updateRow(e.record, { "TotalDesign_Qty": d });
+        //       var t = parseFloat(e.record.TotalDesign_Qty) * parseFloat(e.record.ConversionFactor);
+        //       e.sender.updateRow(e.record, { "Total_Qty": t });
+
+        //        var g = parseFloat(e.record.Design_Qty);
+        //        e.sender.updateRow(e.record, { "UnitWeight": g });
+
+        //        var q = parseFloat(e.record.Total_Qty) * parseFloat(e.record.UnitWeight);
+        //        e.sender.updateRow(e.record, { "TotalWeight": q });
+
+        //    }
+        //})
+        //PowerForm.EventWizardData = function(e, data) {
+        //  if (e.id == "PS_BOM.Add" ) {
+        //	var text=mini.get("PS_BOMFile.ProMajor").text;
+        //	for(var i=0;i<data.length;i++){
+        //		data[i].Pur_Major=text;
+        //	}
+        //  }
+        // }
+
+        function is_bumenchange() {
+            if (mini.get("PS_BOMFile.is_bumen").getValue() == "0") {
+                $("#bumen").hide();
+                $("#bumen1").hide();
+                $("#yifang").show();
+                $("#yifang1").show();
+            } else {
+                $("#yifang").hide();
+                $("#yifang1").hide();
+                $("#bumen").show();
+                $("#bumen1").show();
+            }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (matfilter && matfilter.length > 0) {
+                var p = e.params;
+                if (p.swhere && p.swhere.length > 0)
+                    p.swhere += " and " + matfilter;
+                else
+                    p.swhere = matfilter;
+            }
+            var Title = mini.get("PS_BOMFile.Title").getValue();
+            var name = sessiondata.HumanName;
+            var code = mini.get("PS_BOMFile.Code").getValue();
+            var tt = "物资需求-" + name + "-" + code;
+            if (Title.length == 0) {
+                mini.get("PS_BOMFile.Title").setValue(tt);
+            }
+        }
+
+
+
+        function UpgradeRelase(act) {
+            if (formconfig.FormState == "add" || formconfig.KeyValue.length == 0)
+                return;
+            //未批准,不允许变更及升版
+            if (formconfig.config.joindata.currow.Status != "50") {
+                Power.ui.warning("单据未批准，不允许执行该操作");
+                return;
+            }
+            var fnAction = function () {
+                $.ajax({
+                    url: "/Purchase/BOMFileCreate",
+                    data: { bomfileid: formconfig.KeyValue, action: act },
+                    type: "POST",
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        if (!o.success) {
+                            Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            return;
+                        }
+                        var uedit = window.location.protocol + "//" + window.location.host + "/Form/ValidForm/" + formconfig.FormId + "/edit/" + o.data.value;
+                        window.location.href = uedit;
+                    }
+                })
+            }
+            var buttonOption = {};
+            var yes = "是";
+            var no = "否";
+            buttonOption[yes] = {
+                theme: 'primary',
+                handler: function (ret) {
+                    fnAction();
+                }
+            };
+            buttonOption[no] = function () {
+            };
+            Power.ui.confirm("确定执行操作?", { button: buttonOption });
+        }
+
+        function matching() {
+            PowerForm.OnBtnSave({ id: "PS_BOMFile.Save" }, false, null, null, function (o) {
+                Power.ui.loading("匹配中……");
+                var par = { "bomfileguid": formconfig.KeyValue };
+                FormFuns.APIExec("PS_BOMFile", "BO", "BomFileAutoMatchMat", par, function (text) {
+                    Power.ui.loading.close();
+                    var tmp = mini.decode(text);
+                    if (tmp.success)
+                        Power.ui.success("通过物资描述共匹配物资项 " + tmp.data.value + " 项.");
+                    else
+                        Power.ui.error(tmp.message);
+                });
+                //$.getJSON("/Purchase/BomFileAutoMatchMat/" + formconfig.KeyValue, function (obj) {
+                //    if (obj.success) {
+                //        Power.ui.success("通过物资描述共匹配物资项 " + obj.data.count + " 项.");
+                //    }
+                //    else
+                //        Power.ui.warning(obj.message);
+                //})
+            })
+
+        }
+
+        //function UpateFinalBom() {
+        //    if (formconfig.FormState == "add" || formconfig.KeyValue.length == 0)
+        //        return;
+        //    //未批准,不允许变更及升版
+        //    if (formconfig.config.joindata.currow.Status != "50") {
+        //        Power.ui.warning("单据未批准，不允许执行该操作");
+        //        return;
+        //    }
+        //    Power.ui.loading("处理中...");
+        //    $.ajax({
+        //        url: "/Purchase/BomToFinalBOM",
+        //        data: { bomfileid: formconfig.KeyValue },
+        //        type: "POST",
+        //        success: function (text) {
+        //            Power.ui.loading.close();
+        //            var o = mini.decode(text);
+        //            if (!o.success) {
+        //                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+        //                return;
+        //            }
+        //        }
+        //    })
+        //}
+
+
+        function MatCheckReLoad(btn, all) {
+            $($(btn).find("i")).addClass("fa fa-check");
+            if (all) {
+                matfilter = "";
+                $($(btn).parent().prevAll().find("i")).removeClass();
+            }
+            else {
+                $($(btn).parent().nextAll().find("i")).removeClass();
+                matfilter = "(Mat_Guid is null or Mat_Guid='00000000-0000-0000-0000-000000000000')";
+            }
+            mini.get("PS_BOM").reload();
+        }
+
+        function builderhisversion() {
+            if (!formconfig || formconfig.FormState == "add" || !formconfig.KeyValue)
+                return;
+            $.getJSON("/Purchase/GetBomVersions/" + formconfig.KeyValue, function (o) {
+                if (o.success) {
+                    var html = "";
+                    for (var i = 0; i < o.list.length; i++) {
+                        var item = o.list[i];
+                        html += "<li><a href='javascript:;' onclick=openhis('" + item.Id + "')>" + item.Version + "</li>";
+                    }
+                    var btn = $("#btnhisversion ul");
+                    btn.append(html);
+                }
+                else
+                    Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+            })
+
+            //<div id="btnPrint" class="btn-group open"><a href="#" class="btn blue" data-toggle="dropdown"><i class="fa fa-print"></i>打印</a><ul class="dropdown-menu pull-right"><li><a href="/PowerPlat/FormXml/ReportView.aspx?rid=c78011d0-03db-4224-ab4b-61f2bca9092f&amp;KeyWord=PS_MatInStore" target="_blank"><i class="fa fa-file-pdf-o"></i>测试转PDF</a></li></ul></div>
+        }
+
+        function openhis(hisid) {
+            var url = "/PowerPlat/FormXml/zh-CN/StdPurchase/PS_BOMFile_His_Compare.htm?curguid=" + formconfig.KeyValue + "&hisguid=" + hisid;
+            mini.open({ url: url });
+        }
+        //增加物资库
+        function PMS_AddMat() {
+            var grid = mini.get("PS_BOM");
+            var len = grid.data.length;
+            if (len == 0) {
+                Power.ui.warning("未找到物资明细");
+            }
+            else {
+                var si = 0;
+                var row = grid.findRow(function (row) {
+                    if (row.MatBsCode == "" || row.MatBsCode == null || row.MatName == "" || row.MatName == null || row.MatDescription == "" || row.MatDescription == null || row.MatUnit == "" || row.MatUnit == null || row.Design_Qty == "" || row.Design_Qty == null) {
+                        Power.ui.warning("模版格式错误");
+                        si = 1;
+                        return;
+                    }
+                });
+                if (si == 1) {
+
+                }
+                else {
+                    var par = { "OrderId": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName, "EpsProjId": ProjectID, "OwnProjName": ProjectName };
+                    Power.ui.loading("导入中……");
+                    FormFuns.APIExec("PS_BOMFile", "BO", "Proc_PS_PUR_BOM", par, function (text) {
+                        Power.ui.alert(mini.decode(text).data.value);
+                        Power.ui.loading.close();
+                        mini.get("PS_BOMFile.Refresh").doClick();
+                    });
+                }
+            }
+        }
+        function OnToContract() {
+            var par = { "OrderId": formconfig.KeyValue, "HumanId": HumanId, "HumanName": HumanName };
+            FormFuns.APIExec("PS_BOMFile", "BO", "Proc_XLX_BomFileTORequest", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                mini.get("PS_BOMFile.Refresh").doClick();
+            });
+        }
+        //根据流程节点判断导入BOM按钮的隐藏显示
+        PowerForm.EventAfterLoadRight = function (e) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "gcs") {
+                $("#btnUpload").hide();
+                $("#btnUpload1").show();
+            }
+            else if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "cgb") {
+                $("#btnUpload").hide();
+                $("#btnUpload1").show();
+            }
+            else {
+                $("#btnUpload1").hide();
+                $("#btnUpload").show();
+            }
+            //批准之后导入BOM按钮隐藏
+            if (formconfig.config.joindata.currow.Status == '50') {
+                $("#btnUpload1").hide();
+                $("#btnUpload").hide();
+            }
+
+            //var grid = mini.get("PS_BOMFile");
+            //if (formconfig.HumanId != grid.currow.HumanId) {
+            //    document.getElementById("PS_BOM.Delall").style.display = "none";
+            //}
+        }
+
+
+
+        //PowerForm.EventWizardAfterUpdateRow = function (form, currow, id) {
+        //    if (id == "PS_BOMFile.PartyBdept" || id == "PS_BOMFile.PartyBName") {
+        //        //主表概算科目选择时，将子表的所有概算科目覆
+        //        var deptid = currow.PartyB_Guid;
+        //        var PartyBName = currow.PartyBName;
+        //        var grid = mini.get("PS_BOM");
+        //        var data = grid.getData();
+        //        for (var i = 0; i < data.length; i++) {
+        //            var d = data[i];
+        //            grid.updateRow(d, { "Pattern": deptid, "Specifi": PartyBName });
+        //        }
+        //    }
+        //}
+
+        //PowerForm.EventBeforeOnBtnSave = function (e) {
+        //    var deptid = sessiondata.PartyB_Guid;
+        //    var PartyBName = mini.get("PS_BOMFile.PartyBName").getValue();
+        //    var grid = mini.get("PS_BOM");
+        //    var data = grid.getData();
+        //    for (var i = 0; i < data.length; i++) {
+        //        var d = data[i];
+        //        grid.updateRow(d, { "Pattern": deptid, "Specifi": PartyBName });
+        //    }
+        //}
+
+        function OnBtnDelAll() {
+            //js删除当前页
+            //var grid = mini.get("PS_BOM");
+            //if (grid.data.length > 0)
+            //    grid.removeRows(grid.getData());
+
+            var par = { "keyvalue": formconfig.KeyValue };
+            Power.ui.loading("删除中……");
+            FormFuns.APIExec("PS_BOMFile", "BO", "delAll", par, function (text) {
+                Power.ui.alert(mini.decode(text).data.value);
+                Power.ui.loading.close();
+                mini.get("PS_BOMFile.Refresh").doClick();
+            })
+        }
+        function RequestTest() {
+
+            var par = { "Id": KeyValue, "HumanName": HumanName, "HumanId": HumanId };
+            Power.ui.loading("正在生成请购单……");
+            FormFuns.APIExec("PS_BOM", "BO", "RequestTest", par, function (text) {
+                Power.ui.loading.close();
+                var R = mini.decode(text).data.value;
+                debugger;
+           if (R != undefined & R != '') {
+                Power.ui.alert(text);
+            }
+
+       });
+
+}
+    </script>
+</body>
+</html>

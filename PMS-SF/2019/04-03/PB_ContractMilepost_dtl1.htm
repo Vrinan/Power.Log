@@ -1,0 +1,124 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=403" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=403" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=403" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=403 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=403 "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=403 "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var FormParams = $Model.data.FormParams;
+        var currentproj = "00000000-0000-0000-0000-0000000000a4";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>里程碑节点
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="mini-button blue" id="PB_ContractMilepost.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                        <a class="mini-button blue" id="PB_ContractMilepost.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                        <a class="mini-button blue" id="PB_ContractMilepost.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="top" tabalign="center" style="height: 100%;">
+                        <div title='节点'>
+                            <div id="PB_ContractMilepost" class="form">
+                            </div>
+                            
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                                <div size="35%" showcollapsebutton="true" visible="false">
+                                    <div class="mini-fit">
+                                        <div class="portlet blue box" style="height: 97%;">
+                                            <div class="portlet-title">
+                                                
+                                            </div>
+                                            <div class="mini-toolbar">
+                                                    <a class="mini-button blue" iconcls="fa-plus" id="PB_ContractMilepost_dtl1.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                                    <a class="mini-button blue" iconcls="fa fa-refresh" id="PB_ContractMilepost_dtl1.Refresh" onclick="PowerForm.OnBtnRefresh(this)">刷新</a>
+                                                    <a class="mini-button blue" iconcls="fa-trash-o" id="PB_ContractMilepost_dtl1.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                            </div>                    
+                                            <div class="portlet-body" style="height: 97%">
+                                                <div id="PB_ContractMilepost_dtl1" class="mini-treegrid" style="width: 100%; height: 96%" showtreeicon="true" treecolumn="Code"
+                                                     idfield="Id" parentfield="ParentId"  allowresize="true" expandonload="true" resultastree="false">
+                                                    <div property="columns">
+                                                        <div name="Code" field="Code" headeralign="center" header="编号" allowsort="true">编号</div>
+                                                        <div field="Name" header="名称" headeralign="center" allowsort="true">名称</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div size="65%" showcollapsebutton="true" visible="true">
+                                    <div class="mini-toolbar">
+                                        <a class="mini-button blue" iconcls="fa-plus" id="PB_ContractMilepost_dtl1_dtl.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="PB_ContractMilepost_dtl1_dtl.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                    </div>
+                                    <div id="PB_ContractMilepost_dtl1_dtl" class="mini-datagrid" style="height: 90%;" resultastree="false"
+                                         idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="true" cellendedit="" showPager="false">
+                                        <div property="columns">
+                                            <div type="checkcolumn" width="20px"></div>
+                                            <div type="indexcolumn" width="20px">
+                                                序号
+                                            </div>
+                                            <div field="PlanStart" allowsort="true" header="计划开始" dateformat="yyyy-MM-dd" headeralign="center">
+                                                计划开始
+                                                <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                            </div>
+                                            <div field="PlanFinish" allowsort="true" header="计划开始" dateformat="yyyy-MM-dd" headeralign="center">
+                                                计划完成
+                                                <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                            </div>
+                                            <div field="RealStart" allowsort="true" header="计划开始" dateformat="yyyy-MM-dd" headeralign="center">
+                                                实际开始
+                                                <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                            </div>
+                                            <div field="RealFinish" allowsort="true" header="计划开始" dateformat="yyyy-MM-dd" headeralign="center">
+                                                实际完成
+                                                <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                            </div>
+                                            <div field="Memo" name="Memo" headeralign="center">
+                                                情况说明
+                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+    </script>
+</body>
+</html>

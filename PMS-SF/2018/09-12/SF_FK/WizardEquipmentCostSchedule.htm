@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/wizard.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/FormFuns.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var WizardParams = "$Model".indexOf("Power") < 0 ? {} : $Model.data.params;
+        var currentHumanId = "$!CurrentSession.HumanId";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span>项目名称</span>
+                    <input id="txtName" class="mini-textbox" style="width: 200px;" emptytext="项目名称" onenter="OnSearchClick" />
+                    <a class="mini-button blue" onclick="OnSearchClick"><i class="fa fa-search"></i>$Helper.GetResource("g_search")</a>
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" onclick="OnOK"><i class="fa fa-check"></i>$Helper.GetResource("g_ok")</a>
+                    <a class="mini-button blue" onclick="OnCancel"><i class="fa fa-ban"></i>$Helper.GetResource("g_cancel")</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%; ">
+                    <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;">
+                        <div size="75%" showcollapsebutton="true">
+                            <div id="SF_FK_EquipmentCostSchedule" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                 allowresize="true" multiselect="false" idfield="Id" onlyCheckSelection="false" 
+                                 onbeforeload="OnGridBeforeLoad" pagesize="50" autoload="false" url="/Form/GridPageLoad">
+                                <div property="columns">
+                                    <div type="indexcolumn" width="45">序号</div>
+                                    <div type="checkcolumn" name="checkcolumn">选择</div>
+                                    <div field="Id" name="Id" width="0">表单Id</div>
+                                    <div field="EpsId" width="0">项目Id</div>
+                                    <div field="EpsCode">项目编号</div>
+                                    <div field="EpsName">项目名称</div>
+                                    <div field="Code">编号</div>
+                                    <div field="Titile">标题</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div showcollapsebutton="false">
+                            <div id="GridSelected" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true"
+                                 showpager="false" idfield="Id">
+                                <div property="columns">
+                                    <div field="Code">编号</div>
+                                    <div field="Titile">标题</div>
+                                    <div name="action" width="50px">操作</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        mini.parse();
+        var RightGrid = mini.get("SF_FK_EquipmentCostSchedule");
+        var gridselected = mini.get("GridSelected");
+
+        //重定向Select的GetData方法
+        Select.GetData = function () {
+            return gridselected.getData();
+        };
+
+        //如果打开向导前指定了e.where，则需要这个方法，否则Select.GetWhere()取不到值
+        Select.LoadStepFirst = function () {
+            RightGrid.reload();
+        }
+        $(function () {
+            var bmulti = "0";
+            RightGrid.multiSelect = bmulti;
+            RightGrid.onlyCheckSelection = bmulti;
+            if (bmulti)
+                RightGrid.showColumn("checkcolumn");
+            else {
+                RightGrid.hideColumn("checkcolumn");
+            }
+        });
+        
+        RightGrid.on("select", function (e) {
+            var data = gridselected.getData();
+            var row = mini.clone(e.record);
+            var cRow = gridselected.findRow(function (findrow) {
+                if (findrow.Id == row.Id)
+                    return true;
+            });
+            if (RightGrid.multiSelect)
+                gridselected.addRow(row);
+            else {
+                var data = [];
+                data.push(row);
+                gridselected.setData(data);
+            }
+        })
+
+        RightGrid.on("deselect", function (e) {
+            OnDelGridSelected(e.record.Id);
+        })
+
+        //绑定删除操作
+        gridselected.on("drawcell", function (e) {
+            if (e.column.name == "action") {
+                e.cellHtml = '<a href="javascript:;" onclick="OnDelGridSelected(\''
+				+ e.record.ListId + '\')" style="margin-left:10px"><u>删除</u></a>';
+            }
+        });
+        function OnDelGridSelected(id) {
+            var arr = gridselected.getData();
+            if (arr.length == 0) return;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].ListId == id) {
+                    gridselected.removeRow(arr[i], false);
+                    gridselected.accept();
+                    return;
+                }
+            }
+        }
+
+        //列表绑定前事件
+        function OnGridBeforeLoad(e) {
+            e.cancel = true;
+            var sender = e.sender;    //树控件
+            var swhere = Select.GetWhere() || "1=1";
+            if (WizardParams.filter) {
+                swhere += " and " + base64decode(WizardParams.filter);
+            }
+            //KeyWordType: "ViewEntity"
+            var p = { KeyWord: sender.id, KeyWordType: "BO", index: e.params.pageIndex, size: e.params.pageSize, sort: "",swhere:swhere };
+            var txt = mini.get("txtName");
+            if (txt.value.length > 0)
+                p.swhere += " and (EpsName like '%" + txt.value + "%')";
+            p.sort = RightGrid.sortField + " " + RightGrid.sortOrder;
+            if (p.sort.length == 1) {
+                p.sort = ""
+            }
+            var pgindex = e.params.pageIndex;
+            sender.mask();
+            FormFuns.GridPageLoad(p, function (o) {
+                sender.unmask();
+                if (o.success) {
+                    var data = mini.decode(o.data.value);
+                    sender.setData(data);
+                    sender.setTotalCount(o.data.totalcount);
+                    sender.setPageIndex(pgindex);
+                }
+            })
+        }
+
+        function OnSearchClick(e) {
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnSelectNode(e) {
+            e.sender.currow = e.node;
+            RightGrid.setPageIndex(0);
+            RightGrid.reload();
+        }
+        function OnOK() {
+            ComToolsCloseWindow("ok", null);
+        }
+        function OnCancel() {
+            ComToolsCloseWindow("cancel", null);
+        }
+    </script>
+</body>
+</html>

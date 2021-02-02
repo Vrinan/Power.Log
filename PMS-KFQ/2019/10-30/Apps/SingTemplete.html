@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="no" />
+    <title></title>
+    <script src="/Apps/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Apps/js/MobileSingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/APPAccount/GetMoblieConfig/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <link href="/Apps/style/style.css?v=$AppVersion" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var SingleParams = ""
+        var strEpsProjId = "$!CurrentSession.EpsProjId"
+    </script>
+
+    <style type="text/css">
+        .listfile ul{
+            padding-top:5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="listfile">
+    </div>
+
+    <div class="buttonlist1" style="display:none;">
+        
+    </div>
+
+    <script type="text/javascript">
+        var PowerForm = new MobileSingleForm();
+        $(function () {
+            PowerForm.Init();
+            debugger;
+            if (moblieconfig && moblieconfig.url) {
+                $(".listfile").html('<ul id="OutList"></ul>');
+                DataP.index = "0";
+                PowerM3AppCallBack.loadpage = LoadUrlData;
+                AndroidLoadPage = LoadUrlData;
+                LoadUrlData(DataP);
+            }
+            else if (moblieconfig && moblieconfig.KeyWord) {
+                $(".listfile").html('<ul id="' + moblieconfig.KeyWord + '"></ul>');
+                var dataparams = {};
+                dataparams.KeyWord = moblieconfig.KeyWord;//关键词
+                dataparams.select = "";//需要查询哪些字段,默认空
+                dataparams.KeyWordType = moblieconfig.KeyWordType || "BO";//BO/ViewEntity;默认BO
+                dataparams.swhere = moblieconfig.swhere;//where条件，默认空
+                dataparams.size = moblieconfig.size || "10";//每页条数，默认0
+                dataparams.index = "0";//当前多少页，默认0
+                dataparams.order = "";//排序，默认空
+                var htmlparams = {};
+                htmlparams.gridid = moblieconfig.KeyWord;//ul的id
+                htmlparams.icon = "";//左侧图标，默认fa-plus-square-o
+                htmlparams.formid = OpenFormId;//如果需要打开表单，表单的formid
+                htmlparams.idfield = moblieconfig.idfield;//主键字段是什么
+                if (moblieconfig.title)
+                    htmlparams.title = moblieconfig.title;
+                if (moblieconfig.left)
+                    htmlparams.left = moblieconfig.left;
+                if (moblieconfig.center)
+                    htmlparams.center = moblieconfig.center;
+                if (moblieconfig.right)
+                    htmlparams.right = moblieconfig.right;
+                //var ctrls = moblieconfig.controls;
+                //for (var i = 0; i < ctrls.length; i++) {
+                //    var ctrl = ctrls[i];
+                //    switch (i) {
+                //        case 0:
+                //            htmlparams.title = { value: ctrl.field, format: ctrl.format };
+                //            break;
+                //        case 1:
+                //            htmlparams.left = { value: ctrl.field, format: ctrl.format };
+                //            break;
+                //        case 2:
+                //            htmlparams.center = { value: ctrl.field, format: ctrl.format };
+                //            break;
+                //        case 3:
+                //            htmlparams.right = { value: ctrl.field, format: ctrl.format };
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                PowerForm.LoadData(dataparams, htmlparams);
+            }  
+
+        });
+        function LoadUrlData(dp) {
+
+            var url = moblieconfig.url.replace("[@indexpage]", dp.index);
+            $.ajax({
+                url: url,
+                type: "POST",
+                cache: false,
+                success: function (text) {
+                    var o = jQuery.parseJSON(text);
+                    BuidHTML(o);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.responseText);
+                    Power.ui.error(jqXHR.responseText, { timeout: 0, position: "center center", closeable: true });
+                }
+            })
+        }
+        function BuidHTML(data) {
+            var html = "";
+
+            for (var j = 0; j < data.length; j++) {
+                var row = data[j];
+                html += " <li>" +
+               "<a href=\"javascript:;\" " + GetOnClick(row) + ">" +
+                   "<span class=\"left\"><input id=\"" + row[moblieconfig.idfield] + "\" name=\"" + moblieconfig.idfield + "\" class=\"check\" type=\"checkbox\" value=\"\" style=\"display:none\"/><i class=\"fa " + (moblieconfig.icon || "fa-plus-square-o") + " a\"></i></span>" +
+                   "<div>" +
+                       GetTitle(row) +
+                       "<p class=\"group\">" +
+                          GetLeft( row) +
+                          GetCenter(row) +
+                         GetRight(row) +
+                      " </p>" +
+                  " </div>" +
+                  " <span class=\"right\"><i class=\"fa fa-angle-right\"></i></span>" +
+               "</a>" +
+           "</li>";
+            }
+            $("#OutList").append(html);
+            if (data.length > 0)
+                DataP.index = parseInt(DataP.index) + 1;
+            if ($(".buttonlist1").css("display") != "none") {
+                $(".left i").hide();
+                $(".left input").show();
+            }
+        }
+        function GetOnClick(row) {
+            var onclick = "";//单击html
+            if (OpenFormId != "") {
+                onclick = "onclick=\"PowerForm.OpenWebForm('" + OpenFormId + "','" + row[moblieconfig.idfield] + "')\"";
+            }
+            return onclick;
+        }
+        function GetTitle(row) {
+
+            var title = "";//title 
+            if (moblieconfig.title) {
+                var format = moblieconfig.title.format;
+                var field = moblieconfig.title.field;
+                if (format == "" || format == null)//普通文本
+                    title = "<p class=\"title\">" + row[field] + "</p>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[moblieconfig.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                title = "<p class=\"title\">" + d[comb.TextField] + "</p>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    title = "<p class=\"title\">" + mini.formatNumber(row[field], format) + "</p>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    title = "<p class=\"title\">" + mini.formatDate(row[field], format) + "</p>";
+                }
+            }
+            return title.replace("null", "");
+        }
+        function GetLeft( row) {
+
+            var left = "";//左下角 
+            if (moblieconfig.left) {
+                var format = moblieconfig.left.format;
+                var field = moblieconfig.left.field;
+                if (format == "" || format == null)//普通文本
+                    left = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[moblieconfig.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                left = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    left = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    left = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return left.replace("null", "");
+        }
+        function GetCenter( row) {
+            var center = "";//中间
+            if (moblieconfig.center) {
+                var format = moblieconfig.center.format;
+                var field = moblieconfig.center.field;
+                if (format == "" || format == null)//普通文本
+                    center = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[moblieconfig.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                center = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    center = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    center = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return center.replace("null", "");;
+        }
+        function GetRight(row) {
+
+            var right = "";//右下角
+            if (moblieconfig.right) {
+                var format = moblieconfig.right.format;
+                var field = moblieconfig.right.field;
+                if (format == "" || format == null)//普通文本
+                    right = "<span>" + row[field] + "</span>";
+                else if (format == "combobox") {
+                    var comb = comboboxdata[moblieconfig.KeyWord + "." + field];
+                    if (comb) {
+                        var ds = comb.Data;
+                        var v = row[field];
+                        for (var i = 0; i < ds.length; i++) {
+                            var d = ds[i];
+                            if (d[comb.ValueField] == v) {
+                                right = "<span>" + d[comb.TextField] + "</span>";
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (format.indexOf("n") > -1 || format.indexOf("c") > -1 || format.indexOf("p") > -1) {//数字
+                    right = "<span>" + mini.formatNumber(row[field], format) + "</span>";
+                }
+                else if (format.indexOf("y") > -1) {//日期
+                    right = "<span>" + mini.formatDate(row[field], format) + "</span>";
+                }
+            }
+            return right.replace("null", "");;
+        }
+        mini.parse();
+        var DataP = {};
+        var HtmlP = {};
+    </script>
+</body>
+</html>

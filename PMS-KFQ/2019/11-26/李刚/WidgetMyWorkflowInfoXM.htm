@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/Date.js?v=$AppVersion" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            //如果传固定宽度和高度参数，则使用参数，不传参数，则默认窗口大小。
+            var height = getQueryString('height');
+            if (height != null)
+                document.getElementById("tab-content").style.height = height + "px";
+            else
+                document.getElementById("tab-content").style.height = document.documentElement.clientHeight - 60 + "px";
+            function getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        });
+    </script>
+    <style>
+        /*控制tab页头部高度*/
+        .nav > li > a {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .table {
+            table-layout: fixed;
+        }
+
+            .table > tbody > tr:hover {
+                cursor: pointer;
+            }
+
+            .table > tbody > tr > td {
+                border-bottom: 1px solid #ddd;
+                border-top: 0px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+    </style>
+</head>
+<body>
+    <div class="tabbable tabbable-custom">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a id="myinfos_tab" href="#tab_1_1" data-toggle="tab">
+                    $Helper.GetResource("g_infos")
+                </a>
+            </li>
+            <li>
+                <a id="mydone_tab" href="#tab_1_4" data-toggle="tab">
+                    已处理的XM
+                </a>
+            </li>
+            <li>
+                <a id="myactive_tab" href="#tab_1_2" data-toggle="tab">
+                    $Helper.GetResource("g_actived")
+                </a>
+            </li>
+            <!-- <li>
+                <a id="myjoins_tab" href="#tab_1_3" data-toggle="tab">
+                    $Helper.GetResource("g_join")
+                </a>
+            </li> -->
+        </ul>
+        <div class="tab-content" id="tab-content">
+            <div class="tab-pane active" id="tab_1_1" types="infos" title="$Helper.GetResource('g_infos')">
+                <table class="table table-condensed table-hover">
+                    <tbody id="myinfos"></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab_1_4" types="join" title="已处理的">
+                <table class="table table-condensed table-hover">
+                    <tbody id="mydone"></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab_1_2" types="actived" title="$Helper.GetResource('g_actived')">
+                <table class="table table-condensed table-hover">
+                    <tbody id="myactive"></tbody>
+                </table>
+            </div>
+            <!-- <div class="tab-pane" id="tab_1_3" types="join" title="$Helper.GetResource('g_join')">
+                <table class="table table-condensed table-hover">
+                    <tbody id="myjoins"></tbody>
+                </table>
+            </div> -->
+        </div>
+    </div>
+    <script type="text/javascript" hasvelocity="true">
+        $moretext = '$Helper.GetResource("g_more")';
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            RefreshData();
+            SetMoreButton();
+        });
+
+        function SetMoreButton() {
+            //如果父级是portlet-body且包含portlet-title 则为其增加 更多 按钮
+            if (!window.parent) return;
+            //找到父窗体中的所有iframe
+            var ifrs = $(window.parent.document).find("iframe");
+            if (!ifrs || ifrs.length == 0) return;
+
+            for (var i = 0 ; i < ifrs.length; i++) {
+                var ifr = $(ifrs[i]);
+                if (ifr.attr('src') != window.location.pathname) continue;
+                var bd = ifr.parent();
+                if (!bd) continue;
+                if (bd.attr('class') != "portlet-body") continue;
+                var tools = bd.parent().find(".portlet-title .tools")
+                if (!tools) continue;
+                //给iframe生成id,使其能够方便调用 iframe中的方法
+                var ifrid = CreateGUID();
+                ifr.attr("id", ifrid);
+                var html = '<a href="#" style="color:#666" onclick="$(\'#' + ifrid + '\')[0].contentWindow.OnClickMore()"><i class="fa fa-bars"></i>' + $moretext + '</a>';
+                tools.attr("class", "caption");
+                tools.attr("style", "float:right;font-size:12px;margin-right: 5px;");
+                tools.html(html);
+                break;
+            }
+        }
+
+        function OnClickMore() {
+            var active = $(".tab-pane.active");
+            if (!active || active.length == 0) return;
+            var id = $(active[0]).attr("types");
+            var text = $(active[0]).attr("title");
+            var t = base64encode('{"types":"' + id + '"}');
+            var url = '/Form/EditForm/2b9a8adb-121e-40e7-ab4a-52d05806c548/2b9a8adb-121e-40e7-ab4a-52d05806c548/' + t;
+            id = 'my' + id + 'workflow';
+            top.Power.menu.nav.addTabs(url, id, text, "single");
+        }
+
+        function RefreshData() {
+            $.ajax({
+                url: "/ALWorkflow/MyWorkInfos",
+                type: "POST",
+                data: { types: "infos,mydone,actived", index: "0", size: "8", swhere: "  KeyWord != 'KFQ_ZH_Leave' and KeyWord != 'KFQ_ZH_Selling' and KeyWord != 'KFQ_ZH_BusinessTravel' and KeyWord != 'PS_MeetingSummary' and KeyWord != 'PS_FileContact' and KeyWord != 'KFQ_ZH_CarManage' " },
+                cacha: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    BuilderHtml("myinfos", o.data.infos, o.data.infostotalcount);
+                    BuilderHtml("mydone", o.data.done, o.data.donetotalcount);
+                    BuilderHtml("myactive", o.data.actived, o.data.activedtotalcount);
+                    //BuilderHtml("myjoins", o.data.join, o.data.jointotalcount);
+                }
+            });
+        }
+
+        function BuilderHtml(gridid, data, count) {
+            if (data == undefined || data == null)
+                return;
+            var html = "";
+            var dw = (gridid == "myinfos") ? "180px" : "140px";
+            for (var i = 0; i < data.length; i++) {
+                var row = data[i];
+                var title = row.Title == null || row.Title == "" ? row.wfDate.Format("yyyy-MM-dd HH:mm") : row.Title;
+                switch (row.MessageType) {
+                    case "transflow":  //如果是事务流记录，则URL要重新定向
+                        html += "<tr onclick=\"openurl('/PowerPlat/TransFlow/TransNodeManage.html?KeyWord=TransInstanceList&OperatorType=OpenRecord&KeyValue=" + row.KeyValue + "&InstanceID=" + row.HtmlPath + "/')\">";
+                        break;
+                    default:
+                        html += "<tr onclick=\"openurl('/Form/ValidForm/" + row.HtmlPath + "/edit/" + row.KeyValue + "/')\">";
+                        break;
+                }
+                html += ("<td>" + title + "</td><td width='" + dw + "'>");
+                if (gridid == "myinfos") html += (row.UserName + "|");
+                html += (row.wfDate.Format("yyyy-MM-dd HH:mm") + "</td></tr>");
+            }
+            $("#" + gridid).html(html);
+            if (count != undefined) {
+                if ($("#" + gridid + "_tab").html().indexOf("(") > -1) {
+                    $("#" + gridid + "_tab").html($("#" + gridid + "_tab").html().substring(0, $("#" + gridid + "_tab").html().indexOf("(")) + "(" + count + ")");
+                }
+                else
+                    $("#" + gridid + "_tab").html($("#" + gridid + "_tab").html() + "(" + count + ")");
+            }
+        }
+
+        function openurl(url) {
+            if (top.$config && top.$config.isphone) {
+                var win = top.mini.open({
+                    url: url, width: "80%", height: "80%", //showMaxButton: true,
+                    onload: function () {
+                    },
+                    ondestroy: function () {
+                        RefreshData();
+                    }
+                });
+            }
+            else {
+                mini.open({
+                    url: url, width: "80%", height: "80%", showMaxButton: true,
+                    onload: function () {
+                    },
+                    ondestroy: function () {
+                        //刷新grid 或 tree 中的数据
+                        RefreshData();
+                    }
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>

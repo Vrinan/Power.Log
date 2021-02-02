@@ -1,0 +1,339 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var currentproj = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>入库管理
+                </div>
+                <!--基础数据定义-->
+                $!WorkFlowButtons
+                <div class="actions">
+                    <div class="btn-group">
+
+                        <a class="mini-button blue" id="SF_ZZ_Warehouse.Save" onclick="PowerForm.OnBtnSave(this)">
+                            <i class="fa fa-save"></i>保存</a>
+                        <!--保存-->
+                        <a class="mini-button blue" id="SF_ZZ_Warehouse.Refresh" onclick="PowerForm.OnBtnRefresh(this)">
+                            <i class="fa fa-refresh"></i>刷新</a>
+                        <!--刷新-->
+                        <a class="mini-button blue" id="SF_ZZ_Warehouse.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)">
+                            <i class="fa fa-power-off"></i>关闭</a>
+                        <!--关闭-->
+                    </div>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div id="maintabs" class="mini-tabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <!-- 通常 -->
+                            <div id="SF_ZZ_Warehouse" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.Code" name="Code" class="mini-textbox" required="true" />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="SF_ZZ_Warehouse.Title" name="Title" class="mini-textbox" />
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.ProjectCode" name="ProjectCode" textname="ProjectCode" class="mini-buttonedit" allowinput="false"
+                                                emptytext="请选择编号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"
+                                            />
+                                        </td>
+                                        <td>
+                                            项目负责人
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.ProjectLeader" name="ProjectLeader" textname="ProjectLeader" class="mini-buttonedit" allowinput="false"
+                                                onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+
+                                            <tr> -->
+
+
+                                    <tr>
+                                        <td>
+                                            到货单号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.ArrivalCode" name="ArrivalCode" textname="ArrivalCode" class="mini-buttonedit" allowinput="false"
+                                                emptytext="到货单号..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"
+                                            />
+                                        </td>
+                                        <td>
+                                            合同名称
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.ContractInformation" name="ContractInformation" textname="ContractInformation" class="mini-buttonedit"
+                                                allowinput="false" emptytext="合同名称..." onbuttonclick="PowerForm.OnBtnWizard(this)"
+                                                allowinput="false" />
+                                        </td>
+                                    </tr>
+                                    <td>
+                                        入库日期
+                                    </td>
+                                    <td>
+                                        <input id="SF_ZZ_Warehouse.PlanMonthly" name="PlanMonthly" class="mini-datepicker" />
+                                    </td>
+                                    <tr></tr>
+
+                                    <tr>
+                                        <td>
+                                            备注说明
+                                        </td>
+                                        <td colspan="3">
+
+                                            <input id="SF_ZZ_Warehouse.Memo" name="Memo" class="mini-TextArea" />
+                                        </td>
+                                    </tr>
+
+                                    <!-- <td>
+                                            工号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.HumanCode" name="HumanCode" class="mini-textbox" readonly="readonly" />
+                                        </td> -->
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+                                            劳动合同编号
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.LaborCode" name="LaborCode" textname="LaborCode" class="mini-buttonedit" allowinput="false"
+                                                   emptytext="请选择劳动合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="true" />
+                                        </td>-->
+                                        <!-- <td>
+                                            通知状态
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.IsNotice" name="IsNotice" class="mini-combobox" readonly/>
+                                        </td>
+                                        <td>
+                                            原劳动合同到期时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.LaborEndDate" name="LaborEndDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            续签次数（年）
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.RenewalTimes" name="RenewalTimes" class="mini-combobox" />
+                                        </td>
+                                        <td>
+                                            续签合同期限
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.RenewalTerm" name="RenewalTerm" class="mini-spinner" maxvalue="999999999" minvalue="0" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            续签起始时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.RenewalBeginDate" name="RenewalBeginDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                        <td>
+                                            续签截至时间
+                                        </td>
+                                        <td>
+                                            <input id="SF_ZZ_Warehouse.RenewalEndDate" name="RenewalEndDate" class="mini-datepicker" format="yyyy-MM-dd" />
+                                        </td>
+                                    </tr>                                     -->
+
+                                        <tr>
+                                            <td>
+                                                录入人
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZZ_Warehouse.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                            </td>
+                                            <td>
+                                                录入时间
+                                            </td>
+                                            <td>
+                                                <input id="SF_ZZ_Warehouse.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
+                                                    <td>
+                                                        委托任务内容及要求
+                                                    </td>
+                                                    <td colspan="3">
+
+                                                        <input id="SF_ZZ_Warehouse.Code" name="Requirements" class="mini-TextArea" style="height:130px;" />
+                                                    </td>
+                                                </tr>
+                                                <td>
+                                                    返回资料内容及时间
+                                                </td>
+                                                <td colspan="3">
+
+                                                    <input id="SF_ZZ_Warehouse.Code" name="Content" class="mini-TextArea" style="height:130px;" />
+                                                </td>
+                                            </tr> -->
+
+                                </table>
+                            </div>
+                        </div>
+                        <div title='物资明细'>
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="SF_ZZ_WarehouseList.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="SF_ZZ_WarehouseList.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                <!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="SF_ZZ_WarehouseList" class="mini-datagrid" style="height: 100%;" idfield="Id" allowresize="true" allowcelledit="true"
+                                    allowcellselect="true" oncellendedit="SF_ZZ_WarehouseList_EndEdit" ondrawcell="SF_ZZ_WarehouseList_DrawCell">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div field="Species" headeralign="center">
+                                            物资种类
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Species" class="mini-textbox" name="Species" style="width: 100%;" />
+                                        </div>
+                                        <div field="Code" headeralign="center">
+                                            物资编号
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Code" class="mini-textbox" name="Code" style="width: 100%;" />
+                                        </div>
+                                        <div field="Title" headeralign="center">
+                                            物资名称
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Title" class="mini-textbox" name="Title" style="width: 100%;" />
+                                        </div>
+                                        <div field="Specifications" headeralign="center">
+                                            规格
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Specifications" class="mini-textbox" name="Specifications" style="width: 100%;"
+                                            />
+                                        </div>
+
+                                        <div field="Model" headeralign="center">
+                                            型号
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Model" class="mini-textbox" name="Model" style="width: 100%;" />
+                                        </div>
+
+
+
+                                        <div field="Unit" headeralign="center">
+                                            单位
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Unit" class="mini-textbox" name="Unit" style="width: 100%;" />
+                                        </div>
+                                        <div field="Amount" headeralign="center">
+                                            数量
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Amount" class="mini-spinner" name="Amount" style="width: 100%;"  minValue="0" maxValue="9999999999999" />
+                                        </div>
+                                        <div field="Units" headeralign="center">
+                                            单价
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Units" class="mini-spinner" name="Units" style="width: 100%;" minValue="0" maxValue="9999999999999"/>
+                                        </div>
+                                        <div field="TotalMoney" headeralign="center">
+                                            总价
+                                            <input property="editor" id="SF_ZZ_WarehouseList.TotalMoney" class="" name="TotalMoney" style="width: 100%;"
+                                            readonly="true" minValue="0" maxValue="9999999999999" />
+                                        </div>
+
+                                        <!-- <div field="Construction" headeralign="center">
+                                            是否安全施工项
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Construction" class="mini-combobox" name="Construction" style="width: 100%;" /> 
+                                        </div> -->
+                                        <div field="Construction" type="comboboxcolumn" headeralign="center">
+                                            是否安全施工项
+                                            <input property="editor" id="SF_ZZ_WarehouseList.Construction" name="Construction" class="mini-combobox" style="width: 100%;"
+                                            />
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div  id="attachfile" title="附件" name="attachfile" url=""></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        mini.parse();
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function SF_ZZ_WarehouseList_EndEdit(e) {//设备成本计划表--费用控制
+            var record = e.record;
+            var grid = mini.get(SF_ZZ_WarehouseList);
+            //判断、并进行计算
+            if (e.field == "Units" || e.field == "Amount") {
+                var s = parseFloat(record.Units) * parseFloat(record.Amount);
+                grid.updateRow(record, { "TotalMoney": s });
+            }
+        }
+        function  SF_ZZ_WarehouseList_DrawCell(e){
+     if(e.field == "TotalMoney" && e.value>=1000)  {     //本方法遍及每一个单元格单循环到Price列，且值大于1000时的样式
+         e.rowStyle ="background#99CCFF;";
+
+    }
+}
+
+
+
+
+    </script>
+</body>
+
+</html>

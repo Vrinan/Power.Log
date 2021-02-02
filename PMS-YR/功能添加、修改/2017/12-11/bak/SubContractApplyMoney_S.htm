@@ -1,0 +1,478 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <!--<script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?v=$AppVersion" type="text/javascript"></script>-->
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>合同付款
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="TEXT.View" onclick="ViewForm()"><i class="fa fa-eye"></i>查看</a>
+                    <a class="mini-button blue" id="PS_SubContractApplyMoney.share" onclick="Share()"><i class="fa fa-share-alt"></i>分摊</a>
+                    <a class="mini-button blue" id="PS_SubContractApplyMoney.Save" onclick="money(this)"><i class="fa fa-save"></i>保存</a><!--保存-->
+                    <a class="mini-button blue" id="PS_SubContractApplyMoney.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a><!--刷新-->
+                    <!--<div id="btnPrint" class="btn-group"></div>-->
+                    <a class="mini-button blue" id="PS_SubContractApplyMoney.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a><!--关闭-->
+
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="PS_SubContractApplyMoney" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>编号
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.Code" name="Code" class="mini-textbox" required="true" requirederrortext="编号不能为空" vtype="maxLength:50" />
+                                        </td>
+                                        <td>审批状态
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.Status" name="Status" class="mini-combobox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>标题
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractApplyMoney.Title" name="Title" class="mini-textbox" required="true" requirederrortext="标题不能为空" vtype="maxLength:100" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PS_SubContractApplyMoney.SubContractCode">合同编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.SubContractCode" name="SubContractCode" textname="SubContractCode" class="mini-buttonedit"
+                                                emptytext="请选择其他合同..." onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" required="true" requirederrortext="合同不能为空" />
+                                        </td>
+                                        <td>合同金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.SubContractAmount" name="SubContractAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>合同名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractApplyMoney.SubContract_Guid" name="SubContract_Guid" class="mini-textbox" style="display: none" />
+                                            <input id="PS_SubContractApplyMoney.SubContractName" name="SubContractName" class="mini-textbox" readonly="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>申请金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.ApplyAmount" name="ApplyAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="true" />
+                                        </td>
+                                        <td>批准金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.ApprAmount" name="ApprAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>累计申请金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.TotalApplyAmount" name="TotalApplyAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" readonly="true" />
+                                        </td>
+                                        <td>累计批准金额
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.TotalApprAmount" name="TotalApprAmount" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>请款日期</td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.ApplyDate" name="ApplyDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>说明
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="PS_SubContractApplyMoney.Memo" name="Memo" class="mini-textarea" height="100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>录入人
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>录入时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td>
+                                            批准人
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.ApprHumName" textname="ApprHumName"  name="ApprHumName" class="mini-buttonedit"
+                                                   emptytext="" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="flase"  readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            批准时间
+                                        </td>
+                                        <td>
+                                            <input id="PS_SubContractApplyMoney.ApprDate" name="ApprDate" class="mini-datepicker"  readonly="readonly"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='支付节点'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContractApplyMoney_PayNodes.Add" onclick="addcodes(this)">选择结点</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContractApplyMoney_PayNodes.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContractApplyMoney_PayNodes" class="mini-datagrid" style="height: 100%;" showpager="true"
+                                    idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <!--序号-->
+                                        <div field="PayType" headeralign="center" align="center">
+                                            付款类型
+                                            <input property="editor" id="PS_SubContractApplyMoney_PayNodes.PayType" name="PayType" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayPercent" headeralign="center" align="center">
+                                            付款比例(%)
+                                            <input property="editor" class="mini-spinner" minvalue="0" maxvalue="100" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayAmount" headeralign="center" align="center">
+                                            金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="PayItem" headeralign="center">
+                                            付款说明
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title='其他扣款'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="PS_SubContractApplyMoney_OtherBack.Add" onclick="AddPayChargedOther()">新增</a><!--新增-->
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="PS_SubContractApplyMoney_OtherBack.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="PS_SubContractApplyMoney_OtherBack" class="mini-datagrid" style="height: 100%;" showpager="true"
+                                    idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        
+                                        <div field="BackType" headeralign="center" type="comboboxcolumn" align="center">
+                                            扣款类型
+                                            <input property="editor" id="PS_SubContractApplyMoney_OtherBack.BackType" name="BackType" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="BackCode" headeralign="center">
+                                            扣款编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="BackName" headeralign="center">
+                                            扣款名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="BackAmount" headeralign="center" align="center">
+                                            金额
+                                            <input property="editor" class="mini-spinner" allowlimitvalue="true" minvalue="0" maxvalue="999999999" changeonmousewhere="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="BackDate" headeralign="center" dateformat="yyyy-MM-dd" align="center">
+                                            扣款日期
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+
+        function money(e) {
+
+            //var grid = mini.get("PS_SubContractApplyMoney_PayNodes");
+            //var sum = 0;
+            //var row = grid.findRow(function (row) {
+            //    sum += parseFloat(row.PayAmount);
+
+            //});
+            //mini.get("PS_SubContractApplyMoney.ApplyAmount").setValue(sum);
+
+            PowerForm.OnBtnSave(e);
+        }
+
+        function addcodes() {
+            var Grid = mini.get("PS_SubContractApplyMoney_PayNodes");
+            var ContactId = mini.get("PS_SubContractApplyMoney.SubContract_Guid").getValue();
+            var AllayId = formconfig.KeyValue;
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/WizardWinSubContractPayNodes.htm&multi=1&ContactId=" + ContactId + "&AllayId=" + AllayId,
+                showMaxButton: true,
+                width: 800,
+                height: 500,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.PayNodes_Guid = data[i].Id;
+                        row.Pi_Guid = data[i].Pi_Guid;
+                        row.PayType = data[i].PayType;
+                        row.PayPercent = data[i].PayPercent;
+                        row.PayAmount = data[i].PayAmount;
+                        row.PayItem = data[i].PayItem;
+                        Grid.addRow(row, 0)
+                    }
+                    var a = { id: "PS_SubContractApplyMoney.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+        function AddPayChargedOther() {
+            var Grid = mini.get("PS_SubContractApplyMoney_OtherBack");
+            var ApplyId = formconfig.KeyValue;
+            var conId = mini.get("PS_SubContractApplyMoney.SubContract_Guid").getValue();
+            mini.open({
+                url: "/Form/OpenWizardURL?url=/PowerPlat/FormXml/zh-CN/StdContract/Wizardwin_PS_SubContractChargedout.htm&multi=1&Fid=" + ApplyId + "&conId=" + conId,
+                showMaxButton: true,
+                width: 800,
+                height: 600,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.WizardParams = { multi: "1" };
+                    iframe.contentWindow.Select.LoadStepFirst();
+                },
+                ondestroy: function (action) {
+                    debugger;
+                    if (action != "ok")
+                        return;
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.Select.GetData();
+                    if (!data || data.length == 0) {
+                        Power.ui.warning(app_global_ResouceId["not_select_data"]); //未选择数据
+                        return;
+                    }
+                    data = mini.clone(data);
+                    //var sum = new Number(0);
+                    for (var i = 0; i < data.length; i++) {
+                        var row = {};
+                        row.Id = CreateGUID();
+                        row.MasterId = formconfig.KeyValue;
+                        row.Charged_Guid = data[i].Id;
+                        row.BackType = data[i].ChargedType;
+                        row.BackCode = data[i].Code;
+                        row.BackName = data[i].Title;
+                        row.BackAmount = data[i].ChargedAmount;
+                        row.BackDate = data[i].ChargedDate;
+                        row.ChargedCompany = data[i].ChargedCompany;
+                        Grid.addRow(row, 0)
+                        //sum = sum + data[i].ChargedAmount;
+                    }
+                    //mini.get("PS_SubContractApplyMoney.TotalApprAmount").setValue(sum);
+                    var a = { id: "PS_SubContractApplyMoney.Save" };
+                    PowerForm.OnBtnSave(a);
+                }
+            })
+        }
+
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            debugger;
+            Refresh();
+        }
+        function Refresh() {
+            debugger;
+            var exec = {};  //对象
+            var guid = formconfig.KeyValue;
+            exec.KeyWord = "PS_SubContractApplyMoney";   //bo的KeyWord
+            exec.MethodName = "countSumm"; //方法名称
+            //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.Id = guid;
+            params.PayType = "1";
+            var txt = mini.encode(exec); //对象转换成字符串
+            $.ajax({
+                url: "/API/Exec",
+                type: "POST",
+                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                cache: false,
+                success: function (text) {
+                    // var tmp = mini.decode(text);
+                    // var result = tmp.data.value;  
+                    //刷新
+                    var e = { id: "PS_SubContractApplyMoney.Refresh" };
+                    PowerForm.OnBtnRefresh(e);
+                }
+            });
+
+        }
+        //查看合同表单
+        function ViewForm() {
+            var Client_Guid = formconfig.config.joindata.currow["SubContract_Guid"];
+
+            if (formconfig.FormState == "add" || mini.get("PS_SubContractApplyMoney.SubContractCode").value == "") {
+                return;
+            }
+            else {
+                var url = "/Form/ValidForm/2797fbca-e50e-4bda-b53c-7bc6c3a5f9cf/" + "/view/" + Client_Guid;
+                mini.open({
+                    url: url,
+                    width: 900,
+                    height: 550
+                });
+            }
+        }
+        function Share() {
+            var ShareAmount = mini.get("PS_SubContractApplyMoney.ApprAmount").getValue();
+            $.ajax({
+                url: "/Cost/CheckShareId",
+                data: { KeyValue: KeyValue, ShareAmount: ShareAmount },
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                success: function (text) {
+                    var o = mini.decode(text);
+                    if (o.success) {
+                        if (o.detail != "") {
+                            var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                            //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                            mini.open({
+                                url: url,
+                                width: 900,
+                                height: 600,
+                                showMaxButton: true,
+                                onload: function () {
+                                },
+                                ondestroy: function () {
+                                }
+                            });
+                        } else {
+                            NewShare();
+                        }
+                    }
+                    else {
+                        Power.ui.loading.close();
+                        Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                    }
+                }
+            });
+
+        }
+        function NewShare() {
+            Power.ui.confirm("确定分摊？", function (ret) {
+                if (ret) {
+                    Power.ui.loading("分摊中。。")
+                    var Code = mini.get("PS_SubContractApplyMoney.Code").getValue();
+                    var Title = mini.get("PS_SubContractApplyMoney.Title").getValue();
+                    var ShareAmount = mini.get("PS_SubContractApplyMoney.ApprAmount").getValue();
+                    var Plan_Guid = "";
+                    $.ajax({
+                        url: "/Cost/InsertShare",
+                        data: {
+                            KeyWord: KeyWord,
+                            KeyValue: KeyValue,
+                            KeyWordFilter: "S",
+                            Plan_Guid: Plan_Guid,
+                            Code: Code,
+                            Title: Title,
+                            ShareAmount: ShareAmount
+                        },
+                        async: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (text) {
+                            debugger
+                            var o = mini.decode(text);
+                            if (o.success) {
+                                debugger;
+                                Power.ui.loading.close();
+                                var url = "/Form/ValidForm/5e7606c9-c5b5-435a-9669-d8417f3018f3/edit/" + o.detail
+                                //mini.open只有url必填，其他可不写，width和 height不写的话，会自动根据当前浏览器大小计算
+                                mini.open({
+                                    url: url,
+                                    width: 900,
+                                    height: 600,
+                                    showMaxButton: true,
+                                    onload: function () {
+                                    },
+                                    ondestroy: function () {
+                                    }
+                                });
+                            }
+                            else {
+                                Power.ui.loading.close();
+                                Power.ui.error(o.message, { detail: o.detail, timeout: 0, position: "center center", closeable: true });
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>
