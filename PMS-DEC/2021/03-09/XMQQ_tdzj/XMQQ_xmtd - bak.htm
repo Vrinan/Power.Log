@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>项目团队组建</title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script src="/Resource/Get/$!CurrentSession.Language?v=$AppVersion" type="text/javascript"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+    <script type="text/javascript" hasvelocity="true">
+    var KeyValue = "$Model.data.KeyValue";
+    var FormId = "$Model.data.FormId";
+    var FormState = "$Model.data.FormState";
+    var EpsProjId = "$!CurrentSession.EpsProjId";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i><span>项目团队组建</span>
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <!-- <a class="mini-button blue" id="XMQQ_xmtd.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="XMQQ_xmtd.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a> -->
+                    <a class="mini-button blue" id="XMQQ_xmtd.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="XMQQ_xmtd.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="XMQQ_xmtd.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <!--portlet-body-->
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class=" mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <!--tab 通常 -->
+                        <div title="通常">
+                            <div id="XMQQ_xmtd" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            <label for="project_code">项目编号</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.project_code" name="project_code" class="mini-textbox" readonly />
+                                            <!-- 20200803 dwh 项目信息默认为当前项目，不用选择(并且原向导数据源功能已经去掉)，项目经理和客户名称改为从项目信息中获取 -->
+                                            <!--<input id="XMQQ_xmtd.project_code" name="project_code" class="mini-buttonedit" textname="project_code" onbuttonclick="PowerForm.OnBtnWizard(this)" required />-->
+                                        </td>
+                                        <td>
+                                            <label for="project_name">项目名称</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.project_name" name="project_name" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr hidden>
+                                        <td>
+                                            <label for="ProjectId">项目ID</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.ProjectId" name="ProjectId" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="manager">项目经理</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.manager" name="manager" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            <label for="customer">客户名称</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.customer" name="customer" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr style="display:none">
+                                        <td>
+                                            项目经理Id
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.manager_id" name="manager_id" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.Status" name="Status" class="mini-combobox" url="/Form/ComboxLoadData/PS_ContractStatus/" textfield="Name" valuefield="Code" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="remark">备注</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XMQQ_xmtd.remark" name="remark" class="mini-textarea" style="height: 200px" />
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            <label for="credentials">项目经理资质说明</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XMQQ_xmtd.credentials" name="credentials" class="mini-textarea" style="height: 150px" />
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            <label for="txtApprHumName">核准人</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.RegDateApprHumName" name="ApprHumName" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            <label for="txtApprDate">核准日期</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.RegDateApprDate" name="ApprDate" class="mini-datepicker" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="RegHumName">录入人</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.RegHumName" name="RegHumName" class="mini-textbox" readonly="readonly" />
+                                        </td>
+                                        <td>
+                                            <label for="RegDate">录入时间</label>
+                                        </td>
+                                        <td>
+                                            <input id="XMQQ_xmtd.RegDate" name="RegDate" class="mini-datepicker" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!--tab 通常 end-->
+                        <div title="明细">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="XMQQ_xmtd_detail.AddRow" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="XMQQ_xmtd_detail.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="XMQQ_xmtd_detail.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh" hidden></i>刷新</a>
+                                <a class="mini-button blue" id="XMQQ_xmtd_detail.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XMQQ_xmtd_detail" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true" oncellbeginedit="OnCellBeginEdit" pagesize="15" allowCellEdit="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn" headeralign="center" align="center" width="45px">序号</div>
+                                        <!--<div field="gw_name" headeralign="center" type="comboboxcolumn">项目岗位<input property="editor" class="mini-combobox" style="width: 100%;" url="/Form/ComboxLoadData/BD_Post/"textfield="Name" valuefield="Name" /></div>-->
+                                        <div field="gw_name" width="120" header="项目岗位" headeralign="center" align="left">
+                                            项目岗位
+                                            <input id="XMQQ_xmtd_detail.gw_name" property="editor" textname="gw_name" name="gw_name" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width:100%;" />
+                                        </div>
+                                        <div field="hum_num" headeralign="center" width="60" align="center">
+                                            需要人数<input property="editor" class="mini-textbox" vtype="int" required="true" />
+                                        </div>
+                                        <div width="100px" field="need_date" allowsort="true" headeralign="center" header="要求进入项目日期" align="center" dateformat="yyyy-MM-dd">
+                                            到岗时间<input property="editor" name="need_date" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="gw_des" width="150" headeralign="center" align="right">
+                                            岗位描述<input property="editor" class="mini-textbox" style="width: 100%;" textname="gw_des" />
+                                        </div>
+                                        <div field="hum_name" width="150" headeralign="center" align="left" class="design mini-datagridcolumn" type="textboxcolumn" allowCellWrap="true">推荐到岗人<input property="editor" id="XMQQ_xmtd_detail.hum_name" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%;" textname="hum_name" /></div>
+                                        <div field="hum_dept" headeralign="center" align="left">
+                                            到岗人所在部门<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div width="100px" field="plan_humdate" allowsort="true" headeralign="center" header="计划到岗日期" align="center" dateformat="yyyy-MM-dd">
+                                            计划到岗日期<input property="editor" name="plan_humdate" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="remark" headeralign="center" align="left">
+                                            备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="attachfile" title="附件" name="attachfile" url="">
+                        </div>
+                        <!--tab 内容 end-->
+                    </div>
+                </div>
+                <!--portlet-body end-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var PowerForm = new WebForm();
+
+    $(function() {
+        PowerForm.Init();
+
+    });
+    mini.parse();
+
+    function OnCellBeginEdit(e) {
+        var node = e.record;
+        var grid = mini.get("XMQQ_xmtd_detail"); //当前treegrid
+        //当前节点没有子节点，且当前点击的字段是以下5个的时候，取消编辑
+        if (formconfig.config.joindata.currow.Status == 0) {
+            if (e.field == "gw_name" || e.field == "hum_num" || e.field == "need_date" || e.field == "gw_des" || e.field == "remark" || e.field == "hum_name") {
+                e.cancel = false;
+            } else {
+                e.cancel = true;
+            }
+        } else if (formconfig.config.joindata.currow.Status != 50) {
+            if (workflowdata && workflowdata.BookMarkCode && workflowdata.BookMarkCode == "exec") {
+                if (e.field == "hum_dept" || e.field == "plan_humdate" || e.field == "remark") {
+                    e.cancel = false;
+                } else {
+                    e.cancel = true;
+                }
+            }
+        }
+    }
+    var addSi = 0;
+    PowerForm.EventAfterFormLoad = function(e, data) {
+        if (FormState == "add") {
+            addSi = 0;
+            mini.get("XMQQ_xmtd.project_code").setValue(sessiondata.EpsProjCode); //项目编号
+            mini.get("XMQQ_xmtd.project_name").setValue(sessiondata.EpsProjName); //项目名称
+            mini.get("XMQQ_xmtd.ProjectId").setValue(sessiondata.EpsProjId); //项目ID
+
+            //获取项目经理和客户名称
+            var p = {
+                "KeyWord": "Project",
+                "KeyWordType": "BO",
+                "select": "",
+                "index": "0",
+                "sort": "",
+                "size": "0"
+            };
+            p.swhere = " project_guid='" + sessiondata.EpsProjId + "'";
+            $.ajax({
+                url: "/Form/GridPageLoadEx",
+                data: p,
+                async: false,
+                success: function(text) {
+                    var tmpdata = mini.decode(text);
+                    var dataResult1 = mini.decode(tmpdata.data.value);
+                    mini.get("XMQQ_xmtd.manager").setValue(dataResult1[0].Pro_manager_name); //项目经理
+                    mini.get("XMQQ_xmtd.manager_id").setValue(dataResult1[0].Pro_manager_guid); //项目经理Id
+                    mini.get("XMQQ_xmtd.customer").setValue(dataResult1[0].Pro_owners_name); //客户名称
+                }
+            });
+            //PowerForm.OnBtnRefresh({ id: "XMQQ_xmtd.Save" });
+        } else {
+            addSi = 1;
+        }
+
+        //
+    }
+    PowerForm.EventAfterOnBtnSave = function(e) {
+        if (addSi == 0) {
+            var id = EpsProjId;
+            GetPost(id);
+            //PowerForm.OnBtnRefresh({ id: "XMQQ_xmtd.Save" });
+        }
+    }
+    PowerForm.EventWizardData = function(e, data) {
+        if (e.id == "XMQQ_xmtd_detail.hum_name") {
+            e.Next = false;
+            var htmValue = "";
+            var humId = "";
+            for (var i = 0; i < data.length; i++) {
+                if (i < data.length - 1) {
+                    htmValue += (data[i]["Name"] + "，");
+                    humId += (data[i]["Id"] + ",");
+                } else {
+                    htmValue += (data[i]["Name"]);
+                    humId += (data[i]["Id"]);
+                }
+            }
+            var gjc = e.id.split(".");
+            var row = mini.get(gjc[0]).getSelected();
+            if (row) {
+                var exec = {}; //对象
+                exec.KeyWord = "XMQQ_xmtd_detail"; //bo的KeyWord
+                exec.MethodName = "Upd_HumName"; //方法名称
+                //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                exec.MethodParams = {}; //方法参数
+                var params = exec.MethodParams;
+                params.Id = row.Id;
+                //params.KeyWord = gjc[0];
+                params.hum_name = htmValue;
+                params.humId = humId;
+                params.swhere = "";
+                var txt = mini.encode(exec); //对象转换成字符串
+                $.ajax({
+                    url: "/API/Exec",
+                    type: "POST",
+                    async: false,
+                    data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                    cache: false,
+                    success: function(text) {
+                        var tmp = mini.decode(text);
+                        var NowDeptName = mini.decode(tmp.data.value);
+                        PowerForm.OnBtnRefresh({ id: gjc[0] + ".Refresh" });
+                    }
+                });
+            }
+        }
+    }
+
+    //PowerForm.EventAfterFormLoad = function (e) {
+    //    var id = EpsProjId;
+    //    GetPost(id);
+    //}
+
+    function GetPost(id) {
+        debugger
+        //var id = mini.gte("XMQQ_xmtd.project_id");
+        var exec = {}; //对象
+        exec.KeyWord = "XMQQ_xmtd"; //bo的KeyWord(关键词)
+        exec.MethodName = "GetPost"; //方法名称(后台)
+        exec.MethodParams = {}; //方法参数
+        var params = exec.MethodParams;
+
+        params.Id = id; //传递给后台方法的参数值
+        params.MainId = formconfig.config.joindata.currow["Id"];
+        params.swhere = "";
+
+        var txt = mini.encode(exec); //对象转换成字符串
+
+        $.ajax({
+            url: "/API/Exec",
+            type: "POST",
+            data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+            cache: false,
+            success: function(text) {
+                //var o = mini.decode(text);
+                //debugger
+                //if (o.success) {
+                //    var data = mini.decode(o.data.value);
+                //    mini.get("XMQQ_xmtd_detail").setData(data);
+                //    //mini.get("XMQQ_xmtd_detail").setTotalCount(data.length);
+                //}
+
+                var tmp = mini.decode(text);
+                var result = tmp.data.value;
+                if (result == "true") {
+                    //PowerForm.OnBtnRefresh({ id: "XMQQ_xmtd_detail.Refresh" });
+                    //PowerForm.OnBtnRefresh({ id: "XMQQ_xmtd.Save" });
+                    Power.ui.warning("岗位同步成功");
+                } else
+                    Power.ui.warning("同步失败");
+            }
+        })
+    }
+    </script>
+</body>
+
+</html>

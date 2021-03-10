@@ -6,11 +6,6 @@ alter table XLX_PUR_InquiryOnline_Supply add InquiryMatNum int null
 
 select count(*) as Num from XLX_PUR_InquiryOnline_Offer where MasterId='f9239713-3910-4895-aa51-fd81a5ef55d6' and MatPrice != 0
 --2、在线议价
-
-
-
------------------
---查询
 select * from Standard_interfacelog
 
 select * from XLX_PUR_InquiryOnline
@@ -36,3 +31,6 @@ select * from XLX_PUR_InquiryOnline_Offer
 
 
 select count(*) as num from XLX_PUR_Inquiry_SupplieList where InquiryStatus =5 and FK='f4968dd8-f22b-4218-a234-dcaa46f4fafe'
+
+
+

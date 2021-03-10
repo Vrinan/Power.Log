@@ -1,0 +1,87 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId"
+        var FormId = "$Model.data.FormId"
+        var FormState = "$Model.data.FormState"
+        var KeyValue = "$Model.data.KeyValue"
+        var RegHumId = "$Model.data.RegHumId"
+        var KeyWord = "$Model.data.KeyWord"
+        var SingleParams = ""
+    </script>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet box blue" style="height: 100%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="XMCH_XMGLCH.AddForm" onclick="PowerForm.OnBtnAddForm(this,OpenFormId)"><i class="fa fa-plus"></i>新增</a>
+                            <a class="mini-button blue" id="XMCH_XMGLCH.Del" onclick="PowerForm.OnBtnDel(this,SingleParams)"><i class="fa fa-trash-o"></i>删除</a>
+                            <a class="mini-button blue" id="XMCH_XMGLCH.EditForm" onclick="PowerForm.OnBtnEditForm(this,OpenFormId)"><i class="fa fa-pencil"></i>编辑</a>
+                            <a class="mini-button blue" id="XMCH_XMGLCH.ViewForm" onclick="PowerForm.OnBtnViewForm(this,OpenFormId)"><i class="fa fa-eye"></i>查看</a>
+                            <a class="mini-button blue" id="XMCH_XMGLCH.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                        </div>
+                        <div class="tools">
+                            <input id="XMCH_XMGLCH-search-fields" class="mini-combobox" onvaluechanged="PowerForm.FieldChanged(this)" style="width: 150px;" />
+                            <span id="XMCH_XMGLCH-search">
+                                <input id="XMCH_XMGLCH-search-value" class="mini-textbox" style="width: 150px;" />
+                            </span>
+                            <a class="mini-button blue" id="XMCH_XMGLCH-btn-search" onclick="PowerForm.OnPageChanged(this)"><i class="fa fa-search"></i>搜索</a><!--查询-->
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="XMCH_XMGLCH" class="mini-datagrid" style="width: 100%; height: 100%;" visible="true" width="917" height="581" allowalternating="true" pageSize="15" SummaryColumns="" fitColumns="" idField="Id" allowcelledit="false" allowcellselect="true">
+                            <div property="columns">
+                                <div type="indexcolumn"></div>
+
+                                <div field="ProjectCode" name="ProjectCode" headerAlign="Center" allowSort="true" currencyUnit="" header="项目编号" align="Left" width="100">项目编号</div>
+                                <div field="ProjectName" name="ProjectName" headerAlign="Center" allowSort="true" currencyUnit="" header="项目名称" align="Left" width="100">项目名称</div>
+                                <div type='comboboxcolumn' id="XMCH_XMGLCH.Status" name="XMCH_XMGLCH.Status" headeralign='center' align='center' field='Status' header='状态' allowsort='true' width="60">状态<input property='editor' class='mini-combobox' style='width: 100%;' /></div>
+                                <div field="ProjTotalDate" name="ProjTotalDate" headerAlign="Center" allowSort="true" currencyUnit="" header="项目总工期" align="Center" width="80">项目总工期</div>
+                                <div field="Planner" name="Planner" headerAlign="Center" allowSort="true" currencyUnit="" header="策划书编制人" align="Left" width="100">策划书编制人</div>
+                                <div field="RegHumName" name="RegHumName" headeralign="Center" allowsort="true" header="录入人" align="Center">录入人</div>
+                                <div field='RegDate' name='RegDate' headeralign='center'  allowsort='true' header='录入日期' dateformat='yyyy-MM-dd' align='center'>录入日期</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" hasvelocity="true">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function onbuttonclick(e) {
+            if (e.name == "close") {
+                var win = mini.get("win_search");
+                win.hide();
+            }
+        }
+ var EpsIsProject = "$!CurrentSession.EpsIsProject";
+        PowerForm.EventAfterLoadData = function (e) {
+            if (EpsIsProject == "0") {
+                mini.get("XMCH_XMGLCH.AddForm").setEnabled(false);
+            }
+        }
+    </script>
+</body>
+</html>
+

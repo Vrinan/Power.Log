@@ -1,0 +1,263 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>项目管理策划</title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion"></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion"></script>
+
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+<body>
+    <div class="row" style="height: 100%">
+        $!WorkFlowButtons
+
+        <div class="portlet box blue" style="height: 100%">
+
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>
+                    <span>项目管理策划</span>
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="XMCH_XMGLCH.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="XMCH_XMGLCH.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <!--<a class="mini-button blue" id="XMCH_XMGLCH.Print"><i class="fa fa-print"></i>打印</a>-->
+                    <a class="mini-button blue" id="XMCH_XMGLCH.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title="通常">
+                            <div id="XMCH_XMGLCH" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.ProjectCode" name="ProjectCode" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            状态
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.Status" name="Status" class="mini-combobox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XMCH_XMGLCH.ProjectName" name="ProjectName" class="mini-textbox" readonly />
+                                            <!-- <input id="XMCH_XMGLCH.ProjectName" name="ProjectName" class="mini-buttonedit" textname="ProjectName" emptytext="请选择项目..." allowinput='false' onbuttonclick="PowerForm.OnBtnWizard(this)"  required/> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目启动日期
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.ProjStartDate" name="ProjStartDate" class="mini-datepicker" style="width: 100%" onvaluechanged="DateChanged" required/>
+                                        </td>
+                                        <td>
+                                            合同完工日期
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.ContractEndDate" name="ContractEndDate" class="mini-datepicker" style="width: 100%" onvaluechanged="DateChanged" required />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目总工期（天）
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.ProjTotalDate" name="ProjTotalDate" class="mini-spinner" style="width: 100%" allowlimitvalue="false" required readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            项目建设规模及工艺路线
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XMCH_XMGLCH.ProjSetRange" name="ProjSetRange" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            工程范围
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="XMCH_XMGLCH.ProjScope" name="ProjScope" class="mini-textarea" height="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            策划书编制人
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.Planner" name="Planner" class="mini-buttonedit" textname="Planner" emptytext="请选择策划书编制人..." allowinput='false' onbuttonclick="PowerForm.OnBtnWizard(this)"/>
+                                        </td>
+                                        <td>
+                                            编制时间
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.PlanDate" name="PlanDate" class="mini-datepicker" style="width: 100%"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.RegHumName" name="RegHumName" class="mini-textbox" textname="RegHumName" readonly="True" />
+                                        </td>
+                                        <td>
+                                            录入日期
+                                        </td>
+                                        <td>
+                                            <input id="XMCH_XMGLCH.RegDate" name="RegDate" class="mini-datepicker" style="width: 100%" readonly="True" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div title='明细'>
+                            <!--数据明细-->
+                            <div class="mini-toolbar">
+                                <a class="mini-button blue" iconcls="fa-plus" id="XMCH_XMGLCH_DTL.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                <a class="mini-button blue" iconcls="fa-trash-o" id="XMCH_XMGLCH_DTL.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a><!--删除-->
+                            </div>
+                            <div class="mini-fit">
+                                <div id="XMCH_XMGLCH_DTL" class="mini-datagrid" style="height: 100%;" multiselect="true"
+                                     idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn"></div>
+                                        <div type="checkcolumn" width="20"></div>
+                                        <div field="Title" headeralign="center">
+                                            节点名称
+                                            <input property="editor" class="mini-textbox" style="width: 100%;"/>
+                                        </div>
+                                        <div field="PlanEndDate" dateformat="yyyy-MM-dd" headeralign="center">
+                                            计划完成时间
+                                            <input property="editor" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="ResponsibleHum" headeralign="center">
+                                            责任人
+                                            <input property="editor" id="XMCH_XMGLCH_DTL.ResponsibleHum" onbuttonclick="PowerForm.OnBtnWizard(this)" class="mini-buttonedit" allowinput="false" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center">
+                                            备注
+                                            <input property="editor" class="mini-textarea" style="width: 100%;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div title="附件" id="attachfile" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+
+        /********************************************开始：变量定义********************************************/
+        var currow = null; //当前表单数据
+        var oldcurrow = null;//表单原始数据
+        var projManager = "";//项目经理
+        var projCode = mini.get("XMCH_XMGLCH.ProjectCode");//项目编号
+        var projName = mini.get("XMCH_XMGLCH.ProjectName");//项目名称
+        var startDate = mini.get("XMCH_XMGLCH.ProjStartDate");//开始时间
+        var endDate = mini.get("XMCH_XMGLCH.ContractEndDate");//结束时间
+        var totalDate = mini.get("XMCH_XMGLCH.ProjTotalDate");//总工期
+        var planner = mini.get("XMCH_XMGLCH.Planner");//策划书编制人，默认项目经理
+        /********************************************结束：变量定义********************************************/
+
+
+        /********************************************开始：平台事件重写********************************************/
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            currow = formconfig.config.joindata.currow;
+            oldcurrow = formconfig.config.joindata.oldcurrow;
+            if (FormState == 'add') {
+                projCode.setValue(sessiondata.EpsProjCode);
+                projName.setValue(sessiondata.EpsProjName);
+                projName.setText(sessiondata.EpsProjName);
+
+                // 获取当前项目项目经理
+                getDataJson([{KeyWord:'Project',Type:"Business",Where:"project_type=1 and project_shortname = '"+sessiondata.EpsProjCode+"'",OrderBy:"project_shortname", IgnoreRight:"true"}], function (data) {
+                    if(data.data.Project.length<1){
+                        // Power.ui.warning("请切换到项目层级");
+                    }
+                    else{
+                        projManager = data.data.Project[0].Pro_manager_name;
+                        projManagerGuid = data.data.Project[0].Pro_manager_guid;
+                        if(IsEmpty(projManager)){
+                            // Power.ui.warning("当前项目未定义项目经理");
+                        }
+                        else{
+                            planner.setValue(projManager);
+                            planner.setText(projManager);
+                            currow.PlannerId = projManagerGuid;
+                            oldcurrow.PlannerId = projManagerGuid;
+                        }
+                    }
+                });
+            }
+        }
+        /********************************************结束：平台事件重写********************************************/
+
+
+        /********************************************开始：miniui拦截事件********************************************/
+
+        /********************************************结束：miniui拦截事件********************************************/
+
+
+        /********************************************开始：自定义事件********************************************/
+        function DateChanged(){
+            var a = 1;
+            //都不为空则计算
+            if(!IsEmpty(startDate.value) && !IsEmpty(endDate.value)){
+                if(endDate.value<startDate.value){
+                    totalDate.setValue(0);
+                    Power.ui.warning("结束时间不能小于开始时间");
+                }
+                else{
+                    totalDate.setValue((endDate.value-startDate.value)/(1000 * 60 * 60 * 24));
+                }
+            }
+        }
+        /********************************************结束：自定义事件********************************************/
+    </script>
+</body>
+</html>
+
+

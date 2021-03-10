@@ -1,0 +1,868 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/PowerPlat/WorkFlow/js/FlowStatusSeries.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WorkFlowForm.js?version=<%=AppVersion%>" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var KeyValue = "$Model.data.KeyValue";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i><span>服务采购合同登记</span>
+                </div>
+                <div class="actions">
+                    <a class="mini-button blue" id="ZhContactDetails.Effect" onclick="PowerForm.OnBtnEffect(this);" style="display: none"><i class="fa fa-save"></i>生效</a>
+                    <a class="mini-button blue" id="ZhContactDetails.UnEffect" onclick="PowerForm.OnBtnUnEffect(this);" style="display: none"><i class="fa fa-save"></i>取消生效</a>
+                    <a class="mini-button blue" id="ZhContactDetails.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="ZhContactDetails.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <a class="mini-button blue" id="ZhContactDetails.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <!--portlet-body-->
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <!--tab 通常 -->
+                        <div title="通常" style="text-align: left;" concls="fa fa-h-square">
+                            <div id="ZhContactDetails" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td width="20%">
+                                            <label for="txttitle">
+                                                项目编号
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.ProjectCode" name="ProjectCode" class="mini-textbox" style="width: 100%" readonly />
+                                            <input id="ZhContactDetails.ContractType" name="ContractType" class="mini-textbox" style="display: none" readonly="readonly">
+                                        </td>
+                                        <td width="20%">
+                                            <label for="txttitle">
+                                                项目名称
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.ProjectName" name="ProjectName" class="mini-textbox" style="width: 100%" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            合同评审
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.htps_name" name="htps_name" textname="htps_name" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false"  />
+                                        </td>
+                                        <td>
+                                            <label for="txtStatus">
+                                                状态
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.Status" name="Status" class="mini-combobox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txttitle">
+                                                合同编号
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.Code" name="Code" class="mini-textbox" required style="width: 100%" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                合同号(C号)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.HTCode" name="HTCode" class="mini-textbox" required style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txttitle">
+                                                合同名称
+                                            </label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="ZhContactDetails.Name" name="Name" class="mini-textbox" required style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--<td>
+                                            <label for="txttitle">
+                                                合同类型
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.FenBaoType" name="FenBaoType" class="mini-combobox" required onvaluechanged="SetInput" />
+                                        </td>-->
+                                        <td>
+                                            <label for="FYKM_name">
+                                                费用科目
+                                            </label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="ZhContactDetails.FYKM_name" name="FYKM_name" textname="FYKM_name" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            计价方式
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.ValuationType" name="ValuationType" class="mini-textbox" style="width: 100%" />
+                                        </td>
+                                        <td>
+                                            <label for="lblCurrencyCode">
+                                                合同主货币
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.CurrencyCode" name="CurrencyCode" class="mini-combobox" required />
+                                        </td>
+                                    </tr>
+									<tr>
+									   <td>税率</td>
+									   <td><input id="ZhContactDetails.Tax" name="Tax" class="mini-combobox" required onvaluechanged="setTotal" /></td>
+									   
+									    <td>
+                                              税额(万元)
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.TaxAmount" name="TaxAmount" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly />
+                                        </td>
+									</tr>
+                                    <tr>
+                                        <td>
+                                            <label for="HtMoney">
+                                                合同签订金额(万元)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.HtMoney" name="HtMoney" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly onvaluechanged="setTotal" />
+                                        </td>
+										<td>不含税金额(万元)</td>
+									   <td><input id="ZhContactDetails.TotalPriceTax" name="TotalPriceTax" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly /></td>
+									
+                                        <!--<td>
+                                            <label for="txttitle">
+                                                累计已付金额(万元)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.HtyfMoney" name="HtyfMoney" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly />
+                                        </td>-->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="ZbTotalMoney">
+                                                合同变更金额(万元)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.ZbTotalMoney" name="ZbTotalMoney" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly />
+                                        </td>
+                                        <td>
+                                            <label for="TotalPrice">
+                                                变更后合同总金额(万元)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.TotalPrice" name="TotalPrice" class="mini-spinner" align="right" format="0.000000" changeonmousewheel="false" allowlimitvalue="false" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txtPartA">
+                                                甲方
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.PartyAName" name="PartyAName" class="mini-textbox" required style="width: 100%" />
+                                            <!--<input id="ZhContactDetails.PartyAName" name="PartyAName" class="mini-buttonedit"
+                                                   textname="PartyAName" onbuttonclick="PowerForm.OnBtnWizard(this)" required />-->
+                                            <input id="ZhContactDetails.PartyAId" name="PartyAId" class="mini-textbox" style="display: none;" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                甲方签署人
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <!--<input id="ZhContactDetails.PartyASigner" name="PartyASigner" class="mini-buttonedit" textname="PartyASigner" onbuttonclick="PowerForm.OnBtnWizard(this)" />-->
+                                            <input id="ZhContactDetails.PartyASigner" name="PartyASigner" class="mini-textbox" style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PartyBName">
+                                                乙方
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.PartyBName" name="PartyBName" width="80%" textname="PartyBName" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" required allowinput="false" />
+                                            <a class="mini-button blue" id="ViewFrom" onclick="ViewFrom()"><i class="fa fa-eye"></i><span style="color: #1c5aaf !important;">查看</span></a>
+                                            <input id="ZhContactDetails.PartyBId" name="PartyBId" class="mini-combobox" style="display:none" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                乙方签署人
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.PartyBSigner" name="PartyBSigner" class="mini-buttonedit" textname="PartyBSigner" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="BankType">
+                                                开户银行
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.BankType" name="BankType" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            <label for="BankNum">
+                                                开户账号
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.BankNum" name="BankNum" class="mini-textbox"  />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="PartyBPhone">
+                                                乙方单位联系电话
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.PartyBPhone" name="PartyBPhone" class="mini-textbox"  />
+                                        </td>
+                                        <td>
+                                            <label for="FkType">
+                                                付款方式
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.FkType" name="FkType" multiSelect="true" class="mini-combobox" style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="partnerCode">
+                                                对应原合同编号
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.partnerCode" name="partnerCode" class="mini-buttonedit" textname="partnerCode" onbuttonclick="PowerForm.OnBtnWizard(this)" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                合同签署日期
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.PartyASignDate" name="PartyASignDate" class="mini-datepicker" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="FinishDate">
+                                                合同完工日期
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.FinishDate" name="FinishDate" class="mini-datepicker" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                合同生效日期
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.EffectDate" name="EffectDate" class="mini-datepicker" style="width: 100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="lblMemo">
+                                                备注
+                                            </label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="ZhContactDetails.Memo" name="Memo" class="mini-textarea" style="height: 100px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="txttitle">
+                                                录入人
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.RegHumName" name="RegHumName" class="mini-textbox" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <label for="txttitle">
+                                                录入日期
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="ZhContactDetails.RegDate" name="RegDate" class="mini-datepicker" readonly="True" />
+                                            <input id="ZhContactDetails.OwnProjId" name="OwnProjId" class="mini-textbox" readonly="True" style="display: none;" />
+                                            <input id="ZhContactDetails.OwnProjName" name="OwnProjName" class="mini-textbox" readonly="True" style="display: none;" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div>
+                                    <label for="lblAttention" style="color: red; font-size: 16px; font-weight: 600;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--tab 通常 end-->
+                        <!--tab 内容 -->
+                        <div title="价格明细" style="text-align: left;">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="ZhConstructionContractList.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <!--<a class="mini-button blue" id="ZhConstructionContractList.Add" onclick="PowerForm.OnBtnWizard(this)"><i class="fa fa-plus"></i>新增</a>-->
+                                <a class="mini-button blue" id="ZhConstructionContractList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="ZhConstructionContractList.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                                <a class="mini-button blue" id="ZhConstructionContractList.Quote" onclick="PowerForm.OnBtnWizard(this)"><i class="fa fa-share-alt"></i>引用</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="ZhConstructionContractList" class="mini-treegrid" style="width: 100%; height: 100%;" showTreeIcon="true" resultastree="false" allowresize="true" allowcelledit="true" treecolumn="PiCode" expandonload="true" multiselect="true" allowcellselect="true" idfield="Id" parentfield="ParentId" oncellendedit="CellEndEdit" oncellbeginedit="cellbeginedit">
+                                    <div property="columns">
+                                        <div field="PiCode" name="PiCode" headeralign="center">
+                                            支付项编号<input property="editor" class="mini-textbox" style="width: 100%;" textname="PiCode" />
+                                        </div>
+                                        <div field="PiName" headeralign="center">
+                                            支付项名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="CurrencyCode" headeralign="center" type="comboboxcolumn">
+                                            币种<input property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ExchangeRate" headeralign="center" align="center">
+                                            汇率<input property="editor" class="mini-spinner" style="width: 100%;" changeonmousewheel="false" allowlimitvalue="false" readonly/>
+                                        </div>
+                                        <div field="UnitName" type="comboboxcolumn" headeralign="center">
+                                            单位<input property="editor" id="ZhConstructionContractList.UnitName" class="mini-combobox" style="width: 100%;" allowInput="true" />
+                                        </div>
+                                        <div field="UnitPrice" headeralign="center" align="right" numberformat="0.000000">
+                                            单价(万元)<input property="editor" class="mini-spinner" style="width: 100%;" changeonmousewheel="false" allowlimitvalue="false" />
+                                        </div>
+                                        <div field="Amount" headeralign="center" align="right" numberformat="n2">
+                                            数量<input property="editor" class="mini-spinner" style="width: 100%;" changeonmousewheel="false" allowlimitvalue="false"/>
+                                        </div>
+                                        <div field="TotalPrice" headeralign="center" align="right" numberformat="0.000000">
+                                            金额(万元)<input property="editor" class="mini-spinner" style="width: 100%;" changeonmousewheel="false" allowlimitvalue="false" readonly="True" />
+                                        </div>
+                                        <div field="ZHUnitPrice" headeralign="center" align="right" numberformat="0.000000">
+                                            折合主货币单价(万元)
+                                        </div>
+                                        <div field="ZHTotalPrice" headeralign="center" align="right" numberformat="0.000000">
+                                            折合主货币金额(万元)
+                                        </div>
+                                        <!--div field="Taxrate" headeralign="center" align="right" nemberformat="n">税率<input property="editor" class="mini-spinner" style="width: 100%;" format="n" changeonmousewheel="false" allowlimitvalue="false"/></div-->
+                                        <div field="Memo" headeralign="center">
+                                            备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="合同变更">
+                            <div class="portlet box blue" style="height: 100%">
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <a class="mini-button blue" id="EditForm" onclick="view_change()">
+                                            <i class="fa fa-plus"></i>查看
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="mini-fit">
+                                    <div id="FWContractChange" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true">
+                                        <div property="columns">
+                                            <div type="indexcolumn" headeralign="center" align="right" style="width: 100%;">
+                                                序号
+                                            </div>
+                                            <div field="Code" headeralign="center" align="right">
+                                                编号
+                                            </div>
+                                            <div field="Name" headeralign="center" align="right">
+                                                名称
+                                            </div>
+                                            <div field="DateInco" headeralign="center" align="right" dateformat="yyyy-MM-dd">
+                                                变更日期
+                                            </div>
+                                            <div field="CurCo" headeralign="center" align="right" numberformat="0.000000">
+                                                变更金额(万元)<input property="editor" class="mini-spinner" style="width: 100%;" changeonmousewheel="false" allowlimitvalue="false" readonly="True" />
+                                            </div>
+                                            <!--<div field="TotalPrice" headeralign="center" align="right" numberformat="n">
+                                                变更后总金额<input property="editor" class="mini-spinner" style="width: 100%;" format="n"
+                                                             changeonmousewheel="false" allowlimitvalue="false" readonly="True" />
+                                            </div>-->
+                                            <div field="CoCompletDate" headeralign="center" align="right" dateformat="yyyy-MM-dd">
+                                                变更完成时间
+                                            </div>
+                                            <div field="CurrencyCode" headeralign="center" align="right">
+                                                币种
+                                            </div>
+                                            <div field="JudgeDate" headeralign="center" align="right" dateformat="yyyy-MM-dd">
+                                                审定时间
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--tab 内容 end-->
+                        </div>
+                        <div title="工程付款" style="text-align: left;">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="ViewForm" onclick="view"><i class="fa fa-plus"></i>查看</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="FbContrActualPay" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true">
+                                    <div property="columns">
+                                        <div type="indexcolumn" headeralign="center">
+                                            序号
+                                        </div>
+                                        <div field="Code" headeralign="center">
+                                            付款申请编号
+                                        </div>
+                                        <div field="Name" headeralign="center">
+                                            付款申请名称
+                                        </div>
+                                        <div field="Period" headeralign="center">
+                                            期数
+                                        </div>
+                                        <div field="AmountPayables" datatype="currency" headeralign="center" numberformat="0.000000">
+                                            应付金额(万元)<input property="editor" class="mini-spinner" changeonmousewheel="false" style="width: 100%;" readonly="True" />
+                                        </div>
+                                        <div field="SJ_PayM" datatype="currency" headeralign="center" numberformat="0.000000">
+                                            实付金额(万元)<input property="editor" class="mini-spinner" changeonmousewheel="false" style="width: 100%;" readonly="True" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--tab 内容 end-->
+                        <!-- 重要条款摘要子表-->
+                        <div title="重要条款" style="text-align: left;">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="FbContrZyList.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="FbContrZyList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="FbContrZyList.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="FbContrZyList" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true" data-options="{canImport:true}">
+                                    <div property="columns">
+                                        <div type="indexcolumn" headeralign="center" width="15">
+                                            序号
+                                        </div>
+                                        <div field="vType" headeralign="center" type="comboboxcolumn" width="50">
+                                            条款类别
+                                            <input id="FbContrZyList.vType" property="editor" class="mini-combobox" />
+                                        </div>
+                                        <div field="Code" headeralign="center" width="30">
+                                            条款编号
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Cont" headeralign="center">
+                                            条款内容
+                                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 重要条款摘要子表-->
+                        <!-- 支付条款-->
+                        <div title="支付条款" style="text-align: left;">
+                            <div class="mini-toolbar" id="toolbar_admin">
+                                <a class="mini-button blue" id="FbContrPlanList.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                <a class="mini-button blue" id="FbContrPlanList.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                <a class="mini-button blue" id="FbContrPlanList.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                            </div>
+                            <div class="mini-fit">
+                                <div id="FbContrPlanList" class="mini-datagrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" multiselect="true" allowcellselect="true" idfield="Id" showpager="true" data-options="{canImport:true}" oncellendedit="JS_Zfje" title="支付条款">
+                                    <div property="columns">
+                                        <div type="indexcolumn" headeralign="center" width="35">
+                                            序号
+                                        </div>
+                                        <div field="ZfType" headeralign="center" type="comboboxcolumn" width="60">
+                                            支付类别
+                                            <input id="FbContrPlanList.ZfType" name="ZfType" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="JgType" headeralign="center" type="comboboxcolumn" width="50">
+                                            价格种类
+                                            <input id="FbContrPlanList.JgType" name="JgType" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="FkCont" headeralign="center" width="70">
+                                            付款条件
+                                            <input property="editor" name="FkCont" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                        <div field="Zfbl" headeralign="center" width="50">
+                                            支付比例<input property="editor" class="mini-spinner" style="width: 100%;" format="n" changeonmousewheel="false" minValue="0" maxValue="100" />
+                                        </div>
+                                        <div field="ZfCurry" headeralign="center" type="comboboxcolumn" width="50">
+                                            支付币种
+                                            <input id="FbContrPlanList.ZfCurry" name="ZfCurry" property="editor" class="mini-combobox" style="width: 100%;" />
+                                        </div>
+                                        <div field="ZfMoney" headeralign="center" width="60" numberformat="0.000000">
+                                            支付金额(万元)
+                                            <!--<input property="editor" name="ZfMoney" class="mini-textbox" style="width: 100%;" />-->
+                                        </div>
+                                        <div width="80" field="Zfdate" allowsort="true" headeralign="center" header="计划支付日期" align="center" dateformat="yyyy-MM-dd">
+                                            计划支付日期
+                                            <input property="editor" name="Zfdate" class="mini-datepicker" style="width: 100%;" />
+                                        </div>
+                                        <div field="Remark" headeralign="center" width="100">
+                                            备注
+                                            <input property="editor" name="Remark" class="mini-textbox" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 支付条款信息-->
+                        <!-- 合同交货期-->
+                        <!--tab 箱件清单明细 end-->
+                        <!-- 合同交货期-->
+                        <div title="附件" name="attachfile" url="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--portlet-body end-->
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new WebForm();
+        PowerForm.EventAfterFormLoad = function (e, data) {
+            if (formconfig.FormState == "add") {
+                mini.get("ZhContactDetails.ContractType").setValue("FW");
+                mini.get("ZhContactDetails.PartyAName").setValue("东方电气集团东方锅炉股份有限公司");
+                mini.get("ZhContactDetails.PartyAId").setValue("bb35bf5c-6996-4c40-adee-bfeea734b4da");
+            }
+            if (e.el.id == "ZhContactDetails") {
+                if (formconfig.FormState != "add") {
+                    mini.get("ZhContactDetails.CurrencyCode").enabled = false;
+                }
+            }
+            var val = mini.get("ZhContactDetails.FenBaoType").getValue();
+            if (val == "QT") {
+                //mini.get("ZhContactDetails.htps_name").setRequired(false);
+                mini.get("ZhContactDetails.HtMoney").setReadOnly(false);
+            } else {
+                //mini.get("ZhContactDetails.htps_name").setRequired(true);
+                mini.get("ZhContactDetails.HtMoney").setReadOnly(true);
+            }
+        }
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "ZhContactDetails.PartyBSigner") {
+                var partname = formconfig.config.joindata.currow.PartyBId;
+                if (partname == null || partname == undefined || partname == "") {
+                    Power.ui.alert("请先选择乙方");
+                    e.canOpen = false;
+                    return;
+                } else {
+                    e.canOpen = true;
+                    e.where = " MasterId='" + partname + "' ";
+                }
+            }
+            if (e.id == "ZhConstructionContractList.Quote") {
+                    e.where = " EpsProjId='" + sessiondata.EpsProjId + "' ";
+            }
+            if (e.id == "ZhContactDetails.PartyBName") {
+                    e.where = " SupplierStatus !=2 and SupplierStatus !=3 ";
+            }
+        }
+        PowerForm.EventWizardData = function (e, data) {
+            if (e.id == "ZhContactDetails.htps_name") {
+                var exec = {}; //对象
+                exec.KeyWord = "ZhContactDetails"; //bo的KeyWord(关键词)
+                exec.MethodName = "Insert"; //方法名称(后台)
+                exec.MethodParams = {}; //方法参数
+                var params = exec.MethodParams;
+                params.Id = formconfig.KeyValue; //传递给后台方法的参数值
+                params.Value = formconfig.config.joindata.currow.Jsfs;
+                params.HTPS_Id = formconfig.config.joindata.currow.htps_Id;
+                params.swhere = "";
+                var txt = mini.encode(exec); //对象转换成字符串
+                $.ajax({
+                    url: "/API/Exec",
+                    type: "POST",
+                    data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                    cache: false,
+                    success: function (text) {
+                        var tmp = mini.decode(text);
+                        var result = tmp.data.value;
+                        var btn = { id: "ZhConstructionContractList.Refresh" };
+                        PowerForm.OnBtnRefresh(btn);
+                    }
+                })
+            }
+
+            
+            if (e.id == "ZhConstructionContractList.Quote") {
+                if (KeyValue == null || KeyValue == "") {
+                    power.ui.alert("请先保存主表！");
+                    return;
+                } else {
+                    e.Next = false;
+                    var CurrencyCode = mini.get("ZhContactDetails.CurrencyCode").value;
+                    //如果已经存在则提醒
+                    var TypeId = data[0].Id;
+                    var p = {
+                        "KeyWord": "FbServiceItemBjb",
+                        "KeyWordType": "BO",
+                        "select": "",
+                        "sort": "",
+                        "index": "0",
+                        "size": "0"
+                    };
+                    p.swhere = " PiCodeId='" + TypeId + "'";
+                    $.ajax({
+                        url: "/Form/GridPageLoadEx",
+                        data: p,
+                        async: false,
+                        success: function (text) {
+                            var tmpdata = mini.decode(text);
+                            var Result = mini.decode(tmpdata.data.value);
+                            if (Result.length == 0 || Result == "") {
+                                Power.ui.alert('该工程量清单报价表没有报价明细！');
+                                return;
+                            }
+                            else {
+                                var exec = {};  //对象
+                                exec.KeyWord = "ZhConstructionContractList";   //bo的KeyWord
+                                exec.MethodName = "Insert"; //方法名称
+                                //如果是数据集的话，要加上 exec.KeyWordType="ViewEntity";
+                                exec.MethodParams = {}; //方法参数
+                                var params = exec.MethodParams;
+                                params.TypeId = TypeId;
+                                params.Id = KeyValue;
+                                params.CurrencyCode = CurrencyCode;
+                                params.swhere = "";
+
+                                var txt = mini.encode(exec); //对象转换成字符串
+
+                                $.ajax({
+                                    url: "/API/Exec",
+                                    type: "POST",
+                                    data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                                    cache: false,
+                                    success: function (text) {
+                                        var tmp = mini.decode(text);
+                                        var result = tmp.data.value;
+                                        if (result != "1")
+                                            Power.ui.alert(result);
+                                        else
+                                            Power.ui.alert('引用完成！');
+                                        var e = { id: "ZhConstructionContractList.Refresh" };
+                                        PowerForm.OnBtnRefresh(e);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                }
+                   
+                }
+        }
+        //保存后触发，将对应主货币的汇率写到【内容】子表，并计算折合单价/金额，并汇总折合金额至主表【合同签订金额】
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            var parms = {};
+            parms.Id = formconfig.config.joindata.currow["Id"];
+            parms.ContractType = formconfig.config.joindata.currow["ContractType"];
+            FormFuns.APIExec("ZhConstructionContractList", "BO", "GetRate", parms, function (text) {
+                var tmp = mini.decode(text);
+                if (tmp.success) {
+                    var btn = { id: "ZhContactDetails.Refresh" };
+                    PowerForm.OnBtnRefresh(btn);
+                } else
+                    Power.ui.error(tmp.message);
+            });
+        }
+        //父节点的数量、单价、金额设为空
+        function drawcell(e) {
+            var grid = mini.get("SEDC_PurchasePlan_QDMX");
+            if (!e.sender.isLeaf(e.row)) {
+                e.row.CurrencyCode = "";
+            }
+        }
+
+        function view_change() {
+            var grid = mini.get("FWContractChange");
+            var Id = grid.getSelected().Id;
+            var url = "/Form/ValidForm/8b06334b-6f93-4d42-b816-1c54f551d5f6/view/" + Id + "/"
+            mini.open({
+                url: url,
+                width: 900,
+                height: 600,
+                showMaxButton: true,
+                onload: function () { },
+                ondestroy: function () { }
+            });
+        }
+        $(function () {
+            PowerForm.Init();
+
+        });
+
+        function valuechanged(e) {
+            var exec = {}; //对象
+            exec.KeyWord = "ZhContactDetails"; //bo的KeyWord(关键词)
+            exec.MethodName = "Insert"; //方法名称(后台)
+            exec.MethodParams = {}; //方法参数
+            var params = exec.MethodParams;
+            params.Id = formconfig.KeyValue; //传递给后台方法的参数值
+            params.Value = e.value;
+            params.HTPS_Id = formconfig.config.joindata.currow.htps_Id;
+            params.swhere = "";
+            var txt = mini.encode(exec); //对象转换成字符串
+            $.ajax({
+                url: "/API/Exec",
+                type: "POST",
+                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                cache: false,
+                success: function (text) {
+                    var tmp = mini.decode(text);
+                    var result = tmp.data.value;
+                    var btn = { id: "ZhConstructionContractList.Refresh" };
+                    PowerForm.OnBtnRefresh(btn);
+                }
+            })
+        }
+
+        function view() {
+            var btn = { id: "FbContrActualPay.View" };
+            PowerForm.OnBtnViewForm(btn);
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            if (e.data.KeyWord == "FbContrActualPay") {
+                if (e.params.swhere != "")
+                    e.params.swhere += " and (Status='35' or Status ='50')";
+                else
+                    e.params.swhere = "(Status='35' or Status ='50')";
+            } else if (e.data.KeyWord == "ZhContractChange") {
+                if (e.params.swhere != "")
+                    e.params.swhere += " and (Status='35' or Status ='50')";
+                else
+                    e.params.swhere = "(Status='35' or Status ='50')";
+            }
+        }
+
+        function CellEndEdit(e) {
+            var record = e.record;
+            var grid = mini.get("ZhConstructionContractList");
+            if (e.field == "UnitPrice" || e.field == "Amount") {
+                var p = {};
+                p.TotalPrice = Number(record.UnitPrice) * Number(record.Amount);
+                grid.updateRow(record, p);
+
+                var t = {};
+                t.HtMoney = Number(record.UnitPrice) * Number(record.Amount);
+                mini.get("ZhContactDetails.HtMoney").setValue(t.HtMoney);
+
+            }
+        }
+
+        function cellbeginedit(e) {
+            if (e.record.PiId != null) {
+                //if (e.field == "PiCode" || e.field == "PiName" || e.field == "UnitName" || e.field == "Amount")
+                //e.cancel = true;
+            }
+        }
+
+        function JS_Zfje(e) {
+            var record = e.record;
+            var grid = mini.get("FbContrPlanList");
+            if (e.field == "Zfbl") {
+                var p = {};
+                p.ZfMoney = Number(record.Zfbl) * Number(mini.get("ZhContactDetails.HtMoney").value);
+                grid.updateRow(record, p);
+            }
+        }
+
+        function ViewFrom() {
+            var PartyBId = formconfig.config.joindata.currow.PartyBId;
+            if (PartyBId == null || PartyBId == "" || PartyBId == "00000000-0000-0000-0000-000000000000") {
+                Power.ui.warning("请先选择乙方！");
+                return;
+            } else {
+                mini.open({
+                    url: "/Form/ValidForm/da9eb8f8-5074-4d5f-8b15-e2c8795c4b8f/edit/" + PartyBId + "/",
+                    width: "80%",
+                    height: "80%"
+                })
+            }
+        }
+
+        function SetInput(e) {
+            var val = mini.get("ZhContactDetails.FenBaoType").getValue();
+            if (val == "QT") {
+                //mini.get("ZhContactDetails.htps_name").setRequired(false);
+                mini.get("ZhContactDetails.HtMoney").setReadOnly(false);
+            } else {
+                //mini.get("ZhContactDetails.htps_name").setRequired(true);
+                mini.get("ZhContactDetails.HtMoney").setReadOnly(true);
+            }
+        }
+        function setTotal(e) {
+            var val = mini.get("ZhContactDetails.HtMoney").getValue();
+            mini.get("ZhContactDetails.TotalPrice").setValue(val);
+			
+			//计算不含税合同金额
+			// 税额 TaxAmount 不含税金额 TotalPriceTax
+			var Tax = Number(mini.get("ZhContactDetails.Tax").getValue());
+			Tax = Tax/100 + 1;
+					
+			if(val==0) {
+			   mini.get("ZhContactDetails.TotalPriceTax").setValue(0);
+			   mini.get("ZhContactDetails.TaxAmount").setValue(0);
+			}else{
+			   var TotalPriceTax =val / Tax;
+			   
+			   var TaxAmount = val - TotalPriceTax
+			   mini.get("ZhContactDetails.TotalPriceTax").setValue(TotalPriceTax);
+			   mini.get("ZhContactDetails.TaxAmount").setValue(TaxAmount);
+			}
+        }
+
+
+        //20201118 dwh 子表新增时币种赋默认值(等于主表中"合同主货币")
+        PowerForm.EventBeforeAddRow = function (e, data) {
+            var CurrencyCode = mini.get("ZhContactDetails.CurrencyCode").value;
+            if (e.id == "ZhConstructionContractList") {
+                data.CurrencyCode = CurrencyCode;
+            }
+            if (e.id == "FbContrPlanList") {
+                data.ZfCurry = CurrencyCode;
+            }
+        }
+    </script>
+</body>
+
+</html>
