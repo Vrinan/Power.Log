@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/SingleForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script type="text/javascript" hasvelocity="true">
+        var OpenFormId = "$Model.data.OpenFormId";
+        var FormId = "$Model.data.FormId";
+        var FormState = "$Model.data.FormState";
+        var EpsProjId = "$!CurrentSession.EpsProjId"
+        var SingleParams = "";
+    </script>
+    <style>
+        .mini-fit {
+            margin-top: 0px !important;
+        }
+
+        .mini-panel {
+            padding-top: 0px !important;
+        }
+
+        .mini-textbox-input, .mini-buttonedit-input {
+            height: 25px;
+        }
+
+        .mini-grid-headerCell-inner {
+            line-height: 25px;
+        }
+
+        .mini-grid-cell-inner {
+            min-height: 25px !important;
+            line-height: 25px !important;
+        }
+
+        .mini-tabs-scrollCt {
+            background-color: #fafafa !important;
+        }
+
+        .row-hd > [class*=col-hd] > .portlet.box > .portlet-title {
+            line-height: 29px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="row-wrap">
+        <div class="row  row-hd row-hd-responsive" style="height: 100%">
+            <!--end col-md-5-->
+            <div class="col-md-12 col-hd-12">
+                <div class="portlet blue box" style="height: 50%">
+                    <div class="portlet-title">
+                        <div class="captiontools">
+                            <a class="mini-button blue" id="V_KCSJ_QDBZ_Dtl.KJPackage" onclick="NewPackage(this)"><i class="fa fa-suitcase"></i>移入采购包</a>
+                        </div>
+                        <div style="float:right;">
+                            <input id="V_KCSJ_QDBZ_Dtl.WzCode" style="width:25%;height:25px;" class="mini-textbox" onenter="Search" emptytext="物料明细代码" />
+                            <input id="V_KCSJ_QDBZ_Dtl.Name" style="width:30%;height:25px;" class="mini-textbox" onenter="Search" emptytext="物料明细名称" />
+                            <input id="V_KCSJ_QDBZ_Dtl.GGXH" style="width:30%;height:25px;" class="mini-textbox" onenter="Search" emptytext="物料明细规格型号" />
+                            <a class="mini-button blue" style="width:5%;height:25px;" onclick="Search"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="height: 100%">
+                        <div id="V_KCSJ_QDBZ_Dtl" idfield="Id" class="mini-treegrid" style="width: 100%; height: 100%;" allowresize="true" allowcelledit="true" allowcellselect="true" showtreeicon="true" treecolumn="Name" parentfield="ParentId" resultastree="false" expandonload="true" checkRecursive="true" ondrawcell="OnDrawCell" multiSelect="true" onbeforeselect="beforeselect">
+                            <div property="columns">
+                                <div type="indexcolumn" width="20"></div>
+                                <div type="checkcolumn"></div>
+                                <div field="Code" name="Name" allowsort="true" headeralign="center" width="180">编号</div>
+                                <div field="WzCode" allowsort="true" headeralign="center" width="120">物料代码</div>
+                                <div field="Name" allowsort="true" headeralign="center" width="120">名称</div>
+                                <div field="QDType" allowsort="true" headeralign="center" width="120">清单类型</div>
+                                <div field="GGXH" allowsort="true" headeralign="center" width="120">规格型号</div>
+                                <!--<div field="DW" allowsort="true" headeralign="center" width="100" align="center">单位</div>-->
+                                <div field="DW" allowsort="true" headeralign="center" align="center" type="comboboxcolumn">单位<input property="" id="V_KCSJ_QDBZ_Dtl.DW" name="DW" url="/Form/ComboxLoadData/BD_Unit/" class="mini-combobox" textfield="Name" valuefield="Code" readonly /></div>
+                                <div field="CBSL" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">目标成本数量</div>
+                                <div field="SJSL" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">设计数量</div>
+                                <!-- <div field="SL" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">投标数量</div> -->
+                                <div field="Requested_Qty" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">已采购计划数量</div>
+                                <div field="ReqNum" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">剩余需求数量</div>
+                                <div field="ZL" allowsort="true" headeralign="center" width="100" align="right" numberformat="n2">重量</div>
+                                <div field="JZ" allowsort="true" headeralign="center" width="180">介质</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="bizojbectsplit" class="mini-splitter" vertical="false" style="width: 100%; height: 50%;">
+                    <div size="40%" showcollapsebutton="true" style="height: 100%">
+                        <div class="portlet blue box" style="height: 100%">
+                            <div class="mini-fit">
+                                <div class="portlet-title">
+                                    <div class="captiontools">
+                                        <span style="font-size: 16px;font-weight: bold;color: #666;">采购包</span>
+                                        <input id="CGGL_PurchasePlan.Refresh" class="mini-combobox" emptytext="类型" onvaluechanged="PowerForm.OnBtnRefresh(this)" style="width:90px;" showClose="true" oncloseclick="onCloseClick" url="/Form/ComboxLoadData/PS_ContractCategory/" textfield="Name" valuefield="Code"/>
+                                        <a class="mini-button blue" iconcls="fa-plus" id="CGGL_PurchasePlan.Add" onclick="PowerForm.OnBtnAdd(this)">新增</a>
+                                        <a class="mini-button blue" iconcls="fa-trash-o" id="CGGL_PurchasePlan.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                        <a class="mini-button blue" iconcls="fa-save" id="CGGL_PurchasePlan.Save" onclick="PowerForm.OnBtnSave(this)">保存</a>
+                                        <a class="mini-button blue" iconcls="fa fa-cogs" onclick="CreatePlan()">生成采购命令单</a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height:90%">
+                                    <div class="portlet-body" style="height: 100%;">
+                                        <div id="CGGL_PurchasePlan" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="false" showpager="true" onload="load">
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <!--<div field="Code" allowsort="true" width="80">采购包编号<input id="cgCode" property="editor" class="mini-textbox" style="width:100%;" /></div>-->
+                                                <div field="Code" name="Code" allowSort="true" header="采购包编号" align="center" headeralign="center" width="180" vtype="required">采购包编号<input id="CGGL_PurchasePlan.Code" property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="Title" allowsort="true" width="100" headeralign="center" vtype="required">采购包名称<input id="CGGL_PurchasePlan.Title" property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                <div field="PlanType" allowsort="true" headeralign="center" align="center" width="100" type="comboboxcolumn">类型<input property="editor" id="CGGL_MatPurchase.PlanType" name="MatUnit" url="/Form/ComboxLoadData/PS_ContractCategory/" class="mini-combobox" textfield="Name" valuefield="Code" /></div>
+                                                <div field="Budget" allowsort="true" headeralign="center" align="center" width="120" numberformat="0.00">目标成本金额(万元)<input property="editor" class="mini-spinner" style="width:100%;" allowLimitValue="false" changeOnMousewheel="false" /></div>
+                                                <div field="BuyType" allowsort="true" headeralign="center" align="center" width="100" type="comboboxcolumn">采买方式<input property="editor" id="CGGL_MatPurchase.BuyType" name="MatUnit" url="/Form/ComboxLoadData/PS_PurWay/" class="mini-combobox" textfield="Name" valuefield="Code" /></div>
+                                                <!--<div field="PlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划请购日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>-->
+                                                <div field="LeadTime" allowsort="true" headeralign="center" align="center" width="70" numberformat="n0">供货周期<input property="editor" class="mini-spinner" style="width:100%;" allowLimitValue="false" changeOnMousewheel="false" /></div>
+                                                <!--<div field="ZBPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划招标申请<br />完成日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <div field="PSPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划招标文件<br />评审完成日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>-->
+                                                <div field="FBPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划发标日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <div field="KBPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划开标日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <div field="DBPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划定标日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <!--<div field="BSPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划招标结果<br />报审完成日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>-->
+                                                <div field="HTPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划合同评审<br />完成日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <div field="DHPlanDate" allowsort="true" headeralign="center" align="center" width="100" dateformat="yyyy-MM-dd">计划到货日期<input property="editor" class="mini-datepicker" style="width: 100%;" /></div>
+                                                <div field="IsVisiable" allowsort="true" width="80" visible="false">是否可见</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end col-md-3-->
+                    <div showcollapsebutton="true" style="height: 100%">
+                        <div class="portlet blue box" style="height: 100%">
+                            <div id="tabs1" class="mini-tabs" style="height: 100%;" plain="false">
+                                <div title="物资明细">
+                                    <div class="mini-fit">
+                                        <div class="captiontools">
+                                            <!--mini-toolbar-->
+                                            <a class="mini-button blue" id="CGGL_MatPurchase.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                                            <!-- <a class="mini-button blue" id="CGGL_MatPurchase.Delete" onclick="BtnDel(this)"><i class="fa fa-trash-o"></i>删除</a> -->
+                                            <a class="mini-button blue" iconcls="fa-trash-o" id="CGGL_MatPurchase.Delete" onclick="PowerForm.OnBtnDel(this)">删除</a>
+                                        </div>
+                                        <div class="portlet-body" style="height: 85%;">
+                                            <div id="CGGL_MatPurchase" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="true" showpager="true">
+                                                <div property="columns">
+                                                    <div type="indexcolumn"></div>
+                                                    <div type="checkcolumn" name="checkcolumn"></div>
+                                                    <div field="MatCode" allowsort="true" headeralign="center">物料代码</div>
+                                                    <div field="MatName" allowsort="true" headeralign="center" width="150">物料名称</div>
+                                                    <div field="MatDescription" allowsort="true" headeralign="center" width="240">规格型号</div>
+                                                    <div field="MatUnit" allowsort="true" headeralign="center" align="center" width="70" type="comboboxcolumn">单位<input property="editor" id="CGGL_MatPurchase.MatUnit" name="MatUnit" url="/Form/ComboxLoadData/BD_Unit/" class="mini-combobox" textfield="Name" valuefield="Code" readonly /></div>
+                                                    <div field="BOMNum" allowsort="true" headeralign="center" align="right" numberformat="0.00" width="100">设计数量</div>
+                                                    <div field="Requested_Qty" allowsort="true" headeralign="center" align="right" numberformat="0.00" width="100">已采购计划数量</div>
+                                                    <div field="ReqNum" allowsort="true" headeralign="center" align="right" numberformat="0.00" width="120">本次采购计划数量<input property="editor" class="mini-spinner" maxvalue="99999999999999999999999" allowLimitValue="false" changeOnMousewheel="false" /></div>
+                                                    <!-- <div field="TenderMode" headeralign="center" width="100" type="comboboxcolumn">招标方式<input property="editor" id="CGGL_MatPurchase.TenderMode" name="MatUnit" url="/Form/ComboxLoadData/PS_TenderWay/" class="mini-combobox" textfield="Name" valuefield="Code"/></div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div title="拟邀请供应商">
+                                    <div class="mini-fit">
+                                        <div class="captiontools">
+                                            <a class="mini-button blue" id="CGGL_PurchaseSupplier.Add" onclick="PowerForm.OnBtnWizard(this)"><i class="fa fa-plus"></i>新增</a>
+                                            <a class="mini-button blue" id="CGGL_PurchaseSupplier.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a>
+                                        </div>
+                                        <div class="portlet-body" style="height: 85%;">
+                                            <div id="CGGL_PurchaseSupplier" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="Id" allowresize="true" allowcelledit="true" allowcellselect="true" multiselect="true" showpager="true" oncellendedit="cellendedit">
+                                                <div property="columns">
+                                                    <div type="indexcolumn"></div>
+                                                    <div type="checkcolumn" name="checkcolumn"></div>
+                                                    <div field="Code">供应商编码</div>
+                                                    <div field="Name">供应商名称</div>
+                                                    <div field="MainLinker" headeralign="center" width="80">
+                                                        联系人
+                                                        <input property="editor" id="CGGL_PurchaseSupplier.MainLinker" name="MainLinker" textname="MainLinker" class="mini-buttonedit" onbuttonclick="PowerForm.OnBtnWizard(this)" style="width: 100%;" />
+                                                    </div>
+                                                    <div field="Phone" headeralign="center" width="130">联系电话<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                    <div field="Email" headeralign="center" width="150">电子邮箱<input property="editor" class="mini-textbox" style="width: 100%;" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var PowerForm = new SingleForm();
+        $(function () {
+            PowerForm.Init();
+        });
+        mini.parse();
+        function load(e){
+            mini.get("CGGL_PurchasePlan").select(0);
+        }
+        function onCloseClick(e) {
+            e.sender.setValue("");
+            PowerForm.OnBtnRefresh({ "id": "CGGL_PurchasePlan.Refresh" })
+        }
+        //分类 数据标注颜色
+        function OnDrawCell(e) {
+            var record = e.record;
+            if (record.Flag == "fl") {
+                e.rowStyle = "background:#99ffff"; //#F0F8FF
+            }
+        }
+        function beforeselect(e) {
+            if(e.record.Flag == "fl"){
+                mini.showTips({
+                    content: "注意：不能选择分类！",    
+                    x: "center",          //left|center|right
+                    y: "top",          //top|center|bottom
+                    timeout: 2000     //自动消失间隔时间。默认2000（2秒）。
+                })
+                e.cancel = true;
+            }
+        }
+        function cellendedit(e){
+            var record = e.record
+            //if(e.sender.id == "CGGL_PurchaseSupplier"){
+                // e.sender.updateRow(record, { "MainLinker": record.MainLinker});
+                // if((e.field == "MainLinker" || e.field == "Phone" || e.field == "Email") && record.MainLinker != null && record.MainLinker != ""){
+                //     var exec = {};  //对象
+                //     exec.KeyWord = "CGGL_PurchasePlan";   //bo的KeyWord
+                //     exec.MethodName = "UpdeteSup"; //方法名称
+                //     //exec.KeyWordType="ViewEntity";
+                //     exec.MethodParams = {}; //方法参数
+                //     var params = exec.MethodParams;
+                //     params.Id = record.Id;
+                //     params.SupId = record.SupplierId;
+                //     params.MainLinker = record.MainLinker;
+                //     params.Phone = record.Phone;
+                //     params.Email = record.Email;
+                //     params.swhere = "";
+                //     var txt = mini.encode(exec); //对象转换成字符串
+                //     $.ajax({
+                //         url: "/API/Exec",
+                //         type: "POST",
+                //         data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                //         cache: false,
+                //         success: function (text) {
+                //             var tmp = mini.decode(text);
+                //             var result = tmp.data.value;
+                //         }
+                //     });
+                // }
+           // }
+        }
+        PowerForm.EventBeforeLoadData = function (e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            if (sender.id == "V_KCSJ_QDBZ_Dtl") {
+                //params.swhere = " EpsProjId = '"+ EpsProjId +"'";// and Id not in (select Id from v_kcsj_qdbz_dtl where Flag = 'mx' and IFNULL(SJSL,0) >= 0 and IFNULL(ReqNum,0) = 0)";
+                //20210201 dwh update（条件为当前层级下以及分类==明细，并且Id不包含 本次采购计划数量<=设计数量的）
+                //params.swhere = " EpsProjId = '" + EpsProjId + "'  and WZId not in (select a.MatId from CGGL_MatPurchase a left join (select sum(ReqNum) as ReqNum,MatId from CGGL_MatPurchase group by MatId) b on a.MatId=b.MatId where a.BOMNum<=b.ReqNum)";
+                //设计数量>=剩余需求数量
+                params.swhere = "EpsProjId='" + EpsProjId + "' and SJSL>=ReqNum";
+
+            }
+            if (sender.id == "CGGL_PurchasePlan") {
+                params.swhere += "Id not in (select CgbId from CGGL_PurchaseOrder)";
+                var PlanType = mini.get("CGGL_PurchasePlan.Refresh").getValue();
+                if (PlanType != "")
+                    params.swhere += " and PlanType = '" + PlanType + "'";
+            }
+        }
+        PowerForm.EventAfterLoadData = function (e) {
+            var sender = e.sender;    //树控件
+            var node = e.node;      //当前节点
+            var params = e.params;  //参数对象
+            var tree = mini.get("V_KCSJ_QDBZ_Dtl");
+            if (sender.id == "V_KCSJ_QDBZ_Dtl") {
+                tree.filter(function (node) {
+                    if (node.ReqNum > 0) {
+                        return true;
+                    }
+                });
+            }
+        }
+        //查询
+        function Search() {
+            var tree = mini.get("V_KCSJ_QDBZ_Dtl");
+            var WzCode = mini.get("V_KCSJ_QDBZ_Dtl.WzCode").getValue();
+            var Name = mini.get("V_KCSJ_QDBZ_Dtl.Name").getValue();
+            var GGXH = mini.get("V_KCSJ_QDBZ_Dtl.GGXH").getValue();
+            if (WzCode == "" && Name == "" && GGXH == "") {
+                tree.clearFilter();
+            } 
+            else {
+                WzCode = WzCode.toLowerCase();   
+                Name = Name.toLowerCase();    
+                GGXH = GGXH.toLowerCase();            
+                tree.filter(function (node) {
+                    var textWzCode = node.WzCode ? node.WzCode.toLowerCase() : "";
+                    var textName = node.Name ? node.Name.toLowerCase() : "";
+                    var textGGXH = node.GGXH ? node.GGXH.toLowerCase() : "";
+                    if (textWzCode.indexOf(WzCode) != -1 && textName.indexOf(Name) != -1 && textGGXH.indexOf(GGXH) != -1 && node.ReqNum > 0) {
+                        return true;
+                    }
+                });
+            }
+        }
+        PowerForm.EventBeforeOnBtnSave = function (e) {
+            if (e.id == "CGGL_PurchasePlan.Save") {
+                mini.get("CGGL_PurchasePlan").validate();
+                if (mini.get("CGGL_PurchasePlan").isValid() == false) {
+                    Power.ui.warning("采购包编号和采购包名称不能为空");
+                    e.isValid = false;
+                }
+                else{
+                    e.isValid = true;
+                }
+            }
+        }
+        PowerForm.EventAfterOnBtnSave = function (e) {
+            if(e.id = "CGGL_MatPurchase.Save"){
+                PowerForm.OnBtnRefresh({ id: "V_KCSJ_QDBZ_Dtl.Refresh" });
+            }
+        }
+        PowerForm.EventAfterDelete = function (e) {
+            if(e.id = "CGGL_MatPurchase.Delete"){
+                PowerForm.OnBtnRefresh({ id: "V_KCSJ_QDBZ_Dtl.Refresh" });
+            }
+        }
+        //发包
+        function NewPackage(e) {
+            var data = mini.encode(mini.get("V_KCSJ_QDBZ_Dtl").getSelecteds());
+            var PurchasePlan = mini.get("CGGL_PurchasePlan");
+            if (PurchasePlan.getSelected() == undefined) {
+                Power.ui.alert("请先选择采购包！");
+                return;
+            }
+            Power.ui.confirm("确认向" + PurchasePlan.getSelected()["Title"] + "添加选择物资", {
+                "closeable": true,
+                "dismiss": false,
+                "modal": true,
+                "fullWidth": false,
+                "position": "center center",
+                "speed": "200",
+                "timeout": "0",
+                "effect": "fade",
+                button: {                          //设置对话框的按钮组
+                    "确定": {
+                        theme: 'primary',         //按钮的主题
+                        handler: function () {      //点击按钮时的回调
+                            var exec = {};  //对象
+                            exec.KeyWord = "CGGL_PurchasePlan";   //bo的KeyWord
+                            exec.MethodName = "Insert"; //方法名称
+                            //exec.KeyWordType="ViewEntity";
+                            exec.MethodParams = {}; //方法参数
+                            var params = exec.MethodParams;
+                            params.Id = PurchasePlan.getSelected()["Id"];
+                            params.data = data;
+                            params.swhere = "";
+                            var txt = mini.encode(exec); //对象转换成字符串
+                            $.ajax({
+                                url: "/API/Exec",
+                                type: "POST",
+                                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                                cache: false,
+                                success: function (text) {
+                                    var tmp = mini.decode(text);
+                                    var result = tmp.data.value;
+                                    PowerForm.OnBtnRefresh({ id: "CGGL_PurchasePlan.Refresh" });
+                                }
+                            });
+                        }
+                    },
+                    "取消": function () {
+                        Power.form.warning("取消生成");
+                    }
+                }
+            });
+        }
+        function CreatePlan() {
+            var record = mini.get("CGGL_PurchasePlan").getSelected();
+            if(record.PlanType == "C"){//施工合同
+                var p = { KeyWord: 'CGGL_ZZYS', KeyWordType: 'BO', select: '', swhere: '', sort: '', index: '', size: '' };
+                p.swhere = "CGBId = '"+ record.Id +"'";
+                $.ajax({
+                    url: "/Form/GridPageLoadEx",
+                    data: p,
+                    type: 'post',
+                    async:false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            var data = mini.decode(o.data.value);
+                            if(data == "" || data == null)
+                                Power.ui.alert("请先完成资质预审审核！");
+                            else if(data.length > 0 && data[0].Status == "0")
+                                Power.ui.alert("请先完成资质预审审核！");
+                            else if(data.length > 0 && (data[0].Status == "35" || data[0].Status == "50"))
+                                InsertPlan();
+                        }
+                    }
+                })
+            }
+            else if(record.BuyType == "P5" || record.BuyType == "P6"){//单一来源或者直接委托
+                var p = { KeyWord: 'CGGL_tscgsq', KeyWordType: 'BO', select: '', swhere: '', sort: '', index: '', size: '' };
+                p.swhere = "CgbId = '"+ record.Id +"'";
+                $.ajax({
+                    url: "/Form/GridPageLoadEx",
+                    data: p,
+                    type: 'post',
+                    async:false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        if (o.success) {
+                            var data = mini.decode(o.data.value);
+                            if(data == "" || data == null)
+                                Power.ui.alert("请先完成特殊采购申请审核！");
+                            else if(data.length > 0 && data[0].Status == "0")
+                                Power.ui.alert("请先完成特殊采购申请审核！");
+                            else if(data.length > 0 && (data[0].Status == "35" || data[0].Status == "50"))
+                                InsertPlan();
+                        }
+                    }
+                })
+            }
+            else{
+                InsertPlan();
+            }
+        }
+        function InsertPlan(){
+            var record = mini.get("CGGL_PurchasePlan").getSelected();
+            Power.ui.confirm("确认生成采购命令单？", {
+                "closeable": true,
+                "dismiss": false,
+                "modal": true,
+                "fullWidth": false,
+                "position": "center center",
+                "speed": "200",
+                "timeout": "0",
+                "effect": "fade",
+                button: {                          //设置对话框的按钮组
+                    "确定": {
+                        theme: 'primary',         //按钮的主题
+                        handler: function () {      //点击按钮时的回调
+                            var exec = {};  //对象
+                            exec.KeyWord = "CGGL_PurchasePlan";   //bo的KeyWord
+                            exec.MethodName = "InsertPlan"; //方法名称
+                            //exec.KeyWordType="ViewEntity";
+                            exec.MethodParams = {}; //方法参数
+                            var params = exec.MethodParams;
+                            params.Id = record.Id;
+                            params.swhere = "";
+                            var txt = mini.encode(exec); //对象转换成字符串
+                            $.ajax({
+                                url: "/API/Exec",
+                                type: "POST",
+                                data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                                cache: false,
+                                success: function (text) {
+                                    var tmp = mini.decode(text);
+                                    var result = tmp.data.value;
+                                    Power.form.warning("生成采购命令单成功！");
+                                    var e = { id: "CGGL_PurchasePlan.Refresh" };
+                                    PowerForm.OnBtnRefresh(e);
+                                    var url = "/Form/ValidForm/98dc761e-e70b-42ec-aa8c-e769318b24a4/edit/" + tmp.data.value + "/";
+                                    mini.open({
+                                        url: url,
+                                        width: "80%",
+                                        height: "80%"
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    "取消": function () {
+                        Power.form.warning("取消生成");
+                    }
+                }
+            });
+        }
+        PowerForm.EventWizardWhere = function (e) {
+            if (e.id == "CGGL_PurchaseSupplier.Add") {
+                var PurchasePlan = mini.get("CGGL_PurchasePlan");
+                if (PurchasePlan.getSelected() == undefined) {
+                    Power.ui.alert("请先选择采购包！");
+                    e.canOpen = false;
+                    return;
+                }
+                else {
+                    e.canOpen = true;
+                }
+            }
+            if (e.id == "CGGL_PurchaseSupplier.MainLinker") {//此处判断点击的状态按钮，才加判断条件，因为页面可能有多个向导按钮
+                var MainUnitId = mini.get("CGGL_PurchaseSupplier").getSelected().SupplierId;
+                e.where = " MasterId='" + MainUnitId + "' ";
+            }
+        }
+        PowerForm.EventAfterAddRow = function (e, data) {
+            //20201223
+            //pcz  设置采购包编号  编码规则(项目编号-CGJH-年-流水号)
+            if (e.id == "CGGL_PurchasePlan") {
+                var exec = {};  //对象
+                exec.KeyWord = "CGGL_PurchasePlan";   //bo的KeyWord
+                exec.MethodName = "Add_Code"; //方法名称
+                exec.MethodParams = {}; //方法参数
+                var params = exec.MethodParams;
+                params.EpsId = sessiondata.EpsProjId;
+                params.EpsCode = sessiondata.EpsProjCode;
+                params.swhere = "";
+                var txt = mini.encode(exec); //对象转换成字符串
+                $.ajax({
+                    url: "/API/Exec",
+                    type: "POST",
+                    data: { jsonData: txt }, //对象字符串传递给 jsonData变量
+                    cache: false,
+                    async: false,
+                    success: function (text) {
+                        var tmp = mini.decode(text);
+                        var result = tmp.data.value;
+                        mini.get("CGGL_PurchasePlan").updateRow(mini.get("CGGL_PurchasePlan").getSelected(),{"Code":result,"Title":sessiondata.EpsProjName+"采购包","PlanType":"P","BuyType":"P1"});
+                    }
+                });
+                PowerForm.OnBtnSave({"id":"CGGL_PurchasePlan.Save"});
+            }
+        }
+    </script>
+</body>
+</html>
