@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="/Scripts/boot.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/ComTools.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Scripts/PlatForm/WebForm.js?v=$AppVersion" type="text/javascript"></script>
+    <script src="/Form/Init/$Model.data.FormId/$Model.data.FormState/$Model.data.KeyValue"></script>
+    <script language="javascript" src="/Scripts/PlatForm/ControlCenter.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsEnums.js?v=$AppVersion "></script>
+    <script language="javascript" src="/Scripts/PlatForm/WorkFlowsForm.js?v=$AppVersion "></script>
+    <script type="text/javascript" hasvelocity="true">
+    var KeyValue = "$Model.data.KeyValue";
+    var FormId = "$Model.data.FormId";
+    var FormState = "$Model.data.FormState";
+    var KeyWord = "$Model.data.KeyWord";
+    </script>
+</head>
+
+<body>
+    <div class="row" style="height: 100%">
+        <div class="portlet box blue" style="height: 100%">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i>成本异动报告
+                </div>
+                $!WorkFlowButtons
+                <div class="actions">
+                    <a class="mini-button blue" id="WZGL_CBYDBG.Save" onclick="PowerForm.OnBtnSave(this)"><i class="fa fa-save"></i>保存</a>
+                    <a class="mini-button blue" id="WZGL_CBYDBG.Refresh" onclick="PowerForm.OnBtnRefresh(this)"><i class="fa fa-refresh"></i>刷新</a>
+                    <div id="btnPrint" class="btn-group"></div>
+                    <a class="mini-button blue" id="WZGL_CBYDBG.CloseForm" onclick="PowerForm.OnBtnCloseForm(this)"><i class="fa fa-power-off"></i>关闭</a>
+                </div>
+            </div>
+            <div class="mini-fit">
+                <div class="portlet-body" style="height: 100%;">
+                    <div class="mini-tabs" id="maintabs" tabposition="left" tabalign="left" style="height: 100%;">
+                        <div title='基本信息'>
+                            <div id="WZGL_CBYDBG" class="form">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            项目编号
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.ProjCode" name="ProjCode" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            项目名称
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.ProjName" name="ProjName" class="mini-textbox" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            招标编号
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.ZBCode" name="ZBCode" class="mini-buttonedit" textname="ZBCode" onbuttonclick="PowerForm.OnBtnWizard(this)" allowinput="false" />
+                                        </td>
+                                        <td>
+                                            招标名称
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.ZBName" name="ZBName" class="mini-textbox" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            造成差价原因
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="WZGL_CBYDBG.Reason" name="Reason" class="mini-textarea" style="height: 200px;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            备注
+                                        </td>
+                                        <td colspan="3">
+                                            <input id="WZGL_CBYDBG.Reason" name="Reason" class="mini-textarea" style="height: 100px;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            录入人
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.RegHumName" name="RegHumName" class="mini-textbox" readonly />
+                                        </td>
+                                        <td>
+                                            录入日期
+                                        </td>
+                                        <td>
+                                            <input id="WZGL_CBYDBG.RegDate" name="RegDate" class="mini-datepicker" readonly />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div title='明细'>
+                            <div id="bizojbectsplit" class="mini-splitter" vertical="true" style="width: 100%; height: 100%;">
+                                <div size="40%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <!-- <a class="mini-button blue" id="WZGL_CBYDBG_Party.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                        <a class="mini-button blue" id="WZGL_CBYDBG_Party.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a> -->
+                                    </div>
+                                    <div class="mini-fit">
+                                         <div id="WZGL_CBYDBG_Party" class="mini-datagrid" style="height: 100%;"  idfield="Id" allowresize="true" allowcelledit="false" allowcellselect="false"  multiselect="true">
+                                             <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <div field="Name" width="120" headeralign="Center" allowsort="true" align="Center">投标单位名称<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <!-- <div type="comboboxcolumn" field="IsRatio" width="80" headeralign="Center" allowsort="true" align="Center">是否含税<input property="editor" class="mini-combobox" style="width:100%;"/></div> -->
+                                                <div field="TBAmount" numberformat="n2" width="80" headeralign="Center" allowsort="true" align="right">投标报价总金额金额<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <!-- <div field="Ratio" numberformat="n2" width="80" headeralign="Center" allowsort="true" align="right">税率<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div field="TBDate" dateformat="yyyy-MM-dd" width="80" headeralign="Center" allowsort="true" align="Center">投标日期<input property="editor" class="mini-datepicker" style="width:100%;"  /></div> -->
+                                             </div>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div size="60%" showcollapsebutton="true">
+                                    <div class="mini-toolbar">
+                                        <!-- <a class="mini-button blue" id="WZGL_CBYDBG_Purchase.Add" onclick="PowerForm.OnBtnAdd(this)"><i class="fa fa-plus"></i>新增</a>
+                                        <a class="mini-button blue" id="WZGL_CBYDBG_Purchase.Delete" onclick="PowerForm.OnBtnDel(this)"><i class="fa fa-trash-o"></i>删除</a> -->
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="WZGL_CBYDBG_Purchase" class="mini-datagrid" style="height: 100%;"  idfield="Id" allowresize="true" 
+                                        allowcelledit="true" allowcellselect="true"  multiselect="true" oncellbeginedit="purchasebeginedit" oncellendedit="purchaseendedit">
+                                            <div property="columns">
+                                                <div type="indexcolumn"></div>
+                                                <!-- <div field="Active" width="80" headeralign="Center" align="Center">操作</div>
+                                                <div field="PurchaseCode" width="120" headeralign="Center" allowsort="true" align="Center">采购申请编号<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <div field="PurchaseName" width="120" headeralign="Center" allowsort="true" align="Center">采购申请行号<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <div field="Code" width="120" headeralign="Center" allowsort="true" align="Center">物品编号<input property="editor" class="mini-textbox" style="width:100%;"  /></div> -->
+                                                <div field="Name" width="120" headeralign="Center" allowsort="true" align="Center">设备（材料）名称<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <!-- <div type="comboboxcolumn" field="IsKJXY" width="120" headeralign="Center" allowsort="true" align="Center">是否框架协议<input property="editor" class="mini-combobox" style="width:100%;"  /></div>
+                                                <div field="CGJSYQ" width="120" headeralign="Center" allowsort="true" align="Center">采购技术要求<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <div field="ZBNum" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">招标数量<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div type="comboboxcolumn" field="Unit" width="120" headeralign="Center" allowsort="true" align="Center">单位<input property="editor" class="mini-combobox" style="width:100%;"  /></div>
+                                                <div field="TBNum" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">投标数量<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div type="comboboxcolumn" field="Currency" width="120" headeralign="Center" allowsort="true" align="Center">币种<input property="editor" class="mini-combobox" style="width:100%;"  /></div>
+                                                <div field="Price" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">单价<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div field="Ratio" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">税率<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div> -->
+                                                <div field="Total" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">投标价<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div field="TargetPrice" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">目标成本价<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+                                                <div field="Difference" width="120" headeralign="Center" allowsort="true" align="right" numberformat="n2">差值<input property="editor" class="mini-spinner" style="width:100%;"  allowLimitValue="false" changeOnMousewheel="false"  /></div>
+ 
+                                                <!--<div field="XQDate" width="120" headeralign="Center" allowsort="true" align="Center" dateformat="yyyy-MM-dd">需求日期<input property="editor" class="mini-datepicker" style="width:100%;"  /></div>
+                                                <div field="JHDate" width="120" headeralign="Center" allowsort="true" align="Center" dateformat="yyyy-MM-dd">交货日期<input property="editor" class="mini-datepicker" style="width:100%;"  /></div>
+                                                <div field="PP" width="120" headeralign="Center" allowsort="true" align="Center">品牌<input property="editor" class="mini-textbox" style="width:100%;"  /></div>
+                                                <div field="YCS" width="120" headeralign="Center" allowsort="true" align="Center">原厂商<input property="editor" class="mini-textbox" style="width:100%;"  /></div> -->
+                                                <div field="Memo" width="120" headeralign="Center" allowsort="true" align="Center">备注<input property="editor" class="mini-textarea" style="width:100%;"  /></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="附件" name="attachfile" url=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var PowerForm = new WebForm();
+    $(function() {
+        PowerForm.Init();
+    });
+
+    /********************************************开始：变量定义********************************************/
+    var currow = null; //当前表单数据
+    var oldcurrow = null;//表单原始数据
+    var gridParty = mini.get("WZGL_CBYDBG_Party");//子表
+    var gridPurchase = mini.get("WZGL_CBYDBG_Purchase");//孙表
+    /********************************************结束：变量定义********************************************/
+
+
+    /********************************************开始：平台事件重写********************************************/
+    /********************************************结束：平台事件重写********************************************/
+
+
+    /********************************************开始：miniui拦截事件********************************************/
+    function purchasebeginedit(e){
+        e.cancel = false;
+        if(e.field != "TargetPrice"){
+            e.cancel = true;
+        }
+    }
+
+    function purchaseendedit(e){
+        var record = e.record;
+        if(e.field == "TargetPrice"){
+            mini.get("WZGL_CBYDBG_Purchase").updateRow(record,{"Difference":parseFloat(record.TargetPrice)-parseFloat(record.Total) })
+        }
+    }
+    /********************************************结束：miniui拦截事件********************************************/
+
+
+    /********************************************开始：自定义事件********************************************/
+    /********************************************结束：自定义事件********************************************/
+
+    </script>
+</body>
+
+</html>
